@@ -14,12 +14,33 @@ export function startTestServers(appPort = 4000, adPort = 4001): Promise<TestSer
   return new Promise((resolve) => {
     // 1. App Server (First-Party)
     const appServer = http.createServer((req, res) => {
-      // Enable CORS
+      // Enable CORS & headers
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', '*');
 
       const urlPath = req.url?.split('?')[0] || '/';
+
+      // Support dynamic service worker script
+      if (urlPath === '/sw-test.js') {
+        res.writeHead(200, { 'Content-Type': 'application/javascript', 'Service-Worker-Allowed': '/' });
+        res.end(`
+          self.addEventListener('install', (e) => {
+            self.skipWaiting();
+          });
+          self.addEventListener('activate', (e) => {
+            e.waitUntil(clients.claim());
+          });
+          self.addEventListener('fetch', (e) => {
+            // Echo or cache
+            if (e.request.url.includes('/cached-asset')) {
+              e.respondWith(new Response('Cached in Service Worker', { headers: { 'Content-Type': 'text/plain' } }));
+            }
+          });
+        `);
+        return;
+      }
+
       let filePath = path.join(__dirname, urlPath === '/' ? 'index.html' : urlPath);
 
       if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {

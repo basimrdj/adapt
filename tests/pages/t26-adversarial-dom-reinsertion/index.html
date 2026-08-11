@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T26: Hostile Anti-Anti-Adblock DOM Reinsertion Loop</title>
+  <style>
+    body { font-family: sans-serif; overflow: hidden; }
+    .hostile-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: red; color: white; display: flex; align-items: center; justify-content: center; z-index: 99999; }
+  </style>
+</head>
+<body>
+  <div id="content">Hostile Page Content</div>
+  <div class="hostile-overlay" id="hostile-gate">
+    <h1>Disable Your Ad Blocker!</h1>
+  </div>
+
+  <script>
+    let reinsertions = 0;
+    const observer = new MutationObserver(() => {
+      const gate = document.getElementById('hostile-gate');
+      if (!gate || gate.style.display === 'none') {
+        if (reinsertions < 10) {
+          reinsertions++;
+          const newGate = document.createElement('div');
+          newGate.className = 'hostile-overlay';
+          newGate.id = 'hostile-gate';
+          newGate.innerHTML = '<h1>Disable Your Ad Blocker (Reinserted)!</h1>';
+          document.body.appendChild(newGate);
+          document.body.style.overflow = 'hidden';
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, attributes: true, subtree: true });
+    window.__reinsertion_loop_active = true;
+  </script>
+</body>
+</html>

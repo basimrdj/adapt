@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T27: BFCache & History Navigation</title>
+</head>
+<body>
+  <h1>BFCache Navigation Probe</h1>
+  <p id="nav-count">Visits: 0</p>
+  <a href="http://localhost:4000/t01-basic-ad/index.html" id="link-away">Navigate Away</a>
+
+  <script>
+    let pageshows = 0;
+    window.addEventListener('pageshow', (event) => {
+      pageshows++;
+      document.getElementById('nav-count').innerText = 'Visits: ' + pageshows + (event.persisted ? ' (BFCache)' : '');
+      window.__bfcache_persisted = event.persisted;
+      window.__pageshow_count = pageshows;
+    });
+  </script>
+</body>
+</html>

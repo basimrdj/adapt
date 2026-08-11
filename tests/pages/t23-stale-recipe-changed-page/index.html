@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T23: Radically Altered DOM Layout</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    /* The selector from the old recipe no longer exists or is a crucial UI element now */
+    #vital-nav-bar { background: #007acc; color: white; padding: 15px; }
+  </style>
+</head>
+<body>
+  <div id="vital-nav-bar">
+    <h2>Primary App Header (Must not be damaged by stale recipe)</h2>
+  </div>
+  <main id="main-content">
+    <p>Legitimate redesigned content without anti-adblock gates.</p>
+  </main>
+  <script>
+    window.__page_redesigned = true;
+  </script>
+</body>
+</html>

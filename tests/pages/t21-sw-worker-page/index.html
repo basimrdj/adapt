@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T21: Host Page with Service Worker & CacheStorage</title>
+</head>
+<body>
+  <h1>PWA Service Worker Host Page</h1>
+  <p id="sw-status">Registering Service Worker...</p>
+  <div id="sw-cache-output"></div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw-test.js').then(async (reg) => {
+        document.getElementById('sw-status').innerText = 'SW Registered';
+        window.__sw_registered = true;
+
+        // Test CacheStorage
+        const cache = await caches.open('v1-local-cache');
+        await cache.put('/cached-data', new Response('local-cached-content'));
+        window.__cache_stored = true;
+      }).catch((err) => {
+        console.error('SW Error:', err);
+        window.__sw_error = err.message;
+      });
+    }
+  </script>
+</body>
+</html>
