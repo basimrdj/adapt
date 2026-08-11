@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>T20 — Extension Fingerprint Probing</title>
+</head>
+<body>
+  <h1>T20 Hostile Fingerprint Probes</h1>
+  <div id="probe-results"></div>
+
+  <script>
+    const results = {
+      windowAdaptGlobal: typeof window.ADAPT !== 'undefined',
+      windowCustomGlobals: Object.keys(window).filter(k => k.toLowerCase().includes('adapt')),
+      domMarkersFound: document.querySelectorAll('[data-adapt-blocker], [data-adapt-hidden]').length > 0
+    };
+
+    window.__fingerprint_probe_results = results;
+    document.getElementById('probe-results').textContent = JSON.stringify(results);
+  </script>
+</body>
+</html>

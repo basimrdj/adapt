@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>T15 — Mutation Storm Stress Test</title>
+</head>
+<body>
+  <h1>T15 Mutation Storm</h1>
+  <div id="storm-container"></div>
+
+  <script>
+    const container = document.getElementById('storm-container');
+    let count = 0;
+    // Generate rapid DOM churn
+    const interval = setInterval(() => {
+      for (let i = 0; i < 50; i++) {
+        const div = document.createElement('div');
+        div.textContent = `Churn item ${count++}`;
+        container.appendChild(div);
+        if (container.children.length > 200) {
+          container.removeChild(container.firstChild);
+        }
+      }
+    }, 50);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      window.__storm_completed = true;
+    }, 3000);
+  </script>
+</body>
+</html>

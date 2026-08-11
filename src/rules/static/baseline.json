@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "priority": 10,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||doubleclick.net^",
+      "resourceTypes": ["script", "image", "xmlhttprequest", "sub_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 10,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||google-analytics.com^",
+      "resourceTypes": ["script", "xmlhttprequest", "ping"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 10,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||adnxs.com^",
+      "resourceTypes": ["script", "image", "sub_frame"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 10,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "||adservice.google.com^",
+      "resourceTypes": ["script", "xmlhttprequest"]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 10,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "ad-probe.js",
+      "resourceTypes": ["script", "xmlhttprequest"]
+    }
+  },
+  {
+    "id": 6,
+    "priority": 10,
+    "action": { "type": "block" },
+    "condition": {
+      "urlFilter": "synthetic-ad.js",
+      "resourceTypes": ["script", "image", "xmlhttprequest"]
+    }
+  }
+]

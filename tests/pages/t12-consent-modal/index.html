@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>T12 — GDPR Cookie Consent Modal (Negative Control)</title>
+  <style>
+    .cookie-banner {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #222;
+      color: white;
+      padding: 20px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>T12 Welcome to our Service</h1>
+    <p>This is a standard web page with a legitimate cookie consent banner.</p>
+  </main>
+
+  <div class="cookie-banner" id="cookie-dialog">
+    <p>We use cookies to improve your experience and analyze traffic in accordance with our Privacy Policy.</p>
+    <button onclick="document.getElementById('cookie-dialog').remove()">Accept All Cookies</button>
+  </div>
+</body>
+</html>

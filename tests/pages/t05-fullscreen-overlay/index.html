@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>T05 — Full-Screen Anti-Block Overlay Test</title>
+  <style>
+    body {
+      overflow: hidden;
+    }
+    #blocker-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+    }
+  </style>
+</head>
+<body>
+  <main id="main-content">
+    <h1>T05 Story Content</h1>
+    <p>Reading this text requires removing the overlay and unlocking the scrollbar.</p>
+  </main>
+
+  <div id="blocker-modal">
+    <h1>Adblock Detected</h1>
+    <p>Please disable your ad blocker to continue viewing this website.</p>
+  </div>
+</body>
+</html>

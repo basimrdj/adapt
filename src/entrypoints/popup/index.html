@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADAPT Shield</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="logo-area">
+        <span class="shield-icon">🛡️</span>
+        <h1>ADAPT</h1>
+      </div>
+      <span id="shield-status" class="status-badge active">ACTIVE</span>
+    </header>
+
+    <main class="popup-content">
+      <div class="site-card">
+        <div class="site-label">CURRENT SITE</div>
+        <div id="current-site" class="site-host">example.com</div>
+        <div id="recipe-status" class="recipe-badge">Baseline Protection</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div id="blocked-count" class="stat-value">0</div>
+          <div class="stat-label">Blocked Ads</div>
+        </div>
+        <div class="stat-box">
+          <div id="adapt-count" class="stat-value">0</div>
+          <div class="stat-label">Adaptations</div>
+        </div>
+      </div>
+
+      <div class="control-section">
+        <button id="btn-toggle-protection" class="btn btn-primary">Protection Enabled</button>
+        <button id="btn-view-audit" class="btn btn-secondary">View Adaptation Audit</button>
+      </div>
+
+      <div id="audit-drawer" class="audit-drawer hidden">
+        <h3>Recent Local Events</h3>
+        <div id="audit-list" class="audit-list"></div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="popup.ts"></script>
+</body>
+</html>

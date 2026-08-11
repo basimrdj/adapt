@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "ADAPT — Adaptive Content & Privacy Blocker",
+  "version": "1.0.0",
+  "description": "Fast deterministic Chromium MV3 content blocker with transactional adaptation engine.",
+  "permissions": [
+    "declarativeNetRequest",
+    "scripting",
+    "storage",
+    "webRequest",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    }
+  ],
+  "action": {
+    "default_popup": "popup/index.html",
+    "default_title": "ADAPT Shield"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_baseline",
+        "enabled": true,
+        "path": "rules/baseline.json"
+      }
+    ]
+  }
+}

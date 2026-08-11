@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>T13 — Newsletter Modal (Negative Control)</title>
+  <style>
+    .modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      padding: 30px;
+      background: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: 500;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>T13 Tech Newsletter</h1>
+    <p>Read our latest engineering posts.</p>
+  </main>
+
+  <div class="modal" id="newsletter-box">
+    <h3>Subscribe to our newsletter</h3>
+    <p>Enter your email to receive weekly updates.</p>
+    <input type="email" placeholder="you@domain.com">
+    <button onclick="document.getElementById('newsletter-box').remove()">Subscribe</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>T03 — Bait Detector Test</title>
+  <style>
+    .ad-banner {
+      width: 300px;
+      height: 250px;
+      background: #eee;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.9);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+    }
+  </style>
+</head>
+<body>
+  <main id="main-content">
+    <h1>T03 Premium Article</h1>
+    <p>This is the essential article content.</p>
+    <div id="ad-container" class="ad-banner">Advertisement Placeholder</div>
+  </main>
+
+  <script>
+    // Detector checks whether bait was hidden or collapsed
+    setInterval(() => {
+      const bait = document.getElementById('ad-container');
+      if (!bait || bait.offsetHeight === 0 || bait.offsetWidth === 0 || window.getComputedStyle(bait).display === 'none') {
+        if (!document.getElementById('anti-adblock-gate')) {
+          const overlay = document.createElement('div');
+          overlay.id = 'anti-adblock-gate';
+          overlay.className = 'overlay';
+          overlay.innerHTML = '<h2>Adblock Detected</h2><p>Please disable your ad blocker to continue reading our content.</p>';
+          document.body.appendChild(overlay);
+          document.body.style.overflow = 'hidden';
+          window.__detector_triggered = true;
+        }
+      } else {
+        const overlay = document.getElementById('anti-adblock-gate');
+        if (overlay) {
+          overlay.remove();
+          document.body.style.overflow = 'auto';
+          window.__detector_cleared = true;
+        }
+      }
+    }, 100);
+  </script>
+</body>
+</html>
