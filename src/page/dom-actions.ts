@@ -9,6 +9,17 @@ export interface AppliedDomActionRecord {
   }>;
 }
 
+/**
+ * Sanitizes CSS selector to prevent CSS injection vulnerabilities.
+ */
+function sanitizeCssSelector(selector: string): string {
+  // Reject selectors containing curly braces or closing style tags
+  if (/[{}<>]/.test(selector)) {
+    throw new Error('Invalid characters in CSS selector');
+  }
+  return selector.trim();
+}
+
 export class DomActionExecutor {
   private appliedActions = new Map<string, AppliedDomActionRecord>();
 
@@ -23,7 +34,8 @@ export class DomActionExecutor {
         case 'DOM_REMOVE_OVERLAY':
         case 'DOM_COLLAPSE': {
           if (action.selector) {
-            const elements = document.querySelectorAll(action.selector);
+            const safeSelector = sanitizeCssSelector(action.selector);
+            const elements = document.querySelectorAll(safeSelector);
             elements.forEach((el) => {
               const htmlEl = el as HTMLElement;
               record.mutatedElements.push({
@@ -104,7 +116,8 @@ export class DomActionExecutor {
         case 'DOM_PRESERVE_BAIT_CANDIDATE': {
           // Keep dummy layout bait elements dimensions without executing external scripts
           if (action.selector) {
-            const baits = document.querySelectorAll(action.selector);
+            const safeSelector = sanitizeCssSelector(action.selector);
+            const baits = document.querySelectorAll(safeSelector);
             baits.forEach((el) => {
               const htmlEl = el as HTMLElement;
               record.mutatedElements.push({
@@ -129,8 +142,9 @@ export class DomActionExecutor {
 
         case 'DOM_HIDE': {
           if (action.selector) {
+            const safeSelector = sanitizeCssSelector(action.selector);
             const style = document.createElement('style');
-            style.textContent = `${action.selector} { display: none !important; }`;
+            style.textContent = `${safeSelector} { display: none !important; }`;
             document.head?.appendChild(style);
             record.injectedStyleElement = style;
           }

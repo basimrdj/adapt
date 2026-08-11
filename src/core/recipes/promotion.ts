@@ -12,13 +12,14 @@ export class RecipePromotionManager {
     healthDelta: number
   ): SiteRecipe {
     if (success) {
-      if (recipe.state === 'provisional' && recipe.evidence.successfulNavigations >= 2) {
-        return updateRecipeState(recipe, 'confirmed', healthDelta);
+      const nextSuccessCount = recipe.evidence.successfulNavigations + 1;
+      if (recipe.state === 'provisional' && nextSuccessCount >= 2) {
+        return updateRecipeState(recipe, 'confirmed', healthDelta, true);
       }
-      return updateRecipeState(recipe, recipe.state, healthDelta);
+      return updateRecipeState(recipe, recipe.state, healthDelta, true);
     } else {
       // Recipe caused or failed to prevent breakage upon replay -> degrade
-      return updateRecipeState(recipe, 'degraded', healthDelta);
+      return updateRecipeState(recipe, 'degraded', healthDelta, false);
     }
   }
 }

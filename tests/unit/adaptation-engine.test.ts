@@ -44,13 +44,19 @@ describe('AdaptationTransactionEngine', () => {
     },
   };
 
-  it('stages an experiment when high anti-block reaction is observed', async () => {
+  it('stages an experiment when high anti-block reaction is observed and persists transaction', async () => {
     const dnrController = new DnrController(mockDnrBackend);
     const recipeStore = new RecipeStore(mockStorage);
     const auditStore = new AuditStore(mockStorage);
     const sendTabMessage = vi.fn().mockResolvedValue(undefined);
 
-    const engine = new AdaptationTransactionEngine(dnrController, recipeStore, auditStore, sendTabMessage);
+    const engine = new AdaptationTransactionEngine(
+      dnrController,
+      recipeStore,
+      auditStore,
+      mockStorage,
+      sendTabMessage
+    );
 
     const brokenBatch: PageSignalBatch = {
       navigationId: 'nav_broken_1',

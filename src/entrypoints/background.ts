@@ -41,7 +41,7 @@ const chromeDnrBackend = {
 const sendTabMessage = async (tabId: number, msg: unknown) => {
   return new Promise<void>((resolve) => {
     chrome.tabs.sendMessage(tabId, msg, () => {
-      // Ignore errors if tab closed/reloaded
+      // Safe ignore if tab closed
       resolve();
     });
   });
@@ -54,7 +54,13 @@ const requestObserver = new RequestObserver(navRegistry, graphManager);
 const dnrController = new DnrController(chromeDnrBackend);
 const recipeStore = new RecipeStore(chromeStorageBackend);
 const auditStore = new AuditStore(chromeStorageBackend);
-const adaptEngine = new AdaptationTransactionEngine(dnrController, recipeStore, auditStore, sendTabMessage);
+const adaptEngine = new AdaptationTransactionEngine(
+  dnrController,
+  recipeStore,
+  auditStore,
+  chromeStorageBackend,
+  sendTabMessage
+);
 
 // 5. Synchronous Top-Level Service Worker Listeners
 
@@ -68,19 +74,14 @@ chrome.webNavigation.onCommitted.addListener(async (details) => {
     parentFrameId
   );
 
-  // If main frame committed, check if we have a confirmed recipe to replay
-  if (epoch.isMainFrame && epoch.siteKey) {
-    const recipe = await recipeStore.getRecipe(epoch.siteKey);
-    if (recipe && (recipe.state === 'confirmed' || recipe.state === 'provisional')) {
-      // Apply recipe DOM actions to page
-      const domActions = recipe.actions.filter((a) => a.type.startsWith('DOM_'));
-      for (const action of domActions) {
-        sendTabMessage(details.tabId, {
-          v: 1,
-          type: 'APPLY_DOM_ACTION',
-          txId: `recipe_replay_${epoch.siteKey}`,
-          payload: action,
-        });
+  // If top-level navigation committed, rollback any pending orphaned experiments on this tab
+  if (epoch.isMainFrame) {
+    const activeTxs = adaptEngine.getActiveTransactions().filter(
+      (tx) => tx.tabId === details.tabId && tx.navigationId !== epoch.navigationId
+    );
+    for (const tx of activeTxs) {
+      if (tx.state === 'staged' || tx.state === 'observing') {
+        await adaptEngine.rollbackAllOrphaned();
       }
     }
   }
@@ -90,8 +91,14 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
   navRegistry.onHistoryStateUpdated(details.tabId, details.frameId, details.url);
 });
 
-chrome.tabs.onRemoved.addListener((tabId) => {
+chrome.tabs.onRemoved.addListener(async (tabId) => {
   navRegistry.onTabClosed(tabId);
+  const activeTxs = adaptEngine.getActiveTransactions().filter((tx) => tx.tabId === tabId);
+  for (const tx of activeTxs) {
+    if (tx.sessionRuleIds.length > 0) {
+      await dnrController.removeSessionExperimentRules(tx.sessionRuleIds).catch(() => {});
+    }
+  }
 });
 
 // WebRequest Telemetry Listeners
@@ -112,12 +119,41 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
   }
 
   const tabId = sender.tab.id;
-  const url = sender.tab.url || '';
+  const frameId = sender.frameId || 0;
+  const url = sender.tab.url || (message.type === 'PAGE_SENSOR_READY' ? message.url : '');
   const siteKey = extractSiteKey(url);
 
+  // Validate or retrieve canonical Navigation Epoch
+  let epoch = navRegistry.getEpoch(tabId, frameId);
+  if (!epoch) {
+    epoch = navRegistry.onNavigationCommitted(tabId, frameId, url);
+  }
+
   switch (message.type) {
+    case 'PAGE_SENSOR_READY': {
+      // Replay confirmed recipe once sensor is confirmed ready in DOM
+      if (siteKey) {
+        recipeStore.getRecipe(siteKey).then((recipe) => {
+          if (recipe && (recipe.state === 'confirmed' || recipe.state === 'provisional')) {
+            const domActions = recipe.actions.filter((a) => a.type.startsWith('DOM_'));
+            for (const action of domActions) {
+              sendTabMessage(tabId, {
+                v: 1,
+                type: 'APPLY_DOM_ACTION',
+                txId: `recipe_replay_${siteKey}`,
+                payload: action,
+              });
+            }
+          }
+        });
+      }
+      break;
+    }
+
     case 'PAGE_SIGNAL_BATCH': {
-      adaptEngine.evaluateSignals(tabId, message.navigationId, siteKey, message.payload);
+      // Correlate with canonical navigation epoch
+      const canonicalNavId = epoch.navigationId;
+      adaptEngine.evaluateSignals(tabId, canonicalNavId, siteKey, message.payload);
       break;
     }
 
@@ -130,7 +166,14 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
   }
 });
 
-// Startup / Worker Wakeup Reconciliation
-dnrController.reconcile(new Set()).catch(() => {
-  // Safe error catch
-});
+// Startup / Worker Wakeup Initialization & Reconciliation
+(async () => {
+  try {
+    await adaptEngine.init();
+    const activeTxs = adaptEngine.getActiveTransactions();
+    const activeTxIds = new Set(activeTxs.map((t) => t.txId));
+    await dnrController.reconcile(activeTxIds);
+  } catch {
+    // Startup recovery safe fallback
+  }
+})();

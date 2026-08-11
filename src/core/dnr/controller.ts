@@ -24,6 +24,10 @@ export class DnrController {
   private reconciler: DnrReconciler;
   private backend: DnrBackend;
 
+  // Track rule metadata for quota decrements
+  private sessionRuleMeta = new Map<number, { isRegex: boolean }>();
+  private dynamicRuleMeta = new Map<number, { isUnsafe: boolean; isRegex: boolean }>();
+
   constructor(backend: DnrBackend, initialAllocations: RuleIdAllocation[] = []) {
     this.backend = backend;
     this.idAllocator = new DnrIdAllocator(initialAllocations);
@@ -43,14 +47,24 @@ export class DnrController {
   ): Promise<{ ruleIds: number[]; quotaCheck: QuotaCheckResult }> {
     const networkActions = actions.filter((a) => a.type.startsWith('NET_'));
     if (networkActions.length === 0) {
-      return { ruleIds: [], quotaCheck: { allowed: true, availableDynamicSafe: 0, availableDynamicUnsafe: 0, availableSession: 0 } };
+      return {
+        ruleIds: [],
+        quotaCheck: {
+          allowed: true,
+          availableDynamicTotal: 30000,
+          availableDynamicUnsafe: 5000,
+          availableSession: 5000,
+          availableRegexDynamic: 1000,
+          availableRegexSession: 1000,
+        },
+      };
     }
 
-    const isRegex = networkActions.some((a) => 'isRegex' in a && a.isRegex);
+    const regexCount = networkActions.filter((a) => 'isRegex' in a && a.isRegex).length;
 
     const quotaCheck = this.quotaTracker.checkCapacity({
       session: networkActions.length,
-      regex: isRegex ? networkActions.length : 0,
+      regexSession: regexCount,
     });
 
     if (!quotaCheck.allowed) {
@@ -73,11 +87,26 @@ export class DnrController {
 
       if (compiled) {
         rulesToAdd.push(compiled.rule);
+        this.sessionRuleMeta.set(id, { isRegex: Boolean('isRegex' in action && action.isRegex) });
       }
     }
 
-    await this.backend.updateSessionRules({ addRules: rulesToAdd });
-    return { ruleIds: allocatedIds, quotaCheck };
+    try {
+      await this.backend.updateSessionRules({ addRules: rulesToAdd });
+      // Update quota tracker on successful addition
+      this.quotaTracker.incrementUsage({
+        sessionRules: rulesToAdd.length,
+        regexSessionRules: regexCount,
+      });
+      return { ruleIds: allocatedIds, quotaCheck };
+    } catch (err) {
+      // Release IDs and clean metadata if backend call fails
+      for (const id of allocatedIds) {
+        this.idAllocator.release(id);
+        this.sessionRuleMeta.delete(id);
+      }
+      throw err;
+    }
   }
 
   /**
@@ -85,10 +114,21 @@ export class DnrController {
    */
   public async removeSessionExperimentRules(ruleIds: number[]): Promise<void> {
     if (ruleIds.length === 0) return;
-    await this.backend.updateSessionRules({ removeRuleIds: ruleIds });
+
+    let regexRemoved = 0;
     for (const id of ruleIds) {
+      const meta = this.sessionRuleMeta.get(id);
+      if (meta?.isRegex) regexRemoved++;
+      this.sessionRuleMeta.delete(id);
       this.idAllocator.release(id);
     }
+
+    await this.backend.updateSessionRules({ removeRuleIds: ruleIds });
+
+    this.quotaTracker.decrementUsage({
+      sessionRules: ruleIds.length,
+      regexSessionRules: regexRemoved,
+    });
   }
 
   /**
@@ -104,10 +144,12 @@ export class DnrController {
 
     const safeCount = networkActions.filter((a) => a.type !== 'NET_REDIRECT_LOCAL').length;
     const unsafeCount = networkActions.filter((a) => a.type === 'NET_REDIRECT_LOCAL').length;
+    const regexCount = networkActions.filter((a) => 'isRegex' in a && a.isRegex).length;
 
     const quotaCheck = this.quotaTracker.checkCapacity({
       dynamicSafe: safeCount,
       dynamicUnsafe: unsafeCount,
+      regexDynamic: regexCount,
     });
 
     if (!quotaCheck.allowed) {
@@ -118,22 +160,70 @@ export class DnrController {
     const allocatedIds: number[] = [];
 
     for (const action of networkActions) {
-      const band = action.type === 'NET_REDIRECT_LOCAL' ? 'DYNAMIC_UNSAFE' : 'DYNAMIC_SAFE';
+      const isUnsafe = action.type === 'NET_REDIRECT_LOCAL';
+      const band = isUnsafe ? 'DYNAMIC_UNSAFE' : 'DYNAMIC_SAFE';
       const id = this.idAllocator.allocate(band, recipeId);
       allocatedIds.push(id);
 
-      const priorityBand = action.type === 'NET_REDIRECT_LOCAL' ? 'PERSISTED_COMPAT_RULE' : 'PERSISTED_LEARNED_BLOCK';
+      const priorityBand = isUnsafe ? 'PERSISTED_COMPAT_RULE' : 'PERSISTED_LEARNED_BLOCK';
       const compiled = this.compiler.compileAction(action, id, priorityBand, {
         initiatorDomains,
       });
 
       if (compiled) {
         rulesToAdd.push(compiled.rule);
+        this.dynamicRuleMeta.set(id, {
+          isUnsafe,
+          isRegex: Boolean('isRegex' in action && action.isRegex),
+        });
       }
     }
 
-    await this.backend.updateDynamicRules({ addRules: rulesToAdd });
-    return allocatedIds;
+    try {
+      await this.backend.updateDynamicRules({ addRules: rulesToAdd });
+      this.quotaTracker.incrementUsage({
+        dynamicSafe: safeCount,
+        dynamicUnsafe: unsafeCount,
+        regexDynamicRules: regexCount,
+      });
+      return allocatedIds;
+    } catch (err) {
+      for (const id of allocatedIds) {
+        this.idAllocator.release(id);
+        this.dynamicRuleMeta.delete(id);
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Removes persisted learned rules.
+   */
+  public async removeDynamicLearnedRules(ruleIds: number[]): Promise<void> {
+    if (ruleIds.length === 0) return;
+
+    let safeRemoved = 0;
+    let unsafeRemoved = 0;
+    let regexRemoved = 0;
+
+    for (const id of ruleIds) {
+      const meta = this.dynamicRuleMeta.get(id);
+      if (meta) {
+        if (meta.isUnsafe) unsafeRemoved++;
+        else safeRemoved++;
+        if (meta.isRegex) regexRemoved++;
+        this.dynamicRuleMeta.delete(id);
+      }
+      this.idAllocator.release(id);
+    }
+
+    await this.backend.updateDynamicRules({ removeRuleIds: ruleIds });
+
+    this.quotaTracker.decrementUsage({
+      dynamicSafe: safeRemoved,
+      dynamicUnsafe: unsafeRemoved,
+      regexDynamicRules: regexRemoved,
+    });
   }
 
   /**
@@ -145,5 +235,9 @@ export class DnrController {
 
   public getAllAllocations(): RuleIdAllocation[] {
     return this.idAllocator.getAllAllocations();
+  }
+
+  public getQuotaTracker(): DnrQuotaTracker {
+    return this.quotaTracker;
   }
 }

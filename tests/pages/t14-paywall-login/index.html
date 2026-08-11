@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T14: Benign Login / Paywall</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .login-modal { position: fixed; top: 10%; left: 50%; transform: translateX(-50%); width: 400px; padding: 24px; background: white; border: 2px solid #333; z-index: 1000; }
+  </style>
+</head>
+<body>
+  <h1>Subscriber Content</h1>
+  <p>Preview of the exclusive news story...</p>
+
+  <div class="login-modal" id="login-form-dialog">
+    <h2>Sign in to continue reading</h2>
+    <form>
+      <input type="text" placeholder="Username" /><br/><br/>
+      <input type="password" placeholder="Password" /><br/><br/>
+      <button type="button">Log In</button>
+    </form>
+  </div>
+</body>
+</html>

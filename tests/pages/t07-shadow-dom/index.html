@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T07: Shadow DOM Isolation</title>
+</head>
+<body>
+  <h1>Shadow DOM Page</h1>
+  <div id="host-element"></div>
+
+  <script>
+    const host = document.getElementById('host-element');
+    const shadow = host.attachShadow({ mode: 'open' });
+    shadow.innerHTML = `
+      <style>
+        .shadow-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); color: white; display: flex; align-items: center; justify-content: center; }
+      </style>
+      <div class="shadow-overlay" id="shadow-modal">
+        <h2>Anti-Adblock inside Shadow DOM</h2>
+      </div>
+    `;
+    window.__shadow_mounted = true;
+  </script>
+</body>
+</html>

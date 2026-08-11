@@ -1,7 +1,7 @@
 import { HealthVector, PageSignalBatch, DomAction, StrategyCandidate, SiteRecipe } from './types';
 
 /**
- * Runtime schema guards to reject untrusted, malformed, or malicious messages.
+ * Deep runtime schema guards to reject untrusted, malformed, or malicious messages.
  */
 
 export function isObject(val: unknown): val is Record<string, unknown> {
@@ -37,9 +37,50 @@ export function isHealthVector(val: unknown): val is HealthVector {
 export function isPageSignalBatch(val: unknown): val is PageSignalBatch {
   if (!isObject(val)) return false;
   if (!isString(val.navigationId) || !isNumber(val.timestamp)) return false;
-  if (!isObject(val.geometry) || !isObject(val.semantic) || !isObject(val.interaction) || !isObject(val.mutation)) {
+
+  const geo = val.geometry;
+  if (
+    !isObject(geo) ||
+    !isNumber(geo.viewportWidth) ||
+    !isNumber(geo.viewportHeight) ||
+    !isBoolean(geo.hasFixedOverlay) ||
+    !isNumber(geo.overlayCoverageRatio) ||
+    !isBoolean(geo.bodyScrollLocked) ||
+    !isBoolean(geo.htmlScrollLocked)
+  ) {
     return false;
   }
+
+  const sem = val.semantic;
+  if (
+    !isObject(sem) ||
+    !Array.isArray(sem.detectedPhrases) ||
+    !isNumber(sem.adblockKeywordDensity) ||
+    !isNumber(sem.confidenceScore)
+  ) {
+    return false;
+  }
+
+  const inter = val.interaction;
+  if (
+    !isObject(inter) ||
+    !isBoolean(inter.pointerEventsSuppressed) ||
+    !isBoolean(inter.bodyOverflowHidden) ||
+    !isBoolean(inter.contentCovered)
+  ) {
+    return false;
+  }
+
+  const mut = val.mutation;
+  if (
+    !isObject(mut) ||
+    !isNumber(mut.mutationRatePerSecond) ||
+    !isBoolean(mut.rapidReinsertionDetected) ||
+    !isString(mut.degradationState)
+  ) {
+    return false;
+  }
+
   return true;
 }
 
@@ -72,13 +113,22 @@ export function isStrategyCandidate(val: unknown): val is StrategyCandidate {
 
 export function isSiteRecipe(val: unknown): val is SiteRecipe {
   if (!isObject(val)) return false;
-  return (
-    isNumber(val.schemaVersion) &&
-    isString(val.siteKey) &&
-    isObject(val.match) &&
-    Array.isArray(val.actions) &&
-    isObject(val.evidence) &&
-    isString(val.state) &&
-    isNumber(val.createdAt)
-  );
+  if (
+    !isNumber(val.schemaVersion) ||
+    !isString(val.siteKey) ||
+    !isObject(val.match) ||
+    !Array.isArray(val.actions) ||
+    !isObject(val.evidence) ||
+    !isString(val.state) ||
+    !isNumber(val.createdAt)
+  ) {
+    return false;
+  }
+
+  const ev = val.evidence;
+  if (!isNumber(ev.successfulNavigations) || !isNumber(ev.confidence)) {
+    return false;
+  }
+
+  return true;
 }

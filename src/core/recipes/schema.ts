@@ -27,7 +27,8 @@ export function createNewRecipe(
 export function updateRecipeState(
   recipe: SiteRecipe,
   nextState: RecipeState,
-  healthDelta?: number
+  healthDelta?: number,
+  incrementSuccess = false
 ): SiteRecipe {
   return {
     ...recipe,
@@ -35,10 +36,9 @@ export function updateRecipeState(
     updatedAt: Date.now(),
     evidence: {
       ...recipe.evidence,
-      successfulNavigations:
-        nextState === 'confirmed'
-          ? recipe.evidence.successfulNavigations + 1
-          : recipe.evidence.successfulNavigations,
+      successfulNavigations: incrementSuccess
+        ? recipe.evidence.successfulNavigations + 1
+        : recipe.evidence.successfulNavigations,
       lastHealthDelta: healthDelta !== undefined ? healthDelta : recipe.evidence.lastHealthDelta,
     },
   };

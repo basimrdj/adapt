@@ -8,6 +8,7 @@ export class MutationPipeline {
   private degradationState: 'NORMAL' | 'COALESCED' | 'SAMPLING' | 'PAUSED' = 'NORMAL';
   private reinsertionCount = 0;
   private onBatchCallback?: () => void;
+  private debounceTimer: number | null = null;
 
   constructor(onBatchCallback?: () => void) {
     this.onBatchCallback = onBatchCallback;
@@ -20,11 +21,26 @@ export class MutationPipeline {
       this.mutationCount += mutations.length;
       this.checkDegradation();
 
-      if (this.degradationState !== 'PAUSED') {
+      if (this.degradationState === 'PAUSED') {
+        return; // Mute processing during storm
+      }
+
+      const debounceDelay =
+        this.degradationState === 'SAMPLING'
+          ? 300
+          : this.degradationState === 'COALESCED'
+          ? 150
+          : 60;
+
+      if (this.debounceTimer !== null) {
+        clearTimeout(this.debounceTimer);
+      }
+
+      this.debounceTimer = window.setTimeout(() => {
         if (this.onBatchCallback) {
           this.onBatchCallback();
         }
-      }
+      }, debounceDelay);
     });
 
     if (document.documentElement) {
@@ -37,7 +53,22 @@ export class MutationPipeline {
     }
   }
 
+  public reset(): void {
+    this.mutationCount = 0;
+    this.lastResetTime = Date.now();
+    this.degradationState = 'NORMAL';
+    this.reinsertionCount = 0;
+    if (this.debounceTimer !== null) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
+  }
+
   public stop(): void {
+    if (this.debounceTimer !== null) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;

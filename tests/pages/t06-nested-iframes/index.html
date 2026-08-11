@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T06: Nested & Sandboxed Iframes</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    iframe { width: 100%; height: 250px; border: 1px solid #ccc; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Host Article with Nested Frames</h1>
+  <p id="host-content">Legitimate content in main frame.</p>
+
+  <!-- Subframe with nested probe -->
+  <iframe id="subframe" src="about:blank"></iframe>
+  <!-- Sandboxed iframe -->
+  <iframe id="sandboxed-frame" sandbox="allow-scripts" src="about:blank"></iframe>
+
+  <script>
+    const sub = document.getElementById('subframe');
+    sub.contentDocument.write('<h2>Subframe Level 1</h2><p>Subframe content</p>');
+    sub.contentDocument.close();
+
+    const sand = document.getElementById('sandboxed-frame');
+    sand.srcdoc = '<h3>Sandboxed Frame</h3><p>Sandboxed content</p>';
+    window.__frames_loaded = true;
+  </script>
+</body>
+</html>

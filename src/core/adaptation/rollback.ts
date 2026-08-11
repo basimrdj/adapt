@@ -13,13 +13,28 @@ export class AdaptationRollbackHandler {
     this.sendTabMessage = sendTabMessage;
   }
 
-  public async rollback(tx: AdaptationTransaction): Promise<void> {
-    // 1. Remove staged session rules
+  public async rollback(tx: AdaptationTransaction): Promise<{
+    sessionRulesRemoved: boolean;
+    domActionsRolledBack: number;
+    errors: string[];
+  }> {
+    const errors: string[] = [];
+    let sessionRulesRemoved = false;
+    let domActionsRolledBack = 0;
+
+    // 1. Remove staged session rules (guaranteed attempt)
     if (tx.sessionRuleIds.length > 0) {
-      await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds);
+      try {
+        await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds);
+        sessionRulesRemoved = true;
+      } catch (err: unknown) {
+        errors.push(`DNR rollback error: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    } else {
+      sessionRulesRemoved = true;
     }
 
-    // 2. Rollback staged DOM actions in content script
+    // 2. Rollback staged DOM actions in content script (guaranteed attempt for all)
     for (const actionId of tx.domActionIds) {
       try {
         await this.sendTabMessage(tx.tabId, {
@@ -28,9 +43,17 @@ export class AdaptationRollbackHandler {
           txId: tx.txId,
           actionId,
         });
-      } catch {
+        domActionsRolledBack++;
+      } catch (err: unknown) {
         // Tab might be closed or refreshed
+        errors.push(`DOM action ${actionId} rollback skipped: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
+
+    return {
+      sessionRulesRemoved,
+      domActionsRolledBack,
+      errors,
+    };
   }
 }

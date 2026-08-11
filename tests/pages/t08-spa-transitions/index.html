@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T08: SPA History Route Transitions</title>
+</head>
+<body>
+  <nav>
+    <a href="/t08-spa-transitions/index.html" id="link-home">Home</a>
+    <a href="/t08-spa-transitions/article" id="link-article">Article</a>
+  </nav>
+  <div id="app">
+    <h1>Home View</h1>
+  </div>
+
+  <script>
+    document.getElementById('link-article').addEventListener('click', (e) => {
+      e.preventDefault();
+      history.pushState({ page: 'article' }, 'Article', '/t08-spa-transitions/article');
+      document.getElementById('app').innerHTML = '<h1>Article View</h1><p>SPA dynamic route loaded</p>';
+      window.__spa_navigated = true;
+    });
+  </script>
+</body>
+</html>

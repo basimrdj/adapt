@@ -36,12 +36,28 @@ export class PageSensor {
       this.handleBackgroundMessage(message);
     });
 
+    // Listen for SPA navigation events
+    window.addEventListener('popstate', () => this.handleSpaTransition());
+    window.addEventListener('hashchange', () => this.handleSpaTransition());
+
     // Schedule initial signals on page load / DOMContentLoaded
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.scheduleSignalBatch());
     } else {
       this.scheduleSignalBatch();
     }
+  }
+
+  private handleSpaTransition(): void {
+    this.mutationPipeline.reset();
+    this.sendMessage({
+      v: 1,
+      type: 'PAGE_SENSOR_READY',
+      navigationId: this.navigationId,
+      url: window.location.href,
+      origin: window.location.origin,
+    });
+    this.scheduleSignalBatch();
   }
 
   private scheduleSignalBatch(): void {

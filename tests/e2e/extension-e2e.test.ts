@@ -3,9 +3,9 @@ import path from 'path';
 import fs from 'fs';
 import puppeteer, { Browser } from 'puppeteer';
 import { startTestServers, TestServerInstances } from '../pages/server';
-import { isPageSignalBatch, isHealthVector, isDomAction } from '../../src/shared/guards';
+import { isPageSignalBatch, isHealthVector, isDomAction, isSiteRecipe } from '../../src/shared/guards';
 
-describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
+describe('ADAPT Extension Phase 1.5 Adversarial Laboratory Suite', () => {
   let servers: TestServerInstances;
   let browser: Browser;
   const extensionPath = path.resolve(__dirname, '../../dist');
@@ -54,7 +54,7 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
     await page.goto(`http://localhost:4000/t01-basic-ad/index.html`, { waitUntil: 'networkidle2' });
 
     const adExecuted = await page.evaluate(() => (window as any).__ad_loaded);
-    expect(adExecuted).toBeUndefined(); // Blocked by native DNR!
+    expect(adExecuted).toBeUndefined();
     await page.close();
   });
 
@@ -63,7 +63,6 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
     await page.setViewport({ width: 1280, height: 800 });
     await page.goto(`http://localhost:4000/t03-bait-detector/index.html`, { waitUntil: 'networkidle2' });
 
-    // Allow sensor to detect bait and trigger adaptation
     await new Promise((r) => setTimeout(r, 1500));
 
     const isGateActive = await page.evaluate(() => {
@@ -119,6 +118,36 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
     await page.close();
   });
 
+  it('T06: Handles nested and sandboxed iframes without unhandled errors', async () => {
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:4000/t06-nested-iframes/index.html`, { waitUntil: 'networkidle2' });
+
+    const framesLoaded = await page.evaluate(() => (window as any).__frames_loaded);
+    expect(framesLoaded).toBe(true);
+    await page.close();
+  });
+
+  it('T07: Respects Shadow DOM encapsulation boundaries', async () => {
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:4000/t07-shadow-dom/index.html`, { waitUntil: 'networkidle2' });
+
+    const shadowMounted = await page.evaluate(() => (window as any).__shadow_mounted);
+    expect(shadowMounted).toBe(true);
+    await page.close();
+  });
+
+  it('T08: Maintains state consistency during SPA route transitions', async () => {
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:4000/t08-spa-transitions/index.html`, { waitUntil: 'networkidle2' });
+
+    await page.click('#link-article');
+    await new Promise((r) => setTimeout(r, 500));
+
+    const spaNavigated = await page.evaluate(() => (window as any).__spa_navigated);
+    expect(spaNavigated).toBe(true);
+    await page.close();
+  });
+
   it('T12 & T13: Negative controls — does not falsely adapt on benign consent or newsletter modals', async () => {
     const page1 = await browser.newPage();
     await page1.goto(`http://localhost:4000/t12-consent-modal/index.html`, { waitUntil: 'networkidle2' });
@@ -128,7 +157,7 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
       const banner = document.getElementById('cookie-dialog');
       return banner !== null && window.getComputedStyle(banner).display !== 'none';
     });
-    expect(consentModalExists).toBe(true); // Legitimate modal preserved!
+    expect(consentModalExists).toBe(true);
     await page1.close();
 
     const page2 = await browser.newPage();
@@ -139,8 +168,21 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
       const modal = document.getElementById('newsletter-box');
       return modal !== null && window.getComputedStyle(modal).display !== 'none';
     });
-    expect(newsletterModalExists).toBe(true); // Newsletter preserved!
+    expect(newsletterModalExists).toBe(true);
     await page2.close();
+  });
+
+  it('T14: Negative control — preserves benign login / paywall dialogs', async () => {
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:4000/t14-paywall-login/index.html`, { waitUntil: 'networkidle2' });
+    await new Promise((r) => setTimeout(r, 800));
+
+    const loginModalVisible = await page.evaluate(() => {
+      const modal = document.getElementById('login-form-dialog');
+      return modal !== null && window.getComputedStyle(modal).display !== 'none';
+    });
+    expect(loginModalVisible).toBe(true);
+    await page.close();
   });
 
   it('T15: Degrades gracefully under mutation storm without crashing page', async () => {
@@ -150,6 +192,19 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
     await page.waitForFunction(() => (window as any).__storm_completed === true, { timeout: 8000 });
     const completed = await page.evaluate(() => (window as any).__storm_completed);
     expect(completed).toBe(true);
+    await page.close();
+  });
+
+  it('T16: Negative control — does not trigger false positive on article discussing adblockers', async () => {
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:4000/t16-adblock-article/index.html`, { waitUntil: 'networkidle2' });
+    await new Promise((r) => setTimeout(r, 800));
+
+    const articleVisible = await page.evaluate(() => {
+      const author = document.getElementById('author-bio');
+      return author !== null && window.getComputedStyle(author).display !== 'none';
+    });
+    expect(articleVisible).toBe(true);
     await page.close();
   });
 
@@ -167,7 +222,9 @@ describe('ADAPT Extension E2E Laboratory Matrix (Complete Suite)', () => {
   it('T25: Hostile IPC message schema validation rejects malformed payloads', () => {
     expect(isPageSignalBatch({ malicious: 'true' })).toBe(false);
     expect(isPageSignalBatch(null)).toBe(false);
+    expect(isPageSignalBatch({ navigationId: 'nav_1', timestamp: Date.now(), geometry: {} })).toBe(false);
     expect(isHealthVector({ antiBlockReaction: 'not_a_number' })).toBe(false);
     expect(isDomAction({ type: 'EXECUTE_ARBITRARY_JS', id: 'hack' })).toBe(false);
+    expect(isSiteRecipe({ schemaVersion: 1, siteKey: 'evil.com', evidence: { confidence: 'high' } })).toBe(false);
   });
 });
