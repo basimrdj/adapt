@@ -11,19 +11,32 @@ export function calculateHealthVector(
   const { geometry, semantic, interaction, mutation } = batch;
 
   // 1. Anti-Block Reaction Score (0..1, LOWER is better)
-  const semanticScore = semantic.confidenceScore;
-  const geometryScore = geometry.hasFixedOverlay ? Math.min(1, geometry.overlayCoverageRatio * 1.2) : 0;
+  const semanticScore =
+    typeof semantic.confidenceScore === 'number'
+      ? semantic.confidenceScore
+      : semantic.detectedPhrases.length > 0
+      ? 0.85
+      : 0;
+  const geometryScore = geometry.hasFixedOverlay ? Math.min(1, (geometry.overlayCoverageRatio || 0) * 1.2) : 0;
   const interactionScore =
     (interaction.pointerEventsSuppressed ? 0.6 : 0) +
     (geometry.bodyScrollLocked || geometry.htmlScrollLocked ? 0.4 : 0);
   const mutationScore = mutation.rapidReinsertionDetected ? 0.8 : 0;
 
+  const weightedSum =
+    (semanticScore || 0) * weights.semantic +
+    (geometryScore || 0) * weights.geometry +
+    (interactionScore || 0) * weights.interaction +
+    (mutationScore || 0) * weights.mutation;
+
+  // If page exhibits clear semantic reaction or mutation burst, reflect high anti-block confidence
   const antiBlockReaction = Math.min(
     1,
-    semanticScore * weights.semantic +
-      geometryScore * weights.geometry +
-      interactionScore * weights.interaction +
-      mutationScore * weights.mutation
+    Math.max(
+      weightedSum,
+      semanticScore >= 0.8 ? semanticScore * 0.85 : 0,
+      mutation.rapidReinsertionDetected ? 0.75 : 0
+    )
   );
 
   // 2. Content Availability (0..1, HIGHER is better)

@@ -25,7 +25,11 @@ export class PolicyValidator {
     }
 
     // 2. Validate Hypothesis & Confidence
-    if (!plan.hypothesis || typeof plan.hypothesis.confidence !== 'number') {
+    if (
+      !plan.hypothesis ||
+      typeof plan.hypothesis.confidence !== 'number' ||
+      !Number.isFinite(plan.hypothesis.confidence)
+    ) {
       reasons.push('Missing or invalid hypothesis.confidence');
     } else if (plan.hypothesis.confidence < 0 || plan.hypothesis.confidence > 1.0) {
       reasons.push(`Confidence out of bounds [0, 1]: ${plan.hypothesis.confidence}`);
@@ -66,10 +70,19 @@ export class PolicyValidator {
     if (
       !plan.verification ||
       typeof plan.verification.maxWaitMs !== 'number' ||
+      !Number.isFinite(plan.verification.maxWaitMs) ||
       plan.verification.maxWaitMs < 0 ||
       plan.verification.maxWaitMs > 10000
     ) {
-      reasons.push('Invalid verification.maxWaitMs (must be 0-10000ms)');
+      reasons.push('Invalid verification.maxWaitMs (must be 0-10000ms finite number)');
+    }
+
+    if (
+      plan.verification &&
+      (typeof plan.verification.expectedHealthDelta !== 'number' ||
+        !Number.isFinite(plan.verification.expectedHealthDelta))
+    ) {
+      reasons.push('Invalid verification.expectedHealthDelta (must be finite number)');
     }
 
     if (reasons.length > 0) {

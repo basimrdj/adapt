@@ -11,12 +11,25 @@ export function createEvidencePacket(
   const candidateElements: OpaqueCandidateElement[] = [];
   const candidateRequests: OpaqueCandidateRequest[] = [];
 
-  // Construct opaque elements from geometry & semantic signals
+  // Construct opaque elements from geometry, mutation, & semantic signals
   if (batch.geometry.hasFixedOverlay) {
     candidateElements.push({
       ref: 'element:e1',
       role: 'fullscreen-overlay',
       viewportCoverage: batch.geometry.overlayCoverageRatio,
+      isFixedOrAbsolute: true,
+      hasHighZIndex: true,
+      textSignals: batch.semantic.detectedPhrases.slice(0, 5),
+      interactionSuppressed: batch.interaction.pointerEventsSuppressed,
+    });
+  } else if (
+    batch.mutation.rapidReinsertionDetected ||
+    batch.semantic.detectedPhrases.length > 0
+  ) {
+    candidateElements.push({
+      ref: 'element:e1',
+      role: 'novel-dynamic-element',
+      viewportCoverage: 0.5,
       isFixedOrAbsolute: true,
       hasHighZIndex: true,
       textSignals: batch.semantic.detectedPhrases.slice(0, 5),

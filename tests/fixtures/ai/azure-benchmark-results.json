@@ -1,0 +1,34 @@
+{
+  "timestamp": 1786551029833,
+  "model": "buzz-gpt-5-4-mini",
+  "summary": [
+    {
+      "reasoningEffort": "low",
+      "casesEvaluated": 25,
+      "strategyAccuracy": 0.96,
+      "falsePositiveRate": 0,
+      "p50LatencyMs": 2354,
+      "p95LatencyMs": 3119,
+      "maxLatencyMs": 4876,
+      "avgPromptTokens": 678,
+      "avgCompletionTokens": 296,
+      "avgReasoningTokens": 60,
+      "policyEscapeRate": 0,
+      "errorRate": 0
+    },
+    {
+      "reasoningEffort": "medium",
+      "casesEvaluated": 25,
+      "strategyAccuracy": 0.32,
+      "falsePositiveRate": 0,
+      "p50LatencyMs": 4115,
+      "p95LatencyMs": 4570,
+      "maxLatencyMs": 4701,
+      "avgPromptTokens": 678,
+      "avgCompletionTokens": 558,
+      "avgReasoningTokens": 487,
+      "policyEscapeRate": 0,
+      "errorRate": 0
+    }
+  ]
+}

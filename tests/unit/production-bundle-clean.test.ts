@@ -21,10 +21,13 @@ describe('Production Bundle Cleanliness & Security Invariant', () => {
       'azure.com',
       'openai.azure.com',
       'buzz-gpt-5-4-mini',
+      'basim-agent3',
       'AZURE_OPENAI_API_KEY',
       'OpenAIClient',
-      'http://127.0.0.1:4040',
+      'http://127.0.0.1',
+      '127.0.0.1',
       'localhost:4040',
+      'localhost:4066',
     ];
 
     for (const forbidden of forbiddenStrings) {

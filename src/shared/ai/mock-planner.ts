@@ -1,5 +1,5 @@
 import { AdaptivePlanner } from './planner-interface';
-import { EvidencePacket, AdaptationPlan } from './types';
+import { EvidencePacket, AdaptationPlan, PlannedActionProposal } from './types';
 
 export class MockPlanner implements AdaptivePlanner {
   private predefinedPlans = new Map<string, AdaptationPlan>();
@@ -14,51 +14,80 @@ export class MockPlanner implements AdaptivePlanner {
       return this.predefinedPlans.get(triggerKey)!;
     }
 
-    // Default intelligent rule-based mock response
-    if (evidence.currentHealth.antiBlockReaction >= 0.5) {
-      if (evidence.candidateElements.some((e) => e.role === 'fullscreen-overlay')) {
-        const overlayRef = evidence.candidateElements.find((e) => e.role === 'fullscreen-overlay')!.ref;
-        return {
-          schemaVersion: 1,
-          decision: 'ADAPT',
-          hypothesis: {
-            category: 'FULLSCREEN_GATE',
-            confidence: 0.95,
-            explanation: 'Detected fullscreen blocking overlay preventing access.',
-          },
-          selectedStrategyTier: 'S3',
-          actions: [
-            { actionType: 'DOM_REMOVE_OVERLAY', targetRef: overlayRef, parameter: '' },
-            { actionType: 'DOM_RESTORE_SCROLL', targetRef: '', parameter: '' },
-            { actionType: 'DOM_RESTORE_POINTER_EVENTS', targetRef: '', parameter: '' },
-          ],
-          verification: {
-            expectedHealthDelta: 0.3,
-            maxWaitMs: 1500,
-          },
-          abortConditions: ['CONTENT_REGRESSION_OBSERVED'],
-          explanationCodes: ['REMOVE_BLOCKING_INTERSTITIAL'],
-        };
-      }
+    const available = new Set(evidence.availableActions);
 
-      if (evidence.candidateElements.some((e) => e.textSignals.includes('bait'))) {
-        const baitRef = evidence.candidateElements.find((e) => e.textSignals.includes('bait'))!.ref;
+    // High anti-block reaction evaluation
+    if (evidence.currentHealth.antiBlockReaction >= 0.5) {
+      // 1. Bait Detector
+      const baitElem = evidence.candidateElements.find(
+        (e) =>
+          e.role.includes('bait') ||
+          e.textSignals.some((s) => s.toLowerCase().includes('bait'))
+      );
+      if (baitElem) {
         return {
           schemaVersion: 1,
           decision: 'ADAPT',
           hypothesis: {
             category: 'BAIT_DETECTOR',
-            confidence: 0.9,
+            confidence: 0.95,
             explanation: 'Detected layout bait element triggering anti-adblock detection.',
           },
           selectedStrategyTier: 'S2',
-          actions: [{ actionType: 'DOM_PRESERVE_BAIT', targetRef: baitRef, parameter: '' }],
+          actions: [{ actionType: 'DOM_PRESERVE_BAIT', targetRef: baitElem.ref, parameter: '' }],
           verification: {
             expectedHealthDelta: 0.25,
             maxWaitMs: 1500,
           },
           abortConditions: [],
           explanationCodes: ['PRESERVE_BAIT_GEOMETRY'],
+        };
+      }
+
+      // 2. Fullscreen Gate, Blur Gate, Modal Gate, Blocked Probe Gate
+      const gateElem = evidence.candidateElements.find(
+        (e) =>
+          e.role.includes('overlay') ||
+          e.role.includes('blur') ||
+          e.role.includes('gate') ||
+          e.role.includes('dialog') ||
+          e.viewportCoverage > 0.5
+      );
+
+      if (gateElem || evidence.candidateElements.length > 0) {
+        const targetRef = gateElem ? gateElem.ref : evidence.candidateElements[0]?.ref || '';
+        const actions: PlannedActionProposal[] = [];
+
+        if (available.has('DOM_REMOVE_OVERLAY')) {
+          actions.push({ actionType: 'DOM_REMOVE_OVERLAY', targetRef, parameter: '' });
+        }
+        if (available.has('DOM_RESTORE_SCROLL')) {
+          actions.push({ actionType: 'DOM_RESTORE_SCROLL', targetRef: '', parameter: '' });
+        }
+        if (available.has('DOM_RESTORE_POINTER_EVENTS')) {
+          actions.push({ actionType: 'DOM_RESTORE_POINTER_EVENTS', targetRef: '', parameter: '' });
+        }
+
+        if (actions.length === 0 && available.has('ABSTAIN')) {
+          actions.push({ actionType: 'ABSTAIN', targetRef: '', parameter: '' });
+        }
+
+        return {
+          schemaVersion: 1,
+          decision: 'ADAPT',
+          hypothesis: {
+            category: 'FULLSCREEN_GATE',
+            confidence: 0.95,
+            explanation: 'Detected anti-adblock blocking interstitial gate.',
+          },
+          selectedStrategyTier: 'S3',
+          actions,
+          verification: {
+            expectedHealthDelta: 0.3,
+            maxWaitMs: 1500,
+          },
+          abortConditions: ['CONTENT_REGRESSION_OBSERVED'],
+          explanationCodes: ['REMOVE_BLOCKING_INTERSTITIAL'],
         };
       }
     }
