@@ -8,6 +8,8 @@
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
+    "test:ai": "vitest run tests/unit/ai-*.test.ts",
+    "test:ai:azure": "tsx scripts/azure-smoke-test.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

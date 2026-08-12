@@ -41,6 +41,7 @@ export class PolicyValidator {
 
       for (let i = 0; i < plan.actions.length; i++) {
         const act = plan.actions[i];
+        if (!act) continue;
         if (!allowedActions.has(act.actionType)) {
           reasons.push(`Action ${act.actionType} is not in availableActions`);
         }

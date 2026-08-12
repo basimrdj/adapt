@@ -2,9 +2,9 @@ import { PageSignalBatch, HealthVector } from '../types';
 import { EvidencePacket, OpaqueCandidateElement, OpaqueCandidateRequest } from './types';
 
 export function createEvidencePacket(
-  tabId: number,
+  _tabId: number,
   navigationId: string,
-  siteKey: string,
+  _siteKey: string,
   batch: PageSignalBatch,
   health: HealthVector
 ): EvidencePacket {

@@ -62,7 +62,7 @@ describe('Phase 2 AI Planner & Oracle Security Suite', () => {
     expect(plan.decision).toBe('ADAPT');
     expect(plan.selectedStrategyTier).toBe('S3');
     expect(plan.actions.length).toBeGreaterThan(0);
-    expect(plan.actions[0].targetRef).toBe('element:e1');
+    expect(plan.actions[0]?.targetRef).toBe('element:e1');
 
     const validator = new PolicyValidator();
     const result = validator.validate(dummyEvidence, plan);

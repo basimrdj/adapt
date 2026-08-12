@@ -5,7 +5,6 @@ import { DnrController } from '../../src/core/dnr/controller';
 import { RecipeStore } from '../../src/core/recipes/store';
 import { AuditStore } from '../../src/core/audit/store';
 import { AdaptationTransactionEngine } from '../../src/core/adaptation/engine';
-import { QUOTA_LIMITS } from '../../src/shared/constants';
 import { StrategyCandidate, HealthVector } from '../../src/shared/types';
 
 describe('Phase 1.5 Concurrency, Quota & Lifecycle Unit Stress Suite', () => {
@@ -72,6 +71,7 @@ describe('Phase 1.5 Concurrency, Quota & Lifecycle Unit Stress Suite', () => {
       tier: 'S3',
       name: 'Test Network Strategy',
       rationale: 'Test',
+      estimatedRisk: 'LOW',
       isReversible: true,
       actions: [
         { id: 'act_1', type: 'NET_BLOCK', urlFilter: '||bad.com^' },
@@ -105,7 +105,7 @@ describe('Phase 1.5 Concurrency, Quota & Lifecycle Unit Stress Suite', () => {
     };
 
     const domActionsRolledBack: string[] = [];
-    const failingTabSender = async (tabId: number, msg: any) => {
+    const failingTabSender = async (_tabId: number, msg: any) => {
       if (msg.actionId === 'action_error') {
         throw new Error('Tab closed or DOM element detached');
       }

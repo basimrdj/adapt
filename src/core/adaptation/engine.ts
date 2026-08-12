@@ -112,7 +112,7 @@ export class AdaptationTransactionEngine {
 
       // Level 1: Deterministic Strategy Candidate Generator
       const candidates = this.candidateGenerator.generateCandidates(batch);
-      let selectedCandidate: StrategyCandidate | null = candidates.length > 0 ? candidates[0] : null;
+      let selectedCandidate: StrategyCandidate | null = (candidates.length > 0 && candidates[0]) ? candidates[0] : null;
 
       // Level 2: If deterministic generator has no candidate, query Adaptive AI Planner if configured
       if (!selectedCandidate && this.adaptivePlanner) {
@@ -122,11 +122,13 @@ export class AdaptationTransactionEngine {
           const validation = this.policyValidator.validate(evidence, rawPlan);
 
           if (validation.valid && validation.sanitizedPlan?.decision === 'ADAPT' && validation.mappedStrategyActions) {
+            const tier = validation.sanitizedPlan.selectedStrategyTier === 'ABSTAIN' ? 'S3' : validation.sanitizedPlan.selectedStrategyTier;
             selectedCandidate = {
               id: `ai_cand_${Date.now()}`,
-              tier: validation.sanitizedPlan.selectedStrategyTier,
+              tier,
               name: `AI: ${validation.sanitizedPlan.hypothesis.category}`,
               rationale: validation.sanitizedPlan.hypothesis.explanation,
+              estimatedRisk: 'MEDIUM',
               actions: validation.mappedStrategyActions,
               isReversible: true,
             };

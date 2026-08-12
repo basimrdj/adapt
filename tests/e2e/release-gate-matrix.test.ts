@@ -155,7 +155,7 @@ describe('ADAPT Phase 1.5 Final Release Gate Verification Suite', () => {
 
       // Open mixed workloads concurrently
       const navPromises = tabs.map((tab, idx) => {
-        const url = targetUrls[idx % targetUrls.length];
+        const url = targetUrls[idx % targetUrls.length]!;
         return tab.goto(url, { waitUntil: 'domcontentloaded' });
       });
 
