@@ -1,0 +1,23 @@
+{
+  "id": "replay-001-fullscreen-gate",
+  "siteKey": "adversarial-publisher.com",
+  "capturedAt": 1700000000000,
+  "evidence": {
+    "schemaVersion": 1,
+    "transactionId": "tx_replay_001",
+    "navigationEpoch": "nav_replay_001",
+    "timestamp": 1700000000000,
+    "siteContext": { "originClass": "news", "pageTypeEstimate": "article" },
+    "trigger": { "reason": "FULLSCREEN_GATE_DETECTED", "confidence": 0.92 },
+    "healthBefore": { "antiBlockReaction": 0.88, "contentAvailability": 0.3, "interaction": 0.1, "scrollability": 0.0, "navigationHealth": 1.0, "visualObstruction": 0.88, "mutationStability": 1.0, "confidence": 0.92 },
+    "currentHealth": { "antiBlockReaction": 0.88, "contentAvailability": 0.3, "interaction": 0.1, "scrollability": 0.0, "navigationHealth": 1.0, "visualObstruction": 0.88, "mutationStability": 1.0, "confidence": 0.92 },
+    "observedReaction": { "detectorTypes": ["FULLSCREEN_GATE", "SCROLL_LOCK"], "antiBlockConfidence": 0.92, "mutationBurstDetected": false },
+    "candidateElements": [
+      { "ref": "element:e1", "role": "fullscreen-overlay", "viewportCoverage": 0.92, "isFixedOrAbsolute": true, "hasHighZIndex": true, "textSignals": ["ad blocker detected", "please turn off adblock"], "interactionSuppressed": true }
+    ],
+    "candidateRequests": [],
+    "availableActions": ["DOM_REMOVE_OVERLAY", "DOM_RESTORE_SCROLL", "DOM_RESTORE_POINTER_EVENTS", "ABSTAIN"],
+    "knownConstraints": [],
+    "previousAttempts": []
+  }
+}

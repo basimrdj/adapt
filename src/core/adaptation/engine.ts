@@ -14,6 +14,9 @@ import { RecipeStore, StorageBackend } from '../recipes/store';
 import { AuditStore } from '../audit/store';
 import { calculateHealthVector } from '../health/scorer';
 import { STORAGE_KEYS } from '../../shared/constants';
+import { AdaptivePlanner } from '../../shared/ai/planner-interface';
+import { PolicyValidator } from '../../shared/ai/validator';
+import { createEvidencePacket } from '../../shared/ai/evidence-builder';
 
 export class AdaptationTransactionEngine {
   private activeTransactions = new Map<string, AdaptationTransaction>();
@@ -26,6 +29,8 @@ export class AdaptationTransactionEngine {
   private auditStore: AuditStore;
   private storageBackend: StorageBackend;
   private sendTabMessage: (tabId: number, msg: unknown) => Promise<void>;
+  private adaptivePlanner?: AdaptivePlanner;
+  private policyValidator = new PolicyValidator();
   private initialized = false;
 
   constructor(
@@ -33,13 +38,15 @@ export class AdaptationTransactionEngine {
     recipeStore: RecipeStore,
     auditStore: AuditStore,
     storageBackend: StorageBackend,
-    sendTabMessage: (tabId: number, msg: unknown) => Promise<void>
+    sendTabMessage: (tabId: number, msg: unknown) => Promise<void>,
+    adaptivePlanner?: AdaptivePlanner
   ) {
     this.dnrController = dnrController;
     this.recipeStore = recipeStore;
     this.auditStore = auditStore;
     this.storageBackend = storageBackend;
     this.sendTabMessage = sendTabMessage;
+    this.adaptivePlanner = adaptivePlanner;
     this.candidateGenerator = new StrategyCandidateGenerator();
     this.verifier = new AdaptationVerifier();
     this.rollbackHandler = new AdaptationRollbackHandler(dnrController, sendTabMessage);
@@ -86,7 +93,7 @@ export class AdaptationTransactionEngine {
 
     // If page has a high anti-block reaction (>= 0.50), initiate adaptation
     if (health.antiBlockReaction >= 0.50) {
-      // Check if site already has a confirmed recipe
+      // Level 0: Check if site already has a confirmed recipe
       const existingRecipe = await this.recipeStore.getRecipe(siteKey);
       if (existingRecipe && existingRecipe.state === 'confirmed') {
         return null; // Already handled by confirmed recipe
@@ -103,15 +110,38 @@ export class AdaptationTransactionEngine {
       );
       if (existingTx) return existingTx;
 
+      // Level 1: Deterministic Strategy Candidate Generator
       const candidates = this.candidateGenerator.generateCandidates(batch);
-      if (candidates.length === 0) return null;
+      let selectedCandidate: StrategyCandidate | null = candidates.length > 0 ? candidates[0] : null;
 
-      const topCandidate = candidates[0];
-      if (!topCandidate) return null;
+      // Level 2: If deterministic generator has no candidate, query Adaptive AI Planner if configured
+      if (!selectedCandidate && this.adaptivePlanner) {
+        try {
+          const evidence = createEvidencePacket(tabId, navigationId, siteKey, batch, health);
+          const rawPlan = await this.adaptivePlanner.plan(evidence);
+          const validation = this.policyValidator.validate(evidence, rawPlan);
+
+          if (validation.valid && validation.sanitizedPlan?.decision === 'ADAPT' && validation.mappedStrategyActions) {
+            selectedCandidate = {
+              id: `ai_cand_${Date.now()}`,
+              tier: validation.sanitizedPlan.selectedStrategyTier,
+              name: `AI: ${validation.sanitizedPlan.hypothesis.category}`,
+              rationale: validation.sanitizedPlan.hypothesis.explanation,
+              actions: validation.mappedStrategyActions,
+              isReversible: true,
+            };
+          }
+        } catch {
+          // AI outage fallback to fail-closed
+          selectedCandidate = null;
+        }
+      }
+
+      if (!selectedCandidate) return null;
 
       this.stagingLocks.add(lockKey);
       try {
-        const tx = await this.stageTransaction(tabId, navigationId, siteKey, health, topCandidate);
+        const tx = await this.stageTransaction(tabId, navigationId, siteKey, health, selectedCandidate);
         return tx;
       } finally {
         this.stagingLocks.delete(lockKey);
@@ -170,7 +200,6 @@ export class AdaptationTransactionEngine {
 
       return tx;
     } catch (err) {
-      // Rollback any partially staged DNR rules if failure occurred
       if (tx.sessionRuleIds.length > 0) {
         await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds).catch(() => {});
       }
