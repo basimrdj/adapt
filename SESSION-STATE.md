@@ -20,10 +20,10 @@ Finish Phase 3 causal runtime remediation, regenerate Graphify from committed so
 ## Remaining
 
 - [x] Commit remediated M0-M6 source and tests (`47e10ea`).
-- [x] Regenerate and audit Graphify from the committed M0-M6 tree (786 nodes, 1,920 edges, 43 communities, 67 flows).
-- [x] M7 `tools/causal-lab`: PC/GES/FCI comparison against fixture ground truth with held-out decision.
-- [ ] Final full-suite and artifact audit.
+- [x] Regenerate and audit Graphify from the committed M0-M6 tree (`6c9e2f2`; 786 nodes, 1,920 edges, 43 communities, 67 flows).
+- [x] M7 `tools/causal-lab`: PC/GES/FCI comparison against fixture ground truth with held-out decision (`f0686a5`).
+- [x] Final audit: typecheck, production build, 30 Vitest files/169 tests, 4 M7 invariants, deterministic 216-run benchmark, and Graphify portability all pass.
 
 ## Evidence boundary
 
-The legacy Phase 1.5 suites are real Chromium tests, but several historical scenario names overstated what they exercised. The new `phase3-causal-live.test.ts` is the direct worker/session/document proof. M7 is not complete until its dependency pin, fixture generator, metrics, and holdout report exist.
+The legacy Phase 1.5 suites are real Chromium tests, but several historical scenario names overstated what they exercised. The new `phase3-causal-live.test.ts` is the direct worker/session/document proof. M7 is synthetic offline evidence, not production causal-effect identification; online support still requires a document-scoped reversible intervention, measured health improvement, privacy preservation, and verified rollback.
