@@ -254,7 +254,9 @@ export class CausalOrchestrator {
     // candidate, not immediately hidden by the legacy fallback. A successful
     // experiment (or exhausted causal budget) may hand off to the established
     // deterministic repair path.
-    if (batch && !hasAnotherSafeExperiment) {
+    if (graph && result.record.status === 'ROLLED_BACK' && hasAnotherSafeExperiment) {
+      await this.maybeRun(graph, state.siteKey, state.navigationId, this.enrichHealth(health, state.navigationId));
+    } else if (batch && !hasAnotherSafeExperiment) {
       await this.deps.runFallback(tabId, state.navigationId, state.siteKey, batch);
     }
     await this.deps.session.persist();
