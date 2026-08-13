@@ -10,11 +10,15 @@ feat/phase31b-page-plane
 
 COMMITS
 -------
-Pending local commit.
+- `4754dbb` feat: add Phase 3.1B compiled page filtering
+- `f6823f5` fix: continue causal sequence after rollback
+- `2b63d07` test: stabilize Chromium extension fixtures
+- `4fa20b9` docs: record Phase 3.1B verification
 
 PULL REQUEST
 ------------
-Pending push and PR creation.
+Draft PR #2 opened against `main`.
+https://github.com/basimrdj/adapt/pull/2
 
 ARCHITECTURE IMPLEMENTED
 ------------------------
