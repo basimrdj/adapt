@@ -16,9 +16,15 @@ export function extractGeometrySignals(): GeometrySignal {
   const candidates = document.querySelectorAll('div, section, aside, dialog');
   for (let i = 0; i < candidates.length && i < 200; i++) {
     const el = candidates[i] as HTMLElement;
-    if (!el || !el.getBoundingClientRect) continue;
+    if (!(el instanceof Element) || !el.getBoundingClientRect) continue;
 
-    const style = window.getComputedStyle(el);
+    let style: CSSStyleDeclaration;
+    try {
+      style = window.getComputedStyle(el);
+    } catch {
+      continue;
+    }
+
     const pos = style.position;
     if (pos === 'fixed' || pos === 'sticky' || pos === 'absolute') {
       const rect = el.getBoundingClientRect();
@@ -41,26 +47,54 @@ export function extractGeometrySignals(): GeometrySignal {
     }
   }
 
-  const bodyStyle = window.getComputedStyle(document.body);
-  const htmlStyle = window.getComputedStyle(document.documentElement);
+  // Content scripts can execute before <body> exists (especially at document_start).
+  // Never pass a nullable/non-Element target to getComputedStyle().
+  const bodyElement = document.body;
+  const htmlElement = document.documentElement;
+
+  let bodyStyle: CSSStyleDeclaration | null = null;
+  if (bodyElement instanceof Element) {
+    try {
+      bodyStyle = window.getComputedStyle(bodyElement);
+    } catch {
+      bodyStyle = null;
+    }
+  }
+
+  let htmlStyle: CSSStyleDeclaration | null = null;
+  if (htmlElement instanceof Element) {
+    try {
+      htmlStyle = window.getComputedStyle(htmlElement);
+    } catch {
+      htmlStyle = null;
+    }
+  }
 
   const bodyScrollLocked =
-    bodyStyle.overflow === 'hidden' ||
-    bodyStyle.overflowY === 'hidden' ||
-    bodyStyle.position === 'fixed';
+    bodyStyle !== null &&
+    (bodyStyle.overflow === 'hidden' ||
+      bodyStyle.overflowY === 'hidden' ||
+      bodyStyle.position === 'fixed');
 
   const htmlScrollLocked =
-    htmlStyle.overflow === 'hidden' ||
-    htmlStyle.overflowY === 'hidden' ||
-    htmlStyle.position === 'fixed';
+    htmlStyle !== null &&
+    (htmlStyle.overflow === 'hidden' ||
+      htmlStyle.overflowY === 'hidden' ||
+      htmlStyle.position === 'fixed');
 
   // Main content presence check
   const mainEl = document.querySelector('main, article, #content, .content, #main');
   let mainContentHidden = false;
   let mainContentHeight = 0;
 
-  if (mainEl) {
-    const mainStyle = window.getComputedStyle(mainEl);
+  if (mainEl instanceof Element) {
+    let mainStyle: CSSStyleDeclaration;
+    try {
+      mainStyle = window.getComputedStyle(mainEl);
+    } catch {
+      mainStyle = window.getComputedStyle(document.documentElement);
+    }
+
     mainContentHidden =
       mainStyle.display === 'none' ||
       mainStyle.visibility === 'hidden' ||

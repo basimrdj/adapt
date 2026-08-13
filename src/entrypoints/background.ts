@@ -110,7 +110,8 @@ const startupReady = (async () => {
   await adaptEngine.init();
   await causalEngine.init();
 })();
-const causalQueues = new Map<number, Promise<void>>();
+const causalQueues = new Map<number, Promise<boolean>>();
+const causalHandledBatches = new Map<number, Map<number, boolean>>();
 
 // 5. Synchronous Top-Level Service Worker Listeners
 
@@ -273,13 +274,32 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
       // Correlate with canonical navigation epoch
       if (!isPageSignalBatch(message.payload)) break;
       await causalQueues.get(tabId)?.catch(() => {});
+      const causal = causalHandledBatches.get(tabId);
+      const handled = causal?.get(message.payload.timestamp);
+      if (handled !== undefined) {
+        causal?.delete(message.payload.timestamp);
+        if (causal?.size === 0) causalHandledBatches.delete(tabId);
+        if (handled) break;
+      }
       await adaptEngine.evaluateSignals(tabId, epoch.navigationId, siteKey, message.payload);
       break;
     }
 
     case 'CAUSAL_OBSERVATION_BATCH': {
       if (!isPageSignalBatch(message.payload?.pageSignals) || !Array.isArray(message.payload.elements)) break;
-      const queued = causalOrchestrator.onPageObservation(tabId, frameId, message.payload);
+      const previous = causalQueues.get(tabId) ?? Promise.resolve(false);
+      const queued = previous
+        .catch(() => false)
+        .then(() => causalOrchestrator.onPageObservation(tabId, frameId, message.payload))
+        .then((handled) => {
+          const batches = causalHandledBatches.get(tabId) ?? new Map<number, boolean>();
+          batches.set(message.payload.pageSignals.timestamp, handled);
+          // Keep this transient correlation cache bounded even if a content
+          // script is destroyed before its paired PAGE_SIGNAL_BATCH arrives.
+          while (batches.size > 32) batches.delete(batches.keys().next().value as number);
+          causalHandledBatches.set(tabId, batches);
+          return handled;
+        });
       causalQueues.set(tabId, queued);
       await queued.finally(() => {
         if (causalQueues.get(tabId) === queued) causalQueues.delete(tabId);

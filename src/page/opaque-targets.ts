@@ -31,7 +31,17 @@ export class OpaqueTargetRegistry {
     for (let i = 0; i < candidates.length && i < 250; i++) {
       const el = candidates[i];
       if (!el) continue;
-      const style = getComputedStyle(el);
+      // querySelectorAll should yield Elements, but keep the runtime boundary
+      // fail-closed because hostile/complex pages can expose unusual DOM wrappers.
+      if (!(el instanceof Element)) continue;
+
+      let style: CSSStyleDeclaration;
+      try {
+        style = window.getComputedStyle(el);
+      } catch {
+        continue;
+      }
+
       const rect = el.getBoundingClientRect();
       const visible = style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) > 0.1;
       const coverage = Math.max(0, Math.min(1, (rect.width * rect.height) / viewportArea));

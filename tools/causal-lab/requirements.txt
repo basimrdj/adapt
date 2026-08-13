@@ -1,2 +1,9 @@
 causal-learn==0.1.4.4
 numpy==2.2.6
+scipy==1.14.1
+scikit-learn==1.7.1
+pandas==2.3.3
+networkx==3.4.2
+matplotlib==3.10.6
+graphviz==0.21
+tqdm==4.67.3

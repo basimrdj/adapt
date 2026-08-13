@@ -2,7 +2,7 @@
 
 Held-out results decide eligibility; development results are diagnostic only.
 
-Implementation: causal-learn 0.1.4.4, 12 SCM families, three development seeds, three held-out seeds, 1,200 samples per family/seed, and 216 total runs.
+Implementation: fully pinned Python dependency set (see benchmark.json), 12 SCM families, three development seeds, three held-out seeds, 1,200 samples per family/seed, and 216 total runs.
 
 | Algorithm | Skeleton F1 | Orientation precision | Orientation recall | Latent skeleton F1 | Eligible |
 |---|---:|---:|---:|---:|---|

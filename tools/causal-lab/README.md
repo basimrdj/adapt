@@ -11,6 +11,7 @@ python3 -m venv tools/causal-lab/.venv
 tools/causal-lab/.venv/bin/pip install -r tools/causal-lab/requirements.txt
 tools/causal-lab/.venv/bin/python -m unittest -v tools/causal-lab/test_benchmark.py
 tools/causal-lab/.venv/bin/python tools/causal-lab/run_benchmark.py
+tools/causal-lab/.venv/bin/python tools/causal-lab/verify_results.py
 ```
 
 Outputs are deterministic JSON and Markdown under `tools/causal-lab/results/`.

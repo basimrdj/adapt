@@ -116,8 +116,8 @@
     "hash": "e65b986902d91b8e0a82cc13f9d59f16"
   },
   "src/entrypoints/background.ts": {
-    "mtime": 1786615925408.0928,
-    "hash": "ac84eab22ff7228411dd1805c90f9d67"
+    "mtime": 1786622934523.0325,
+    "hash": "4840f6d7a7c0e3799d798d5b243bde89"
   },
   "src/entrypoints/content.ts": {
     "mtime": 1786481913375.5571,
@@ -128,8 +128,8 @@
     "hash": "4bfae5a190d60f701635f362f8a6b290"
   },
   "src/page/dom-actions.ts": {
-    "mtime": 1786614579257.3267,
-    "hash": "1c68b6c6a50e01f55f63b31f89fafd04"
+    "mtime": 1786621841110.061,
+    "hash": "0015a6e3e4f870178cd8feb962db284a"
   },
   "src/page/geometry.ts": {
     "mtime": 1786481724117.853,
@@ -516,16 +516,16 @@
     "hash": "42d708ce329c20356f86aa2e335ea6d5"
   },
   "src/background/causal/belief-updater.ts": {
-    "mtime": 1786615086547.1362,
-    "hash": "4e5cd82cb82868e770940380c25fd922"
+    "mtime": 1786622108177.033,
+    "hash": "e7b79a1864d74902dea2f892a8dee81a"
   },
   "src/background/causal/candidate-generator.ts": {
-    "mtime": 1786614845621.7317,
-    "hash": "84a616a718f5aab2ee6131709f59dfa1"
+    "mtime": 1786623192987.9717,
+    "hash": "1d12f0b51f26153a5a97002a3096de9c"
   },
   "src/background/causal/causal-engine.ts": {
-    "mtime": 1786615210347.608,
-    "hash": "7c48e8d2b10e4d30f85c53636fa7c5ec"
+    "mtime": 1786622362739.7583,
+    "hash": "a651490adce15cb952e9bb068daf7309"
   },
   "src/background/causal/epoch-router.ts": {
     "mtime": 1786610660000,
@@ -536,8 +536,8 @@
     "hash": "7f957e0bac000d475925917c954212c3"
   },
   "src/background/causal/experiment-generator.ts": {
-    "mtime": 1786614845623.816,
-    "hash": "0edc7abde89180ce5ef29f1f260ee949"
+    "mtime": 1786622081372.629,
+    "hash": "587c0bba6cd0c52322d600b5335cbddb"
   },
   "src/background/causal/experiment-selector.ts": {
     "mtime": 1786611721000,
@@ -552,8 +552,8 @@
     "hash": "1809a41da9107bda5519e7f7f9976738"
   },
   "src/background/causal/orchestrator.ts": {
-    "mtime": 1786615582885.2598,
-    "hash": "67a787562bf503d9e3b6e4ff4ffaa95e"
+    "mtime": 1786624503584.5898,
+    "hash": "bbd91fcc22c333f9378a4a6d7b6fc666"
   },
   "src/background/causal/promotion-gate.ts": {
     "mtime": 1786615233086.6553,
@@ -588,12 +588,12 @@
     "hash": "983b23b511f717d5f144f92295378db3"
   },
   "src/shared/causal/recipes.ts": {
-    "mtime": 1786615142162.775,
-    "hash": "c601fe36ad41712c2349b2b94f5766e7"
+    "mtime": 1786622427429.0757,
+    "hash": "18be99bcc04b0fed2953bdf70ca315bc"
   },
   "tests/e2e/phase3-causal-live.test.ts": {
-    "mtime": 1786615639047.2854,
-    "hash": "7f4dd387ce66b1140537a154023fd7bb"
+    "mtime": 1786617128767.698,
+    "hash": "29df8f38b1bba81552520c8c5e41beaf"
   },
   "tests/unit/causal-belief.test.ts": {
     "mtime": 1786614979883.7402,
@@ -632,8 +632,8 @@
     "hash": "f96ccd2e989cc3e6160b1944e2f0b043"
   },
   "SESSION-STATE.md": {
-    "mtime": 1786615981232.7336,
-    "hash": "ca5557bdf895d8ea2eb915f242de8848"
+    "mtime": 1786624137221.1353,
+    "hash": "04f280ef92532fab45b36450566b5684"
   },
   "docs/phase3-browser-research-ledger.md": {
     "mtime": 1786556291509.6626,
@@ -658,5 +658,65 @@
   "tests/pages/t28-causal-bait/index.html": {
     "mtime": 1786615464595.0728,
     "hash": "39899cd34aacc858cf6d92866d3332d4"
+  },
+  "scripts/verify-phase3.ts": {
+    "mtime": 1786623918849.6272,
+    "hash": "8c21db726f10f142c0f03246eaf20778"
+  },
+  "tests/e2e/phase3-acceptance-sequence.test.ts": {
+    "mtime": 1786624113581.7908,
+    "hash": "fa2ad7ca2e13fcb673fc323f283102aa"
+  },
+  "tests/e2e/phase3-recipe-lifecycle.test.ts": {
+    "mtime": 1786622241900.9778,
+    "hash": "00b0f085f36fa14c76bb16c8bc01ce70"
+  },
+  "tests/e2e/phase3-restart-invalidation.test.ts": {
+    "mtime": 1786624470033.3606,
+    "hash": "c86f1880f737f2d8a79449d813727dab"
+  },
+  "tests/pages/t29-phase3-acceptance/detector.js": {
+    "mtime": 1786623371960.9377,
+    "hash": "fdfda15d33ff2beea383e478c96a9428"
+  },
+  "tools/causal-lab/run_benchmark.py": {
+    "mtime": 1786623559235.2646,
+    "hash": "d1468afb41f487eb4b410788e99ba42b"
+  },
+  "tools/causal-lab/test_benchmark.py": {
+    "mtime": 1786616978129.1462,
+    "hash": "aecf34dd6b54473debdd2a9b7b9eee05"
+  },
+  "tools/causal-lab/verify_results.py": {
+    "mtime": 1786623559234.3726,
+    "hash": "b7dcabed07419d2c0b64c5e5a1975891"
+  },
+  "artifacts/phase3/latest.md": {
+    "mtime": 1786624388221.316,
+    "hash": "3caf26fc42e2782e425684143962a98e"
+  },
+  "tests/pages/t29-phase3-acceptance/index.html": {
+    "mtime": 1786623173332.035,
+    "hash": "525cfcbbaa70c7eae531b2f38beea144"
+  },
+  "tools/causal-lab/README.md": {
+    "mtime": 1786623559234.7192,
+    "hash": "3862f533219cdc9e453712625043359e"
+  },
+  "tools/causal-lab/requirements.txt": {
+    "mtime": 1786623079136.7424,
+    "hash": "09415ece795b965069db901161bc87a0"
+  },
+  "tools/causal-lab/results/REPORT.md": {
+    "mtime": 1786624384081.213,
+    "hash": "64d68e2bf3f1c82844072d810a098754"
+  },
+  "docs/phase3/FINAL-ACCEPTANCE-2026-08-13.md": {
+    "mtime": 1786624403063.2485,
+    "hash": "f540d34bf9e8aaf57bf554a1c9e0059c"
+  },
+  "docs/phase3/USER-ACCEPTANCE-TEST.md": {
+    "mtime": 1786624105567.5073,
+    "hash": "674971146fa0ab720e2ff1755a95980a"
   }
 }

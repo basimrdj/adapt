@@ -4,9 +4,23 @@ import { InteractionSignal } from '../shared/types';
  * Checks interactivity health indicators (pointer-events, scroll locks, content obstruction).
  */
 export function extractInteractionSignals(): InteractionSignal {
-  const bodyStyle = window.getComputedStyle(document.body);
-  const pointerEventsSuppressed = bodyStyle.pointerEvents === 'none';
-  const bodyOverflowHidden = bodyStyle.overflow === 'hidden' || bodyStyle.overflowY === 'hidden';
+  // At document_start the parser may not have created <body> yet.
+  // Treat that transient state as "no body-level suppression observed" rather
+  // than crashing the entire health-sensing pipeline.
+  const bodyElement = document.body;
+  let bodyStyle: CSSStyleDeclaration | null = null;
+  if (bodyElement instanceof Element) {
+    try {
+      bodyStyle = window.getComputedStyle(bodyElement);
+    } catch {
+      bodyStyle = null;
+    }
+  }
+
+  const pointerEventsSuppressed = bodyStyle?.pointerEvents === 'none';
+  const bodyOverflowHidden =
+    bodyStyle !== null &&
+    (bodyStyle.overflow === 'hidden' || bodyStyle.overflowY === 'hidden');
 
   // Check if main content element is covered by checking elementAtPoint
   let contentCovered = false;

@@ -27,6 +27,7 @@ import {
   isEpochFresh,
 } from '../../shared/causal/experiments';
 import { STORAGE_KEYS } from '../../shared/constants';
+import { PageFingerprint } from '../../shared/causal/recipes';
 import {
   AdaptationTransaction,
   HealthVector,
@@ -41,6 +42,8 @@ export interface CausalRunContext {
   baselineHealth: HealthVector;
   /** When set, verify immediately after staging (tests / settled health). */
   postHealth?: HealthVector;
+  /** Structural fingerprint captured before the intervention begins. */
+  pageFingerprint?: PageFingerprint;
 }
 
 export interface CausalExperimentState {
@@ -60,6 +63,7 @@ export interface CausalExperimentState {
   candidate: StrategyCandidate;
   commitProof: boolean;
   hypothesisId: `hypothesis:h${number}`;
+  baselineFingerprint?: PageFingerprint;
 }
 
 export interface CausalExperimentResult {
@@ -329,6 +333,7 @@ export class CausalEngine {
       candidate: strategy,
       commitProof: false,
       hypothesisId: selected.hypothesisRef,
+      baselineFingerprint: ctx.pageFingerprint,
     };
     this.records.set(selected.id, state);
     await this.persistRecords();

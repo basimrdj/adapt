@@ -4,7 +4,7 @@
 
 ## Current goal
 
-Finish Phase 3 causal runtime remediation, regenerate Graphify from committed source, and implement M7 offline causal-lab comparison.
+Independently re-verify Phase 3 against the Phase 3.5 SAEI prerequisite contract, add the canonical fresh-Chromium acceptance runner and reports, then begin Phase 3.5 only after an explicit `PHASE 3 VERIFIED` verdict.
 
 ## Verified implementation state (2026-08-13)
 
@@ -14,15 +14,20 @@ Finish Phase 3 causal runtime remediation, regenerate Graphify from committed so
 - M4: opaque element refs resolve only in the content script. Apply and rollback require direct ACKs, experiments settle, measure, and then restore all effects.
 - M5: beliefs accumulate by origin/mechanism/causal signature across visits. Wilson success intervals, Student-t effect intervals, and minimum n=5 prevent small-n support.
 - M6: operational DRAFT replay remaps current opaque targets, measures health, rolls back, invalidates on mismatch/failure, and derives replay/privacy evidence from transaction records.
-- Real Chromium Phase 3 proof: session graph/records, SPA versus full navigation identity, and forced MV3 execution termination recovery.
-- M7: causal-learn 0.1.4.4 benchmark completed across PC/GES/FCI, 12 families, and 216 development/holdout runs. All recovered held-out skeletons in this synthetic corpus, but no algorithm passed the definite-orientation precision gate; all remain research-only.
+- Real Chromium Phase 3 proof now includes the original two-hypothesis discriminator, rollback/confidence fall, true-mechanism support, RecipeSafe promotion, real browser restart with zero exploration, modified-detector invalidation, SPA/full-navigation identity, and forced MV3 execution termination recovery.
+- M7: the fully pinned clean environment reproduces causal-learn 0.1.4.4 across PC/GES/FCI, 12 families, and 216 development/holdout runs. Independent raw-row recomputation confirms no algorithm passes the definite-orientation precision gate; all remain research-only.
 
 ## Remaining
 
 - [x] Commit remediated M0-M6 source and tests (`47e10ea`).
-- [x] Regenerate and audit Graphify from the committed M0-M6 tree (`6c9e2f2`; 786 nodes, 1,920 edges, 43 communities, 67 flows).
+- [x] Regenerate and audit Graphify from the current Stage A tree (841 nodes, 2,006 edges, 100% extracted, portable).
 - [x] M7 `tools/causal-lab`: PC/GES/FCI comparison against fixture ground truth with held-out decision (`f0686a5`).
-- [x] Final audit: typecheck, production build, 30 Vitest files/169 tests, 4 M7 invariants, deterministic 216-run benchmark, and Graphify portability all pass.
+- [x] Final audit: typecheck, production build, 27 unit files/140 tests, 6 Chromium files/32 tests, security subset, 4 M7 invariants, deterministic 216-run benchmark, raw recomputation, and Graphify portability/structure all pass.
+- [x] Recompute every Phase 3 claim from artifacts and raw results.
+- [x] Implement and run the complete fresh-profile 20-step Phase 3 acceptance contract.
+- [x] Add `npm run verify:phase3` and the five-minute user acceptance guide.
+- [x] Write `docs/phase3/FINAL-ACCEPTANCE-2026-08-13.md` with `PHASE 3 VERIFIED`.
+- [ ] Begin Phase 3.5 implementation (not started in Stage A).
 
 ## Evidence boundary
 

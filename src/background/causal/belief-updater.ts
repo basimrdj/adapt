@@ -115,10 +115,21 @@ export class BeliefUpdater {
       graph.experiments = [...graph.experiments, record];
     }
 
-    const causalSignature = hyp.causeRefs
+    // Element/request IDs are intentionally document-local opaque refs. Using
+    // them as the cross-visit key fragments one causal mechanism whenever an
+    // overlay is re-created. Event kinds retain the structural causal signature
+    // without persisting selectors, user content, or document-local IDs.
+    const structuralKinds = hyp.createdFrom
+      .filter((ref) => ref.startsWith('event:'))
+      .map((ref) => graph.nodes.find((node) => node.id === ref)?.kind)
+      .filter((kind): kind is NonNullable<typeof kind> => kind !== undefined)
+      .filter((kind, index, kinds) => kinds.indexOf(kind) === index)
+      .sort()
+      .join('>');
+    const causalSignature = structuralKinds || hyp.causeRefs
       .filter((ref) => !ref.startsWith('event:'))
       .sort()
-      .join(',');
+      .join(',') || 'unknown-structure';
     const evidenceKey = `${graph.scope.originHash}|${hyp.mechanismClass}|${hyp.outcome}|${causalSignature}`;
     this.aliases.set(hypothesisId, evidenceKey);
     const prevBelief = this.beliefs.get(evidenceKey) ?? { ...this.prior };

@@ -189,7 +189,13 @@ function uniqueRefs(refs: OpaqueRef[]): OpaqueRef[] {
 }
 
 function mergeKey(mechanism: MechanismClass, causeRefs: OpaqueRef[]): string {
-  return `${mechanism}|${[...causeRefs].sort().join(',')}`;
+  // Event IDs change on every observation. Opaque structural/request refs are
+  // stable within the document and distinguish genuinely separate causes.
+  // collectDrafts orders the causal object's opaque refs before the outcome's
+  // refs. The outcome overlay may be destroyed and re-created with a new
+  // element ID, so it must not fork a new hypothesis for the same cause.
+  const causalRef = causeRefs.find((ref) => !ref.startsWith('event:'));
+  return `${mechanism}|${causalRef ?? 'no-opaque-cause'}`;
 }
 
 function nextHypothesisId(existing: CausalHypothesis[]): `hypothesis:h${number}` {
@@ -296,12 +302,16 @@ function collectDrafts(nodes: EventNode[]): Draft[] {
 function mergeDrafts(drafts: Draft[]): Draft[] {
   const byKey = new Map<string, Draft>();
   for (const d of drafts) {
+    // Repeated sensor batches produce fresh event IDs for the same mechanism.
+    // A document epoch gets one evolving hypothesis per mechanism class, not
+    // one nominal hypothesis per observation pair.
     const key = mergeKey(d.mechanismClass, d.causeRefs);
     const existing = byKey.get(key);
     if (!existing) {
       byKey.set(key, d);
       continue;
     }
+    existing.causeRefs = uniqueRefs([...existing.causeRefs, ...d.causeRefs]);
     existing.createdFrom = uniqueRefs([...existing.createdFrom, ...d.createdFrom]);
   }
   return Array.from(byKey.values());
@@ -313,11 +323,20 @@ function mergeDrafts(drafts: Draft[]): Draft[] {
  */
 export class CandidateGenerator {
   update(graph: EventGraph): CausalHypothesis[] {
-    const preserved = graph.hypotheses.filter((h) => h.status !== 'CANDIDATE');
+    // Candidate evidence is document-scoped state. Re-running the generator as
+    // new observations arrive must not erase updatedByExperiments/posteriors or
+    // silently create a fresh copy of an already-tested hypothesis.
+    const preserved = [...graph.hypotheses];
     const drafts = mergeDrafts(collectDrafts(graph.nodes));
+    const existingKeys = new Set(
+      preserved.map((hypothesis) => mergeKey(hypothesis.mechanismClass, hypothesis.causeRefs))
+    );
+    const novelDrafts = drafts.filter(
+      (draft) => !existingKeys.has(mergeKey(draft.mechanismClass, draft.causeRefs))
+    );
     const activePreserved = preserved.filter((h) => h.status !== 'REFUTED').length;
     const room = Math.max(0, MAX_ACTIVE_HYPOTHESES - activePreserved);
-    const capped = drafts.slice(0, room);
+    const capped = novelDrafts.slice(0, room);
 
     const generated: CausalHypothesis[] = [];
     let allocated = preserved;

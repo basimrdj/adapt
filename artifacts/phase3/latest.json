@@ -1,0 +1,82 @@
+{
+  "schema": "adapt-phase3-verification-v1",
+  "startedAt": "2026-08-13T12:36:52.623Z",
+  "completedAt": "2026-08-13T12:40:49.461Z",
+  "platform": "darwin-arm64",
+  "node": "v26.0.0",
+  "gates": [
+    {
+      "name": "TypeScript typecheck",
+      "command": "npm run typecheck",
+      "pass": true,
+      "durationMs": 1717
+    },
+    {
+      "name": "Unit, property, policy, and integration tests",
+      "command": "npm run test:unit",
+      "pass": true,
+      "durationMs": 7278
+    },
+    {
+      "name": "Production build",
+      "command": "npm run build",
+      "pass": true,
+      "durationMs": 1132
+    },
+    {
+      "name": "Real Chromium suites and 20-step acceptance coverage",
+      "command": "npm run test:e2e",
+      "pass": true,
+      "durationMs": 118665
+    },
+    {
+      "name": "M7 clean environment",
+      "command": "python3 -m venv /var/folders/dh/8fvjmp5j03b360bl2kz4jw9h0000gp/T/adapt-phase3-m7-GqdTeT/venv",
+      "pass": true,
+      "durationMs": 3035
+    },
+    {
+      "name": "M7 pinned dependency install",
+      "command": "/var/folders/dh/8fvjmp5j03b360bl2kz4jw9h0000gp/T/adapt-phase3-m7-GqdTeT/venv/bin/pip install --disable-pip-version-check -q -r tools/causal-lab/requirements.txt",
+      "pass": true,
+      "durationMs": 24475
+    },
+    {
+      "name": "M7 algorithm tests",
+      "command": "/var/folders/dh/8fvjmp5j03b360bl2kz4jw9h0000gp/T/adapt-phase3-m7-GqdTeT/venv/bin/python -m unittest -v tools/causal-lab/test_benchmark.py",
+      "pass": true,
+      "durationMs": 70942
+    },
+    {
+      "name": "M7 deterministic benchmark",
+      "command": "/var/folders/dh/8fvjmp5j03b360bl2kz4jw9h0000gp/T/adapt-phase3-m7-GqdTeT/venv/bin/python tools/causal-lab/run_benchmark.py",
+      "pass": true,
+      "durationMs": 5455
+    },
+    {
+      "name": "M7 independent raw-metric recomputation",
+      "command": "/var/folders/dh/8fvjmp5j03b360bl2kz4jw9h0000gp/T/adapt-phase3-m7-GqdTeT/venv/bin/python tools/causal-lab/verify_results.py",
+      "pass": true,
+      "durationMs": 34
+    },
+    {
+      "name": "Bundle and security tests",
+      "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
+      "pass": true,
+      "durationMs": 1887
+    },
+    {
+      "name": "Graphify portable artifact check",
+      "command": "graphify portable-check .",
+      "pass": true,
+      "durationMs": 358
+    },
+    {
+      "name": "Graphify structural graph parse and integrity check",
+      "command": "graphify summary .graphify/graph.json",
+      "pass": true,
+      "durationMs": 230
+    }
+  ],
+  "verdict": "PHASE 3 VERIFIED"
+}

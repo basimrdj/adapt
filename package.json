@@ -10,9 +10,16 @@
     "test:e2e": "vitest run tests/e2e",
     "test:ai": "vitest run tests/unit/ai-*.test.ts",
     "test:ai:azure": "tsx scripts/azure-smoke-test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify:phase3": "tsx scripts/verify-phase3.ts",
+    "phase31:apply": "node tools/phase31/apply.mjs",
+    "phase31:verify": "node tools/phase31/verify.mjs",
+    "phase31:build": "npm run build && npm run phase31:apply && npm run phase31:verify",
+    "phase31:v5": "npm run build && node tools/phase31/v5.mjs"
   },
   "devDependencies": {
+    "@adguard/dnr-rulesets": "^4.2.20260813130145",
+    "@adguard/tswebextension": "^5.0.0",
     "@types/chrome": "^0.0.308",
     "@types/node": "^22.13.4",
     "openai": "^7.4.0",

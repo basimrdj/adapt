@@ -35,6 +35,10 @@ export class DomActionExecutor {
   }
 
   public applyAction(action: DomAction): boolean {
+    // Deterministic recipe fast-path actions may be re-sent after an MV3
+    // worker restart. Treat an already-applied action ID as an idempotent ACK
+    // instead of overwriting the original rollback snapshot.
+    if (this.appliedActions.has(action.id)) return true;
     if (action.targetRef && !this.targets?.resolve(action.targetRef)) return false;
     const record: AppliedDomActionRecord = {
       action,
@@ -69,7 +73,15 @@ export class DomActionExecutor {
             const vHeight = window.innerHeight;
             candidates.forEach((el) => {
               const htmlEl = el as HTMLElement;
-              const style = window.getComputedStyle(htmlEl);
+              if (!(htmlEl instanceof Element)) return;
+
+              let style: CSSStyleDeclaration;
+              try {
+                style = window.getComputedStyle(htmlEl);
+              } catch {
+                return;
+              }
+
               if (style.position === 'fixed' || style.position === 'absolute') {
                 const rect = htmlEl.getBoundingClientRect();
                 if (rect.width >= vWidth * 0.7 && rect.height >= vHeight * 0.7) {

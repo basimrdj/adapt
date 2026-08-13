@@ -97,7 +97,17 @@ export class ExperimentGenerator {
 
     const candidates: ExperimentCandidate[] = [];
     const usedIds: string[] = graph.experiments.map((e) => e.id);
-    const candidateHyps = graph.hypotheses.filter((h) => h.status === 'CANDIDATE');
+    // Repeated trials of the same mechanism in one document are dependent and
+    // can be contaminated by the previous rollback/fallback cycle. Allocate at
+    // most one intervention per mechanism class per document epoch.
+    const triedMechanisms = new Set(
+      graph.hypotheses
+        .filter((h) => h.updatedByExperiments.length > 0)
+        .map((h) => h.mechanismClass)
+    );
+    const candidateHyps = graph.hypotheses.filter(
+      (h) => h.status === 'CANDIDATE' && !triedMechanisms.has(h.mechanismClass)
+    );
     const competing = candidateHyps.length;
     const scope = scopeFromGraph(graph);
     const paired = pairedBaselineAvailable(graph);

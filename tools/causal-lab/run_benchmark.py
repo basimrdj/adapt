@@ -175,6 +175,11 @@ def main() -> None:
         "dependencies": {
             "causal-learn": importlib.metadata.version("causal-learn"),
             "numpy": np.__version__,
+            "scipy": importlib.metadata.version("scipy"),
+            "scikit-learn": importlib.metadata.version("scikit-learn"),
+            "pandas": importlib.metadata.version("pandas"),
+            "networkx": importlib.metadata.version("networkx"),
+            "matplotlib": importlib.metadata.version("matplotlib"),
         },
         "samples_per_run": 1200,
         "variables": NAMES,
@@ -189,7 +194,7 @@ def main() -> None:
     lines = [
         "# ADAPT M7 causal discovery benchmark", "",
         "Held-out results decide eligibility; development results are diagnostic only.", "",
-        "Implementation: causal-learn 0.1.4.4, 12 SCM families, three development seeds, three held-out seeds, 1,200 samples per family/seed, and 216 total runs.", "",
+        "Implementation: fully pinned Python dependency set (see benchmark.json), 12 SCM families, three development seeds, three held-out seeds, 1,200 samples per family/seed, and 216 total runs.", "",
         "| Algorithm | Skeleton F1 | Orientation precision | Orientation recall | Latent skeleton F1 | Eligible |",
         "|---|---:|---:|---:|---:|---|",
     ]

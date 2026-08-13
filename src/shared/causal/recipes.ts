@@ -53,6 +53,8 @@ export interface CausalRecipeRecord {
   /** Frozen allowlisted actions plus direct evidence needed for operational replay/promotion. */
   actions?: StrategyAction[];
   evidence?: ExperimentRecord[];
+  /** Deterministic reason for the latest invalidation decision. */
+  invalidationReason?: FingerprintCheckKind | 'REPLAY_HEALTH_OR_ROLLBACK';
 }
 
 export const CAUSAL_RECIPE_VERSION = 1 as const;

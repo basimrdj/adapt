@@ -16,3 +16,23 @@ __pycache__/
 .graphify/description-instructions/
 .graphify/label-instructions/
 .graphify/worktree.json
+
+# ADAPT local/build files
+node_modules/
+dist/
+.phase31/
+coverage/
+playwright-report/
+test-results/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
