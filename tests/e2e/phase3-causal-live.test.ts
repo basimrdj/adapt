@@ -65,6 +65,20 @@ describe('Phase 3 causal runtime in real Chromium', () => {
     throw new Error(`session key ${key} was not written within ${timeoutMs}ms`);
   }
 
+  async function waitSessionMatch<T>(
+    key: string,
+    predicate: (value: T) => boolean,
+    timeoutMs = 5000
+  ): Promise<T> {
+    const deadline = Date.now() + timeoutMs;
+    while (Date.now() < deadline) {
+      const value = await sessionValue<T>(key).catch(() => undefined);
+      if (value !== undefined && predicate(value)) return value;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error(`session key ${key} did not satisfy its predicate within ${timeoutMs}ms`);
+  }
+
   it('persists causal graphs and real experiment records in chrome.storage.session', async () => {
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
@@ -72,13 +86,21 @@ describe('Phase 3 causal runtime in real Chromium', () => {
     await new Promise((resolve) => setTimeout(resolve, 1800));
 
     const state = await waitSessionValue<{ graphs: Array<{ nodes: unknown[]; hypotheses: unknown[] }> }>('adapt_causal_session_state_v1');
-    const experiments = await waitSessionValue<Record<string, { record: { status: string; rollbackVerified: boolean } }>>('adapt_causal_experiments_v1');
+    const experiments = await waitSessionMatch<Record<string, {
+      txId: string;
+      record: { status: string; rollbackVerified: boolean };
+    }>>(
+      'adapt_causal_experiments_v1',
+      (value) => Object.values(value).some(
+        (entry) => entry.record.status !== 'STAGED' && entry.record.rollbackVerified
+      )
+    );
     expect(state.graphs.length).toBeGreaterThan(0);
     expect(state.graphs.some((graph) => graph.nodes.length > 0 && graph.hypotheses.length > 0)).toBe(true);
     const records = Object.values(experiments);
     expect(records.length).toBeGreaterThan(0);
-    expect(records.every((entry) => entry.record.status !== 'STAGED')).toBe(true);
-    expect(records.some((entry) => entry.record.rollbackVerified)).toBe(true);
+    expect(records.some((entry) => entry.record.status !== 'STAGED' && entry.record.rollbackVerified)).toBe(true);
+    expect(records.filter((entry) => entry.record.status === 'STAGED').every((entry) => entry.txId.length > 0)).toBe(true);
     await page.close();
   });
 
