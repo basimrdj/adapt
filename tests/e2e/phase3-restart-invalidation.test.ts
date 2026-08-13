@@ -38,11 +38,11 @@ describe('Phase 3 recipe restart and stale-detector invalidation', () => {
 
   async function launch(): Promise<void> {
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       executablePath: chromeExecutable(),
       userDataDir: profilePath,
       ignoreDefaultArgs: ['--disable-extensions'],
-      args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
+      args: ['--headless=new', `--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
     });
     const target = await browser.waitForTarget(
       (item) => item.type() === 'service_worker' && item.url().startsWith('chrome-extension://'),

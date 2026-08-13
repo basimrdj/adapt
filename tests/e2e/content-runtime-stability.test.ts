@@ -7,12 +7,12 @@ import { startTestServers, TestServerInstances } from '../pages/server';
 function chromeExecutable(): string {
   const envPath = process.env.CHROME_PATH;
   if (envPath && fs.existsSync(envPath)) return envPath;
-
-  try {
-    const bundled = puppeteer.executablePath();
-    if (bundled && fs.existsSync(bundled)) return bundled;
-  } catch {
-    // fall through
+  const chromeDir = path.resolve(__dirname, '../../chrome');
+  if (fs.existsSync(chromeDir)) {
+    for (const sub of fs.readdirSync(chromeDir)) {
+      const candidate = path.join(chromeDir, sub, 'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing');
+      if (fs.existsSync(candidate)) return candidate;
+    }
   }
 
   const mac = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -29,10 +29,11 @@ describe('content-script runtime stability', () => {
   beforeAll(async () => {
     servers = await startTestServers(4050, 4051);
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       executablePath: chromeExecutable(),
       ignoreDefaultArgs: ['--disable-extensions'],
       args: [
+        '--headless=new',
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
         '--no-sandbox',

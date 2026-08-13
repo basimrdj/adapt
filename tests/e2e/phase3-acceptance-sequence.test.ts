@@ -43,10 +43,10 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
   beforeAll(async () => {
     servers = await startTestServers(4030, 4031);
     browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       executablePath: chromeExecutable(),
       ignoreDefaultArgs: ['--disable-extensions'],
-      args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
+      args: ['--headless=new', `--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
     });
     const target = await browser.waitForTarget(
       (item) => item.type() === 'service_worker' && item.url().startsWith('chrome-extension://'),

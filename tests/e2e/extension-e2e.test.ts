@@ -123,7 +123,8 @@ describe('ADAPT Extension Phase 1.5 Adversarial Laboratory Suite', () => {
 
   it('T06: Handles nested and sandboxed iframes without unhandled errors', async () => {
     const page = await browser.newPage();
-    await page.goto(`http://localhost:4000/t06-nested-iframes/index.html`, { waitUntil: 'networkidle2' });
+    await page.goto(`http://localhost:4000/t06-nested-iframes/index.html`, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => (window as any).__frames_loaded === true, { timeout: 5000 });
 
     const framesLoaded = await page.evaluate(() => (window as any).__frames_loaded);
     expect(framesLoaded).toBe(true);
