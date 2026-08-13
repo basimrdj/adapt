@@ -1,4 +1,12 @@
-import { PageSignalBatch, HealthVector } from '../shared/types';
+import {
+  GeometrySignal,
+  HealthVector,
+  InteractionSignal,
+  MutationSignal,
+  OpaqueElementObservation,
+  PageSignalBatch,
+  SemanticSignal,
+} from '../shared/types';
 import { extractGeometrySignals } from './geometry';
 import { extractSemanticSignals } from './semantic-signals';
 import { extractInteractionSignals } from './interaction-health';
@@ -14,6 +22,7 @@ export class PageSensor {
   private domExecutor: DomActionExecutor;
   private debounceTimer: number | null = null;
   private readonly targets = new OpaqueTargetRegistry();
+  private sensorFaults = 0;
 
   constructor(navigationId: string) {
     this.navigationId = navigationId;
@@ -22,7 +31,6 @@ export class PageSensor {
   }
 
   public init(): void {
-    // Notify background that sensor is ready
     this.sendMessage({
       v: 1,
       type: 'PAGE_SENSOR_READY',
@@ -33,20 +41,28 @@ export class PageSensor {
 
     this.mutationPipeline.start();
 
-    // Listen for background commands
-    chrome.runtime.onMessage.addListener((message: BackgroundToContentMessage, _sender, sendResponse) => {
-      const response = this.handleBackgroundMessage(message);
-      sendResponse(response);
-      return false;
-    });
+    chrome.runtime.onMessage.addListener(
+      (message: BackgroundToContentMessage, _sender, sendResponse) => {
+        try {
+          const response = this.handleBackgroundMessage(message);
+          sendResponse(response);
+        } catch {
+          this.sensorFaults++;
+          sendResponse({ success: false });
+        }
+        return false;
+      }
+    );
 
-    // Listen for SPA navigation events
     window.addEventListener('popstate', () => this.handleSpaTransition());
     window.addEventListener('hashchange', () => this.handleSpaTransition());
 
-    // Schedule initial signals on page load / DOMContentLoaded
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.scheduleSignalBatch());
+      document.addEventListener(
+        'DOMContentLoaded',
+        () => this.scheduleSignalBatch(),
+        { once: true }
+      );
     } else {
       this.scheduleSignalBatch();
     }
@@ -65,19 +81,79 @@ export class PageSensor {
   }
 
   private scheduleSignalBatch(): void {
-    if (this.debounceTimer !== null) {
-      clearTimeout(this.debounceTimer);
-    }
+    if (this.debounceTimer !== null) clearTimeout(this.debounceTimer);
+
     this.debounceTimer = window.setTimeout(() => {
+      this.debounceTimer = null;
       this.collectAndSendBatch();
     }, 60);
   }
 
+  private probe<T>(producer: () => T, fallback: () => T): T {
+    try {
+      return producer();
+    } catch {
+      this.sensorFaults++;
+      return fallback();
+    }
+  }
+
+  private neutralGeometry(): GeometrySignal {
+    return {
+      viewportWidth: window.innerWidth || document.documentElement?.clientWidth || 1024,
+      viewportHeight: window.innerHeight || document.documentElement?.clientHeight || 768,
+      hasFixedOverlay: false,
+      overlayCoverageRatio: 0,
+      bodyScrollLocked: false,
+      htmlScrollLocked: false,
+      modalCount: 0,
+      mainContentHidden: false,
+      mainContentHeight: 0,
+    };
+  }
+
+  private neutralSemantic(): SemanticSignal {
+    return {
+      detectedPhrases: [],
+      adblockKeywordDensity: 0,
+      confidenceScore: 0,
+    };
+  }
+
+  private neutralInteraction(): InteractionSignal {
+    return {
+      pointerEventsSuppressed: false,
+      bodyOverflowHidden: false,
+      contentCovered: false,
+    };
+  }
+
+  private neutralMutation(): MutationSignal {
+    return {
+      mutationRatePerSecond: 0,
+      rapidReinsertionDetected: false,
+      overlayReinsertedCount: 0,
+      degradationState: 'NORMAL',
+    };
+  }
+
   public collectAndSendBatch(): PageSignalBatch {
-    const geometry = extractGeometrySignals();
-    const semantic = extractSemanticSignals();
-    const interaction = extractInteractionSignals();
-    const mutation = this.mutationPipeline.getSignals();
+    const geometry = this.probe(
+      () => extractGeometrySignals(),
+      () => this.neutralGeometry()
+    );
+    const semantic = this.probe(
+      () => extractSemanticSignals(),
+      () => this.neutralSemantic()
+    );
+    const interaction = this.probe(
+      () => extractInteractionSignals(),
+      () => this.neutralInteraction()
+    );
+    const mutation = this.probe(
+      () => this.mutationPipeline.getSignals(),
+      () => this.neutralMutation()
+    );
 
     const suspectedDetectorTypes: string[] = [];
     if (semantic.detectedPhrases.length > 0) suspectedDetectorTypes.push('SEMANTIC_PROMPT');
@@ -95,8 +171,11 @@ export class PageSensor {
       suspectedDetectorTypes,
     };
 
-    // Causal ingestion is queued first; the background can then decide whether
-    // the legacy deterministic fallback is still needed for this batch.
+    const elements = this.probe<OpaqueElementObservation[]>(
+      () => this.targets.observe(),
+      () => []
+    );
+
     this.sendMessage({
       v: 1,
       type: 'CAUSAL_OBSERVATION_BATCH',
@@ -104,9 +183,10 @@ export class PageSensor {
       payload: {
         timestamp: Date.now(),
         pageSignals: batch,
-        elements: this.targets.observe(),
+        elements,
       },
     });
+
     this.sendMessage({
       v: 1,
       type: 'PAGE_SIGNAL_BATCH',
@@ -132,7 +212,9 @@ export class PageSensor {
     return health;
   }
 
-  private handleBackgroundMessage(message: BackgroundToContentMessage): { success: boolean; actionId?: string } {
+  private handleBackgroundMessage(
+    message: BackgroundToContentMessage
+  ): { success: boolean; actionId?: string } {
     if (!message || message.v !== 1) return { success: false };
 
     switch (message.type) {
@@ -168,6 +250,7 @@ export class PageSensor {
         this.getHealthSnapshot(message.txId);
         return { success: true };
       }
+
       case 'EXECUTE_RUNTIME_OP':
         return { success: false };
     }
@@ -175,9 +258,14 @@ export class PageSensor {
 
   private sendMessage(msg: ContentToBackgroundMessage): void {
     try {
-      chrome.runtime.sendMessage(msg);
+      const pending = chrome.runtime.sendMessage(msg);
+      if (pending && typeof pending.catch === 'function') {
+        void pending.catch(() => {
+          // Service worker may have terminated or the extension may be reloading.
+        });
+      }
     } catch {
-      // Worker might be sleeping; ignored safely
+      // Extension context can disappear during reload/navigation.
     }
   }
 }

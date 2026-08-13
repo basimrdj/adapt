@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ADAPT Runtime DOM Churn</title>
+  <script>
+    window.__churn_done = false;
+  </script>
+</head>
+<body>
+  <main id="content">
+    <h1>Runtime DOM churn fixture</h1>
+    <p>This page repeatedly replaces body content and anti-block-like overlays.</p>
+  </main>
+
+  <script>
+    (async () => {
+      for (let i = 0; i < 25; i++) {
+        const text = document.createTextNode(' churn ');
+        document.body.appendChild(text);
+        text.remove();
+
+        const comment = document.createComment('mutation');
+        document.body.appendChild(comment);
+        comment.remove();
+
+        const gate = document.createElement('div');
+        gate.id = 'adblock-gate';
+        gate.className = 'anti-adblock-gate';
+        gate.style.position = 'fixed';
+        gate.style.inset = '0';
+        gate.style.display = 'block';
+        document.body.appendChild(gate);
+        await new Promise((resolve) => setTimeout(resolve, 8));
+        gate.remove();
+
+        if (i % 5 === 0) {
+          const oldBody = document.body;
+          oldBody.remove();
+          await new Promise((resolve) => setTimeout(resolve, 8));
+          const newBody = document.createElement('body');
+          newBody.innerHTML = '<main id="content"><p>replacement body</p></main>';
+          document.documentElement.appendChild(newBody);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 8));
+      }
+
+      window.__churn_done = true;
+    })();
+  </script>
+</body>
+</html>

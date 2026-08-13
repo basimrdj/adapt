@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { copyFileSync, mkdirSync, rmSync } from 'fs';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const sourcemap = process.argv.includes('--sourcemap');
 
 async function buildExtension() {
   const distDir = resolve(__dirname, '../dist');
@@ -38,6 +39,8 @@ async function buildExtension() {
     build: {
       outDir: distDir,
       emptyOutDir: false,
+      sourcemap,
+      minify: sourcemap ? false : 'esbuild',
       lib: {
         entry: resolve(__dirname, '../src/entrypoints/content.ts'),
         name: 'content',

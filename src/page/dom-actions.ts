@@ -1,5 +1,6 @@
 import { DomAction } from '../shared/types';
 import { OpaqueTargetRegistry } from './opaque-targets';
+import { safeGetBoundingClientRect, safeGetComputedStyle } from './dom-safety';
 
 export interface AppliedDomActionRecord {
   action: DomAction;
@@ -73,17 +74,11 @@ export class DomActionExecutor {
             const vHeight = window.innerHeight;
             candidates.forEach((el) => {
               const htmlEl = el as HTMLElement;
-              if (!(htmlEl instanceof Element)) return;
-
-              let style: CSSStyleDeclaration;
-              try {
-                style = window.getComputedStyle(htmlEl);
-              } catch {
-                return;
-              }
+              const style = safeGetComputedStyle(htmlEl);
+              const rect = safeGetBoundingClientRect(htmlEl);
+              if (!style || !rect) return;
 
               if (style.position === 'fixed' || style.position === 'absolute') {
-                const rect = htmlEl.getBoundingClientRect();
                 if (rect.width >= vWidth * 0.7 && rect.height >= vHeight * 0.7) {
                   record.mutatedElements.push({
                     element: htmlEl,

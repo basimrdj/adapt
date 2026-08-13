@@ -16,6 +16,7 @@ import { CausalEngine } from '../background/causal/causal-engine';
 import { CausalOrchestrator, CausalResourceRegistry } from '../background/causal/orchestrator';
 import { CausalRecipeStore, PromotionGate } from '../background/causal/promotion-gate';
 import { isHealthVector, isPageSignalBatch } from '../shared/guards';
+import { reconcilePhase31StaticRulesets } from '../background/phase31/static-rulesets';
 
 // 1. Storage Backend Implementation for chrome.storage.local
 const chromeStorageBackend = new ChromeStorageBackend(chrome.storage.local);
@@ -109,6 +110,7 @@ const startupReady = (async () => {
   await causalSession.restore().catch(() => false);
   await adaptEngine.init();
   await causalEngine.init();
+  await reconcilePhase31StaticRulesets();
 })();
 const causalQueues = new Map<number, Promise<boolean>>();
 const causalHandledBatches = new Map<number, Map<number, boolean>>();
