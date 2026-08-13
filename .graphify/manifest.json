@@ -1,0 +1,662 @@
+{
+  "scripts/azure-benchmark-eval.ts": {
+    "mtime": 1786551330979.2407,
+    "hash": "84747d6c9ed919a2359bf3923cd8553a"
+  },
+  "scripts/azure-smoke-test.ts": {
+    "mtime": 1786549737229.7117,
+    "hash": "ce61921c7362006bf369bd9dd8e6bf70"
+  },
+  "scripts/build.ts": {
+    "mtime": 1786483116443.3342,
+    "hash": "bc9ca23b209eadc5adf3a33ed270f4a7"
+  },
+  "scripts/generate-eval-corpus.ts": {
+    "mtime": 1786551400825.3027,
+    "hash": "bf35d8bac5af2c69b9a94cbeb77ee96a"
+  },
+  "scripts/generate-injection-corpus.ts": {
+    "mtime": 1786551374620.7612,
+    "hash": "67cf6827aa8bba3c4b19d6d7dd4bdfb7"
+  },
+  "src/core/adaptation/candidates.ts": {
+    "mtime": 1786551192740.9626,
+    "hash": "c4143f6dd359dde3453d3c5bca2628e5"
+  },
+  "src/core/adaptation/engine.ts": {
+    "mtime": 1786615063887.588,
+    "hash": "e9c21a93dba1a2120b8fb30638e2beb1"
+  },
+  "src/core/adaptation/rollback.ts": {
+    "mtime": 1786615063888.2058,
+    "hash": "a30133b9a0c3903184452a359824213f"
+  },
+  "src/core/adaptation/transaction.ts": {
+    "mtime": 1786481804613.489,
+    "hash": "d8a07919401c14336ed6e140b7775044"
+  },
+  "src/core/adaptation/verify.ts": {
+    "mtime": 1786481818283.412,
+    "hash": "302f8ca431330d65c0f82be7e8b69089"
+  },
+  "src/core/audit/store.ts": {
+    "mtime": 1786484451436.5127,
+    "hash": "decc5cd80270467554ecffa12669107b"
+  },
+  "src/core/dnr/compiler.ts": {
+    "mtime": 1786483208756.444,
+    "hash": "d5785655a71de99058b0e4d0b9c3256b"
+  },
+  "src/core/dnr/controller.ts": {
+    "mtime": 1786484331149.1753,
+    "hash": "6e9030eff05ee78ee6f360c94173d023"
+  },
+  "src/core/dnr/ids.ts": {
+    "mtime": 1786483030023.995,
+    "hash": "d5810f5b252badaf03f30f4b54fcb7e6"
+  },
+  "src/core/dnr/priorities.ts": {
+    "mtime": 1786481583559.2458,
+    "hash": "87d320e677b1459b570d4fba9caef352"
+  },
+  "src/core/dnr/quota.ts": {
+    "mtime": 1786484304934.731,
+    "hash": "4e60621813c8b3e32e26755b59af067a"
+  },
+  "src/core/dnr/reconcile.ts": {
+    "mtime": 1786481623778.767,
+    "hash": "badc6a44e52d104100376b18edf807c5"
+  },
+  "src/core/health/compare.ts": {
+    "mtime": 1786614637807.4111,
+    "hash": "37200aa817a33ebe6a0daab5ef22e851"
+  },
+  "src/core/health/model.ts": {
+    "mtime": 1786481778962.04,
+    "hash": "f0d31cb221b4cbdb203a48700709af7b"
+  },
+  "src/core/health/scorer.ts": {
+    "mtime": 1786551316338.9436,
+    "hash": "7f8394b218ee0fd24f3506a7f1331853"
+  },
+  "src/core/navigation/epoch.ts": {
+    "mtime": 1786610602000,
+    "hash": "6005ecee32d79a40145d838bd2cbecf5"
+  },
+  "src/core/navigation/registry.ts": {
+    "mtime": 1786615912369.2737,
+    "hash": "e5beda4f570e2079a854ae29a6951622"
+  },
+  "src/core/network/normalize-url.ts": {
+    "mtime": 1786481699565.1772,
+    "hash": "e5bd4166ba73f74b62baf59d0ad5600a"
+  },
+  "src/core/network/observer.ts": {
+    "mtime": 1786614845624.7083,
+    "hash": "36f68f13f077b85226041c1523de15c7"
+  },
+  "src/core/network/request-graph.ts": {
+    "mtime": 1786614845624.357,
+    "hash": "1e62f0f2231d9415f3762d7e424bff65"
+  },
+  "src/core/recipes/promotion.ts": {
+    "mtime": 1786484365328.3777,
+    "hash": "2985d3153d0bf5428849d02e8154a0b0"
+  },
+  "src/core/recipes/schema.ts": {
+    "mtime": 1786484356029.2332,
+    "hash": "58aa09588202ce55f096cda41346965c"
+  },
+  "src/core/recipes/store.ts": {
+    "mtime": 1786481851265.4045,
+    "hash": "f0ce7cd6b31e05eb35d460616626231c"
+  },
+  "src/core/recipes/validity.ts": {
+    "mtime": 1786481865362.9666,
+    "hash": "e65b986902d91b8e0a82cc13f9d59f16"
+  },
+  "src/entrypoints/background.ts": {
+    "mtime": 1786615925408.0928,
+    "hash": "ac84eab22ff7228411dd1805c90f9d67"
+  },
+  "src/entrypoints/content.ts": {
+    "mtime": 1786481913375.5571,
+    "hash": "fbcf770eb8be1a617efee1ba79b11b13"
+  },
+  "src/entrypoints/popup/popup.ts": {
+    "mtime": 1786481955402.06,
+    "hash": "4bfae5a190d60f701635f362f8a6b290"
+  },
+  "src/page/dom-actions.ts": {
+    "mtime": 1786614579257.3267,
+    "hash": "1c68b6c6a50e01f55f63b31f89fafd04"
+  },
+  "src/page/geometry.ts": {
+    "mtime": 1786481724117.853,
+    "hash": "9b22d8579742f95b99fecdb32a347639"
+  },
+  "src/page/interaction-health.ts": {
+    "mtime": 1786481746335.7764,
+    "hash": "0127539a382f84e5a6129dd792af0077"
+  },
+  "src/page/mutations.ts": {
+    "mtime": 1786484587390.0012,
+    "hash": "0b92b8e3af1aee06df0c676935c55833"
+  },
+  "src/page/semantic-signals.ts": {
+    "mtime": 1786481735471.908,
+    "hash": "24b6d665944b0ffbfa09ac989f3eba7f"
+  },
+  "src/page/sensor.ts": {
+    "mtime": 1786614808383.6528,
+    "hash": "63f5c1e4c9fd91343e69ceb93229c759"
+  },
+  "src/shared/ai/evidence-builder.ts": {
+    "mtime": 1786551320245.0352,
+    "hash": "66b6943198397513cdcf5895fc5a793f"
+  },
+  "src/shared/ai/mock-planner.ts": {
+    "mtime": 1786551139412.3528,
+    "hash": "bc83826fe8a95c61fde2c3d93abe81e9"
+  },
+  "src/shared/ai/planner-interface.ts": {
+    "mtime": 1786549774144.2114,
+    "hash": "08a78860e5b0c23fe1312b76e44b88e0"
+  },
+  "src/shared/ai/schemas.ts": {
+    "mtime": 1786549761902.942,
+    "hash": "abcba5d9cb2169788a0bbbdcb2210599"
+  },
+  "src/shared/ai/types.ts": {
+    "mtime": 1786549754862.5342,
+    "hash": "5c5776abb511836e80220811cdc42a75"
+  },
+  "src/shared/ai/validator.ts": {
+    "mtime": 1786550810736.7268,
+    "hash": "1c24c49813951d2c192ac72b013e8b69"
+  },
+  "src/shared/constants.ts": {
+    "mtime": 1786614546567.072,
+    "hash": "26ba513fb27da880acbed6e2b69e5dfc"
+  },
+  "src/shared/guards.ts": {
+    "mtime": 1786484531997.6162,
+    "hash": "da9e9f5e34f372e3281a19a77269876f"
+  },
+  "src/shared/messages.ts": {
+    "mtime": 1786614329332.0002,
+    "hash": "340072d4f324ae6270feb9922534ab88"
+  },
+  "src/shared/types.ts": {
+    "mtime": 1786615063887.1323,
+    "hash": "137e3ee7a188103c8750e2a9d3b06abc"
+  },
+  "tests/e2e/extension-e2e.test.ts": {
+    "mtime": 1786615872213.353,
+    "hash": "190a3b6a85d4326d6eaf09856450426c"
+  },
+  "tests/e2e/release-gate-matrix.test.ts": {
+    "mtime": 1786615861714.977,
+    "hash": "b961b55e2cfbaa08a69852135989b82c"
+  },
+  "tests/pages/server.ts": {
+    "mtime": 1786615841401.274,
+    "hash": "8c43393cb467a7a408d847b493b27b9e"
+  },
+  "tests/unit/adaptation-engine.test.ts": {
+    "mtime": 1786484665458.1504,
+    "hash": "e138d566004a5c737483248a8d520f59"
+  },
+  "tests/unit/ai-corpus-v2-eval.test.ts": {
+    "mtime": 1786550828261.5786,
+    "hash": "c11d0af774202aef369c1f8924b7ba88"
+  },
+  "tests/unit/ai-malformed-output.test.ts": {
+    "mtime": 1786550795604.6123,
+    "hash": "d66599433fc4d9639253a1961f405897"
+  },
+  "tests/unit/ai-oracle-security-redteam.test.ts": {
+    "mtime": 1786550841915.0674,
+    "hash": "dba081d6e48c40e9c1f922dc84c5638f"
+  },
+  "tests/unit/ai-planner-oracle.test.ts": {
+    "mtime": 1786550165600.893,
+    "hash": "f1560bb009bc367beb03d1a9fa6e65fe"
+  },
+  "tests/unit/ai-prompt-injection-adv.test.ts": {
+    "mtime": 1786550822433.618,
+    "hash": "c6f507e07479990a5feedf03ff13f6be"
+  },
+  "tests/unit/ai-recipe-learning-baseline.test.ts": {
+    "mtime": 1786551308715.4836,
+    "hash": "6a654beb88eb8b6bf1572c7e574ea40e"
+  },
+  "tests/unit/ai-shadow-eval.test.ts": {
+    "mtime": 1786549938764.3928,
+    "hash": "c8891438149edf27b2627150321ed8dd"
+  },
+  "tests/unit/ai-stale-response-concurrency.test.ts": {
+    "mtime": 1786614278825.2742,
+    "hash": "9518746ff5ff52e8245bdd1fc88a6292"
+  },
+  "tests/unit/concurrency-stress.test.ts": {
+    "mtime": 1786550202107.614,
+    "hash": "b1a07619f528ffa75d58280a8995c139"
+  },
+  "tests/unit/dnr-allocator.test.ts": {
+    "mtime": 1786482029220.4634,
+    "hash": "6abed999e6638c973e70d2658afc6649"
+  },
+  "tests/unit/dnr-compiler.test.ts": {
+    "mtime": 1786483213394.6663,
+    "hash": "80fe27bca34d992d4cc1234ffbebab67"
+  },
+  "tests/unit/dnr-quota.test.ts": {
+    "mtime": 1786484649666.9592,
+    "hash": "a037991be349d2eb4c40c84ebf1fe302"
+  },
+  "tests/unit/health-compare.test.ts": {
+    "mtime": 1786482074998.949,
+    "hash": "5da67bf816edf602d0edf028531ece2f"
+  },
+  "tests/unit/health-scorer.test.ts": {
+    "mtime": 1786482067458.1816,
+    "hash": "d78f2337fe23a5a53e36e17772ca56bf"
+  },
+  "tests/unit/navigation-registry.test.ts": {
+    "mtime": 1786615934226.953,
+    "hash": "bd58c8901546da658b34e559ad6a9112"
+  },
+  "tests/unit/production-bundle-clean.test.ts": {
+    "mtime": 1786551046414.1365,
+    "hash": "72daa9e5c4b07091669a9f9cf0928ff1"
+  },
+  "tests/unit/recipe-promotion.test.ts": {
+    "mtime": 1786484682062.5369,
+    "hash": "45d2d071f7a1562add489ff9510271c6"
+  },
+  "tests/unit/reconcile.test.ts": {
+    "mtime": 1786482093795.3599,
+    "hash": "9c47013f11e7059b95a35d9b7098a3c0"
+  },
+  "tests/unit/url-normalizer.test.ts": {
+    "mtime": 1786482102234.0728,
+    "hash": "cb46dff1047b1d16dfb89108edf0c07c"
+  },
+  "tools/ai-oracle/azure-planner.ts": {
+    "mtime": 1786549791054.824,
+    "hash": "c4918f0597fdb69ad60ed1e903eb8976"
+  },
+  "tools/ai-oracle/config.ts": {
+    "mtime": 1786549784314.5156,
+    "hash": "18c594c1dc04a587b467b2261d7d86a3"
+  },
+  "tools/ai-oracle/server.ts": {
+    "mtime": 1786549796763.5466,
+    "hash": "c2f9dedf705a77d62411ab679d038bdd"
+  },
+  "vite.config.ts": {
+    "mtime": 1786483125737.6206,
+    "hash": "bfd7cc4131e0ac0a62e4ba4e35cae251"
+  },
+  "vitest.config.ts": {
+    "mtime": 1786485425980.8953,
+    "hash": "ef268e512c4ce06d7225cc3c2a9b107c"
+  },
+  "ADAPT_Phase_1_Research_Engineering_Spec.md": {
+    "mtime": 1786481234514.5269,
+    "hash": "16b5f73b609f8db698111d4fd2e53a15"
+  },
+  "PHASE_1_5_RELEASE_GATE.md": {
+    "mtime": 1786513639709.7236,
+    "hash": "77a45b76be0d1f3f41ef9e72da767055"
+  },
+  "PHASE_2_5_AI_RELEASE_GATE.md": {
+    "mtime": 1786551497854.7905,
+    "hash": "eebd4ae0e57f24edd87f6d8f3214c813"
+  },
+  "PHASE_2_IMPLEMENTATION_REPORT.md": {
+    "mtime": 1786550215650.8135,
+    "hash": "8c82210ab8db62e12ab5b07d5e7ebbe9"
+  },
+  "docs/adr/001-build-stack.md": {
+    "mtime": 1786481395101.6316,
+    "hash": "4e5482b03cdaddb683586833f95d75c7"
+  },
+  "docs/adr/002-filter-engine.md": {
+    "mtime": 1786481403551.5244,
+    "hash": "78eedc6258d3c97c7b5c8453d5e35b31"
+  },
+  "docs/adr/003-dnr-rule-lifecycle.md": {
+    "mtime": 1786481412266.33,
+    "hash": "715f7c73d3b1a2115b71181c57b7b923"
+  },
+  "docs/adr/004-storage.md": {
+    "mtime": 1786481420612.7866,
+    "hash": "501eaa180e779b5f3f41261b27e17d04"
+  },
+  "docs/adr/005-privacy-invariants.md": {
+    "mtime": 1786481428887.8418,
+    "hash": "f6b2e9d1a48eaacebdf9999bf54fc932"
+  },
+  "docs/adr/006-adaptation-transactions.md": {
+    "mtime": 1786481436624.2546,
+    "hash": "01b844e98df93bc93bd22455f9df9ccf"
+  },
+  "docs/adr/007-test-strategy.md": {
+    "mtime": 1786481445404.4036,
+    "hash": "017c7108acbea3f4718539042c8e50a0"
+  },
+  "docs/adr/008-ai-provider-abstraction.md": {
+    "mtime": 1786550088683.0168,
+    "hash": "c44cad7fe34701959a84a374c91596e1"
+  },
+  "docs/adr/009-oracle-architecture.md": {
+    "mtime": 1786550093252.3652,
+    "hash": "3a9e8c45af6432f8acf68cae1b7d84be"
+  },
+  "docs/adr/010-evidence-packet-schema.md": {
+    "mtime": 1786550097529.0303,
+    "hash": "d723be65c84134d4f0c546c6956e27b2"
+  },
+  "docs/adr/011-planner-schema.md": {
+    "mtime": 1786550100897.7656,
+    "hash": "1c76ce5d5879866f2b32c0734cb2ed79"
+  },
+  "docs/adr/012-prompt-injection-defense.md": {
+    "mtime": 1786550104861.1802,
+    "hash": "331c7ce679a5892d9295478aa85caf3f"
+  },
+  "docs/adr/013-ai-execution-policy.md": {
+    "mtime": 1786550108360.4927,
+    "hash": "9fd978403ec9867fb0d48ff61da34f12"
+  },
+  "docs/adr/014-vision-escalation.md": {
+    "mtime": 1786550112458.9739,
+    "hash": "5430bd531ef74b567f63978bd2e1b66e"
+  },
+  "docs/adr/015-model-configuration.md": {
+    "mtime": 1786550116045.1313,
+    "hash": "26ff9bb968b8a4d70d2c0b027b813ea1"
+  },
+  "docs/filter-list-licenses.md": {
+    "mtime": 1786481354468.8706,
+    "hash": "9e346156ed0c5a3a73ba8ef48e7b0b03"
+  },
+  "docs/known-unknowns.md": {
+    "mtime": 1786481371207.5596,
+    "hash": "d1e4c88440d2b4c0d387a42c0064c298"
+  },
+  "docs/performance.md": {
+    "mtime": 1786481387641.375,
+    "hash": "20b93f078ddb432374bb26609be3f218"
+  },
+  "docs/permissions.md": {
+    "mtime": 1786481362573.8025,
+    "hash": "5447d1020a724d820597162ffa1067a6"
+  },
+  "docs/phase2-ai-architecture.md": {
+    "mtime": 1786549959643.547,
+    "hash": "ad90ab826236ee7e61cb4cf740b31bce"
+  },
+  "docs/phase2-evaluation.md": {
+    "mtime": 1786549976184.7822,
+    "hash": "bea34dc7db18eae2a1a52c49b622c67b"
+  },
+  "docs/phase2-privacy.md": {
+    "mtime": 1786549970945.0957,
+    "hash": "5a6199d7a1aed1db19333cd8b9569204"
+  },
+  "docs/phase2-research-ledger.md": {
+    "mtime": 1786549701226.5427,
+    "hash": "f86d3813d8af93dfe889be2dd8b69b60"
+  },
+  "docs/phase2-source-ledger.md": {
+    "mtime": 1786549707371.1165,
+    "hash": "72a28666c21a34c7515971a078716487"
+  },
+  "docs/phase2-threat-model.md": {
+    "mtime": 1786549965176.7368,
+    "hash": "016dde6131b9f62e371724ce77d23b5c"
+  },
+  "docs/research-ledger.md": {
+    "mtime": 1786481338750.2634,
+    "hash": "749e6a493792d2f4f921c71447330b98"
+  },
+  "docs/source-ledger.md": {
+    "mtime": 1786481346843.249,
+    "hash": "8c62f17ca68f3f759ba467c5cd74c419"
+  },
+  "docs/threat-model.md": {
+    "mtime": 1786481379450.8909,
+    "hash": "257eb2d911c6ae94754140dd67113a2f"
+  },
+  "src/entrypoints/popup/index.html": {
+    "mtime": 1786481931378.875,
+    "hash": "c4541c80558d83d6bb3beae9d7e395e8"
+  },
+  "tests/pages/t01-basic-ad/index.html": {
+    "mtime": 1786482136711.335,
+    "hash": "dc71678b1572abf9e29fc3baa8cd8d24"
+  },
+  "tests/pages/t03-bait-detector/index.html": {
+    "mtime": 1786482148793.1006,
+    "hash": "5c63d16ca119df322076ec642db26ce6"
+  },
+  "tests/pages/t04-blocked-probe/index.html": {
+    "mtime": 1786482160165.8281,
+    "hash": "f1f0de255dba307dad853e8fa2803658"
+  },
+  "tests/pages/t05-fullscreen-overlay/index.html": {
+    "mtime": 1786482167647.2776,
+    "hash": "ba0378042e7a7fe6d8bf5f2036933bac"
+  },
+  "tests/pages/t06-nested-iframes/index.html": {
+    "mtime": 1786484759893.006,
+    "hash": "5838264ef7a57719aae70c1c4cc374e2"
+  },
+  "tests/pages/t07-shadow-dom/index.html": {
+    "mtime": 1786484775658.1711,
+    "hash": "4a33c5de14bec8719e06330bfa3b9dc8"
+  },
+  "tests/pages/t08-spa-transitions/index.html": {
+    "mtime": 1786484788223.7427,
+    "hash": "64e6810a3cdeaf3b9e7ffb5b62d15805"
+  },
+  "tests/pages/t12-consent-modal/index.html": {
+    "mtime": 1786482179852.6416,
+    "hash": "c9ae1d4879ee80991c1d5eab455171ed"
+  },
+  "tests/pages/t13-newsletter-modal/index.html": {
+    "mtime": 1786482191388.24,
+    "hash": "6dd7557f18819f08ac9d0dcf2ed0a6ad"
+  },
+  "tests/pages/t14-paywall-login/index.html": {
+    "mtime": 1786484803860.9373,
+    "hash": "e7f17819096f6973a9a595428d5abdf1"
+  },
+  "tests/pages/t15-mutation-storm/index.html": {
+    "mtime": 1786482203147.793,
+    "hash": "d1b112443762eb95729ca80414a6aabd"
+  },
+  "tests/pages/t16-adblock-article/index.html": {
+    "mtime": 1786484819651.4307,
+    "hash": "637311c6d8b46b969a35fd440f251340"
+  },
+  "tests/pages/t20-fingerprint-probe/index.html": {
+    "mtime": 1786482210841.277,
+    "hash": "fc495cccc1ab821c8f7975acc4df0dda"
+  },
+  "tests/pages/t21-sw-worker-page/index.html": {
+    "mtime": 1786485259784.232,
+    "hash": "75efc7019d23f5fab451cd8cf8c3f166"
+  },
+  "tests/pages/t22-benign-torture-matrix/index.html": {
+    "mtime": 1786485329025.4412,
+    "hash": "9a3939ac80762167e9afc7c425ee7c24"
+  },
+  "tests/pages/t23-stale-recipe-changed-page/index.html": {
+    "mtime": 1786485334295.8916,
+    "hash": "967c64c40fe9135d723c66a9120b9232"
+  },
+  "tests/pages/t26-adversarial-dom-reinsertion/index.html": {
+    "mtime": 1786485340108.5044,
+    "hash": "d63e3239857a8254ea548cc984d91e6e"
+  },
+  "tests/pages/t27-bfcache-history/index.html": {
+    "mtime": 1786485345489.559,
+    "hash": "b90804b424f49f9b907f44cd28e28573"
+  },
+  "scripts/populate-graphify-descriptions.js": {
+    "mtime": 1786554305021.0105,
+    "hash": "7b5d8526b62082b950fb674689bd3c58"
+  },
+  "src/background/ai/causal-policy-validator.ts": {
+    "mtime": 1786616143042.128,
+    "hash": "42d708ce329c20356f86aa2e335ea6d5"
+  },
+  "src/background/causal/belief-updater.ts": {
+    "mtime": 1786615086547.1362,
+    "hash": "4e5cd82cb82868e770940380c25fd922"
+  },
+  "src/background/causal/candidate-generator.ts": {
+    "mtime": 1786614845621.7317,
+    "hash": "84a616a718f5aab2ee6131709f59dfa1"
+  },
+  "src/background/causal/causal-engine.ts": {
+    "mtime": 1786615210347.608,
+    "hash": "7c48e8d2b10e4d30f85c53636fa7c5ec"
+  },
+  "src/background/causal/epoch-router.ts": {
+    "mtime": 1786610660000,
+    "hash": "f405034aaa17b7b0a5da67b1463d8145"
+  },
+  "src/background/causal/event-normalizer.ts": {
+    "mtime": 1786614715996.0476,
+    "hash": "7f957e0bac000d475925917c954212c3"
+  },
+  "src/background/causal/experiment-generator.ts": {
+    "mtime": 1786614845623.816,
+    "hash": "0edc7abde89180ce5ef29f1f260ee949"
+  },
+  "src/background/causal/experiment-selector.ts": {
+    "mtime": 1786611721000,
+    "hash": "683d538fdd5d26856857ef61f8c5caef"
+  },
+  "src/background/causal/experiment-to-strategy.ts": {
+    "mtime": 1786614579256.1592,
+    "hash": "52c08405387c52d15b3f8dabd6809989"
+  },
+  "src/background/causal/graph-store.ts": {
+    "mtime": 1786614546568.6404,
+    "hash": "1809a41da9107bda5519e7f7f9976738"
+  },
+  "src/background/causal/orchestrator.ts": {
+    "mtime": 1786615582885.2598,
+    "hash": "67a787562bf503d9e3b6e4ff4ffaa95e"
+  },
+  "src/background/causal/promotion-gate.ts": {
+    "mtime": 1786615233086.6553,
+    "hash": "59d74054aaa2d6f74522b03ba37edb5b"
+  },
+  "src/background/causal/session-state.ts": {
+    "mtime": 1786614546569.2214,
+    "hash": "50f98feee092750b99512771b0d1695c"
+  },
+  "src/background/storage/chrome-storage.ts": {
+    "mtime": 1786614546567.437,
+    "hash": "67ddeccadd0c1f76c571cbf668579912"
+  },
+  "src/page/opaque-targets.ts": {
+    "mtime": 1786614329332.2368,
+    "hash": "58032fd56ade971a357f9e025fa98845"
+  },
+  "src/shared/causal/belief.ts": {
+    "mtime": 1786615224291.7058,
+    "hash": "50bb20880735e5dfcd43f2e01cb1069f"
+  },
+  "src/shared/causal/events.ts": {
+    "mtime": 1786614931118.208,
+    "hash": "f9fc1f35c613a6e2dfa13b39ff3d01dc"
+  },
+  "src/shared/causal/experiments.ts": {
+    "mtime": 1786611701000,
+    "hash": "f2760f164dfa2c7cd852190b9b959c74"
+  },
+  "src/shared/causal/graph.ts": {
+    "mtime": 1786611221000,
+    "hash": "983b23b511f717d5f144f92295378db3"
+  },
+  "src/shared/causal/recipes.ts": {
+    "mtime": 1786615142162.775,
+    "hash": "c601fe36ad41712c2349b2b94f5766e7"
+  },
+  "tests/e2e/phase3-causal-live.test.ts": {
+    "mtime": 1786615639047.2854,
+    "hash": "7f4dd387ce66b1140537a154023fd7bb"
+  },
+  "tests/unit/causal-belief.test.ts": {
+    "mtime": 1786614979883.7402,
+    "hash": "07c9a28241be4a765a5f8edd210b6ecb"
+  },
+  "tests/unit/causal-engine.test.ts": {
+    "mtime": 1786614609860.4736,
+    "hash": "10d84d9887931584a1f8353dbf10865d"
+  },
+  "tests/unit/causal-event-identity.test.ts": {
+    "mtime": 1786614228794.2944,
+    "hash": "c36ea6b398d90a202fba53e52d95f911"
+  },
+  "tests/unit/causal-eventgraph.test.ts": {
+    "mtime": 1786611342000,
+    "hash": "a891913665df7fd49c796b2309132379"
+  },
+  "tests/unit/causal-experiments.test.ts": {
+    "mtime": 1786614865025.0867,
+    "hash": "4b7c5a589c98d7c9ea84a1e2e4ee912e"
+  },
+  "tests/unit/causal-promotion.test.ts": {
+    "mtime": 1786614946306.7563,
+    "hash": "7ad3a55b31cf9b3de0f22bb10e3894d2"
+  },
+  "tests/unit/causal-session-state.test.ts": {
+    "mtime": 1786614879412.3503,
+    "hash": "ee29fc2d526915d6ba2dfb1177e8cdbc"
+  },
+  "tools/spikes/document-id-spike.ts": {
+    "mtime": 1786556252424.8943,
+    "hash": "81523d7d462b31392dd0e1eb88085fd2"
+  },
+  "ADAPT_Phase_3_Causal_Intelligence_Research_Spec.md": {
+    "mtime": 1786616143034.479,
+    "hash": "f96ccd2e989cc3e6160b1944e2f0b043"
+  },
+  "SESSION-STATE.md": {
+    "mtime": 1786615981232.7336,
+    "hash": "ca5557bdf895d8ea2eb915f242de8848"
+  },
+  "docs/phase3-browser-research-ledger.md": {
+    "mtime": 1786556291509.6626,
+    "hash": "cce415d2a2ef12ac05b6b94b586d5991"
+  },
+  "docs/phase3/ADAPT_Phase_3_Causal_Intelligence_Research_Spec.md": {
+    "mtime": 1786616143036.2056,
+    "hash": "f96ccd2e989cc3e6160b1944e2f0b043"
+  },
+  "docs/phase3/IMPLEMENTATION-VERIFICATION.md": {
+    "mtime": 1786615981233.136,
+    "hash": "8feb6b86e5e0741cf0e060686831cd97"
+  },
+  "memory/phase-status-snapshot.md": {
+    "mtime": 1786616132614.0923,
+    "hash": "b4c28f3afb022486e3713d83e2f5a2db"
+  },
+  "memory/phase3-gap-analysis.md": {
+    "mtime": 1786555984470.1355,
+    "hash": "b10c0aa01f0157571d58c3db02eecf05"
+  },
+  "tests/pages/t28-causal-bait/index.html": {
+    "mtime": 1786615464595.0728,
+    "hash": "39899cd34aacc858cf6d92866d3332d4"
+  }
+}

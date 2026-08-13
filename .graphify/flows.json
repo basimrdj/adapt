@@ -1,0 +1,1730 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-13T10:17:06.234Z",
+  "graphPath": ".graphify/graph.json",
+  "maxDepth": 15,
+  "includeTests": false,
+  "warnings": [],
+  "flows": [
+    {
+      "id": "flow:network_request_graph_requestgraphmanager_recordblockedorerror",
+      "name": ".recordBlockedOrError",
+      "entryPoint": "network_request_graph_requestgraphmanager_recordblockedorerror",
+      "entryPointId": "network_request_graph_requestgraphmanager_recordblockedorerror",
+      "path": [
+        "network_request_graph_requestgraphmanager_recordblockedorerror",
+        "network_request_graph_requestgraphmanager_getorcreategraph"
+      ],
+      "qualifiedPath": [
+        "network_request_graph_requestgraphmanager_recordblockedorerror",
+        "network_request_graph_requestgraphmanager_getorcreategraph"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/network/request-graph.ts"
+      ],
+      "criticality": 0.41,
+      "warnings": []
+    },
+    {
+      "id": "flow:network_request_graph_requestgraphmanager_recordrequest",
+      "name": ".recordRequest",
+      "entryPoint": "network_request_graph_requestgraphmanager_recordrequest",
+      "entryPointId": "network_request_graph_requestgraphmanager_recordrequest",
+      "path": [
+        "network_request_graph_requestgraphmanager_recordrequest",
+        "network_request_graph_requestgraphmanager_getorcreategraph"
+      ],
+      "qualifiedPath": [
+        "network_request_graph_requestgraphmanager_recordrequest",
+        "network_request_graph_requestgraphmanager_getorcreategraph"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/network/request-graph.ts"
+      ],
+      "criticality": 0.41,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_recipes_fingerprintevidencehash",
+      "name": "fingerprintEvidenceHash",
+      "entryPoint": "causal_recipes_fingerprintevidencehash",
+      "entryPointId": "causal_recipes_fingerprintevidencehash",
+      "path": [
+        "causal_recipes_fingerprintevidencehash",
+        "causal_recipes_hashtechnicaltokens"
+      ],
+      "qualifiedPath": [
+        "causal_recipes_fingerprintevidencehash",
+        "causal_recipes_hashtechnicaltokens"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/recipes.ts"
+      ],
+      "criticality": 0.41,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_event_normalizer_eventnormalizer_normalizerequest",
+      "name": ".normalizeRequest",
+      "entryPoint": "causal_event_normalizer_eventnormalizer_normalizerequest",
+      "entryPointId": "causal_event_normalizer_eventnormalizer_normalizerequest",
+      "path": [
+        "causal_event_normalizer_eventnormalizer_normalizerequest",
+        "causal_event_normalizer_coarseurlfeatures",
+        "causal_event_normalizer_requestkind",
+        "causal_event_normalizer_requestref",
+        "causal_event_normalizer_timestampfromchrome",
+        "causal_event_normalizer_stablepositiveintfromrequestid"
+      ],
+      "qualifiedPath": [
+        "causal_event_normalizer_eventnormalizer_normalizerequest",
+        "causal_event_normalizer_coarseurlfeatures",
+        "causal_event_normalizer_requestkind",
+        "causal_event_normalizer_requestref",
+        "causal_event_normalizer_timestampfromchrome",
+        "causal_event_normalizer_stablepositiveintfromrequestid"
+      ],
+      "depth": 2,
+      "nodeCount": 6,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/event-normalizer.ts"
+      ],
+      "criticality": 0.3367,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_causalrecipestore_getbyoriginhash",
+      "name": ".getByOriginHash",
+      "entryPoint": "causal_promotion_gate_causalrecipestore_getbyoriginhash",
+      "entryPointId": "causal_promotion_gate_causalrecipestore_getbyoriginhash",
+      "path": [
+        "causal_promotion_gate_causalrecipestore_getbyoriginhash",
+        "causal_promotion_gate_causalrecipestore_init"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_causalrecipestore_getbyoriginhash",
+        "causal_promotion_gate_causalrecipestore_init"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.285,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_orchestrator_causalorchestrator_onrequest",
+      "name": ".onRequest",
+      "entryPoint": "causal_orchestrator_causalorchestrator_onrequest",
+      "entryPointId": "causal_orchestrator_causalorchestrator_onrequest",
+      "path": [
+        "causal_orchestrator_causalorchestrator_onrequest",
+        "causal_orchestrator_causalresourceregistry_observe"
+      ],
+      "qualifiedPath": [
+        "causal_orchestrator_causalorchestrator_onrequest",
+        "causal_orchestrator_causalresourceregistry_observe"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/orchestrator.ts"
+      ],
+      "criticality": 0.285,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_events_hashorigin",
+      "name": "hashOrigin",
+      "entryPoint": "causal_events_hashorigin",
+      "entryPointId": "causal_events_hashorigin",
+      "path": [
+        "causal_events_hashorigin",
+        "causal_events_sha256hexutf8",
+        "causal_events_rotr"
+      ],
+      "qualifiedPath": [
+        "causal_events_hashorigin",
+        "causal_events_sha256hexutf8",
+        "causal_events_rotr"
+      ],
+      "depth": 2,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/events.ts"
+      ],
+      "criticality": 0.2533,
+      "warnings": []
+    },
+    {
+      "id": "flow:ai_causal_policy_validator_validatecausaldecision",
+      "name": "validateCausalDecision",
+      "entryPoint": "ai_causal_policy_validator_validatecausaldecision",
+      "entryPointId": "ai_causal_policy_validator_validatecausaldecision",
+      "path": [
+        "ai_causal_policy_validator_validatecausaldecision",
+        "ai_causal_policy_validator_fail",
+        "ai_causal_policy_validator_validatecausaldecisioninner",
+        "ai_causal_policy_validator_extrakeys",
+        "ai_causal_policy_validator_finiterisks",
+        "ai_causal_policy_validator_hasactionexpansion",
+        "ai_causal_policy_validator_isplainobject",
+        "ai_causal_policy_validator_packetepochmatches",
+        "ai_causal_policy_validator_stringlooksinvented",
+        "ai_causal_policy_validator_validateactionrefs"
+      ],
+      "qualifiedPath": [
+        "ai_causal_policy_validator_validatecausaldecision",
+        "ai_causal_policy_validator_fail",
+        "ai_causal_policy_validator_validatecausaldecisioninner",
+        "ai_causal_policy_validator_extrakeys",
+        "ai_causal_policy_validator_finiterisks",
+        "ai_causal_policy_validator_hasactionexpansion",
+        "ai_causal_policy_validator_isplainobject",
+        "ai_causal_policy_validator_packetepochmatches",
+        "ai_causal_policy_validator_stringlooksinvented",
+        "ai_causal_policy_validator_validateactionrefs"
+      ],
+      "depth": 2,
+      "nodeCount": 10,
+      "fileCount": 1,
+      "files": [
+        "src/background/ai/causal-policy-validator.ts"
+      ],
+      "criticality": 0.245,
+      "warnings": []
+    },
+    {
+      "id": "flow:page_sensor_pagesensor_handlespatransition",
+      "name": ".handleSpaTransition",
+      "entryPoint": "page_sensor_pagesensor_handlespatransition",
+      "entryPointId": "page_sensor_pagesensor_handlespatransition",
+      "path": [
+        "page_sensor_pagesensor_handlespatransition",
+        "page_sensor_pagesensor_schedulesignalbatch",
+        "page_sensor_pagesensor_sendmessage"
+      ],
+      "qualifiedPath": [
+        "page_sensor_pagesensor_handlespatransition",
+        "page_sensor_pagesensor_schedulesignalbatch",
+        "page_sensor_pagesensor_sendmessage"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/page/sensor.ts"
+      ],
+      "criticality": 0.2433,
+      "warnings": []
+    },
+    {
+      "id": "flow:page_sensor_pagesensor_init",
+      "name": ".init",
+      "entryPoint": "page_sensor_pagesensor_init",
+      "entryPointId": "page_sensor_pagesensor_init",
+      "path": [
+        "page_sensor_pagesensor_init",
+        "page_sensor_pagesensor_schedulesignalbatch",
+        "page_sensor_pagesensor_sendmessage"
+      ],
+      "qualifiedPath": [
+        "page_sensor_pagesensor_init",
+        "page_sensor_pagesensor_schedulesignalbatch",
+        "page_sensor_pagesensor_sendmessage"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/page/sensor.ts"
+      ],
+      "criticality": 0.2433,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_promotiongate_replay",
+      "name": ".replay",
+      "entryPoint": "causal_promotion_gate_promotiongate_replay",
+      "entryPointId": "causal_promotion_gate_promotiongate_replay",
+      "path": [
+        "causal_promotion_gate_promotiongate_replay",
+        "causal_promotion_gate_promotiongate_inferlifecycle",
+        "causal_promotion_gate_promotiongate_invalidate"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_promotiongate_replay",
+        "causal_promotion_gate_promotiongate_inferlifecycle",
+        "causal_promotion_gate_promotiongate_invalidate"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.2433,
+      "warnings": []
+    },
+    {
+      "id": "flow:adaptation_engine_adaptationtransactionengine_verifyandcompletetransaction",
+      "name": ".verifyAndCompleteTransaction",
+      "entryPoint": "adaptation_engine_adaptationtransactionengine_verifyandcompletetransaction",
+      "entryPointId": "adaptation_engine_adaptationtransactionengine_verifyandcompletetransaction",
+      "path": [
+        "adaptation_engine_adaptationtransactionengine_verifyandcompletetransaction",
+        "adaptation_engine_adaptationtransactionengine_init",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "qualifiedPath": [
+        "adaptation_engine_adaptationtransactionengine_verifyandcompletetransaction",
+        "adaptation_engine_adaptationtransactionengine_init",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/core/adaptation/engine.ts"
+      ],
+      "criticality": 0.2433,
+      "warnings": []
+    },
+    {
+      "id": "flow:page_dom_actions_domactionexecutor_applyaction",
+      "name": ".applyAction",
+      "entryPoint": "page_dom_actions_domactionexecutor_applyaction",
+      "entryPointId": "page_dom_actions_domactionexecutor_applyaction",
+      "path": [
+        "page_dom_actions_domactionexecutor_applyaction",
+        "page_dom_actions_domactionexecutor_rollbackaction",
+        "page_dom_actions_domactionexecutor_targetelements",
+        "page_dom_actions_sanitizecssselector"
+      ],
+      "qualifiedPath": [
+        "page_dom_actions_domactionexecutor_applyaction",
+        "page_dom_actions_domactionexecutor_rollbackaction",
+        "page_dom_actions_domactionexecutor_targetelements",
+        "page_dom_actions_sanitizecssselector"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/page/dom-actions.ts"
+      ],
+      "criticality": 0.2225,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_experiments_ispolicyallowed",
+      "name": "isPolicyAllowed",
+      "entryPoint": "causal_experiments_ispolicyallowed",
+      "entryPointId": "causal_experiments_ispolicyallowed",
+      "path": [
+        "causal_experiments_ispolicyallowed",
+        "causal_experiments_containsforbiddentoken",
+        "causal_experiments_isopaquerefstring",
+        "causal_experiments_lookslikeselectororurl"
+      ],
+      "qualifiedPath": [
+        "causal_experiments_ispolicyallowed",
+        "causal_experiments_containsforbiddentoken",
+        "causal_experiments_isopaquerefstring",
+        "causal_experiments_lookslikeselectororurl"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/experiments.ts"
+      ],
+      "criticality": 0.2225,
+      "warnings": []
+    },
+    {
+      "id": "flow:adaptation_engine_adaptationtransactionengine_evaluatesignals",
+      "name": ".evaluateSignals",
+      "entryPoint": "adaptation_engine_adaptationtransactionengine_evaluatesignals",
+      "entryPointId": "adaptation_engine_adaptationtransactionengine_evaluatesignals",
+      "path": [
+        "adaptation_engine_adaptationtransactionengine_evaluatesignals",
+        "adaptation_engine_adaptationtransactionengine_init",
+        "adaptation_engine_adaptationtransactionengine_navigationiscurrent",
+        "adaptation_engine_adaptationtransactionengine_stagetransaction",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "qualifiedPath": [
+        "adaptation_engine_adaptationtransactionengine_evaluatesignals",
+        "adaptation_engine_adaptationtransactionengine_init",
+        "adaptation_engine_adaptationtransactionengine_navigationiscurrent",
+        "adaptation_engine_adaptationtransactionengine_stagetransaction",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "depth": 2,
+      "nodeCount": 5,
+      "fileCount": 1,
+      "files": [
+        "src/core/adaptation/engine.ts"
+      ],
+      "criticality": 0.22,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_candidate_generator_candidategenerator_update",
+      "name": ".update",
+      "entryPoint": "causal_candidate_generator_candidategenerator_update",
+      "entryPointId": "causal_candidate_generator_candidategenerator_update",
+      "path": [
+        "causal_candidate_generator_candidategenerator_update",
+        "causal_candidate_generator_collectdrafts",
+        "causal_candidate_generator_mergedrafts",
+        "causal_candidate_generator_nexthypothesisid",
+        "causal_candidate_generator_temporaledge",
+        "causal_candidate_generator_iscontrollable",
+        "causal_candidate_generator_paireligible",
+        "causal_candidate_generator_recipemechanism",
+        "causal_candidate_generator_uniquerefs",
+        "causal_candidate_generator_mergekey",
+        "causal_candidate_generator_hashealthdrop",
+        "causal_candidate_generator_observationeligible",
+        "causal_candidate_generator_samedocumentepoch",
+        "causal_candidate_generator_healthdelta",
+        "causal_candidate_generator_numberfeature"
+      ],
+      "qualifiedPath": [
+        "causal_candidate_generator_candidategenerator_update",
+        "causal_candidate_generator_collectdrafts",
+        "causal_candidate_generator_mergedrafts",
+        "causal_candidate_generator_nexthypothesisid",
+        "causal_candidate_generator_temporaledge",
+        "causal_candidate_generator_iscontrollable",
+        "causal_candidate_generator_paireligible",
+        "causal_candidate_generator_recipemechanism",
+        "causal_candidate_generator_uniquerefs",
+        "causal_candidate_generator_mergekey",
+        "causal_candidate_generator_hashealthdrop",
+        "causal_candidate_generator_observationeligible",
+        "causal_candidate_generator_samedocumentepoch",
+        "causal_candidate_generator_healthdelta",
+        "causal_candidate_generator_numberfeature"
+      ],
+      "depth": 5,
+      "nodeCount": 15,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/candidate-generator.ts"
+      ],
+      "criticality": 0.2167,
+      "warnings": []
+    },
+    {
+      "id": "flow:shared_guards_ispagesignalbatch",
+      "name": "isPageSignalBatch",
+      "entryPoint": "shared_guards_ispagesignalbatch",
+      "entryPointId": "shared_guards_ispagesignalbatch",
+      "path": [
+        "shared_guards_ispagesignalbatch",
+        "shared_guards_isboolean",
+        "shared_guards_isnumber",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "qualifiedPath": [
+        "shared_guards_ispagesignalbatch",
+        "shared_guards_isboolean",
+        "shared_guards_isnumber",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "depth": 1,
+      "nodeCount": 5,
+      "fileCount": 1,
+      "files": [
+        "src/shared/guards.ts"
+      ],
+      "criticality": 0.21,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_promotiongate_evaluate",
+      "name": ".evaluate",
+      "entryPoint": "causal_promotion_gate_promotiongate_evaluate",
+      "entryPointId": "causal_promotion_gate_promotiongate_evaluate",
+      "path": [
+        "causal_promotion_gate_promotiongate_evaluate",
+        "causal_promotion_gate_promotiongate_evaluatepromotion",
+        "causal_promotion_gate_promotiongate_buildrecipe",
+        "causal_promotion_gate_promotiongate_confirmhypothesis",
+        "causal_promotion_gate_promotiongate_fingerprintpass",
+        "causal_promotion_gate_promotiongate_privacypass",
+        "causal_promotion_gate_promotiongate_replaypass",
+        "causal_promotion_gate_promotiongate_rollbackpass",
+        "causal_promotion_gate_promotiongate_safetypass",
+        "causal_promotion_gate_promotiongate_statisticalpass",
+        "causal_promotion_gate_derivedprivacyscore",
+        "causal_promotion_gate_derivedstablereplays",
+        "causal_promotion_gate_experimentcount",
+        "causal_promotion_gate_promotiongate_nextid",
+        "causal_promotion_gate_ispersistenttrackerallow",
+        "causal_promotion_gate_lastexperiment",
+        "causal_promotion_gate_actiontext",
+        "causal_promotion_gate_hasforbiddencontext",
+        "causal_promotion_gate_isnoopinvalidallow",
+        "causal_promotion_gate_verifiedexperiments",
+        "causal_promotion_gate_causalrecipestore_allocateid"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_promotiongate_evaluate",
+        "causal_promotion_gate_promotiongate_evaluatepromotion",
+        "causal_promotion_gate_promotiongate_buildrecipe",
+        "causal_promotion_gate_promotiongate_confirmhypothesis",
+        "causal_promotion_gate_promotiongate_fingerprintpass",
+        "causal_promotion_gate_promotiongate_privacypass",
+        "causal_promotion_gate_promotiongate_replaypass",
+        "causal_promotion_gate_promotiongate_rollbackpass",
+        "causal_promotion_gate_promotiongate_safetypass",
+        "causal_promotion_gate_promotiongate_statisticalpass",
+        "causal_promotion_gate_derivedprivacyscore",
+        "causal_promotion_gate_derivedstablereplays",
+        "causal_promotion_gate_experimentcount",
+        "causal_promotion_gate_promotiongate_nextid",
+        "causal_promotion_gate_ispersistenttrackerallow",
+        "causal_promotion_gate_lastexperiment",
+        "causal_promotion_gate_actiontext",
+        "causal_promotion_gate_hasforbiddencontext",
+        "causal_promotion_gate_isnoopinvalidallow",
+        "causal_promotion_gate_verifiedexperiments",
+        "causal_promotion_gate_causalrecipestore_allocateid"
+      ],
+      "depth": 4,
+      "nodeCount": 21,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.19,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_causal_engine_causalengine_runcausalexperiment",
+      "name": ".runCausalExperiment",
+      "entryPoint": "causal_causal_engine_causalengine_runcausalexperiment",
+      "entryPointId": "causal_causal_engine_causalengine_runcausalexperiment",
+      "path": [
+        "causal_causal_engine_causalengine_runcausalexperiment",
+        "causal_causal_engine_causalengine_hasactiveontab",
+        "causal_causal_engine_causalengine_init",
+        "causal_causal_engine_causalengine_persistrecords",
+        "causal_causal_engine_causalengine_verifycausalexperiment",
+        "causal_causal_engine_isforbiddenintervention",
+        "causal_causal_engine_liveepoch",
+        "causal_causal_engine_makerecord",
+        "causal_causal_engine_primaryframeid",
+        "causal_causal_engine_causalengine_rollbackstate",
+        "causal_causal_engine_causalengine_cleanupcommittedstate",
+        "causal_causal_engine_toadaptationtx",
+        "causal_causal_engine_tocompact"
+      ],
+      "qualifiedPath": [
+        "causal_causal_engine_causalengine_runcausalexperiment",
+        "causal_causal_engine_causalengine_hasactiveontab",
+        "causal_causal_engine_causalengine_init",
+        "causal_causal_engine_causalengine_persistrecords",
+        "causal_causal_engine_causalengine_verifycausalexperiment",
+        "causal_causal_engine_isforbiddenintervention",
+        "causal_causal_engine_liveepoch",
+        "causal_causal_engine_makerecord",
+        "causal_causal_engine_primaryframeid",
+        "causal_causal_engine_causalengine_rollbackstate",
+        "causal_causal_engine_causalengine_cleanupcommittedstate",
+        "causal_causal_engine_toadaptationtx",
+        "causal_causal_engine_tocompact"
+      ],
+      "depth": 2,
+      "nodeCount": 13,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/causal-engine.ts"
+      ],
+      "criticality": 0.1892,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_promotiongate_compiledraft",
+      "name": ".compileDraft",
+      "entryPoint": "causal_promotion_gate_promotiongate_compiledraft",
+      "entryPointId": "causal_promotion_gate_promotiongate_compiledraft",
+      "path": [
+        "causal_promotion_gate_promotiongate_compiledraft",
+        "causal_promotion_gate_promotiongate_buildrecipe",
+        "causal_promotion_gate_derivedprivacyscore",
+        "causal_promotion_gate_derivedstablereplays",
+        "causal_promotion_gate_experimentcount",
+        "causal_promotion_gate_promotiongate_nextid",
+        "causal_promotion_gate_verifiedexperiments",
+        "causal_promotion_gate_causalrecipestore_allocateid"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_promotiongate_compiledraft",
+        "causal_promotion_gate_promotiongate_buildrecipe",
+        "causal_promotion_gate_derivedprivacyscore",
+        "causal_promotion_gate_derivedstablereplays",
+        "causal_promotion_gate_experimentcount",
+        "causal_promotion_gate_promotiongate_nextid",
+        "causal_promotion_gate_verifiedexperiments",
+        "causal_promotion_gate_causalrecipestore_allocateid"
+      ],
+      "depth": 3,
+      "nodeCount": 8,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.18,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_experiment_generator_experimentgenerator_generate",
+      "name": ".generate",
+      "entryPoint": "causal_experiment_generator_experimentgenerator_generate",
+      "entryPointId": "causal_experiment_generator_experimentgenerator_generate",
+      "path": [
+        "causal_experiment_generator_experimentgenerator_generate",
+        "causal_experiment_generator_collectactionrefs",
+        "causal_experiment_generator_graphisbenignonly",
+        "causal_experiment_generator_hypothesistouchesbenign",
+        "causal_experiment_generator_pairedbaselineavailable",
+        "causal_experiment_generator_scopefromgraph",
+        "causal_experiment_generator_nodebyid"
+      ],
+      "qualifiedPath": [
+        "causal_experiment_generator_experimentgenerator_generate",
+        "causal_experiment_generator_collectactionrefs",
+        "causal_experiment_generator_graphisbenignonly",
+        "causal_experiment_generator_hypothesistouchesbenign",
+        "causal_experiment_generator_pairedbaselineavailable",
+        "causal_experiment_generator_scopefromgraph",
+        "causal_experiment_generator_nodebyid"
+      ],
+      "depth": 2,
+      "nodeCount": 7,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/experiment-generator.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:page_sensor_pagesensor_handlebackgroundmessage",
+      "name": ".handleBackgroundMessage",
+      "entryPoint": "page_sensor_pagesensor_handlebackgroundmessage",
+      "entryPointId": "page_sensor_pagesensor_handlebackgroundmessage",
+      "path": [
+        "page_sensor_pagesensor_handlebackgroundmessage",
+        "page_sensor_pagesensor_gethealthsnapshot",
+        "page_sensor_pagesensor_sendmessage",
+        "page_sensor_pagesensor_collectandsendbatch"
+      ],
+      "qualifiedPath": [
+        "page_sensor_pagesensor_handlebackgroundmessage",
+        "page_sensor_pagesensor_gethealthsnapshot",
+        "page_sensor_pagesensor_sendmessage",
+        "page_sensor_pagesensor_collectandsendbatch"
+      ],
+      "depth": 2,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/page/sensor.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:navigation_registry_navigationregistry_iscausalscopevalid",
+      "name": ".isCausalScopeValid",
+      "entryPoint": "navigation_registry_navigationregistry_iscausalscopevalid",
+      "entryPointId": "navigation_registry_navigationregistry_iscausalscopevalid",
+      "path": [
+        "navigation_registry_navigationregistry_iscausalscopevalid",
+        "navigation_registry_navigationregistry_getcausalkey",
+        "navigation_registry_navigationregistry_getepoch"
+      ],
+      "qualifiedPath": [
+        "navigation_registry_navigationregistry_iscausalscopevalid",
+        "navigation_registry_navigationregistry_getcausalkey",
+        "navigation_registry_navigationregistry_getepoch"
+      ],
+      "depth": 2,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/core/navigation/registry.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_orchestrator_causalorchestrator_onhealthsnapshot",
+      "name": ".onHealthSnapshot",
+      "entryPoint": "causal_orchestrator_causalorchestrator_onhealthsnapshot",
+      "entryPointId": "causal_orchestrator_causalorchestrator_onhealthsnapshot",
+      "path": [
+        "causal_orchestrator_causalorchestrator_onhealthsnapshot",
+        "causal_orchestrator_causalorchestrator_enrichhealth",
+        "causal_orchestrator_causalorchestrator_finishreplay",
+        "causal_orchestrator_causalorchestrator_maybedraftorpromote",
+        "causal_orchestrator_causalorchestrator_tocompact"
+      ],
+      "qualifiedPath": [
+        "causal_orchestrator_causalorchestrator_onhealthsnapshot",
+        "causal_orchestrator_causalorchestrator_enrichhealth",
+        "causal_orchestrator_causalorchestrator_finishreplay",
+        "causal_orchestrator_causalorchestrator_maybedraftorpromote",
+        "causal_orchestrator_causalorchestrator_tocompact"
+      ],
+      "depth": 2,
+      "nodeCount": 5,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/orchestrator.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_causal_engine_causalengine_onnavigation",
+      "name": ".onNavigation",
+      "entryPoint": "causal_causal_engine_causalengine_onnavigation",
+      "entryPointId": "causal_causal_engine_causalengine_onnavigation",
+      "path": [
+        "causal_causal_engine_causalengine_onnavigation",
+        "causal_causal_engine_causalengine_discardgraph",
+        "causal_causal_engine_causalengine_init",
+        "causal_causal_engine_causalengine_rollbackstate",
+        "causal_causal_engine_causalengine_persistrecords",
+        "causal_causal_engine_toadaptationtx"
+      ],
+      "qualifiedPath": [
+        "causal_causal_engine_causalengine_onnavigation",
+        "causal_causal_engine_causalengine_discardgraph",
+        "causal_causal_engine_causalengine_init",
+        "causal_causal_engine_causalengine_rollbackstate",
+        "causal_causal_engine_causalengine_persistrecords",
+        "causal_causal_engine_toadaptationtx"
+      ],
+      "depth": 2,
+      "nodeCount": 6,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/causal-engine.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_orchestrator_causalorchestrator_onpageobservation",
+      "name": ".onPageObservation",
+      "entryPoint": "causal_orchestrator_causalorchestrator_onpageobservation",
+      "entryPointId": "causal_orchestrator_causalorchestrator_onpageobservation",
+      "path": [
+        "causal_orchestrator_causalorchestrator_onpageobservation",
+        "causal_orchestrator_causalorchestrator_enrichhealth",
+        "causal_orchestrator_causalorchestrator_fingerprint",
+        "causal_orchestrator_causalorchestrator_maybereplay",
+        "causal_orchestrator_causalorchestrator_mayberun",
+        "causal_orchestrator_compactscore",
+        "causal_orchestrator_nownode",
+        "causal_orchestrator_causalorchestrator_remapactions"
+      ],
+      "qualifiedPath": [
+        "causal_orchestrator_causalorchestrator_onpageobservation",
+        "causal_orchestrator_causalorchestrator_enrichhealth",
+        "causal_orchestrator_causalorchestrator_fingerprint",
+        "causal_orchestrator_causalorchestrator_maybereplay",
+        "causal_orchestrator_causalorchestrator_mayberun",
+        "causal_orchestrator_compactscore",
+        "causal_orchestrator_nownode",
+        "causal_orchestrator_causalorchestrator_remapactions"
+      ],
+      "depth": 2,
+      "nodeCount": 8,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/orchestrator.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:navigation_epoch_createnavigationepoch",
+      "name": "createNavigationEpoch",
+      "entryPoint": "navigation_epoch_createnavigationepoch",
+      "entryPointId": "navigation_epoch_createnavigationepoch",
+      "path": [
+        "navigation_epoch_createnavigationepoch",
+        "navigation_epoch_createnavigationid",
+        "navigation_epoch_extractsitekey",
+        "navigation_epoch_resolvedocumentid",
+        "navigation_epoch_createsyntheticdocumentid"
+      ],
+      "qualifiedPath": [
+        "navigation_epoch_createnavigationepoch",
+        "navigation_epoch_createnavigationid",
+        "navigation_epoch_extractsitekey",
+        "navigation_epoch_resolvedocumentid",
+        "navigation_epoch_createsyntheticdocumentid"
+      ],
+      "depth": 2,
+      "nodeCount": 5,
+      "fileCount": 1,
+      "files": [
+        "src/core/navigation/epoch.ts"
+      ],
+      "criticality": 0.17,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_epoch_router_epochrouter_accept",
+      "name": ".accept",
+      "entryPoint": "causal_epoch_router_epochrouter_accept",
+      "entryPointId": "causal_epoch_router_epochrouter_accept",
+      "path": [
+        "causal_epoch_router_epochrouter_accept",
+        "causal_epoch_router_epochrouter_route"
+      ],
+      "qualifiedPath": [
+        "causal_epoch_router_epochrouter_accept",
+        "causal_epoch_router_epochrouter_route"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/epoch-router.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_graph_store_eventgraphstore_append",
+      "name": ".append",
+      "entryPoint": "causal_graph_store_eventgraphstore_append",
+      "entryPointId": "causal_graph_store_eventgraphstore_append",
+      "path": [
+        "causal_graph_store_eventgraphstore_append",
+        "causal_graph_store_eventgraphstore_get"
+      ],
+      "qualifiedPath": [
+        "causal_graph_store_eventgraphstore_append",
+        "causal_graph_store_eventgraphstore_get"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/graph-store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_belief_updater_beliefupdater_apply",
+      "name": ".apply",
+      "entryPoint": "causal_belief_updater_beliefupdater_apply",
+      "entryPointId": "causal_belief_updater_beliefupdater_apply",
+      "path": [
+        "causal_belief_updater_beliefupdater_apply",
+        "causal_belief_updater_beliefupdater_evaluate",
+        "causal_belief_updater_beliefupdater_isconfounded",
+        "causal_belief_updater_beliefupdater_touchedges"
+      ],
+      "qualifiedPath": [
+        "causal_belief_updater_beliefupdater_apply",
+        "causal_belief_updater_beliefupdater_evaluate",
+        "causal_belief_updater_beliefupdater_isconfounded",
+        "causal_belief_updater_beliefupdater_touchedges"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/belief-updater.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:dnr_compiler_dnrcompiler_compileaction",
+      "name": ".compileAction",
+      "entryPoint": "dnr_compiler_dnrcompiler_compileaction",
+      "entryPointId": "dnr_compiler_dnrcompiler_compileaction",
+      "path": [
+        "dnr_compiler_dnrcompiler_compileaction",
+        "dnr_compiler_dnrcompiler_compileallow",
+        "dnr_compiler_dnrcompiler_compileblock",
+        "dnr_compiler_dnrcompiler_compileredirect"
+      ],
+      "qualifiedPath": [
+        "dnr_compiler_dnrcompiler_compileaction",
+        "dnr_compiler_dnrcompiler_compileallow",
+        "dnr_compiler_dnrcompiler_compileblock",
+        "dnr_compiler_dnrcompiler_compileredirect"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/core/dnr/compiler.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_belief_updater_beliefupdater_decide",
+      "name": ".decide",
+      "entryPoint": "causal_belief_updater_beliefupdater_decide",
+      "entryPointId": "causal_belief_updater_beliefupdater_decide",
+      "path": [
+        "causal_belief_updater_beliefupdater_decide",
+        "causal_belief_updater_beliefupdater_evaluate"
+      ],
+      "qualifiedPath": [
+        "causal_belief_updater_beliefupdater_decide",
+        "causal_belief_updater_beliefupdater_evaluate"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/belief-updater.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_causalrecipestore_delete",
+      "name": ".delete",
+      "entryPoint": "causal_promotion_gate_causalrecipestore_delete",
+      "entryPointId": "causal_promotion_gate_causalrecipestore_delete",
+      "path": [
+        "causal_promotion_gate_causalrecipestore_delete",
+        "causal_promotion_gate_causalrecipestore_init",
+        "causal_promotion_gate_causalrecipestore_persist"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_causalrecipestore_delete",
+        "causal_promotion_gate_causalrecipestore_init",
+        "causal_promotion_gate_causalrecipestore_persist"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:recipes_store_recipestore_deleterecipe",
+      "name": ".deleteRecipe",
+      "entryPoint": "recipes_store_recipestore_deleterecipe",
+      "entryPointId": "recipes_store_recipestore_deleterecipe",
+      "path": [
+        "recipes_store_recipestore_deleterecipe",
+        "recipes_store_recipestore_init",
+        "recipes_store_recipestore_persist"
+      ],
+      "qualifiedPath": [
+        "recipes_store_recipestore_deleterecipe",
+        "recipes_store_recipestore_init",
+        "recipes_store_recipestore_persist"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/core/recipes/store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_causalrecipestore_getall",
+      "name": ".getAll",
+      "entryPoint": "causal_promotion_gate_causalrecipestore_getall",
+      "entryPointId": "causal_promotion_gate_causalrecipestore_getall",
+      "path": [
+        "causal_promotion_gate_causalrecipestore_getall",
+        "causal_promotion_gate_causalrecipestore_init"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_causalrecipestore_getall",
+        "causal_promotion_gate_causalrecipestore_init"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:recipes_store_recipestore_getallrecipes",
+      "name": ".getAllRecipes",
+      "entryPoint": "recipes_store_recipestore_getallrecipes",
+      "entryPointId": "recipes_store_recipestore_getallrecipes",
+      "path": [
+        "recipes_store_recipestore_getallrecipes",
+        "recipes_store_recipestore_init"
+      ],
+      "qualifiedPath": [
+        "recipes_store_recipestore_getallrecipes",
+        "recipes_store_recipestore_init"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/recipes/store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_graph_store_eventgraphstore_getorcreate",
+      "name": ".getOrCreate",
+      "entryPoint": "causal_graph_store_eventgraphstore_getorcreate",
+      "entryPointId": "causal_graph_store_eventgraphstore_getorcreate",
+      "path": [
+        "causal_graph_store_eventgraphstore_getorcreate",
+        "causal_graph_store_eventgraphstore_get"
+      ],
+      "qualifiedPath": [
+        "causal_graph_store_eventgraphstore_getorcreate",
+        "causal_graph_store_eventgraphstore_get"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/graph-store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:audit_store_auditstore_getrecentevents",
+      "name": ".getRecentEvents",
+      "entryPoint": "audit_store_auditstore_getrecentevents",
+      "entryPointId": "audit_store_auditstore_getrecentevents",
+      "path": [
+        "audit_store_auditstore_getrecentevents",
+        "audit_store_auditstore_ensureinitialized"
+      ],
+      "qualifiedPath": [
+        "audit_store_auditstore_getrecentevents",
+        "audit_store_auditstore_ensureinitialized"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/audit/store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_causalrecipestore_getrecipe",
+      "name": ".getRecipe",
+      "entryPoint": "causal_promotion_gate_causalrecipestore_getrecipe",
+      "entryPointId": "causal_promotion_gate_causalrecipestore_getrecipe",
+      "path": [
+        "causal_promotion_gate_causalrecipestore_getrecipe",
+        "causal_promotion_gate_causalrecipestore_init"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_causalrecipestore_getrecipe",
+        "causal_promotion_gate_causalrecipestore_init"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:recipes_store_recipestore_getrecipe",
+      "name": ".getRecipe",
+      "entryPoint": "recipes_store_recipestore_getrecipe",
+      "entryPointId": "recipes_store_recipestore_getrecipe",
+      "path": [
+        "recipes_store_recipestore_getrecipe",
+        "recipes_store_recipestore_init"
+      ],
+      "qualifiedPath": [
+        "recipes_store_recipestore_getrecipe",
+        "recipes_store_recipestore_init"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/recipes/store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:navigation_registry_navigationregistry_isepochvalid",
+      "name": ".isEpochValid",
+      "entryPoint": "navigation_registry_navigationregistry_isepochvalid",
+      "entryPointId": "navigation_registry_navigationregistry_isepochvalid",
+      "path": [
+        "navigation_registry_navigationregistry_isepochvalid",
+        "navigation_registry_navigationregistry_getepoch"
+      ],
+      "qualifiedPath": [
+        "navigation_registry_navigationregistry_isepochvalid",
+        "navigation_registry_navigationregistry_getepoch"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/navigation/registry.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_event_normalizer_eventnormalizer_normalizenavigation",
+      "name": ".normalizeNavigation",
+      "entryPoint": "causal_event_normalizer_eventnormalizer_normalizenavigation",
+      "entryPointId": "causal_event_normalizer_eventnormalizer_normalizenavigation",
+      "path": [
+        "causal_event_normalizer_eventnormalizer_normalizenavigation",
+        "causal_event_normalizer_coarseurlfeatures",
+        "causal_event_normalizer_navigationkind",
+        "causal_event_normalizer_timestampfromchrome"
+      ],
+      "qualifiedPath": [
+        "causal_event_normalizer_eventnormalizer_normalizenavigation",
+        "causal_event_normalizer_coarseurlfeatures",
+        "causal_event_normalizer_navigationkind",
+        "causal_event_normalizer_timestampfromchrome"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/event-normalizer.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:page_opaque_targets_opaquetargetregistry_observe",
+      "name": ".observe",
+      "entryPoint": "page_opaque_targets_opaquetargetregistry_observe",
+      "entryPointId": "page_opaque_targets_opaquetargetregistry_observe",
+      "path": [
+        "page_opaque_targets_opaquetargetregistry_observe",
+        "page_opaque_targets_opaquetargetregistry_register"
+      ],
+      "qualifiedPath": [
+        "page_opaque_targets_opaquetargetregistry_observe",
+        "page_opaque_targets_opaquetargetregistry_register"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/page/opaque-targets.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:navigation_registry_navigationregistry_onhistorystateupdated",
+      "name": ".onHistoryStateUpdated",
+      "entryPoint": "navigation_registry_navigationregistry_onhistorystateupdated",
+      "entryPointId": "navigation_registry_navigationregistry_onhistorystateupdated",
+      "path": [
+        "navigation_registry_navigationregistry_onhistorystateupdated",
+        "navigation_registry_navigationregistry_nextnavigationepoch"
+      ],
+      "qualifiedPath": [
+        "navigation_registry_navigationregistry_onhistorystateupdated",
+        "navigation_registry_navigationregistry_nextnavigationepoch"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/navigation/registry.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:navigation_registry_navigationregistry_onnavigationcommitted",
+      "name": ".onNavigationCommitted",
+      "entryPoint": "navigation_registry_navigationregistry_onnavigationcommitted",
+      "entryPointId": "navigation_registry_navigationregistry_onnavigationcommitted",
+      "path": [
+        "navigation_registry_navigationregistry_onnavigationcommitted",
+        "navigation_registry_navigationregistry_nextnavigationepoch"
+      ],
+      "qualifiedPath": [
+        "navigation_registry_navigationregistry_onnavigationcommitted",
+        "navigation_registry_navigationregistry_nextnavigationepoch"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/navigation/registry.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:audit_store_auditstore_recordevent",
+      "name": ".recordEvent",
+      "entryPoint": "audit_store_auditstore_recordevent",
+      "entryPointId": "audit_store_auditstore_recordevent",
+      "path": [
+        "audit_store_auditstore_recordevent",
+        "audit_store_auditstore_ensureinitialized"
+      ],
+      "qualifiedPath": [
+        "audit_store_auditstore_recordevent",
+        "audit_store_auditstore_ensureinitialized"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/audit/store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:adaptation_engine_adaptationtransactionengine_releasetransaction",
+      "name": ".releaseTransaction",
+      "entryPoint": "adaptation_engine_adaptationtransactionengine_releasetransaction",
+      "entryPointId": "adaptation_engine_adaptationtransactionengine_releasetransaction",
+      "path": [
+        "adaptation_engine_adaptationtransactionengine_releasetransaction",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "qualifiedPath": [
+        "adaptation_engine_adaptationtransactionengine_releasetransaction",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/core/adaptation/engine.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:page_dom_actions_domactionexecutor_rollbackall",
+      "name": ".rollbackAll",
+      "entryPoint": "page_dom_actions_domactionexecutor_rollbackall",
+      "entryPointId": "page_dom_actions_domactionexecutor_rollbackall",
+      "path": [
+        "page_dom_actions_domactionexecutor_rollbackall",
+        "page_dom_actions_domactionexecutor_rollbackaction"
+      ],
+      "qualifiedPath": [
+        "page_dom_actions_domactionexecutor_rollbackall",
+        "page_dom_actions_domactionexecutor_rollbackaction"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/page/dom-actions.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:adaptation_engine_adaptationtransactionengine_rollbackallorphaned",
+      "name": ".rollbackAllOrphaned",
+      "entryPoint": "adaptation_engine_adaptationtransactionengine_rollbackallorphaned",
+      "entryPointId": "adaptation_engine_adaptationtransactionengine_rollbackallorphaned",
+      "path": [
+        "adaptation_engine_adaptationtransactionengine_rollbackallorphaned",
+        "adaptation_engine_adaptationtransactionengine_init",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "qualifiedPath": [
+        "adaptation_engine_adaptationtransactionengine_rollbackallorphaned",
+        "adaptation_engine_adaptationtransactionengine_init",
+        "adaptation_engine_adaptationtransactionengine_persistactivetransactions"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/core/adaptation/engine.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_promotion_gate_causalrecipestore_save",
+      "name": ".save",
+      "entryPoint": "causal_promotion_gate_causalrecipestore_save",
+      "entryPointId": "causal_promotion_gate_causalrecipestore_save",
+      "path": [
+        "causal_promotion_gate_causalrecipestore_save",
+        "causal_promotion_gate_causalrecipestore_init",
+        "causal_promotion_gate_causalrecipestore_persist"
+      ],
+      "qualifiedPath": [
+        "causal_promotion_gate_causalrecipestore_save",
+        "causal_promotion_gate_causalrecipestore_init",
+        "causal_promotion_gate_causalrecipestore_persist"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/promotion-gate.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:recipes_store_recipestore_saverecipe",
+      "name": ".saveRecipe",
+      "entryPoint": "recipes_store_recipestore_saverecipe",
+      "entryPointId": "recipes_store_recipestore_saverecipe",
+      "path": [
+        "recipes_store_recipestore_saverecipe",
+        "recipes_store_recipestore_init",
+        "recipes_store_recipestore_persist"
+      ],
+      "qualifiedPath": [
+        "recipes_store_recipestore_saverecipe",
+        "recipes_store_recipestore_init",
+        "recipes_store_recipestore_persist"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/core/recipes/store.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_recipes_checkfingerprint",
+      "name": "checkFingerprint",
+      "entryPoint": "causal_recipes_checkfingerprint",
+      "entryPointId": "causal_recipes_checkfingerprint",
+      "path": [
+        "causal_recipes_checkfingerprint",
+        "causal_recipes_pathclassmatches"
+      ],
+      "qualifiedPath": [
+        "causal_recipes_checkfingerprint",
+        "causal_recipes_pathclassmatches"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/recipes.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_graph_createemptygraph",
+      "name": "createEmptyGraph",
+      "entryPoint": "causal_graph_createemptygraph",
+      "entryPointId": "causal_graph_createemptygraph",
+      "path": [
+        "causal_graph_createemptygraph",
+        "causal_graph_creategraphid"
+      ],
+      "qualifiedPath": [
+        "causal_graph_createemptygraph",
+        "causal_graph_creategraphid"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/graph.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_belief_effectfromwelford",
+      "name": "effectFromWelford",
+      "entryPoint": "causal_belief_effectfromwelford",
+      "entryPointId": "causal_belief_effectfromwelford",
+      "path": [
+        "causal_belief_effectfromwelford",
+        "causal_belief_samplevariance"
+      ],
+      "qualifiedPath": [
+        "causal_belief_effectfromwelford",
+        "causal_belief_samplevariance"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/belief.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_experiment_to_strategy_experimenttostrategy",
+      "name": "experimentToStrategy",
+      "entryPoint": "causal_experiment_to_strategy_experimenttostrategy",
+      "entryPointId": "causal_experiment_to_strategy_experimenttostrategy",
+      "path": [
+        "causal_experiment_to_strategy_experimenttostrategy",
+        "causal_experiment_to_strategy_isallowedvariable",
+        "causal_experiment_to_strategy_riskfromhealth",
+        "causal_experiment_to_strategy_unsafetext"
+      ],
+      "qualifiedPath": [
+        "causal_experiment_to_strategy_experimenttostrategy",
+        "causal_experiment_to_strategy_isallowedvariable",
+        "causal_experiment_to_strategy_riskfromhealth",
+        "causal_experiment_to_strategy_unsafetext"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/experiment-to-strategy.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_experiments_experimentutility",
+      "name": "experimentUtility",
+      "entryPoint": "causal_experiments_experimentutility",
+      "entryPointId": "causal_experiments_experimentutility",
+      "path": [
+        "causal_experiments_experimentutility",
+        "causal_experiments_clampunit"
+      ],
+      "qualifiedPath": [
+        "causal_experiments_experimentutility",
+        "causal_experiments_clampunit"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/experiments.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:scripts_generate_eval_corpus_generatecorpus",
+      "name": "generateCorpus",
+      "entryPoint": "scripts_generate_eval_corpus_generatecorpus",
+      "entryPointId": "scripts_generate_eval_corpus_generatecorpus",
+      "path": [
+        "scripts_generate_eval_corpus_generatecorpus",
+        "scripts_generate_eval_corpus_createcase"
+      ],
+      "qualifiedPath": [
+        "scripts_generate_eval_corpus_generatecorpus",
+        "scripts_generate_eval_corpus_createcase"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "scripts/generate-eval-corpus.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:shared_guards_isdomaction",
+      "name": "isDomAction",
+      "entryPoint": "shared_guards_isdomaction",
+      "entryPointId": "shared_guards_isdomaction",
+      "path": [
+        "shared_guards_isdomaction",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "qualifiedPath": [
+        "shared_guards_isdomaction",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/shared/guards.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:shared_guards_ishealthvector",
+      "name": "isHealthVector",
+      "entryPoint": "shared_guards_ishealthvector",
+      "entryPointId": "shared_guards_ishealthvector",
+      "path": [
+        "shared_guards_ishealthvector",
+        "shared_guards_isnumber",
+        "shared_guards_isobject"
+      ],
+      "qualifiedPath": [
+        "shared_guards_ishealthvector",
+        "shared_guards_isnumber",
+        "shared_guards_isobject"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/shared/guards.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:shared_guards_issiterecipe",
+      "name": "isSiteRecipe",
+      "entryPoint": "shared_guards_issiterecipe",
+      "entryPointId": "shared_guards_issiterecipe",
+      "path": [
+        "shared_guards_issiterecipe",
+        "shared_guards_isnumber",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "qualifiedPath": [
+        "shared_guards_issiterecipe",
+        "shared_guards_isnumber",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/shared/guards.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_events_isstalescope",
+      "name": "isStaleScope",
+      "entryPoint": "causal_events_isstalescope",
+      "entryPointId": "causal_events_isstalescope",
+      "path": [
+        "causal_events_isstalescope",
+        "causal_events_scopesequal"
+      ],
+      "qualifiedPath": [
+        "causal_events_isstalescope",
+        "causal_events_scopesequal"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/events.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:shared_guards_isstrategycandidate",
+      "name": "isStrategyCandidate",
+      "entryPoint": "shared_guards_isstrategycandidate",
+      "entryPointId": "shared_guards_isstrategycandidate",
+      "path": [
+        "shared_guards_isstrategycandidate",
+        "shared_guards_isboolean",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "qualifiedPath": [
+        "shared_guards_isstrategycandidate",
+        "shared_guards_isboolean",
+        "shared_guards_isobject",
+        "shared_guards_isstring"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "src/shared/guards.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:spikes_document_id_spike_main",
+      "name": "main",
+      "entryPoint": "spikes_document_id_spike_main",
+      "entryPointId": "spikes_document_id_spike_main",
+      "path": [
+        "spikes_document_id_spike_main",
+        "spikes_document_id_spike_buildinstrumentedextension",
+        "spikes_document_id_spike_findchrome",
+        "spikes_document_id_spike_startlogger"
+      ],
+      "qualifiedPath": [
+        "spikes_document_id_spike_main",
+        "spikes_document_id_spike_buildinstrumentedextension",
+        "spikes_document_id_spike_findchrome",
+        "spikes_document_id_spike_startlogger"
+      ],
+      "depth": 1,
+      "nodeCount": 4,
+      "fileCount": 1,
+      "files": [
+        "tools/spikes/document-id-spike.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_experiments_scoreinformationgain",
+      "name": "scoreInformationGain",
+      "entryPoint": "causal_experiments_scoreinformationgain",
+      "entryPointId": "causal_experiments_scoreinformationgain",
+      "path": [
+        "causal_experiments_scoreinformationgain",
+        "causal_experiments_clampunit"
+      ],
+      "qualifiedPath": [
+        "causal_experiments_scoreinformationgain",
+        "causal_experiments_clampunit"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/experiments.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_experiment_selector_selectexperiment",
+      "name": "selectExperiment",
+      "entryPoint": "causal_experiment_selector_selectexperiment",
+      "entryPointId": "causal_experiment_selector_selectexperiment",
+      "path": [
+        "causal_experiment_selector_selectexperiment",
+        "causal_experiment_selector_experimentselector",
+        "causal_experiment_selector_experimentselector_select"
+      ],
+      "qualifiedPath": [
+        "causal_experiment_selector_selectexperiment",
+        "causal_experiment_selector_experimentselector",
+        "causal_experiment_selector_experimentselector_select"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/background/causal/experiment-selector.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_belief_successrateci95",
+      "name": "successRateCi95",
+      "entryPoint": "causal_belief_successrateci95",
+      "entryPointId": "causal_belief_successrateci95",
+      "path": [
+        "causal_belief_successrateci95",
+        "causal_belief_observedn"
+      ],
+      "qualifiedPath": [
+        "causal_belief_successrateci95",
+        "causal_belief_observedn"
+      ],
+      "depth": 1,
+      "nodeCount": 2,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/belief.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    },
+    {
+      "id": "flow:causal_graph_withinlagwindow",
+      "name": "withinLagWindow",
+      "entryPoint": "causal_graph_withinlagwindow",
+      "entryPointId": "causal_graph_withinlagwindow",
+      "path": [
+        "causal_graph_withinlagwindow",
+        "causal_graph_lagms",
+        "causal_graph_temporalprecedes"
+      ],
+      "qualifiedPath": [
+        "causal_graph_withinlagwindow",
+        "causal_graph_lagms",
+        "causal_graph_temporalprecedes"
+      ],
+      "depth": 1,
+      "nodeCount": 3,
+      "fileCount": 1,
+      "files": [
+        "src/shared/causal/graph.ts"
+      ],
+      "criticality": 0.16,
+      "warnings": []
+    }
+  ]
+}
