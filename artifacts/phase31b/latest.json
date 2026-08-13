@@ -1,0 +1,62 @@
+{
+  "schema": "adapt-phase31b-verification-v1",
+  "startedAt": "2026-08-13T19:51:26.377Z",
+  "completedAt": "2026-08-13T19:56:13.286Z",
+  "verdict": "PASSED",
+  "gates": [
+    {
+      "name": "TypeScript typecheck",
+      "command": "npm run typecheck",
+      "pass": true,
+      "durationMs": 1729
+    },
+    {
+      "name": "Full reproducible build and filter compilation",
+      "command": "npm run build:full",
+      "pass": true,
+      "durationMs": 102882
+    },
+    {
+      "name": "Page filter compiler unit suite",
+      "command": "npm run test:page",
+      "pass": true,
+      "durationMs": 1084
+    },
+    {
+      "name": "Filter compiler and package integrity",
+      "command": "npm run verify:phase31b:integrity",
+      "pass": true,
+      "durationMs": 449
+    },
+    {
+      "name": "All unit and Phase 3 regression tests",
+      "command": "npm run test:unit",
+      "pass": true,
+      "durationMs": 6818
+    },
+    {
+      "name": "Synthetic adversarial page lab",
+      "command": "npm run test:anti-adblock",
+      "pass": true,
+      "durationMs": 4736
+    },
+    {
+      "name": "Content runtime stability regression",
+      "command": "npm run test:runtime",
+      "pass": true,
+      "durationMs": 4816
+    },
+    {
+      "name": "Chromium Phase 3 and Phase 3.1B E2E suites",
+      "command": "npm run test:e2e",
+      "pass": true,
+      "durationMs": 162863
+    },
+    {
+      "name": "Bundle security and packaging checks",
+      "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
+      "pass": true,
+      "durationMs": 1531
+    }
+  ]
+}
