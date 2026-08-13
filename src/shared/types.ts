@@ -11,6 +11,10 @@ export interface HealthVector {
   visualObstruction: number; // 0..1 (LOWER is better)
   mutationStability: number; // 0..1 (HIGHER is better)
   mediaHealth?: number; // 0..1 (HIGHER is better)
+  /** Background-derived request success ratio; absent when network telemetry is unavailable. */
+  networkIntegrity?: number;
+  /** Background-derived score accounting for temporary allow rules and tracker risk. */
+  privacyPreservation?: number;
   confidence: number; // 0..1
 }
 
@@ -67,6 +71,8 @@ export interface DomAction extends BaseAction {
     | 'DOM_RESTORE_POINTER_EVENTS'
     | 'DOM_PRESERVE_BAIT_CANDIDATE';
   selector?: string;
+  /** Content-script-owned opaque element reference. AI never sees or creates selectors. */
+  targetRef?: `element:e${number}`;
   styleId?: string;
   cssText?: string;
   targetProperty?: string;
@@ -117,6 +123,7 @@ export interface AdaptationTransaction {
   txId: string;
   tabId: number;
   navigationId: string;
+  documentId?: string;
   siteKey: string;
   createdAt: number;
   updatedAt: number;
@@ -154,6 +161,10 @@ export interface SiteRecipe {
 export interface NavigationEpoch {
   tabId: number;
   navigationId: string;
+  /** Chrome webNavigation documentId. Synthetic `missing:` prefix if Chrome did not supply one. */
+  documentId: string;
+  /** ADAPT-assigned monotonic per-tab counter. Starts at 1. Increments on real nav and SPA history. */
+  navigationEpoch: number;
   frameId: number;
   parentFrameId?: number;
   url: string;
@@ -202,6 +213,19 @@ export interface PageSignalBatch {
   interaction: InteractionSignal;
   mutation: MutationSignal;
   suspectedDetectorTypes: string[];
+}
+
+export interface OpaqueElementObservation {
+  ref: `element:e${number}`;
+  role: 'fullscreen-overlay' | 'bait-candidate';
+  viewportCoverage: number;
+  visible: boolean;
+}
+
+export interface CausalPageObservationBatch {
+  timestamp: number;
+  pageSignals: PageSignalBatch;
+  elements: OpaqueElementObservation[];
 }
 
 export interface AuditEvent {

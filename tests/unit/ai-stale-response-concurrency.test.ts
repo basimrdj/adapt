@@ -110,6 +110,60 @@ describe('Phase 2.5 Stale Response & Concurrency Stress Suite', () => {
     expect(staleActive).toHaveLength(0);
   });
 
+  it('drops a slow planner response after navigation before staging any action', async () => {
+    const memoryStorage: Record<string, any> = {};
+    const storageBackend = {
+      get: async (keys: string[]) => Object.fromEntries(keys.filter((k) => k in memoryStorage).map((k) => [k, memoryStorage[k]])),
+      set: async (items: Record<string, any>) => { Object.assign(memoryStorage, items); },
+      remove: async (keys: string[]) => { for (const k of keys) delete memoryStorage[k]; },
+    };
+    const dnrUpdates: unknown[] = [];
+    const dnr = new DnrController({
+      getDynamicRules: async () => [],
+      getSessionRules: async () => [],
+      updateDynamicRules: async (opts) => { dnrUpdates.push(opts); },
+      updateSessionRules: async (opts) => { dnrUpdates.push(opts); },
+    });
+    const messages: unknown[] = [];
+    let releasePlan!: () => void;
+    const gate = new Promise<void>((resolve) => { releasePlan = resolve; });
+    const planner = {
+      plan: async (evidence: any) => {
+        await gate;
+        return new MockPlanner().plan(evidence);
+      },
+    };
+    let liveNavigationId = 'epoch_1';
+    const engine = new AdaptationTransactionEngine(
+      dnr,
+      new RecipeStore(storageBackend),
+      new AuditStore(storageBackend),
+      storageBackend,
+      async (_tabId, msg) => { messages.push(msg); },
+      planner,
+      (_tabId, navigationId) => navigationId === liveNavigationId
+    );
+
+    const unknownBatch = createDummyBatch(false);
+    unknownBatch.semantic = {
+      detectedPhrases: ['novel custom blocker detection'],
+      adblockKeywordDensity: 0.05,
+      confidenceScore: 0.95,
+    };
+    unknownBatch.mutation.rapidReinsertionDetected = true;
+    unknownBatch.mutation.mutationRatePerSecond = 150;
+    unknownBatch.suspectedDetectorTypes = ['NOVEL_UNKNOWN_DETECTOR'];
+    const pending = engine.evaluateSignals(1, 'epoch_1', 'example.com', unknownBatch);
+    await Promise.resolve();
+    liveNavigationId = 'epoch_2';
+    releasePlan();
+
+    await expect(pending).resolves.toBeNull();
+    expect(engine.getActiveTransactions()).toHaveLength(0);
+    expect(messages).toHaveLength(0);
+    expect(dnrUpdates).toHaveLength(0);
+  });
+
   it('Concurrency: Executes 10 concurrent AI adaptation evaluations across 10 tabs with zero cross-contamination', async () => {
     const memoryStorage: Record<string, any> = {};
     const storageBackend = {

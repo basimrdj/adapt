@@ -1,0 +1,1576 @@
+{
+  "id": "stable-replay-corpus",
+  "kind": "stable",
+  "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+  "expectedHealthDelta": 0.3,
+  "fingerprint": {
+    "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+    "topLevelPathClass": "article",
+    "detectorFeatureHash": "det:overlay-v1",
+    "relevantResourceSetHash": "res:set-v1",
+    "structuralFeatureHash": "str:dom-v1",
+    "createdWallMs": 1700000000000
+  },
+  "visits": [
+    {
+      "visit": 1,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2986,
+      "success": true
+    },
+    {
+      "visit": 2,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2967,
+      "success": true
+    },
+    {
+      "visit": 3,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.285,
+      "success": true
+    },
+    {
+      "visit": 4,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2719,
+      "success": true
+    },
+    {
+      "visit": 5,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.298,
+      "success": true
+    },
+    {
+      "visit": 6,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3266,
+      "success": true
+    },
+    {
+      "visit": 7,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3229,
+      "success": true
+    },
+    {
+      "visit": 8,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3277,
+      "success": true
+    },
+    {
+      "visit": 9,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2848,
+      "success": true
+    },
+    {
+      "visit": 10,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3113,
+      "success": true
+    },
+    {
+      "visit": 11,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3074,
+      "success": true
+    },
+    {
+      "visit": 12,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3278,
+      "success": true
+    },
+    {
+      "visit": 13,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2878,
+      "success": true
+    },
+    {
+      "visit": 14,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2963,
+      "success": true
+    },
+    {
+      "visit": 15,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2732,
+      "success": true
+    },
+    {
+      "visit": 16,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3153,
+      "success": true
+    },
+    {
+      "visit": 17,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2734,
+      "success": true
+    },
+    {
+      "visit": 18,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3278,
+      "success": true
+    },
+    {
+      "visit": 19,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3201,
+      "success": true
+    },
+    {
+      "visit": 20,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3212,
+      "success": true
+    },
+    {
+      "visit": 21,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2998,
+      "success": true
+    },
+    {
+      "visit": 22,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3166,
+      "success": true
+    },
+    {
+      "visit": 23,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3281,
+      "success": true
+    },
+    {
+      "visit": 24,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3205,
+      "success": true
+    },
+    {
+      "visit": 25,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3011,
+      "success": true
+    },
+    {
+      "visit": 26,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.322,
+      "success": true
+    },
+    {
+      "visit": 27,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2825,
+      "success": true
+    },
+    {
+      "visit": 28,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2852,
+      "success": true
+    },
+    {
+      "visit": 29,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3093,
+      "success": true
+    },
+    {
+      "visit": 30,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3117,
+      "success": true
+    },
+    {
+      "visit": 31,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2882,
+      "success": true
+    },
+    {
+      "visit": 32,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2834,
+      "success": true
+    },
+    {
+      "visit": 33,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3045,
+      "success": true
+    },
+    {
+      "visit": 34,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3295,
+      "success": true
+    },
+    {
+      "visit": 35,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3227,
+      "success": true
+    },
+    {
+      "visit": 36,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.324,
+      "success": true
+    },
+    {
+      "visit": 37,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3291,
+      "success": true
+    },
+    {
+      "visit": 38,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3074,
+      "success": true
+    },
+    {
+      "visit": 39,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3169,
+      "success": true
+    },
+    {
+      "visit": 40,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2994,
+      "success": true
+    },
+    {
+      "visit": 41,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3238,
+      "success": true
+    },
+    {
+      "visit": 42,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2896,
+      "success": true
+    },
+    {
+      "visit": 43,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3213,
+      "success": true
+    },
+    {
+      "visit": 44,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3049,
+      "success": true
+    },
+    {
+      "visit": 45,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.28,
+      "success": true
+    },
+    {
+      "visit": 46,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2962,
+      "success": true
+    },
+    {
+      "visit": 47,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2814,
+      "success": true
+    },
+    {
+      "visit": 48,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3229,
+      "success": true
+    },
+    {
+      "visit": 49,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2906,
+      "success": true
+    },
+    {
+      "visit": 50,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2721,
+      "success": true
+    },
+    {
+      "visit": 51,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3073,
+      "success": true
+    },
+    {
+      "visit": 52,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3264,
+      "success": true
+    },
+    {
+      "visit": 53,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3283,
+      "success": true
+    },
+    {
+      "visit": 54,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3285,
+      "success": true
+    },
+    {
+      "visit": 55,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.323,
+      "success": true
+    },
+    {
+      "visit": 56,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2988,
+      "success": true
+    },
+    {
+      "visit": 57,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2933,
+      "success": true
+    },
+    {
+      "visit": 58,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3229,
+      "success": true
+    },
+    {
+      "visit": 59,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2777,
+      "success": true
+    },
+    {
+      "visit": 60,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2722,
+      "success": true
+    },
+    {
+      "visit": 61,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3278,
+      "success": true
+    },
+    {
+      "visit": 62,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.327,
+      "success": true
+    },
+    {
+      "visit": 63,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2954,
+      "success": true
+    },
+    {
+      "visit": 64,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2969,
+      "success": true
+    },
+    {
+      "visit": 65,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3062,
+      "success": true
+    },
+    {
+      "visit": 66,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3147,
+      "success": true
+    },
+    {
+      "visit": 67,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3115,
+      "success": true
+    },
+    {
+      "visit": 68,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.317,
+      "success": true
+    },
+    {
+      "visit": 69,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2909,
+      "success": true
+    },
+    {
+      "visit": 70,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3259,
+      "success": true
+    },
+    {
+      "visit": 71,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2869,
+      "success": true
+    },
+    {
+      "visit": 72,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2906,
+      "success": true
+    },
+    {
+      "visit": 73,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3135,
+      "success": true
+    },
+    {
+      "visit": 74,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2946,
+      "success": true
+    },
+    {
+      "visit": 75,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2885,
+      "success": true
+    },
+    {
+      "visit": 76,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2902,
+      "success": true
+    },
+    {
+      "visit": 77,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2728,
+      "success": true
+    },
+    {
+      "visit": 78,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2953,
+      "success": true
+    },
+    {
+      "visit": 79,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2875,
+      "success": true
+    },
+    {
+      "visit": 80,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3235,
+      "success": true
+    },
+    {
+      "visit": 81,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3053,
+      "success": true
+    },
+    {
+      "visit": 82,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3052,
+      "success": true
+    },
+    {
+      "visit": 83,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3069,
+      "success": true
+    },
+    {
+      "visit": 84,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2758,
+      "success": true
+    },
+    {
+      "visit": 85,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3063,
+      "success": true
+    },
+    {
+      "visit": 86,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3251,
+      "success": true
+    },
+    {
+      "visit": 87,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2707,
+      "success": true
+    },
+    {
+      "visit": 88,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2892,
+      "success": true
+    },
+    {
+      "visit": 89,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3228,
+      "success": true
+    },
+    {
+      "visit": 90,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3014,
+      "success": true
+    },
+    {
+      "visit": 91,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.324,
+      "success": true
+    },
+    {
+      "visit": 92,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3216,
+      "success": true
+    },
+    {
+      "visit": 93,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2968,
+      "success": true
+    },
+    {
+      "visit": 94,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2922,
+      "success": true
+    },
+    {
+      "visit": 95,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.306,
+      "success": true
+    },
+    {
+      "visit": 96,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2811,
+      "success": true
+    },
+    {
+      "visit": 97,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3252,
+      "success": true
+    },
+    {
+      "visit": 98,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2975,
+      "success": true
+    },
+    {
+      "visit": 99,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2859,
+      "success": true
+    },
+    {
+      "visit": 100,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2727,
+      "success": true
+    },
+    {
+      "visit": 101,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2826,
+      "success": true
+    },
+    {
+      "visit": 102,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2807,
+      "success": true
+    },
+    {
+      "visit": 103,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2976,
+      "success": true
+    },
+    {
+      "visit": 104,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3238,
+      "success": true
+    },
+    {
+      "visit": 105,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2778,
+      "success": true
+    },
+    {
+      "visit": 106,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2945,
+      "success": true
+    },
+    {
+      "visit": 107,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2869,
+      "success": true
+    },
+    {
+      "visit": 108,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2727,
+      "success": true
+    },
+    {
+      "visit": 109,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3143,
+      "success": true
+    },
+    {
+      "visit": 110,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.273,
+      "success": true
+    },
+    {
+      "visit": 111,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3217,
+      "success": true
+    },
+    {
+      "visit": 112,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2763,
+      "success": true
+    },
+    {
+      "visit": 113,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3062,
+      "success": true
+    },
+    {
+      "visit": 114,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3027,
+      "success": true
+    },
+    {
+      "visit": 115,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2969,
+      "success": true
+    },
+    {
+      "visit": 116,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2866,
+      "success": true
+    },
+    {
+      "visit": 117,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2842,
+      "success": true
+    },
+    {
+      "visit": 118,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2971,
+      "success": true
+    },
+    {
+      "visit": 119,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2719,
+      "success": true
+    },
+    {
+      "visit": 120,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3147,
+      "success": true
+    }
+  ]
+}

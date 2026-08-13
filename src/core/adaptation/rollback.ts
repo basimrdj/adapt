@@ -42,6 +42,7 @@ export class AdaptationRollbackHandler {
           type: 'ROLLBACK_DOM_ACTION',
           txId: tx.txId,
           actionId,
+          documentId: tx.documentId,
         });
         domActionsRolledBack++;
       } catch (err: unknown) {

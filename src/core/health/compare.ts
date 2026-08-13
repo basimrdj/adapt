@@ -23,8 +23,16 @@ export function verifyHealthOutcome(
   const reactionImproved = reactionDelta <= -0.30 || (baseline.antiBlockReaction >= 0.50 && post.antiBlockReaction <= 0.20);
   const contentPreserved = contentDelta >= ADAPT_THRESHOLDS.MAX_ALLOWED_CONTENT_REGRESSION;
   const interactionHealthy = post.interaction >= 0.70 && post.scrollability >= 0.70;
+  const networkPreserved =
+    baseline.networkIntegrity === undefined ||
+    post.networkIntegrity === undefined ||
+    post.networkIntegrity >= baseline.networkIntegrity - 0.05;
+  const privacyPreserved =
+    baseline.privacyPreservation === undefined ||
+    post.privacyPreservation === undefined ||
+    post.privacyPreservation >= baseline.privacyPreservation - 0.01;
 
-  const success = reactionImproved && contentPreserved && interactionHealthy;
+  const success = reactionImproved && contentPreserved && interactionHealthy && networkPreserved && privacyPreserved;
 
   let notes = '';
   if (success) {
@@ -33,8 +41,12 @@ export function verifyHealthOutcome(
     notes = `Adaptation failed: reaction score did not improve sufficiently (delta: ${reactionDelta.toFixed(2)}).`;
   } else if (!contentPreserved) {
     notes = `Adaptation failed: main content availability regressed by ${(Math.abs(contentDelta) * 100).toFixed(1)}%.`;
-  } else {
+  } else if (!interactionHealthy) {
     notes = `Adaptation failed: page interaction or scrollability remained locked.`;
+  } else if (!networkPreserved) {
+    notes = 'Adaptation failed: network integrity regressed.';
+  } else {
+    notes = 'Adaptation failed: privacy preservation regressed.';
   }
 
   return {

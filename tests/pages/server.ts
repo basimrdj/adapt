@@ -1,6 +1,9 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
 export interface TestServerInstances {
   appServer: http.Server;
@@ -41,7 +44,7 @@ export function startTestServers(appPort = 4000, adPort = 4001): Promise<TestSer
         return;
       }
 
-      let filePath = path.join(__dirname, urlPath === '/' ? 'index.html' : urlPath);
+      let filePath = path.join(currentDir, urlPath === '/' ? 'index.html' : urlPath);
 
       if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
         filePath = path.join(filePath, 'index.html');

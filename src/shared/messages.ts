@@ -1,4 +1,4 @@
-import { PageSignalBatch, DomAction, HealthVector, RuntimeOpAction } from './types';
+import { PageSignalBatch, DomAction, HealthVector, RuntimeOpAction, CausalPageObservationBatch } from './types';
 
 /**
  * Message protocol definitions between content scripts and background service worker.
@@ -20,6 +20,12 @@ export type ContentToBackgroundMessage =
     }
   | {
       v: 1;
+      type: 'CAUSAL_OBSERVATION_BATCH';
+      navigationId: string;
+      payload: CausalPageObservationBatch;
+    }
+  | {
+      v: 1;
       type: 'HEALTH_SNAPSHOT';
       navigationId: string;
       txId?: string;
@@ -30,6 +36,8 @@ export type ContentToBackgroundMessage =
       type: 'DOM_ACTION_RESULT';
       navigationId: string;
       actionId: string;
+      txId?: string;
+      operation?: 'apply' | 'rollback';
       success: boolean;
       error?: string;
     };
@@ -40,12 +48,14 @@ export type BackgroundToContentMessage =
       type: 'APPLY_DOM_ACTION';
       txId: string;
       payload: DomAction;
+      documentId?: string;
     }
   | {
       v: 1;
       type: 'ROLLBACK_DOM_ACTION';
       txId: string;
       actionId: string;
+      documentId?: string;
     }
   | {
       v: 1;

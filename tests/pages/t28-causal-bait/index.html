@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <title>T28 Causal bait intervention</title>
+  <style>
+    #ad-causal-bait { display: none; width: 300px; height: 250px; }
+    .overlay { position: fixed; inset: 0; background: #111; color: white; display: grid; place-items: center; z-index: 99999; }
+  </style>
+</head>
+<body>
+  <main><h1>Causal fixture</h1><p>Content remains available.</p></main>
+  <div id="ad-causal-bait" class="ad-banner">bait</div>
+  <script>
+    const update = () => {
+      const bait = document.getElementById('ad-causal-bait');
+      const hidden = !bait || bait.offsetWidth === 0 || bait.offsetHeight === 0;
+      let gate = document.getElementById('causal-gate');
+      if (hidden && !gate) {
+        gate = document.createElement('div');
+        gate.id = 'causal-gate';
+        gate.className = 'overlay';
+        gate.textContent = 'Adblock detected. Disable your blocker.';
+        document.body.appendChild(gate);
+        document.body.style.overflow = 'hidden';
+      } else if (!hidden && gate) {
+        gate.remove();
+        document.body.style.overflow = 'auto';
+      }
+    };
+    update();
+    setInterval(update, 50);
+  </script>
+</body>
+</html>

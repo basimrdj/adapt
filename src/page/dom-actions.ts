@@ -1,4 +1,5 @@
 import { DomAction } from '../shared/types';
+import { OpaqueTargetRegistry } from './opaque-targets';
 
 export interface AppliedDomActionRecord {
   action: DomAction;
@@ -23,7 +24,18 @@ function sanitizeCssSelector(selector: string): string {
 export class DomActionExecutor {
   private appliedActions = new Map<string, AppliedDomActionRecord>();
 
+  constructor(private readonly targets?: OpaqueTargetRegistry) {}
+
+  private targetElements(action: DomAction): HTMLElement[] | null {
+    if (action.targetRef) {
+      const element = this.targets?.resolve(action.targetRef);
+      return element ? [element] : [];
+    }
+    return null;
+  }
+
   public applyAction(action: DomAction): boolean {
+    if (action.targetRef && !this.targets?.resolve(action.targetRef)) return false;
     const record: AppliedDomActionRecord = {
       action,
       mutatedElements: [],
@@ -33,7 +45,13 @@ export class DomActionExecutor {
       switch (action.type) {
         case 'DOM_REMOVE_OVERLAY':
         case 'DOM_COLLAPSE': {
-          if (action.selector) {
+          const opaqueTargets = this.targetElements(action);
+          if (opaqueTargets !== null) {
+            opaqueTargets.forEach((htmlEl) => {
+              record.mutatedElements.push({ element: htmlEl, originalStyles: { display: htmlEl.style.display } });
+              htmlEl.style.setProperty('display', 'none', 'important');
+            });
+          } else if (action.selector) {
             const safeSelector = sanitizeCssSelector(action.selector);
             const elements = document.querySelectorAll(safeSelector);
             elements.forEach((el) => {
@@ -115,9 +133,9 @@ export class DomActionExecutor {
 
         case 'DOM_PRESERVE_BAIT_CANDIDATE': {
           // Keep dummy layout bait elements dimensions without executing external scripts
-          if (action.selector) {
-            const safeSelector = sanitizeCssSelector(action.selector);
-            const baits = document.querySelectorAll(safeSelector);
+          const opaqueTargets = this.targetElements(action);
+          const baits = opaqueTargets ?? (action.selector ? Array.from(document.querySelectorAll<HTMLElement>(sanitizeCssSelector(action.selector))) : []);
+          if (baits.length > 0) {
             baits.forEach((el) => {
               const htmlEl = el as HTMLElement;
               record.mutatedElements.push({
@@ -141,7 +159,13 @@ export class DomActionExecutor {
         }
 
         case 'DOM_HIDE': {
-          if (action.selector) {
+          const opaqueTargets = this.targetElements(action);
+          if (opaqueTargets !== null) {
+            opaqueTargets.forEach((htmlEl) => {
+              record.mutatedElements.push({ element: htmlEl, originalStyles: { display: htmlEl.style.display } });
+              htmlEl.style.setProperty('display', 'none', 'important');
+            });
+          } else if (action.selector) {
             const safeSelector = sanitizeCssSelector(action.selector);
             const style = document.createElement('style');
             style.textContent = `${safeSelector} { display: none !important; }`;

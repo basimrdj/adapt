@@ -99,7 +99,10 @@ describe('ADAPT Extension Phase 1.5 Adversarial Laboratory Suite', () => {
     await page.setViewport({ width: 1280, height: 800 });
     await page.goto(`http://localhost:4000/t05-fullscreen-overlay/index.html`, { waitUntil: 'networkidle2' });
 
-    await new Promise((r) => setTimeout(r, 1500));
+    await page.waitForFunction(() => {
+      const modal = document.getElementById('blocker-modal');
+      return !modal || window.getComputedStyle(modal).display === 'none';
+    }, { timeout: 5000 });
 
     const isOverlayVisible = await page.evaluate(() => {
       const modal = document.getElementById('blocker-modal');

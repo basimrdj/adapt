@@ -92,7 +92,17 @@ export class RequestGraphManager {
     }
   }
 
+  public recordCompleted(navigationId: string, requestId: string): void {
+    const graph = this.graphs.get(navigationId);
+    const record = graph?.recentRequests.find((item) => item.requestId === requestId);
+    if (record) record.status = 'completed';
+  }
+
   public cleanupGraph(navigationId: string): void {
     this.graphs.delete(navigationId);
+  }
+
+  public getGraph(navigationId: string): NavigationRequestGraph | undefined {
+    return this.graphs.get(navigationId);
   }
 }

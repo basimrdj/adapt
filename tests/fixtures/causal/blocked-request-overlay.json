@@ -1,0 +1,63 @@
+{
+  "id": "blocked-request-overlay",
+  "nodes": [
+    {
+      "id": "event:br-cause",
+      "kind": "REQUEST_ERROR",
+      "scope": {
+        "tabId": 1,
+        "navigationEpoch": 1,
+        "documentId": "doc-fixture",
+        "frameId": 0,
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9"
+      },
+      "timestamp": {
+        "value": 10000,
+        "domain": "extension.monotonic_ms",
+        "capturedWallMs": 1700000010000
+      },
+      "refs": [
+        "request:r12"
+      ],
+      "features": {
+        "hostname": "ads.example",
+        "coarsePath": "/probe.js",
+        "isSecure": true,
+        "resourceType": "script",
+        "blocked": true,
+        "error": "net::ERR_BLOCKED_BY_CLIENT"
+      },
+      "provenance": "webRequest",
+      "observationConfidence": 1
+    },
+    {
+      "id": "event:br-overlay",
+      "kind": "OVERLAY_APPEARED",
+      "scope": {
+        "tabId": 1,
+        "navigationEpoch": 1,
+        "documentId": "doc-fixture",
+        "frameId": 0,
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9"
+      },
+      "timestamp": {
+        "value": 10800,
+        "domain": "extension.monotonic_ms",
+        "capturedWallMs": 1700000010800
+      },
+      "refs": [],
+      "features": {
+        "obstruction": 1
+      },
+      "provenance": "mutationObserver",
+      "observationConfidence": 1
+    }
+  ],
+  "groundTruth": [
+    {
+      "mechanismClass": "BLOCKED_RESOURCE_PROBE",
+      "causeEventId": "event:br-cause",
+      "outcomeEventId": "event:br-overlay"
+    }
+  ]
+}

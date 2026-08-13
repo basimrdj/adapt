@@ -1,0 +1,85 @@
+{
+  "id": "mixed-trace",
+  "nodes": [
+    {
+      "id": "event:mx-cause",
+      "kind": "REQUEST_ERROR",
+      "scope": {
+        "tabId": 1,
+        "navigationEpoch": 1,
+        "documentId": "doc-fixture",
+        "frameId": 0,
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9"
+      },
+      "timestamp": {
+        "value": 10000,
+        "domain": "extension.monotonic_ms",
+        "capturedWallMs": 1700000010000
+      },
+      "refs": [
+        "request:r12"
+      ],
+      "features": {
+        "hostname": "ads.example",
+        "coarsePath": "/probe.js",
+        "isSecure": true,
+        "blocked": true,
+        "error": "net::ERR_BLOCKED_BY_CLIENT"
+      },
+      "provenance": "webRequest",
+      "observationConfidence": 1
+    },
+    {
+      "id": "event:mx-antiblock",
+      "kind": "OVERLAY_APPEARED",
+      "scope": {
+        "tabId": 1,
+        "navigationEpoch": 1,
+        "documentId": "doc-fixture",
+        "frameId": 0,
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9"
+      },
+      "timestamp": {
+        "value": 10800,
+        "domain": "extension.monotonic_ms",
+        "capturedWallMs": 1700000010800
+      },
+      "refs": [],
+      "features": {
+        "obstruction": 1
+      },
+      "provenance": "mutationObserver",
+      "observationConfidence": 1
+    },
+    {
+      "id": "event:mx-consent",
+      "kind": "OVERLAY_APPEARED",
+      "scope": {
+        "tabId": 1,
+        "navigationEpoch": 1,
+        "documentId": "doc-fixture",
+        "frameId": 0,
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9"
+      },
+      "timestamp": {
+        "value": 11200,
+        "domain": "extension.monotonic_ms",
+        "capturedWallMs": 1700000011200
+      },
+      "refs": [],
+      "features": {
+        "benignClass": "consent",
+        "role": "consent"
+      },
+      "provenance": "mutationObserver",
+      "observationConfidence": 1
+    }
+  ],
+  "groundTruth": [
+    {
+      "mechanismClass": "BLOCKED_RESOURCE_PROBE",
+      "causeEventId": "event:mx-cause",
+      "outcomeEventId": "event:mx-antiblock"
+    }
+  ]
+}

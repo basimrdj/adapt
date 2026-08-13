@@ -18,6 +18,8 @@ import { AdaptivePlanner } from '../../shared/ai/planner-interface';
 import { PolicyValidator } from '../../shared/ai/validator';
 import { createEvidencePacket } from '../../shared/ai/evidence-builder';
 
+export type NavigationFreshnessGuard = (tabId: number, navigationId: string) => boolean;
+
 export class AdaptationTransactionEngine {
   private activeTransactions = new Map<string, AdaptationTransaction>();
   private stagingLocks = new Set<string>(); // Lock per tabId to prevent race conditions
@@ -30,6 +32,7 @@ export class AdaptationTransactionEngine {
   private storageBackend: StorageBackend;
   private sendTabMessage: (tabId: number, msg: unknown) => Promise<void>;
   private adaptivePlanner?: AdaptivePlanner;
+  private isNavigationCurrent?: NavigationFreshnessGuard;
   private policyValidator = new PolicyValidator();
   private initialized = false;
 
@@ -39,7 +42,8 @@ export class AdaptationTransactionEngine {
     auditStore: AuditStore,
     storageBackend: StorageBackend,
     sendTabMessage: (tabId: number, msg: unknown) => Promise<void>,
-    adaptivePlanner?: AdaptivePlanner
+    adaptivePlanner?: AdaptivePlanner,
+    isNavigationCurrent?: NavigationFreshnessGuard
   ) {
     this.dnrController = dnrController;
     this.recipeStore = recipeStore;
@@ -47,6 +51,7 @@ export class AdaptationTransactionEngine {
     this.storageBackend = storageBackend;
     this.sendTabMessage = sendTabMessage;
     this.adaptivePlanner = adaptivePlanner;
+    this.isNavigationCurrent = isNavigationCurrent;
     this.candidateGenerator = new StrategyCandidateGenerator();
     this.verifier = new AdaptationVerifier();
     this.rollbackHandler = new AdaptationRollbackHandler(dnrController, sendTabMessage);
@@ -89,12 +94,14 @@ export class AdaptationTransactionEngine {
     batch: PageSignalBatch
   ): Promise<AdaptationTransaction | null> {
     await this.init();
+    if (!this.navigationIsCurrent(tabId, navigationId)) return null;
     const health = calculateHealthVector(batch);
 
     // If page has a high anti-block reaction (>= 0.50), initiate adaptation
     if (health.antiBlockReaction >= 0.50) {
       // Level 0: Check if site already has a confirmed recipe
       const existingRecipe = await this.recipeStore.getRecipe(siteKey);
+      if (!this.navigationIsCurrent(tabId, navigationId)) return null;
       if (existingRecipe && existingRecipe.state === 'confirmed') {
         return null; // Already handled by confirmed recipe
       }
@@ -119,6 +126,9 @@ export class AdaptationTransactionEngine {
         try {
           const evidence = createEvidencePacket(tabId, navigationId, siteKey, batch, health);
           const rawPlan = await this.adaptivePlanner.plan(evidence);
+          // A planner response belongs only to the document epoch that requested it.
+          // Navigation can occur while the await is pending, before any transaction exists.
+          if (!this.navigationIsCurrent(tabId, navigationId)) return null;
           const validation = this.policyValidator.validate(evidence, rawPlan);
 
           if (validation.valid && validation.sanitizedPlan?.decision === 'ADAPT' && validation.mappedStrategyActions) {
@@ -140,6 +150,7 @@ export class AdaptationTransactionEngine {
       }
 
       if (!selectedCandidate) return null;
+      if (!this.navigationIsCurrent(tabId, navigationId)) return null;
 
       this.stagingLocks.add(lockKey);
       try {
@@ -158,10 +169,15 @@ export class AdaptationTransactionEngine {
     navigationId: string,
     siteKey: string,
     baselineHealth: HealthVector,
-    candidate: StrategyCandidate
+    candidate: StrategyCandidate,
+    documentId?: string
   ): Promise<AdaptationTransaction> {
     await this.init();
+    if (!this.navigationIsCurrent(tabId, navigationId)) {
+      throw new Error('Stale navigation: refusing to stage transaction');
+    }
     let tx = createAdaptationTransaction(tabId, navigationId, siteKey, baselineHealth, candidate);
+    if (documentId) tx.documentId = documentId;
 
     try {
       // 1. Stage network actions via DNR Session Rules (tab-scoped)
@@ -179,6 +195,7 @@ export class AdaptationTransactionEngine {
           v: 1,
           type: 'APPLY_DOM_ACTION',
           txId: tx.txId,
+          documentId,
           payload: domAction,
         });
       }
@@ -273,6 +290,12 @@ export class AdaptationTransactionEngine {
     return Array.from(this.activeTransactions.values());
   }
 
+  /** Causal wrapper owns verification/promotion and releases the Phase 1 staging record. */
+  public async releaseTransaction(txId: string): Promise<void> {
+    this.activeTransactions.delete(txId);
+    await this.persistActiveTransactions();
+  }
+
   public async rollbackAllOrphaned(): Promise<void> {
     await this.init();
     for (const tx of this.activeTransactions.values()) {
@@ -282,5 +305,9 @@ export class AdaptationTransactionEngine {
       }
     }
     await this.persistActiveTransactions();
+  }
+
+  private navigationIsCurrent(tabId: number, navigationId: string): boolean {
+    return this.isNavigationCurrent?.(tabId, navigationId) ?? true;
   }
 }

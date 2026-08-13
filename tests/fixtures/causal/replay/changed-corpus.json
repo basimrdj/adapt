@@ -1,0 +1,1696 @@
+{
+  "id": "changed-fixture-corpus",
+  "kind": "changed",
+  "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+  "expectedHealthDelta": 0.3,
+  "baselineFingerprint": {
+    "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+    "topLevelPathClass": "article",
+    "detectorFeatureHash": "det:overlay-v1",
+    "relevantResourceSetHash": "res:set-v1",
+    "structuralFeatureHash": "str:dom-v1",
+    "createdWallMs": 1700000000000
+  },
+  "visits": [
+    {
+      "visit": 1,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.329,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 2,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-2",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3213,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 3,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-3",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3273,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 4,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-4",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3206,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 5,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-5",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3065,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 6,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-6",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3128,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 7,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-7",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2848,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 8,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-8",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3045,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 9,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-9",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.293,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 10,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-10",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3168,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 11,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-11",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2813,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 12,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-12",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.284,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 13,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-13",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2989,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 14,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-14",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3081,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 15,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-15",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3262,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 16,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-16",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2895,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 17,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-17",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3227,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 18,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-18",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2885,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 19,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-19",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2848,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 20,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-20",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3005,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 21,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-21",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2721,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 22,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-22",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3067,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 23,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-23",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3054,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 24,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-24",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2724,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 25,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-25",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3002,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 26,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-26",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.296,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 27,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-27",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3236,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 28,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-28",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.305,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 29,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-29",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3135,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 30,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-30",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2854,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 31,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-31",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3006,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 32,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-32",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3011,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 33,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-33",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3042,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 34,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-34",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3119,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 35,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-35",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2892,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 36,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-36",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2734,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 37,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-37",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2981,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 38,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-38",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3007,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 39,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-39",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2922,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 40,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-40",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3072,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 41,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-41",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2727,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 42,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-42",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2717,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 43,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-43",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2876,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 44,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-44",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3185,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 45,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-45",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2809,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 46,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-46",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3154,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 47,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-47",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3055,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 48,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-48",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2783,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 49,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-49",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2856,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 50,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-50",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.316,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 51,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-51",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3227,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 52,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-52",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2968,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 53,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-53",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.327,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 54,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-54",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3129,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 55,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-55",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2748,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 56,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-56",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3091,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 57,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-57",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3011,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 58,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-58",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2983,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 59,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-59",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2742,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 60,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-60",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3092,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 61,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-61",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3279,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 62,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-62",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.27,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 63,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-63",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2891,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 64,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-64",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3028,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 65,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-65",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3293,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 66,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-66",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2943,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 67,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-67",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3146,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 68,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-68",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2953,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 69,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-69",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.32,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 70,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-70",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3002,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 71,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-71",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2758,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 72,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-72",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2729,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 73,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-73",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3023,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 74,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-74",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3119,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 75,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-75",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3089,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 76,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-76",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3231,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 77,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-77",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2856,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 78,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-78",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2778,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 79,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-79",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3125,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 80,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-80",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3226,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 81,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-81",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2865,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 82,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-82",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.275,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 83,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-83",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2778,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 84,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-84",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3167,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 85,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-85",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3117,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 86,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-86",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3044,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 87,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-87",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2731,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 88,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-88",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2818,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 89,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-89",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2899,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 90,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-90",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3121,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 91,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-91",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2809,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 92,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-92",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2946,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 93,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-93",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3118,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 94,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-94",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2718,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 95,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-95",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2924,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 96,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-96",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3031,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 97,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-97",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2715,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 98,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-98",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3136,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 99,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-99",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3113,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 100,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-100",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2982,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 101,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-101",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2919,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 102,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-102",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2708,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 103,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-103",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2841,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 104,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-104",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2713,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 105,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-105",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2865,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 106,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-106",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3257,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 107,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-107",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3218,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 108,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-108",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3175,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 109,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-109",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3297,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 110,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-110",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3087,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 111,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-111",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3101,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 112,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-112",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2796,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 113,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-113",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.303,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 114,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-114",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3214,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 115,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-115",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.318,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 116,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-116",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2776,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 117,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-117",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2994,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 118,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-118",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.2744,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    },
+    {
+      "visit": 119,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-redesign-119",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3288,
+      "success": true,
+      "changedField": "detectorFeatureHash"
+    },
+    {
+      "visit": 120,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-redesign-120",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3223,
+      "success": true,
+      "changedField": "structuralFeatureHash"
+    }
+  ]
+}

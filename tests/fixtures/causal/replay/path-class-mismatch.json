@@ -1,0 +1,56 @@
+{
+  "id": "path-class-mismatch",
+  "kind": "path-class",
+  "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+  "expectedHealthDelta": 0.3,
+  "baselineFingerprint": {
+    "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+    "topLevelPathClass": "article",
+    "detectorFeatureHash": "det:overlay-v1",
+    "relevantResourceSetHash": "res:set-v1",
+    "structuralFeatureHash": "str:dom-v1",
+    "createdWallMs": 1700000000000
+  },
+  "visits": [
+    {
+      "visit": 1,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "home",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3,
+      "success": true
+    },
+    {
+      "visit": 2,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "login",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3,
+      "success": true
+    },
+    {
+      "visit": 3,
+      "fingerprint": {
+        "originHash": "100680ad546ce6a577f42f52df33b4cfdca756859e664b8d7de329b150d09ce9",
+        "topLevelPathClass": "article/sports",
+        "detectorFeatureHash": "det:overlay-v1",
+        "relevantResourceSetHash": "res:set-v1",
+        "structuralFeatureHash": "str:dom-v1",
+        "createdWallMs": 1700000000000
+      },
+      "healthDelta": 0.3,
+      "success": true,
+      "expectMatch": true
+    }
+  ]
+}

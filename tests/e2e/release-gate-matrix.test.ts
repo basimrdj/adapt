@@ -50,14 +50,17 @@ describe('ADAPT Phase 1.5 Final Release Gate Verification Suite', () => {
     if (servers) await servers.close();
   });
 
-  // Scenario 1: SW Termination while transaction is staged & recovery
-  it('Scenario 1: Handles Service Worker lifecycle termination & restarts cleanly during transactions', async () => {
+  // Scenario 1: startup path. Actual forced worker termination is covered by phase3-causal-live.
+  it('Scenario 1: adapts cleanly after service-worker startup initialization', async () => {
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
     await page.goto(`http://localhost:${appPort}/t05-fullscreen-overlay/index.html`, { waitUntil: 'networkidle2' });
 
     // Allow transaction to stage
-    await new Promise((r) => setTimeout(r, 1200));
+    await page.waitForFunction(() => {
+      const modal = document.getElementById('blocker-modal');
+      return !modal || window.getComputedStyle(modal).display === 'none';
+    }, { timeout: 5000 });
 
     // Verify DOM overlay removal and scroll restoration
     const isOverlayGone = await page.evaluate(() => {

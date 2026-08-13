@@ -6,16 +6,18 @@ import { MutationPipeline } from './mutations';
 import { DomActionExecutor } from './dom-actions';
 import { ContentToBackgroundMessage, BackgroundToContentMessage } from '../shared/messages';
 import { calculateHealthVector } from '../core/health/scorer';
+import { OpaqueTargetRegistry } from './opaque-targets';
 
 export class PageSensor {
   private navigationId: string;
   private mutationPipeline: MutationPipeline;
   private domExecutor: DomActionExecutor;
   private debounceTimer: number | null = null;
+  private readonly targets = new OpaqueTargetRegistry();
 
   constructor(navigationId: string) {
     this.navigationId = navigationId;
-    this.domExecutor = new DomActionExecutor();
+    this.domExecutor = new DomActionExecutor(this.targets);
     this.mutationPipeline = new MutationPipeline(() => this.scheduleSignalBatch());
   }
 
@@ -32,8 +34,10 @@ export class PageSensor {
     this.mutationPipeline.start();
 
     // Listen for background commands
-    chrome.runtime.onMessage.addListener((message: BackgroundToContentMessage) => {
-      this.handleBackgroundMessage(message);
+    chrome.runtime.onMessage.addListener((message: BackgroundToContentMessage, _sender, sendResponse) => {
+      const response = this.handleBackgroundMessage(message);
+      sendResponse(response);
+      return false;
     });
 
     // Listen for SPA navigation events
@@ -91,6 +95,18 @@ export class PageSensor {
       suspectedDetectorTypes,
     };
 
+    // Causal ingestion is queued first; the background can then decide whether
+    // the legacy deterministic fallback is still needed for this batch.
+    this.sendMessage({
+      v: 1,
+      type: 'CAUSAL_OBSERVATION_BATCH',
+      navigationId: this.navigationId,
+      payload: {
+        timestamp: Date.now(),
+        pageSignals: batch,
+        elements: this.targets.observe(),
+      },
+    });
     this.sendMessage({
       v: 1,
       type: 'PAGE_SIGNAL_BATCH',
@@ -116,8 +132,8 @@ export class PageSensor {
     return health;
   }
 
-  private handleBackgroundMessage(message: BackgroundToContentMessage): void {
-    if (!message || message.v !== 1) return;
+  private handleBackgroundMessage(message: BackgroundToContentMessage): { success: boolean; actionId?: string } {
+    if (!message || message.v !== 1) return { success: false };
 
     switch (message.type) {
       case 'APPLY_DOM_ACTION': {
@@ -126,21 +142,34 @@ export class PageSensor {
           v: 1,
           type: 'DOM_ACTION_RESULT',
           navigationId: this.navigationId,
+          txId: message.txId,
+          operation: 'apply',
           actionId: message.payload.id,
           success,
         });
-        break;
+        return { success, actionId: message.payload.id };
       }
 
       case 'ROLLBACK_DOM_ACTION': {
-        this.domExecutor.rollbackAction(message.actionId);
-        break;
+        const success = this.domExecutor.rollbackAction(message.actionId);
+        this.sendMessage({
+          v: 1,
+          type: 'DOM_ACTION_RESULT',
+          navigationId: this.navigationId,
+          txId: message.txId,
+          operation: 'rollback',
+          actionId: message.actionId,
+          success,
+        });
+        return { success, actionId: message.actionId };
       }
 
       case 'REQUEST_HEALTH_SNAPSHOT': {
         this.getHealthSnapshot(message.txId);
-        break;
+        return { success: true };
       }
+      case 'EXECUTE_RUNTIME_OP':
+        return { success: false };
     }
   }
 
