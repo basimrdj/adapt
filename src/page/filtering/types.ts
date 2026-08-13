@@ -2,6 +2,19 @@ export type PageRuleKind = 'css' | 'has-text' | 'matches-css' | 'remove' | 'remo
 
 export type ScriptletWorld = 'ISOLATED' | 'MAIN';
 
+export type ScriptletLifecycle =
+  | 'ONE_SHOT_MAIN_WORLD'
+  | 'PERSISTENT_MAIN_WORLD'
+  | 'REAPPLY_ON_MUTATION'
+  | 'REAPPLY_ON_NAVIGATION'
+  | 'ELEMENT_SCOPED';
+
+export type ScriptletSupportStatus =
+  | 'fully-executable'
+  | 'unsupported-by-name'
+  | 'unsupported-by-arguments'
+  | 'unsafe';
+
 export interface PageFilterRule {
   id: string;
   kind: PageRuleKind;
@@ -22,11 +35,15 @@ export interface ScriptletRule {
   excludedDomains: string[];
   world: ScriptletWorld;
   supported: boolean;
+  lifecycle: ScriptletLifecycle;
+  supportStatus: ScriptletSupportStatus;
+  supportReason?: string;
+  early: boolean;
   sourceFilterId: number;
 }
 
 export interface PageFilterBundle {
-  schemaVersion: 1;
+  schemaVersion: number;
   generatedAt: string;
   genericRules: PageFilterRule[];
   domainRules: PageFilterRule[];
@@ -53,5 +70,11 @@ export interface PageFilterBundle {
     scriptlets: number;
     supportedScriptlets: number;
     unsupported: number;
+    parsed: number;
+    fullyExecutable: number;
+    unsupportedByName: number;
+    unsupportedByArguments: number;
+    unsafe: number;
+    exceptionSuppressed: number;
   };
 }

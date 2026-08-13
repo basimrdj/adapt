@@ -39,13 +39,19 @@ MAJOR FILES CHANGED
 `scripts/build-page-filtering.ts` → reproducible page artifacts and manifest.
 `scripts/verify-phase31b.ts` → authoritative verification gate.
 `tests/fixtures/phase31b/adversarial-corpus.json` → deterministic lab matrix.
+`artifacts/phase31b/unsupported-scriptlet-frequency.json` → unsupported
+maintained-scriptlet demand report.
 
 FILTER COVERAGE
 ---------------
 Network rules: existing Phase 3.1 v6 corpus.
 Cosmetic rules: 68,185 compiled records in the current cache.
 Exceptions: 1,623 compiled records.
-Scriptlet rules: 7,631 parsed; 1,860 supported by the audited allowlist.
+Scriptlet rules: 7,631 parsed; 4,473 fully executable; 2,884 unsupported by
+name; 49 unsupported by arguments; 225 unsafe; 6 exception-suppressed.
+The generated frequency report ranks the remaining unsupported names by rule
+demand; the highest-impact next primitives remain an explicit backlog and are
+not counted as supported.
 Procedural/extended rules: bounded `:has-text`, `:matches-css`, `:remove`, and
 `:remove-attr`; unsupported forms are recorded.
 Redirect resources: existing v6 path, subject to the license review.
@@ -53,20 +59,21 @@ Redirect resources: existing v6 path, subject to the license review.
 TEST RESULTS
 ------------
 Typecheck: PASS.
-Unit: 145 tests PASS, including 140 baseline and 5 page/lab tests.
+Unit: 151 tests PASS across 32 files.
 Phase 3 regression: PASS; acceptance sequence commits the true mechanism.
-Page filtering: 5 focused tests PASS; integrity gate PASS.
-Anti-adblock: 1 synthetic Chromium test PASS.
+Page filtering: 8 focused tests PASS; integrity gate PASS.
+Anti-adblock: 30/30 executable corpus scenarios PASS.
 Runtime: 1 body-replacement/mutation-stability test PASS.
-Chromium E2E: 34 tests PASS across 8 files.
+Chromium E2E: 65 tests PASS across 8 files.
 Bundle security: 4 tests PASS.
-Authoritative command: PASS on 2026-08-13 UTC.
+Authoritative command: `ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b` PASS on
+2026-08-13 UTC.
 Machine evidence: `artifacts/phase31b/latest.json`.
 
 REAL-WORLD RESULTS
 ------------------
 Site/category: synthetic local lab only.
-Blocking: generic fixture coverage is automated; broad live-site coverage is pending.
+Blocking: executable corpus is green; broad clean-profile live-site comparison is pending.
 Detector behavior: causal synthetic coverage is retained; no universal claim.
 Breakage: local fixture keeps main content and SPA churn alive.
 Notes: comparative uBO Lite/AdGuard/no-blocker benchmarks are not complete.
@@ -82,17 +89,22 @@ Errors: hostile DOM protections retained; final Chromium gate passed.
 
 PERFORMANCE
 -----------
-Measured overhead: mutation work is coalesced and bounded; comparative
-benchmark pending.
+Previous monolithic index: 15,022,819 bytes. New startup index: 412 bytes.
+Total page-filtering artifacts: 30,235,251 bytes. YouTube sample per-frame
+load: 1,760,804 bytes; parse: 9.6 ms; selected indexed rules: 735; mutation
+lookup: 0.15 ms for 2,000 checks. No full bundle parse occurs per frame.
 Service-worker behavior: baseline page filtering is content-script/data driven.
 Idle behavior: no permanent polling; mutation work is coalesced and bounded.
-Comparison summary: not yet available.
+The benchmark is a local indexed-artifact benchmark, not a live-site CPU or
+memory claim. Clean-profile uBO Lite/AdGuard MV3/no-blocker comparison remains
+pending.
 
 SECURITY
 --------
 Remote code: none in the new page plane.
 Secrets: bundle integrity gate rejects known secret/development markers.
-MAIN-world scriptlets: only top-level `set-constant` is allowlisted.
+MAIN-world scriptlets: audited allowlist only; descriptors are fully validated
+before execution.
 WAR exposure: bounded and dynamic when present.
 License status: unresolved GPL build-toolchain review blocks proprietary release.
 
@@ -105,9 +117,10 @@ Recipe promotion: existing successful-intervention promotion preserved.
 
 KNOWN LIMITATIONS
 -----------------
-The page bundle is currently large, unsupported maintained syntax is explicit,
-closed shadow roots are not claimed, live YouTube and broad real-world
-comparison are pending, and the GPL build-toolchain decision is unresolved.
+The total page artifacts remain large even though per-frame loading is indexed;
+unsupported maintained syntax is explicit, closed shadow roots are not claimed,
+live YouTube and broad real-world comparison are pending, and the GPL
+build-toolchain decision is unresolved.
 
 VERIFICATION COMMAND
 --------------------

@@ -1,0 +1,25 @@
+{
+  "schema": "adapt-phase31b-page-filter-benchmark-v1",
+  "hostname": "www.youtube.com",
+  "candidates": [
+    "www.youtube.com",
+    "youtube.com"
+  ],
+  "shardFiles": [
+    "domains/0328.json",
+    "domains/0335.json"
+  ],
+  "baselineIndexBytes": 15022819,
+  "afterIndexBytes": 412,
+  "afterBundleBytes": 30235251,
+  "perFrameBytes": 1760804,
+  "perFrameParseMs": 10.179459,
+  "genericBytes": 1833,
+  "relevantDomainShardBytes": 159461,
+  "indexedRules": 735,
+  "mutationChecks": 2000,
+  "mutationBenchmarkMs": 0.16125,
+  "domainShardCount": 339,
+  "earlyShardCount": 337,
+  "noFullBundleParsePerFrame": true
+}

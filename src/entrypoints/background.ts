@@ -19,6 +19,49 @@ import { isHealthVector, isPageSignalBatch } from '../shared/guards';
 import { reconcilePhase31StaticRulesets } from '../background/phase31/static-rulesets';
 import { runMainScriptlet } from '../shared/main-scriptlet';
 
+const ALLOWED_MAIN_SCRIPTLETS = new Set([
+  'set-constant',
+  'abort-current-inline-script',
+  'abort-on-property-read',
+  'abort-on-property-write',
+  'prevent-fetch',
+  'prevent-xhr',
+  'prevent-setTimeout',
+  'prevent-eval-if',
+  'prevent-window-open',
+  'json-prune',
+]);
+
+async function registerEarlyPageScripts(): Promise<void> {
+  try {
+    const response = await fetch(chrome.runtime.getURL('page-filtering/early-manifest.json'), { cache: 'no-store' });
+    if (!response.ok) return;
+    const manifest = (await response.json()) as Array<{ file?: string; matches?: string[] }>;
+    const scripts = await chrome.scripting.getRegisteredContentScripts();
+    const existingIds = scripts.filter((script) => script.id.startsWith('adapt-early-')).map((script) => script.id);
+    if (existingIds.length > 0) await chrome.scripting.unregisterContentScripts({ ids: existingIds });
+    const registrations = manifest.flatMap((entry, index) => {
+      if (!entry.file || !entry.matches?.length) return [];
+      return [{
+        id: `adapt-early-${index + 1}`,
+        matches: entry.matches,
+        js: ['page-filtering/early-runtime.js', entry.file],
+        runAt: 'document_start' as const,
+        allFrames: true,
+        matchOriginAsFallback: true,
+        world: 'MAIN' as const,
+      }];
+    });
+    if (registrations.length > 0) await chrome.scripting.registerContentScripts(registrations);
+  } catch {
+    return;
+  }
+}
+
+void registerEarlyPageScripts();
+chrome.runtime.onInstalled.addListener(() => void registerEarlyPageScripts());
+chrome.runtime.onStartup.addListener(() => void registerEarlyPageScripts());
+
 // 1. Storage Backend Implementation for chrome.storage.local
 const chromeStorageBackend = new ChromeStorageBackend(chrome.storage.local);
 const chromeSessionBackend = new ChromeStorageBackend(chrome.storage.session);
@@ -242,7 +285,7 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
     const tabId = sender.tab.id;
     const frameId = sender.frameId || 0;
     const senderDocumentId = (sender as chrome.runtime.MessageSender & { documentId?: string }).documentId;
-    if (message.name !== 'set-constant' || message.args.length > 2 || message.args.some((arg) => typeof arg !== 'string' || arg.length > 100)) {
+    if (!ALLOWED_MAIN_SCRIPTLETS.has(message.name) || message.args.length > 5 || message.args.some((arg) => typeof arg !== 'string' || arg.length > 1000)) {
       sendResponse({ success: false });
       return false;
     }

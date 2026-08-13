@@ -1,62 +1,1243 @@
 {
-  "schema": "adapt-phase31b-verification-v1",
-  "startedAt": "2026-08-13T19:51:26.377Z",
-  "completedAt": "2026-08-13T19:56:13.286Z",
+  "schema": "adapt-phase31b-verification-v2",
+  "startedAt": "2026-08-13T21:20:16.404Z",
+  "completedAt": "2026-08-13T21:26:18.917Z",
   "verdict": "PASSED",
   "gates": [
     {
       "name": "TypeScript typecheck",
       "command": "npm run typecheck",
       "pass": true,
-      "durationMs": 1729
+      "durationMs": 1882
     },
     {
-      "name": "Full reproducible build and filter compilation",
+      "name": "Full reproducible build and indexed page compilation",
       "command": "npm run build:full",
       "pass": true,
-      "durationMs": 102882
+      "durationMs": 106526
     },
     {
-      "name": "Page filter compiler unit suite",
+      "name": "Indexed page-plane benchmark",
+      "command": "npm run benchmark:page",
+      "pass": true,
+      "durationMs": 424
+    },
+    {
+      "name": "Page filter compiler and index unit suite",
       "command": "npm run test:page",
       "pass": true,
-      "durationMs": 1084
+      "durationMs": 1559
     },
     {
       "name": "Filter compiler and package integrity",
       "command": "npm run verify:phase31b:integrity",
       "pass": true,
-      "durationMs": 449
+      "durationMs": 434
     },
     {
       "name": "All unit and Phase 3 regression tests",
       "command": "npm run test:unit",
       "pass": true,
-      "durationMs": 6818
+      "durationMs": 7636
     },
     {
-      "name": "Synthetic adversarial page lab",
+      "name": "30-scenario executable adversarial corpus",
       "command": "npm run test:anti-adblock",
       "pass": true,
-      "durationMs": 4736
+      "durationMs": 35536
     },
     {
       "name": "Content runtime stability regression",
       "command": "npm run test:runtime",
       "pass": true,
-      "durationMs": 4816
+      "durationMs": 8336
     },
     {
       "name": "Chromium Phase 3 and Phase 3.1B E2E suites",
       "command": "npm run test:e2e",
       "pass": true,
-      "durationMs": 162863
+      "durationMs": 198549
     },
     {
       "name": "Bundle security and packaging checks",
       "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
       "pass": true,
-      "durationMs": 1531
+      "durationMs": 1628
     }
-  ]
+  ],
+  "evidence": {
+    "adversarial": {
+      "schema": "adapt-phase31b-adversarial-v2",
+      "total": 30,
+      "passed": 30,
+      "failed": 0,
+      "results": [
+        {
+          "id": "network-ad-request",
+          "pass": true,
+          "durationMs": 5081
+        },
+        {
+          "id": "generic-cosmetic-ad",
+          "pass": true,
+          "durationMs": 1141
+        },
+        {
+          "id": "domain-specific-cosmetic",
+          "pass": true,
+          "durationMs": 1
+        },
+        {
+          "id": "cosmetic-exception",
+          "pass": true,
+          "durationMs": 1
+        },
+        {
+          "id": "specific-generic-rule",
+          "pass": true,
+          "durationMs": 0
+        },
+        {
+          "id": "extended-css-target",
+          "pass": true,
+          "durationMs": 0
+        },
+        {
+          "id": "procedural-has-text",
+          "pass": true,
+          "durationMs": 0
+        },
+        {
+          "id": "scriptlet-target",
+          "pass": true,
+          "durationMs": 0
+        },
+        {
+          "id": "scriptlet-exception",
+          "pass": true,
+          "durationMs": 0
+        },
+        {
+          "id": "main-world-detector",
+          "pass": true,
+          "durationMs": 1
+        },
+        {
+          "id": "offset-height-bait",
+          "pass": true,
+          "durationMs": 1478
+        },
+        {
+          "id": "bounding-rect-bait",
+          "pass": true,
+          "durationMs": 1489
+        },
+        {
+          "id": "computed-style-bait",
+          "pass": true,
+          "durationMs": 1484
+        },
+        {
+          "id": "element-removal-detector",
+          "pass": true,
+          "durationMs": 1410
+        },
+        {
+          "id": "bait-reinsertion",
+          "pass": true,
+          "durationMs": 1756
+        },
+        {
+          "id": "timer-detection",
+          "pass": true,
+          "durationMs": 1482
+        },
+        {
+          "id": "scroll-lock-gate",
+          "pass": true,
+          "durationMs": 1759
+        },
+        {
+          "id": "pointer-events-gate",
+          "pass": true,
+          "durationMs": 1758
+        },
+        {
+          "id": "nested-frame",
+          "pass": true,
+          "durationMs": 410
+        },
+        {
+          "id": "cross-origin-frame",
+          "pass": true,
+          "durationMs": 322
+        },
+        {
+          "id": "open-shadow-dom",
+          "pass": true,
+          "durationMs": 1058
+        },
+        {
+          "id": "csp-heavy-page",
+          "pass": true,
+          "durationMs": 1057
+        },
+        {
+          "id": "spa-route-change",
+          "pass": true,
+          "durationMs": 1499
+        },
+        {
+          "id": "body-replacement",
+          "pass": true,
+          "durationMs": 775
+        },
+        {
+          "id": "mutation-storm",
+          "pass": true,
+          "durationMs": 3218
+        },
+        {
+          "id": "worker-restart",
+          "pass": true,
+          "durationMs": 1066
+        },
+        {
+          "id": "consent-modal",
+          "pass": true,
+          "durationMs": 1067
+        },
+        {
+          "id": "login-modal",
+          "pass": true,
+          "durationMs": 791
+        },
+        {
+          "id": "paywall",
+          "pass": true,
+          "durationMs": 1067
+        },
+        {
+          "id": "benign-advertisement-text",
+          "pass": true,
+          "durationMs": 1065
+        }
+      ]
+    },
+    "benchmark": {
+      "schema": "adapt-phase31b-page-filter-benchmark-v1",
+      "hostname": "www.youtube.com",
+      "candidates": [
+        "www.youtube.com",
+        "youtube.com"
+      ],
+      "shardFiles": [
+        "domains/0328.json",
+        "domains/0335.json"
+      ],
+      "baselineIndexBytes": 15022819,
+      "afterIndexBytes": 412,
+      "afterBundleBytes": 30235251,
+      "perFrameBytes": 1760804,
+      "perFrameParseMs": 10.179459,
+      "genericBytes": 1833,
+      "relevantDomainShardBytes": 159461,
+      "indexedRules": 735,
+      "mutationChecks": 2000,
+      "mutationBenchmarkMs": 0.16125,
+      "domainShardCount": 339,
+      "earlyShardCount": 337,
+      "noFullBundleParsePerFrame": true
+    },
+    "scriptletCoverage": {
+      "parsed": 7637,
+      "fullyExecutable": 4473,
+      "unsupportedByName": 2884,
+      "unsupportedByArguments": 49,
+      "unsafe": 225,
+      "exceptionSuppressed": 6
+    },
+    "scriptletRules": 7631,
+    "supportedScriptletRules": 4473,
+    "unsupportedScriptletFrequency": {
+      "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
+      "generatedAt": "2026-08-13T21:21:17.584Z",
+      "totalScriptletRules": 7631,
+      "unsupportedScriptletRules": 3158,
+      "entries": [
+        {
+          "name": "prevent-addEventListener",
+          "total": 421,
+          "fullyExecutable": 0,
+          "unsupported": 421,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 421,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "adjust-setInterval",
+          "total": 348,
+          "fullyExecutable": 0,
+          "unsupported": 348,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 348,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-cookie",
+          "total": 337,
+          "fullyExecutable": 0,
+          "unsupported": 337,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 337,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-local-storage-item",
+          "total": 292,
+          "fullyExecutable": 0,
+          "unsupported": 292,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 292,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-element-src-loading",
+          "total": 213,
+          "fullyExecutable": 0,
+          "unsupported": 213,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 213,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-constant",
+          "total": 1345,
+          "fullyExecutable": 1179,
+          "unsupported": 166,
+          "statuses": {
+            "fully-executable": 1179,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 1,
+            "unsafe": 165
+          }
+        },
+        {
+          "name": "adjust-setTimeout",
+          "total": 165,
+          "fullyExecutable": 0,
+          "unsupported": 165,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 165,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-set-local-storage-item",
+          "total": 143,
+          "fullyExecutable": 0,
+          "unsupported": 143,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 143,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-click-element",
+          "total": 136,
+          "fullyExecutable": 0,
+          "unsupported": 136,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 136,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "abort-on-stack-trace",
+          "total": 130,
+          "fullyExecutable": 0,
+          "unsupported": 130,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 130,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-replace-node-text",
+          "total": 91,
+          "fullyExecutable": 0,
+          "unsupported": 91,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 91,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-session-storage-item",
+          "total": 83,
+          "fullyExecutable": 0,
+          "unsupported": 83,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 83,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-setInterval",
+          "total": 56,
+          "fullyExecutable": 0,
+          "unsupported": 56,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 56,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-set-cookie",
+          "total": 55,
+          "fullyExecutable": 0,
+          "unsupported": 55,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 55,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "abort-on-property-read",
+          "total": 368,
+          "fullyExecutable": 324,
+          "unsupported": 44,
+          "statuses": {
+            "fully-executable": 324,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 0,
+            "unsafe": 44
+          }
+        },
+        {
+          "name": "trusted-replace-argument",
+          "total": 43,
+          "fullyExecutable": 0,
+          "unsupported": 43,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 43,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-cookie-reload",
+          "total": 41,
+          "fullyExecutable": 0,
+          "unsupported": 41,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 41,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-create-element",
+          "total": 27,
+          "fullyExecutable": 0,
+          "unsupported": 27,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 27,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "google-ima3",
+          "total": 26,
+          "fullyExecutable": 0,
+          "unsupported": 26,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 26,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "json-prune",
+          "total": 143,
+          "fullyExecutable": 121,
+          "unsupported": 22,
+          "statuses": {
+            "fully-executable": 121,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 22,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "href-sanitizer",
+          "total": 21,
+          "fullyExecutable": 0,
+          "unsupported": 21,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 21,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-suppress-native-method",
+          "total": 21,
+          "fullyExecutable": 0,
+          "unsupported": 21,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 21,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "hide-in-shadow-dom",
+          "total": 18,
+          "fullyExecutable": 0,
+          "unsupported": 18,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 18,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-set-constant",
+          "total": 17,
+          "fullyExecutable": 0,
+          "unsupported": 17,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 17,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-cookie",
+          "total": 16,
+          "fullyExecutable": 0,
+          "unsupported": 16,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 16,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "abort-on-property-write",
+          "total": 156,
+          "fullyExecutable": 142,
+          "unsupported": 14,
+          "statuses": {
+            "fully-executable": 142,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 0,
+            "unsafe": 14
+          }
+        },
+        {
+          "name": "set-attr",
+          "total": 11,
+          "fullyExecutable": 0,
+          "unsupported": 11,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 11,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "xml-prune",
+          "total": 11,
+          "fullyExecutable": 0,
+          "unsupported": 11,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 11,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-prune-inbound-object",
+          "total": 10,
+          "fullyExecutable": 0,
+          "unsupported": 10,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 10,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-set-session-storage-item",
+          "total": 10,
+          "fullyExecutable": 0,
+          "unsupported": 10,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 10,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "abort-current-inline-script",
+          "total": 697,
+          "fullyExecutable": 688,
+          "unsupported": 9,
+          "statuses": {
+            "fully-executable": 688,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 9,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "m3u-prune",
+          "total": 9,
+          "fullyExecutable": 0,
+          "unsupported": 9,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 9,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "spoof-css",
+          "total": 9,
+          "fullyExecutable": 0,
+          "unsupported": 9,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 9,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-replace-fetch-response",
+          "total": 9,
+          "fullyExecutable": 0,
+          "unsupported": 9,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 9,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-set-cookie-reload",
+          "total": 9,
+          "fullyExecutable": 0,
+          "unsupported": 9,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 9,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-setTimeout",
+          "total": 477,
+          "fullyExecutable": 469,
+          "unsupported": 8,
+          "statuses": {
+            "fully-executable": 469,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 8,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-replace-xhr-response",
+          "total": 8,
+          "fullyExecutable": 0,
+          "unsupported": 8,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 8,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "inject-css-in-shadow-dom",
+          "total": 7,
+          "fullyExecutable": 0,
+          "unsupported": 7,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 7,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "json-prune-fetch-response",
+          "total": 6,
+          "fullyExecutable": 0,
+          "unsupported": 6,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 6,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-json-set",
+          "total": 6,
+          "fullyExecutable": 0,
+          "unsupported": 6,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 6,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-replace-outbound-text",
+          "total": 6,
+          "fullyExecutable": 0,
+          "unsupported": 6,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 6,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-set",
+          "total": 6,
+          "fullyExecutable": 0,
+          "unsupported": 6,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 6,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-class",
+          "total": 172,
+          "fullyExecutable": 167,
+          "unsupported": 5,
+          "statuses": {
+            "fully-executable": 167,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 5,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "googletagservices-gpt",
+          "total": 5,
+          "fullyExecutable": 0,
+          "unsupported": 5,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 5,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "json-prune-xhr-response",
+          "total": 4,
+          "fullyExecutable": 0,
+          "unsupported": 4,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 4,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-requestAnimationFrame",
+          "total": 4,
+          "fullyExecutable": 0,
+          "unsupported": 4,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 4,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-in-shadow-dom",
+          "total": 4,
+          "fullyExecutable": 0,
+          "unsupported": 4,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 4,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-acs",
+          "total": 4,
+          "fullyExecutable": 0,
+          "unsupported": 4,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 4,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-rmnt",
+          "total": 4,
+          "fullyExecutable": 0,
+          "unsupported": 4,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 4,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-attr",
+          "total": 199,
+          "fullyExecutable": 196,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 196,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 1,
+            "unsafe": 2
+          }
+        },
+        {
+          "name": "prevent-bab",
+          "total": 3,
+          "fullyExecutable": 0,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 3,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-navigation",
+          "total": 3,
+          "fullyExecutable": 0,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 3,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-refresh",
+          "total": 3,
+          "fullyExecutable": 0,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 3,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-set-attr",
+          "total": 3,
+          "fullyExecutable": 0,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 3,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-aost",
+          "total": 3,
+          "fullyExecutable": 0,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 3,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-set-local-storage-item",
+          "total": 3,
+          "fullyExecutable": 0,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 3,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "gemius",
+          "total": 2,
+          "fullyExecutable": 0,
+          "unsupported": 2,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 2,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "noeval",
+          "total": 2,
+          "fullyExecutable": 0,
+          "unsupported": 2,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 2,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-window-open",
+          "total": 479,
+          "fullyExecutable": 478,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 478,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 1,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-node-text",
+          "total": 144,
+          "fullyExecutable": 143,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 143,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 1,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-eval-if",
+          "total": 40,
+          "fullyExecutable": 39,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 39,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 1,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "amazon-apstag",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "close-window",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "evaldata-prune",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "fingerprintjs2",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "fingerprintjs3",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "google-analytics",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "no-protected-audience",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "no-topics",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-canvas",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-constructor",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-innerHTML",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-popads-net",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-request-query-parameter",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-dispatch-event",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "trusted-json-set-xhr-response",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-cookie-remover",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-no-fetch-if",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-no-xhr-if",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-set-attr",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "ubo-set-cookie",
+          "total": 1,
+          "fullyExecutable": 0,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 1,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        }
+      ]
+    }
+  }
 }

@@ -39,10 +39,12 @@ describe('Phase 3.1B page filter compiler', () => {
     expect(bundle.scriptlets).toEqual([
       expect.objectContaining({ name: 'set-constant', args: ['google_ad_status', '1'], world: 'MAIN', supported: true }),
       expect.objectContaining({ name: 'remove-attr', args: ['data-ad', '.slot'], world: 'ISOLATED', supported: true }),
-      expect.objectContaining({ name: 'abort-on-property-read', supported: false }),
+      expect.objectContaining({ name: 'abort-on-property-read', world: 'MAIN', supported: true, supportStatus: 'fully-executable' }),
     ]);
-    expect(bundle.counts.supportedScriptlets).toBe(2);
-    expect(bundle.unsupported).toHaveLength(1);
+    expect(bundle.counts.supportedScriptlets).toBe(3);
+    expect(bundle.counts.fullyExecutable).toBe(3);
+    expect(bundle.counts.unsupportedByName).toBe(0);
+    expect(bundle.unsupported).toHaveLength(0);
   });
 
   it('accepts bounded procedural CSS and rejects unsafe primitives', () => {

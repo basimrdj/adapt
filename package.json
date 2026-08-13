@@ -25,6 +25,7 @@
     "test:page": "vitest run tests/unit/page-filter-*.test.ts",
     "test:anti-adblock": "vitest run tests/e2e/phase31b-adversarial.test.ts",
     "test:runtime": "vitest run tests/e2e/content-runtime-stability.test.ts",
+    "benchmark:page": "tsx scripts/benchmark-page-filtering.ts",
     "verify:phase31b": "tsx scripts/verify-phase31b.ts"
   },
   "devDependencies": {

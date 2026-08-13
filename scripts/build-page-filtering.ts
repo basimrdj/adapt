@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { parseFilterLists } from '../src/page/filtering/compiler';
-import { PageFilterRule } from '../src/page/filtering/types';
+import { PageFilterRule, ScriptletSupportStatus } from '../src/page/filtering/types';
 
 interface SourceManifest {
   id: number;
@@ -19,6 +19,7 @@ const distDir = join(root, 'dist');
 const pageDir = join(distDir, 'page-filtering');
 const phaseDir = join(distDir, 'phase31');
 const manifestPath = join(distDir, 'manifest.json');
+const earlyRuntimeSource = join(root, 'src', 'page', 'filtering', 'early-runtime.js');
 
 function titleOf(text: string): string {
   return text.match(/^!\s*(?:Title|Name):\s*(.+)$/im)?.[1]?.trim() || 'Unknown filter';
@@ -83,13 +84,28 @@ function updateManifest(): void {
     use_dynamic_url: true,
   };
   const resources = Array.isArray(resourceEntry.resources) ? resourceEntry.resources.filter((value): value is string => typeof value === 'string') : [];
-  for (const resource of ['page-filtering/index.json', 'phase31-page-cosmetic.css']) {
+  for (const resource of ['page-filtering/index.json', 'page-filtering/generic.json', 'page-filtering/domain-index.json', 'page-filtering/early-manifest.json', 'phase31-page-cosmetic.css']) {
     if (!resources.includes(resource)) resources.push(resource);
   }
   resourceEntry.resources = resources;
   resourceEntry.matches = ['http://*/*', 'https://*/*'];
   resourceEntry.use_dynamic_url = true;
   if (!pageResources) manifest.web_accessible_resources.push(resourceEntry);
+  const earlyEntries = earlyManifest.map((entry) => ({
+    matches: ['*://*/*'],
+    include_globs: entry.matches,
+    js: ['page-filtering/early-runtime.js', entry.file],
+    run_at: 'document_start',
+    all_frames: true,
+    match_about_blank: true,
+    match_origin_as_fallback: true,
+    world: 'MAIN',
+  }));
+  const normalEntries = manifest.content_scripts.filter((entry) => {
+    const js = Array.isArray(entry.js) ? entry.js : [];
+    return !js.includes('page-filtering/early-runtime.js');
+  });
+  manifest.content_scripts = [...earlyEntries, ...normalEntries];
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
@@ -118,8 +134,113 @@ const genericSelectors = genericCssRules(bundle.genericRules, bundle.exceptions)
 
 mkdirSync(pageDir, { recursive: true });
 mkdirSync(phaseDir, { recursive: true });
+mkdirSync(join(root, 'artifacts', 'phase31b'), { recursive: true });
+rmSync(join(pageDir, 'domains'), { recursive: true, force: true });
+rmSync(join(pageDir, 'early'), { recursive: true, force: true });
+mkdirSync(join(pageDir, 'domains'), { recursive: true });
+mkdirSync(join(pageDir, 'early'), { recursive: true });
 
-writeFileSync(join(pageDir, 'index.json'), `${JSON.stringify(bundle)}\n`);
+const genericRules = bundle.genericRules.filter((rule) => rule.kind !== 'css');
+const genericScriptlets = bundle.scriptlets.filter((rule) => rule.domains.length === 0);
+const genericExceptions = bundle.exceptions.filter((exception) => exception.domains.length === 0);
+const scriptletFrequency = new Map<string, { total: number; fullyExecutable: number; unsupported: number; statuses: Record<ScriptletSupportStatus, number> }>();
+for (const scriptlet of bundle.scriptlets) {
+  const current = scriptletFrequency.get(scriptlet.name) || {
+    total: 0,
+    fullyExecutable: 0,
+    unsupported: 0,
+    statuses: {
+      'fully-executable': 0,
+      'unsupported-by-name': 0,
+      'unsupported-by-arguments': 0,
+      unsafe: 0,
+    },
+  };
+  current.total += 1;
+  current.statuses[scriptlet.supportStatus] += 1;
+  if (scriptlet.supported) current.fullyExecutable += 1;
+  else current.unsupported += 1;
+  scriptletFrequency.set(scriptlet.name, current);
+}
+const frequencyReport = {
+  schema: 'adapt-phase31b-unsupported-scriptlet-frequency-v1',
+  generatedAt,
+  totalScriptletRules: bundle.counts.scriptlets,
+  unsupportedScriptletRules: bundle.counts.scriptlets - bundle.counts.fullyExecutable,
+  entries: [...scriptletFrequency.entries()]
+    .map(([name, counts]) => ({ name, ...counts }))
+    .filter((entry) => entry.unsupported > 0)
+    .sort((left, right) => right.unsupported - left.unsupported || right.total - left.total || left.name.localeCompare(right.name)),
+};
+const domainData = new Map<string, { domainRules: PageFilterRule[]; scriptlets: typeof bundle.scriptlets; exceptions: typeof bundle.exceptions }>();
+for (const rule of bundle.domainRules) {
+  for (const domain of rule.domains) {
+    const key = domain.replace(/^\*\./, '');
+    const current = domainData.get(key) || { domainRules: [], scriptlets: [], exceptions: [] };
+    if (!current.domainRules.some((entry) => entry.id === rule.id)) current.domainRules.push(rule);
+    domainData.set(key, current);
+  }
+}
+for (const rule of bundle.scriptlets.filter((entry) => entry.domains.length > 0)) {
+  for (const domain of rule.domains) {
+    const key = domain.replace(/^\*\./, '');
+    const current = domainData.get(key) || { domainRules: [], scriptlets: [], exceptions: [] };
+    if (!current.scriptlets.some((entry) => entry.id === rule.id)) current.scriptlets.push(rule);
+    domainData.set(key, current);
+  }
+}
+for (const exception of bundle.exceptions.filter((entry) => entry.domains.length > 0)) {
+  for (const domain of exception.domains) {
+    const key = domain.replace(/^\*\./, '');
+    const current = domainData.get(key) || { domainRules: [], scriptlets: [], exceptions: [] };
+    const marker = `${exception.scriptletName || 'cosmetic'}|${exception.selector}|${JSON.stringify(exception.scriptletArgs || [])}`;
+    if (!current.exceptions.some((entry) => `${entry.scriptletName || 'cosmetic'}|${entry.selector}|${JSON.stringify(entry.scriptletArgs || [])}` === marker)) current.exceptions.push(exception);
+    domainData.set(key, current);
+  }
+}
+
+const domainIndex: Record<string, string> = {};
+const earlyManifest: Array<{ file: string; matches: string[] }> = [];
+let shardNumber = 0;
+const sortedDomainEntries = [...domainData.entries()].sort(([a], [b]) => a.localeCompare(b));
+const domainBucketSize = 128;
+for (let offset = 0; offset < sortedDomainEntries.length; offset += domainBucketSize) {
+  shardNumber += 1;
+  const file = `domains/${String(shardNumber).padStart(4, '0')}.json`;
+  const bucket = sortedDomainEntries.slice(offset, offset + domainBucketSize);
+  const scopedShard: Record<string, { domainRules: PageFilterRule[]; scriptlets: typeof bundle.scriptlets; exceptions: typeof bundle.exceptions }> = {};
+  const earlyShard: Record<string, Array<{ name: string; args: string[] }>> = {};
+  const matches: string[] = [];
+  for (const [domain, data] of bucket) {
+    scopedShard[domain] = {
+      domainRules: data.domainRules.map((rule) => ({ ...rule, domains: [] })),
+      scriptlets: data.scriptlets.map((rule) => ({ ...rule, domains: [] })),
+      exceptions: data.exceptions.map((exception) => ({ ...exception, domains: [] })),
+    };
+    const earlyRules = data.scriptlets.filter((rule) => rule.supported && rule.early && rule.world === 'MAIN' && rule.name === 'set-constant');
+    const validEarlyDomain = !domain.includes('*') && /^[a-z0-9.-]+$/i.test(domain) && domain.length <= 253;
+    domainIndex[domain] = file;
+    if (validEarlyDomain) {
+      matches.push(`*://${domain}/*`, `*://*.${domain}/*`);
+      if (earlyRules.length > 0) earlyShard[domain] = earlyRules.map((rule) => ({ name: rule.name, args: rule.args }));
+    }
+  }
+  writeFileSync(join(pageDir, file), `${JSON.stringify(scopedShard)}\n`);
+  if (Object.keys(earlyShard).length > 0) {
+    const earlyFile = `early/${String(shardNumber).padStart(4, '0')}.js`;
+    const serializedRules = JSON.stringify(earlyShard);
+    writeFileSync(join(pageDir, earlyFile), `(() => { const state = globalThis.__adaptEarlyScriptletState__; if (!state || typeof state.apply !== 'function') return; const groups = Object.freeze(${serializedRules}); const host = location.hostname.toLowerCase(); for (const [domain, rules] of Object.entries(groups)) { if (host === domain || host.endsWith('.' + domain)) for (const rule of rules) state.apply(rule); } })();\n`);
+    earlyManifest.push({ file: `page-filtering/${earlyFile}`, matches: [...new Set(matches)] });
+  }
+}
+
+copyFileSync(earlyRuntimeSource, join(pageDir, 'early-runtime.js'));
+writeFileSync(join(pageDir, 'generic.json'), `${JSON.stringify({ genericRules, scriptlets: genericScriptlets, exceptions: genericExceptions })}\n`);
+writeFileSync(join(pageDir, 'domain-index.json'), `${JSON.stringify(domainIndex)}\n`);
+writeFileSync(join(pageDir, 'early-manifest.json'), `${JSON.stringify(earlyManifest)}\n`);
+writeFileSync(join(pageDir, 'index.json'), `${JSON.stringify({ schemaVersion: 3, generatedAt, genericArtifact: 'generic.json', domainIndexArtifact: 'domain-index.json', counts: bundle.counts })}\n`);
+writeFileSync(join(phaseDir, 'UNSUPPORTED-SCRIPTLET-FREQUENCY.json'), `${JSON.stringify(frequencyReport, null, 2)}\n`);
+writeFileSync(join(root, 'artifacts', 'phase31b', 'unsupported-scriptlet-frequency.json'), `${JSON.stringify(frequencyReport, null, 2)}\n`);
 writeFileSync(
   join(distDir, 'phase31-page-cosmetic.css'),
   `${genericSelectors.map((selector) => `${selector}{display:none!important;}`).join('\n')}\n`
@@ -150,7 +271,19 @@ const buildManifest = {
     scriptletRules: bundle.counts.scriptlets,
     supportedScriptletRules: bundle.counts.supportedScriptlets,
     unsupportedRules: bundle.counts.unsupported,
-    artifacts: ['page-filtering/index.json', 'phase31-page-cosmetic.css'],
+    scriptletCoverage: {
+      parsed: bundle.counts.parsed,
+      fullyExecutable: bundle.counts.fullyExecutable,
+      unsupportedByName: bundle.counts.unsupportedByName,
+      unsupportedByArguments: bundle.counts.unsupportedByArguments,
+      unsafe: bundle.counts.unsafe,
+      exceptionSuppressed: bundle.counts.exceptionSuppressed,
+    },
+    artifacts: ['page-filtering/index.json', 'page-filtering/generic.json', 'page-filtering/domain-index.json', 'page-filtering/domains/', 'page-filtering/early-manifest.json', 'page-filtering/early-runtime.js', 'page-filtering/early/', 'phase31-page-cosmetic.css'],
+    domainShardCount: shardNumber,
+    indexedDomainCount: domainData.size,
+    earlyDomainCount: earlyManifest.reduce((count, entry) => count + entry.matches.length / 2, 0),
+    scriptletFrequencyArtifact: 'dist/phase31/UNSUPPORTED-SCRIPTLET-FREQUENCY.json',
   },
   networkPlane: {
     artifacts: ['rules/baseline.json', 'phase31-rulesets/catalog.json'],

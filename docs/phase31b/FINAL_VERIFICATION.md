@@ -15,13 +15,14 @@ returns nonzero on the first failed gate.
 ## Current evidence
 
 - Baseline before implementation: 140 unit tests passed.
-- New page compiler/lab unit coverage: 5 tests passed.
+- New page compiler/lab unit coverage: 8 tests passed.
 - Build artifact generation produced a page bundle, generic CSS, and a build
   manifest from six maintained filter sources.
 - Authoritative verification passed on 2026-08-13 UTC.
-- The full gate reported 145 unit tests, 34 Chromium E2E tests across 8 files,
-  1 synthetic adversarial lab test, 1 runtime-stability test, 5 page/compiler
-  tests, integrity, typecheck, build, and bundle security checks all green.
+- The full gate reported 151 unit tests, 65 Chromium E2E tests across 8 files,
+  30/30 executable adversarial scenarios, 1 runtime-stability test, 8
+  page/compiler/index tests, integrity, typecheck, build, and bundle security
+  checks all green.
 - The causal acceptance evidence includes a rolled-back scroll experiment,
   a committed bait-preservation experiment, and restart invalidation with zero
   exploration after restart.

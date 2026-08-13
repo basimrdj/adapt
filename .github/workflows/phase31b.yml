@@ -1,0 +1,48 @@
+name: Phase 3.1B Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, 'feat/**']
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  page-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:page
+      - run: npm run test:unit
+
+  build-integrity-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:full
+      - run: npm run benchmark:page
+      - run: npm run verify:phase31b:integrity
+      - run: npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts

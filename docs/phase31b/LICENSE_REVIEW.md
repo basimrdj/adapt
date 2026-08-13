@@ -18,11 +18,12 @@ owner before publication.
 
 ## Copyleft boundary
 
-The page compiler, page runtime, isolated scriptlets, MAIN-world bridge, tests,
-and documentation in this branch are independently implemented. No uBO/uBOL or
-AdGuard runtime source was copied. The current DNR build still invokes the
-existing AdGuard converter/tooling path, so this branch is not yet a legal
-clearance for a proprietary distributed artifact.
+The page compiler, page runtime, isolated scriptlets, early plane, MAIN-world
+bridge, tests, and documentation in this branch are independently implemented.
+No uBO/uBOL or AdGuard runtime source was copied. The current DNR build still
+invokes the existing AdGuard converter/tooling path, so this branch is not yet
+a legal clearance for a proprietary distributed artifact. Adding the audited
+primitives does not change that blocker.
 
 ## Required owner decision
 

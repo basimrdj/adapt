@@ -1,0 +1,158 @@
+{
+  "schema": "adapt-phase31b-adversarial-v2",
+  "total": 30,
+  "passed": 30,
+  "failed": 0,
+  "results": [
+    {
+      "id": "network-ad-request",
+      "pass": true,
+      "durationMs": 5140
+    },
+    {
+      "id": "generic-cosmetic-ad",
+      "pass": true,
+      "durationMs": 1149
+    },
+    {
+      "id": "domain-specific-cosmetic",
+      "pass": true,
+      "durationMs": 1
+    },
+    {
+      "id": "cosmetic-exception",
+      "pass": true,
+      "durationMs": 1
+    },
+    {
+      "id": "specific-generic-rule",
+      "pass": true,
+      "durationMs": 0
+    },
+    {
+      "id": "extended-css-target",
+      "pass": true,
+      "durationMs": 0
+    },
+    {
+      "id": "procedural-has-text",
+      "pass": true,
+      "durationMs": 1
+    },
+    {
+      "id": "scriptlet-target",
+      "pass": true,
+      "durationMs": 0
+    },
+    {
+      "id": "scriptlet-exception",
+      "pass": true,
+      "durationMs": 0
+    },
+    {
+      "id": "main-world-detector",
+      "pass": true,
+      "durationMs": 0
+    },
+    {
+      "id": "offset-height-bait",
+      "pass": true,
+      "durationMs": 1481
+    },
+    {
+      "id": "bounding-rect-bait",
+      "pass": true,
+      "durationMs": 1491
+    },
+    {
+      "id": "computed-style-bait",
+      "pass": true,
+      "durationMs": 1474
+    },
+    {
+      "id": "element-removal-detector",
+      "pass": true,
+      "durationMs": 1417
+    },
+    {
+      "id": "bait-reinsertion",
+      "pass": true,
+      "durationMs": 1759
+    },
+    {
+      "id": "timer-detection",
+      "pass": true,
+      "durationMs": 1483
+    },
+    {
+      "id": "scroll-lock-gate",
+      "pass": true,
+      "durationMs": 1759
+    },
+    {
+      "id": "pointer-events-gate",
+      "pass": true,
+      "durationMs": 1758
+    },
+    {
+      "id": "nested-frame",
+      "pass": true,
+      "durationMs": 392
+    },
+    {
+      "id": "cross-origin-frame",
+      "pass": true,
+      "durationMs": 326
+    },
+    {
+      "id": "open-shadow-dom",
+      "pass": true,
+      "durationMs": 1056
+    },
+    {
+      "id": "csp-heavy-page",
+      "pass": true,
+      "durationMs": 1060
+    },
+    {
+      "id": "spa-route-change",
+      "pass": true,
+      "durationMs": 1474
+    },
+    {
+      "id": "body-replacement",
+      "pass": true,
+      "durationMs": 765
+    },
+    {
+      "id": "mutation-storm",
+      "pass": true,
+      "durationMs": 3183
+    },
+    {
+      "id": "worker-restart",
+      "pass": true,
+      "durationMs": 1058
+    },
+    {
+      "id": "consent-modal",
+      "pass": true,
+      "durationMs": 1060
+    },
+    {
+      "id": "login-modal",
+      "pass": true,
+      "durationMs": 764
+    },
+    {
+      "id": "paywall",
+      "pass": true,
+      "durationMs": 1059
+    },
+    {
+      "id": "benign-advertisement-text",
+      "pass": true,
+      "durationMs": 1067
+    }
+  ]
+}
