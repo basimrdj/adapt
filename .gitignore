@@ -3,3 +3,16 @@ dist
 chrome
 .DS_Store
 *.log
+.venv/
+__pycache__/
+*.pyc
+
+# Graphify machine-local lifecycle state; portable exports remain tracked.
+.graphify/.graphify_describe_pending
+.graphify/.graphify_detect.json
+.graphify/20*/
+.graphify/branch.json
+.graphify/cache/
+.graphify/description-instructions/
+.graphify/label-instructions/
+.graphify/worktree.json
