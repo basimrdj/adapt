@@ -1,0 +1,70 @@
+import { describe, expect, it } from 'vitest';
+import { parseFilterLists } from '../../src/page/filtering/compiler';
+import { matchesDomain } from '../../src/page/filtering/matching';
+
+describe('Phase 3.1B page filter compiler', () => {
+  it('keeps generic, domain-specific, and exception semantics separate', () => {
+    const bundle = parseFilterLists([
+      {
+        id: 2,
+        text: [
+          '##.generic-ad',
+          'example.com##.site-ad',
+          'example.com#@#.site-ad',
+          '#@#.generic-ad',
+        ].join('\n'),
+      },
+    ]);
+
+    expect(bundle.genericRules.map((rule) => rule.selector)).toEqual(['.generic-ad']);
+    expect(bundle.domainRules.map((rule) => rule.selector)).toEqual(['.site-ad']);
+    expect(bundle.exceptions).toEqual([
+      expect.objectContaining({ selector: '.site-ad', domains: ['example.com'] }),
+      expect.objectContaining({ selector: '.generic-ad', domains: [] }),
+    ]);
+  });
+
+  it('parses audited scriptlets and records unsupported primitives', () => {
+    const bundle = parseFilterLists([
+      {
+        id: 19,
+        text: [
+          "example.com#%#//scriptlet('set-constant', 'google_ad_status', '1')",
+          "example.com#%#//scriptlet('remove-attr', 'data-ad', '.slot')",
+          "example.com#%#//scriptlet('abort-on-property-read', 'adsBlocked')",
+        ].join('\n'),
+      },
+    ]);
+
+    expect(bundle.scriptlets).toEqual([
+      expect.objectContaining({ name: 'set-constant', args: ['google_ad_status', '1'], world: 'MAIN', supported: true }),
+      expect.objectContaining({ name: 'remove-attr', args: ['data-ad', '.slot'], world: 'ISOLATED', supported: true }),
+      expect.objectContaining({ name: 'abort-on-property-read', supported: false }),
+    ]);
+    expect(bundle.counts.supportedScriptlets).toBe(2);
+    expect(bundle.unsupported).toHaveLength(1);
+  });
+
+  it('accepts bounded procedural CSS and rejects unsafe primitives', () => {
+    const bundle = parseFilterLists([
+      {
+        id: 2,
+        text: [
+          'example.com##.card:has-text(Advertisement)',
+          'example.com##.slot:matches-css(display, none)',
+          'example.com##.target:remove',
+          'example.com##.bad:xpath(//script)',
+        ].join('\n'),
+      },
+    ]);
+
+    expect(bundle.domainRules.map((rule) => rule.kind)).toEqual(['has-text', 'matches-css', 'remove']);
+    expect(bundle.unsupported[0]?.reason).toContain('unsupported');
+  });
+
+  it('matches subdomains while respecting exclusions', () => {
+    expect(matchesDomain('www.example.com', ['example.com'], [])).toBe(true);
+    expect(matchesDomain('cdn.example.com', ['example.com'], ['cdn.example.com'])).toBe(false);
+    expect(matchesDomain('other.test', [], [])).toBe(true);
+  });
+});

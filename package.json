@@ -18,9 +18,14 @@
     "phase31:v5": "npm run build && node tools/phase31/v5.mjs",
     "build:debug": "tsx scripts/build.ts --sourcemap",
     "phase31:sync": "node tools/phase31/sync.mjs",
-    "phase31:v6": "npm run build && npm run phase31:sync && ./node_modules/.bin/tswebextension war dist/web-accessible-resources && node tools/phase31/v6.mjs",
-    "build:full": "npm run phase31:v6",
-    "test:runtime": "vitest run tests/e2e/content-runtime-stability.test.ts"
+    "phase31:v6": "npm run phase31:sync && npm run build && ./node_modules/.bin/tswebextension war dist/web-accessible-resources && node tools/phase31/v6.mjs",
+    "phase31:page": "tsx scripts/build-page-filtering.ts",
+    "verify:phase31b:integrity": "tsx scripts/verify-phase31b-integrity.ts",
+    "build:full": "npm run phase31:v6 && npm run phase31:page",
+    "test:page": "vitest run tests/unit/page-filter-*.test.ts",
+    "test:anti-adblock": "vitest run tests/e2e/phase31b-adversarial.test.ts",
+    "test:runtime": "vitest run tests/e2e/content-runtime-stability.test.ts",
+    "verify:phase31b": "tsx scripts/verify-phase31b.ts"
   },
   "devDependencies": {
     "@adguard/dnr-rulesets": "^4.2.20260813130145",

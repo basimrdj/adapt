@@ -17,6 +17,7 @@ import { CausalOrchestrator, CausalResourceRegistry } from '../background/causal
 import { CausalRecipeStore, PromotionGate } from '../background/causal/promotion-gate';
 import { isHealthVector, isPageSignalBatch } from '../shared/guards';
 import { reconcilePhase31StaticRulesets } from '../background/phase31/static-rulesets';
+import { runMainScriptlet } from '../shared/main-scriptlet';
 
 // 1. Storage Backend Implementation for chrome.storage.local
 const chromeStorageBackend = new ChromeStorageBackend(chrome.storage.local);
@@ -236,6 +237,22 @@ chrome.webRequest.onCompleted.addListener(
 chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sender, sendResponse) => {
   if (!message || message.v !== 1 || !sender.tab || sender.tab.id === undefined) {
     return false;
+  }
+  if (message.type === 'PAGE_FILTER_MAIN_SCRIPTLET') {
+    const tabId = sender.tab.id;
+    const frameId = sender.frameId || 0;
+    const senderDocumentId = (sender as chrome.runtime.MessageSender & { documentId?: string }).documentId;
+    if (message.name !== 'set-constant' || message.args.length > 2 || message.args.some((arg) => typeof arg !== 'string' || arg.length > 100)) {
+      sendResponse({ success: false });
+      return false;
+    }
+    void chrome.scripting.executeScript({
+      target: senderDocumentId ? { tabId, documentIds: [senderDocumentId] } : { tabId, frameIds: [frameId] },
+      world: 'MAIN',
+      func: runMainScriptlet,
+      args: [message.name, message.args],
+    }).then(() => sendResponse({ success: true })).catch(() => sendResponse({ success: false }));
+    return true;
   }
   void startupReady.then(async () => {
     const tabId = sender.tab!.id!;

@@ -40,6 +40,13 @@ export type ContentToBackgroundMessage =
       operation?: 'apply' | 'rollback';
       success: boolean;
       error?: string;
+    }
+  | {
+      v: 1;
+      type: 'PAGE_FILTER_MAIN_SCRIPTLET';
+      ruleId: string;
+      name: string;
+      args: string[];
     };
 
 export type BackgroundToContentMessage =

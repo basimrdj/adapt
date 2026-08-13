@@ -2,12 +2,25 @@ import { build } from 'vite';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { copyFileSync, mkdirSync, rmSync } from 'fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parseFilterLists, renderGenericCosmeticCss } from '../src/page/filtering/compiler';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const sourcemap = process.argv.includes('--sourcemap');
 
+function generatedGenericCss(): string {
+  const textDir = resolve(__dirname, '../.phase31/text');
+  if (!existsSync(textDir)) return '';
+  const names = readdirSync(textDir).filter((name) => /^filter_\d+\.txt$/.test(name));
+  if (names.length === 0) return '';
+  const sources = names.map((name) => ({ id: Number(name.match(/\d+/)?.[0] || 0), text: readFileSync(join(textDir, name), 'utf8') }));
+  return renderGenericCosmeticCss(parseFilterLists(sources));
+}
+
 async function buildExtension() {
   const distDir = resolve(__dirname, '../dist');
+  const genericCss = generatedGenericCss();
   rmSync(distDir, { recursive: true, force: true });
   mkdirSync(distDir, { recursive: true });
   mkdirSync(resolve(distDir, 'rules'), { recursive: true });
@@ -16,6 +29,7 @@ async function buildExtension() {
   // 1. Build Background Service Worker (Self-contained, no external chunk imports)
   await build({
     configFile: false,
+    define: { __ADAPT_GENERIC_CSS__: JSON.stringify(genericCss) },
     build: {
       outDir: distDir,
       emptyOutDir: false,
@@ -36,6 +50,7 @@ async function buildExtension() {
   // 2. Build Content Script (Self-contained IIFE, no external chunk imports)
   await build({
     configFile: false,
+    define: { __ADAPT_GENERIC_CSS__: JSON.stringify(genericCss) },
     build: {
       outDir: distDir,
       emptyOutDir: false,

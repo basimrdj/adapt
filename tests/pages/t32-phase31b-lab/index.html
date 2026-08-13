@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ADAPT Phase 3.1B Adversarial Lab</title>
+    <style>
+      .ad-slot-wrapper, .ad, #ad-banner { width: 120px; height: 40px; background: #f66; }
+      .gate { position: fixed; inset: 0; background: rgba(0,0,0,.8); color: white; }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <main id="main-content">
+      <h1>Phase 3.1B lab</h1>
+      <div class="ad-slot-wrapper ad" id="ad-banner">Advertisement</div>
+      <div id="adversarial-bait" style="width:1px;height:1px">bait</div>
+      <div class="gate" id="anti-adblock-gate" hidden>Disable your ad blocker to continue</div>
+      <div id="consent-modal">Accept cookies</div>
+      <div id="login-modal">Sign in to continue</div>
+      <article id="paywall">Subscribe to read</article>
+      <p id="benign-copy">This article uses the word advertisement in an ordinary sentence.</p>
+    </main>
+    <script>
+      window.__phase31b = { routeChanges: 0, churnComplete: false };
+      history.pushState({}, '', '#initial');
+      setTimeout(() => {
+        history.pushState({}, '', '#spa');
+        window.__phase31b.routeChanges += 1;
+        const bait = document.getElementById('adversarial-bait');
+        bait?.remove();
+        const replacement = document.createElement('div');
+        replacement.id = 'adversarial-bait';
+        replacement.textContent = 'bait';
+        document.body.appendChild(replacement);
+        window.__phase31b.churnComplete = true;
+      }, 100);
+    </script>
+  </body>
+</html>

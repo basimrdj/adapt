@@ -1,0 +1,317 @@
+import { createHash } from 'node:crypto';
+import {
+  PageFilterBundle,
+  PageFilterRule,
+  PageRuleKind,
+  ScriptletRule,
+  ScriptletWorld,
+} from './types';
+
+export interface FilterSource {
+  id: number;
+  text: string;
+}
+
+interface DomainScope {
+  domains: string[];
+  excludedDomains: string[];
+}
+
+const UNSUPPORTED_COSMETIC_MARKERS = [
+  ':xpath(',
+  ':upward(',
+  ':watch-attr(',
+  ':contains(',
+  ':-abp-',
+  ':style(',
+];
+
+const ISOLATED_SCRIPTLETS = new Set([
+  'remove-attr',
+  'remove-class',
+  'remove-node-attr',
+  'remove-node-text',
+]);
+
+const MAIN_SCRIPTLETS = new Set([
+  'set-constant',
+]);
+
+const UNSUPPORTED_SCRIPTLETS = new Set([
+  'abort-current-inline-script',
+  'abort-on-property-read',
+  'abort-on-property-write',
+  'abort-on-stack-trace',
+  'prevent-addEventListener',
+  'prevent-eval-if',
+  'prevent-fetch',
+  'prevent-setTimeout',
+  'prevent-window-open',
+  'prevent-xhr',
+  'json-prune',
+  'json-prune-xhr-response',
+  'set-cookie',
+  'set-local-storage-item',
+  'trusted-suppress-native-method',
+]);
+
+function stableId(value: string): string {
+  return createHash('sha256').update(value).digest('hex').slice(0, 16);
+}
+
+function splitDomains(value: string): DomainScope {
+  const domains: string[] = [];
+  const excludedDomains: string[] = [];
+
+  for (const rawDomain of value.split(',')) {
+    const domain = rawDomain.trim().toLowerCase();
+    if (!domain) continue;
+    if (domain.startsWith('~')) {
+      if (/^[~][a-z0-9.*-]+$/.test(domain)) excludedDomains.push(domain.slice(1));
+      continue;
+    }
+    if (/^[a-z0-9.*-]+$/.test(domain)) domains.push(domain);
+  }
+
+  return { domains: [...new Set(domains)], excludedDomains: [...new Set(excludedDomains)] };
+}
+
+function parseQuotedArguments(value: string): string[] | null {
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('(') || !trimmed.endsWith(')')) return null;
+
+  const args: string[] = [];
+  let current = '';
+  let quote = '';
+  let escaped = false;
+
+  for (let index = 1; index < trimmed.length - 1; index++) {
+    const char = trimmed[index];
+    if (escaped) {
+      current += char;
+      escaped = false;
+      continue;
+    }
+    if (char === '\\') {
+      escaped = true;
+      continue;
+    }
+    if (quote) {
+      if (char === quote) quote = '';
+      else current += char;
+      continue;
+    }
+    if (char === "'" || char === '"') {
+      quote = char;
+      continue;
+    }
+    if (char === ',') {
+      args.push(current.trim());
+      current = '';
+      continue;
+    }
+    current += char;
+  }
+
+  if (quote || escaped) return null;
+  if (current.trim() || trimmed.length > 2) args.push(current.trim());
+  return args;
+}
+
+function parseScriptlet(value: string): { name: string; args: string[] } | null {
+  const match = value.match(/^\/\/scriptlet\s*([\s\S]*)$/i);
+  if (!match) return null;
+  const parsed = parseQuotedArguments(match[1] || '');
+  const name = parsed?.[0];
+  if (!name || !/^[\w-]+$/.test(name)) return null;
+  return { name, args: parsed.slice(1) };
+}
+
+function classifyCosmeticSelector(selector: string): {
+  kind: PageRuleKind;
+  selector: string;
+  argument?: string;
+  property?: string;
+  value?: string;
+} | null {
+  const trimmed = selector.trim();
+  if (!trimmed || trimmed.length > 1000) return null;
+  if (UNSUPPORTED_COSMETIC_MARKERS.some((marker) => trimmed.includes(marker))) return null;
+
+  const hasText = trimmed.match(/^(.*):has-text\((['"]?)(.*?)\2\)$/i);
+  if (hasText) {
+    return { kind: 'has-text', selector: hasText[1] || '*', argument: hasText[3] };
+  }
+
+  const matchesCss = trimmed.match(/^(.*):matches-css\(([^,]+),\s*(.*?)\)$/i);
+  if (matchesCss) {
+    const property = matchesCss[2];
+    const value = matchesCss[3];
+    if (!property || value === undefined) return null;
+    return {
+      kind: 'matches-css',
+      selector: matchesCss[1] || '*',
+      property: property.trim(),
+      value: value.trim(),
+    };
+  }
+
+  if (trimmed.endsWith(':remove')) {
+    return { kind: 'remove', selector: trimmed.slice(0, -7).trim() || '*' };
+  }
+
+  const removeAttr = trimmed.match(/^(.*):remove-attr\(([^)]+)\)$/i);
+  if (removeAttr) {
+    const attribute = removeAttr[2];
+    if (!attribute) return null;
+    return { kind: 'remove-attr', selector: removeAttr[1] || '*', argument: attribute.trim() };
+  }
+
+  if (trimmed.includes(':')) {
+    const safePseudo = /:(?:is|where|not|has|first-child|last-child|nth-child|nth-of-type|empty|root|checked|disabled|enabled|visited|target|focus|hover|active|before|after)(?:\(|$)/i;
+    const customPseudo = trimmed.match(/:([a-z-]+)(?:\(|$)/gi) || [];
+    if (customPseudo.some((pseudo) => !safePseudo.test(pseudo))) return null;
+  }
+
+  return { kind: 'css', selector: trimmed };
+}
+
+function addUnique<T extends { id: string }>(target: T[], value: T): void {
+  if (!target.some((existing) => existing.id === value.id)) target.push(value);
+}
+
+function makeRule(
+  sourceId: number,
+  scope: DomainScope,
+  parsed: NonNullable<ReturnType<typeof classifyCosmeticSelector>>,
+  line: string
+): PageFilterRule {
+  return {
+    id: stableId(`${sourceId}|cosmetic|${line}`),
+    ...parsed,
+    domains: scope.domains,
+    excludedDomains: scope.excludedDomains,
+    sourceFilterId: sourceId,
+  };
+}
+
+function makeScriptlet(sourceId: number, scope: DomainScope, parsed: { name: string; args: string[] }, line: string): ScriptletRule {
+  const world: ScriptletWorld = MAIN_SCRIPTLETS.has(parsed.name) ? 'MAIN' : 'ISOLATED';
+  const supported = ISOLATED_SCRIPTLETS.has(parsed.name) || MAIN_SCRIPTLETS.has(parsed.name);
+  return {
+    id: stableId(`${sourceId}|scriptlet|${line}`),
+    name: parsed.name,
+    args: parsed.args,
+    domains: scope.domains,
+    excludedDomains: scope.excludedDomains,
+    world,
+    supported,
+    sourceFilterId: sourceId,
+  };
+}
+
+export function parseFilterLists(sources: FilterSource[], generatedAt = new Date().toISOString()): PageFilterBundle {
+  const genericRules: PageFilterRule[] = [];
+  const domainRules: PageFilterRule[] = [];
+  const scriptlets: ScriptletRule[] = [];
+  const exceptions: PageFilterBundle['exceptions'] = [];
+  const unsupported: PageFilterBundle['unsupported'] = [];
+
+  for (const source of sources) {
+    for (const rawLine of source.text.split(/\r?\n/)) {
+      const line = rawLine.trim();
+      if (!line || line.startsWith('!') || line.startsWith('[')) continue;
+
+      const scriptletExceptionIndex = line.indexOf('#@%#');
+      const scriptletIndex = line.indexOf('#%#');
+      const cosmeticExceptionIndex = line.indexOf('#@#');
+      const cosmeticIndex = line.indexOf('##');
+      const extendedIndex = line.indexOf('#?#');
+
+      if (scriptletExceptionIndex >= 0) {
+        const scope = splitDomains(line.slice(0, scriptletExceptionIndex));
+        const parsed = parseScriptlet(line.slice(scriptletExceptionIndex + 4));
+        if (!parsed) {
+          unsupported.push({ kind: 'scriptlet', sourceFilterId: source.id, line, reason: 'invalid scriptlet exception syntax' });
+        } else {
+          exceptions.push({ selector: '', ...scope, scriptletName: parsed.name, scriptletArgs: parsed.args, sourceFilterId: source.id });
+        }
+        continue;
+      }
+
+      if (scriptletIndex >= 0 && (cosmeticIndex < 0 || scriptletIndex < cosmeticIndex)) {
+        const scope = splitDomains(line.slice(0, scriptletIndex));
+        const parsed = parseScriptlet(line.slice(scriptletIndex + 3));
+        if (!parsed) {
+          unsupported.push({ kind: 'scriptlet', sourceFilterId: source.id, line, reason: 'invalid or inline scriptlet syntax' });
+          continue;
+        }
+        const scriptlet = makeScriptlet(source.id, scope, parsed, line);
+        addUnique(scriptlets, scriptlet);
+        if (!scriptlet.supported || UNSUPPORTED_SCRIPTLETS.has(scriptlet.name)) {
+          scriptlet.supported = false;
+          unsupported.push({ kind: 'scriptlet', sourceFilterId: source.id, line, reason: `scriptlet '${scriptlet.name}' is outside the audited allowlist` });
+        }
+        continue;
+      }
+
+      if (cosmeticExceptionIndex >= 0) {
+        const scope = splitDomains(line.slice(0, cosmeticExceptionIndex));
+        const selector = line.slice(cosmeticExceptionIndex + 3).trim();
+        const parsed = parseScriptlet(selector);
+        if (parsed) {
+          exceptions.push({ selector: '', ...scope, scriptletName: parsed.name, scriptletArgs: parsed.args, sourceFilterId: source.id });
+        } else {
+          exceptions.push({ selector, ...scope, sourceFilterId: source.id });
+        }
+        continue;
+      }
+
+      const markerIndex = extendedIndex >= 0 ? extendedIndex : cosmeticIndex;
+      if (markerIndex < 0) continue;
+
+      const scope = splitDomains(line.slice(0, markerIndex));
+      const selector = line.slice(markerIndex + (extendedIndex >= 0 ? 3 : 2)).trim();
+      const parsed = classifyCosmeticSelector(selector);
+      if (!parsed) {
+        unsupported.push({ kind: 'cosmetic', sourceFilterId: source.id, line, reason: 'selector requires an unsupported or unsafe procedural primitive' });
+        continue;
+      }
+
+      const rule = makeRule(source.id, scope, parsed, line);
+      if (scope.domains.length === 0) addUnique(genericRules, rule);
+      else addUnique(domainRules, rule);
+    }
+  }
+
+  return {
+    schemaVersion: 1,
+    generatedAt,
+    genericRules,
+    domainRules,
+    scriptlets,
+    exceptions,
+    unsupported,
+    counts: {
+      cosmetic: genericRules.length + domainRules.length,
+      generic: genericRules.length,
+      domainSpecific: domainRules.length,
+      exceptions: exceptions.length,
+      scriptlets: scriptlets.length,
+      supportedScriptlets: scriptlets.filter((scriptlet) => scriptlet.supported).length,
+      unsupported: unsupported.length,
+    },
+  };
+}
+
+export function renderGenericCosmeticCss(bundle: PageFilterBundle): string {
+  const selectors = new Set<string>();
+  for (const rule of bundle.genericRules) {
+    if (rule.kind !== 'css' || rule.domains.length > 0 || rule.selector.length > 1000) continue;
+    if (/[{};]/.test(rule.selector)) continue;
+    if (/:has-text\(|:matches-css\(|:xpath\(|:upward\(|:remove\b|:remove-attr\(/i.test(rule.selector)) continue;
+    if (bundle.exceptions.some((exception) => !exception.scriptletName && exception.selector === rule.selector)) continue;
+    selectors.add(rule.selector);
+  }
+  return [...selectors].slice(0, 20000).map((selector) => `${selector}{display:none!important;}`).join('\n');
+}
