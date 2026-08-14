@@ -136,7 +136,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:4060/t32-phase31b-lab/index.html', { waitUntil: 'networkidle2' });
     await settle(page);
-    expect(await page.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    expect(await page.$eval('.sponsor-div', (element) => getComputedStyle(element).display)).toBe('none');
     await page.close();
   }));
 
@@ -260,7 +260,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     expect(nestedFrames.length).toBeGreaterThanOrEqual(3);
     let contentFrames = 0;
     for (const frame of nestedFrames) {
-      const ad = await frame.$('.ad-slot-wrapper');
+      const ad = await frame.$('.sponsor-div');
       if (ad) expect(await ad.evaluate((element) => getComputedStyle(element).display)).toBe('none');
       if (await frame.$('#frame-content')) contentFrames += 1;
     }
@@ -280,8 +280,8 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     await page.waitForFunction(() => Boolean(document.querySelector('#cross-origin-fixture')));
     const child = page.frames().find((frame) => frame.url().includes('cross-origin-fixture.html'));
     expect(child).toBeDefined();
-    await child?.waitForSelector('.ad-slot-wrapper');
-    expect(await child?.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    await child?.waitForSelector('.sponsor-div');
+    expect(await child?.$eval('.sponsor-div', (element) => getComputedStyle(element).display)).toBe('none');
     expect(await child?.$eval('#child-content', (element) => element.textContent)).toContain('Cross-origin content survives');
     await page.close();
   }));
@@ -292,7 +292,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     expect(await page.evaluate(() => {
       const root = document.querySelector('#host-element')?.shadowRoot;
       const modal = root?.querySelector('#shadow-modal');
-      const ad = root?.querySelector('.ad-slot-wrapper');
+      const ad = root?.querySelector('.sponsor-div');
       return { mounted: Boolean(modal), adDisplay: ad ? getComputedStyle(ad).display : null, text: modal?.textContent || '' };
     })).toEqual({ mounted: true, adDisplay: 'block', text: expect.stringContaining('Anti-Adblock') });
     await page.close();
@@ -302,7 +302,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:4060/t33-csp-heavy-page/index.html', { waitUntil: 'networkidle2' });
     expect(await page.evaluate(() => (window as unknown as { __csp_fixture_loaded?: boolean }).__csp_fixture_loaded)).toBe(true);
-    expect(await page.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    expect(await page.$eval('.sponsor-div', (element) => getComputedStyle(element).display)).toBe('none');
     expect(await page.$eval('#csp-content', (element) => element.textContent)).toContain('CSP content survives');
     await page.close();
   }));
@@ -347,7 +347,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     const restartedPage = await browser.newPage();
     await restartedPage.goto('http://localhost:4060/t32-phase31b-lab/index.html', { waitUntil: 'networkidle2' });
     await settle(restartedPage);
-    expect(await restartedPage.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    expect(await restartedPage.$eval('.sponsor-div', (element) => getComputedStyle(element).display)).toBe('none');
     expect(await restartedPage.$eval('#main-content', (element) => element.textContent)).toContain('Phase 3.1B lab');
     await restartedPage.close();
     await page.close();

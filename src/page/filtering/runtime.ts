@@ -2,8 +2,6 @@ import { exceptionMatches, matchesDomain, scriptletExceptionMatches } from './ma
 import { applyIsolatedScriptlet, applyProceduralRule } from './scriptlets';
 import { PageFilterBundle, PageFilterRule, ScriptletRule } from './types';
 
-declare const __ADAPT_GENERIC_CSS__: string;
-
 interface MainScriptletMessage {
   v: 1;
   type: 'PAGE_FILTER_MAIN_SCRIPTLET';
@@ -101,10 +99,6 @@ export class PageFilteringRuntime {
       const manifest = chrome.runtime.getManifest() as chrome.runtime.Manifest;
       const hasStaticPageCss = manifest.content_scripts?.some((entry) => Array.isArray(entry.css) && entry.css.includes('phase31-page-cosmetic.css'));
       if (hasStaticPageCss) return;
-      if (typeof __ADAPT_GENERIC_CSS__ === 'string' && __ADAPT_GENERIC_CSS__) {
-        this.appendGenericCss(__ADAPT_GENERIC_CSS__);
-        return;
-      }
       const response = await fetch(chrome.runtime.getURL('phase31-page-cosmetic.css'), { cache: 'no-store' });
       if (!response.ok) return;
       const css = await response.text();

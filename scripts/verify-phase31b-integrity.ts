@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
+import { classifyDetectorBaitSelector } from '../src/page/filtering/compiler';
 
 const root = resolve(process.cwd());
 const dist = join(root, 'dist');
@@ -42,6 +43,20 @@ function codeWithoutStringLiterals(source: string): string {
   return output;
 }
 
+function detectorBaitSelectorsInCss(source: string): string[] {
+  const selectors = new Set<string>();
+  for (const match of source.matchAll(/([^{}]+)\{[^{}]*\}/g)) {
+    const prelude = match[1]?.trim() || '';
+    const candidates = prelude.startsWith(':is(') && prelude.endsWith(')')
+      ? prelude.slice(4, -1).split(',').map((selector) => selector.trim())
+      : [prelude];
+    for (const selector of candidates) {
+      if (classifyDetectorBaitSelector(selector) !== 'ORDINARY_COSMETIC') selectors.add(selector);
+    }
+  }
+  return [...selectors];
+}
+
 if (!existsSync(manifestPath)) fail('dist/manifest.json is missing');
 if (!existsSync(buildManifestPath)) fail('dist/phase31/BUILD-MANIFEST.json is missing');
 if (!existsSync(frequencyReportPath)) fail('unsupported scriptlet frequency report is missing');
@@ -57,6 +72,9 @@ const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
 };
 const buildManifest = JSON.parse(readFileSync(buildManifestPath, 'utf8')) as {
   pagePlane?: {
+    artifacts?: string[];
+    cosmeticOwners?: number;
+    cosmeticOwner?: string;
     scriptletRules?: number;
     supportedScriptletRules?: number;
     unsupportedRules?: number;
@@ -104,18 +122,37 @@ for (const resource of manifest.web_accessible_resources || []) {
   if (resources.length > 128) fail('web-accessible resource surface exceeds the audited bound');
   if (resource.use_dynamic_url !== true && resources.some((value) => String(value).startsWith('web-accessible-resources/'))) fail('redirect resources must use dynamic URLs');
 }
-const css = manifest.content_scripts?.flatMap((entry) => Array.isArray(entry.css) ? entry.css : []) || [];
-if (!css.includes('phase31-page-cosmetic.css')) fail('page filtering CSS is not declared in content_scripts');
-const cosmeticCss = readFileSync(join(dist, 'phase31-page-cosmetic.css'), 'utf8');
-for (const selector of ['.ad-widget', '.adsbox', '.ad-banner', '#adblock', '#ads']) {
-  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  if (new RegExp(`(^|[,{\\s])${escaped}(?=\\s*\\{)`).test(cosmeticCss)) fail(`detector bait selector escaped into static cosmetic CSS: ${selector}`);
+const manifestCss = manifest.content_scripts?.flatMap((entry) => Array.isArray(entry.css) ? entry.css.filter((value): value is string => typeof value === 'string') : []) || [];
+const cssFiles = filesUnder(dist)
+  .filter((file) => file.endsWith('.css'))
+  .map((file) => relative(dist, file).split(sep).join('/'));
+const generatedGenericCosmeticCss = cssFiles.filter((file) => file.toLowerCase().includes('generic-cosmetic'));
+if (generatedGenericCosmeticCss.length > 0) fail(`legacy generic cosmetic CSS artifacts are present: ${generatedGenericCosmeticCss.join(', ')}`);
+if (manifestCss.some((file) => file.toLowerCase().includes('generic-cosmetic'))) fail('manifest references a legacy generic cosmetic CSS artifact');
+for (const file of manifestCss) {
+  if (!cssFiles.includes(file)) fail(`manifest-declared CSS artifact is missing: ${file}`);
 }
+const pagePlaneCss = (buildManifest.pagePlane?.artifacts || []).filter((file) => file.endsWith('.css'));
+if (buildManifest.pagePlane?.cosmeticOwners !== 1 || buildManifest.pagePlane?.cosmeticOwner !== 'phase31b-page-plane') fail('cosmetic owner registry must report exactly phase31b-page-plane');
+if (pagePlaneCss.length !== 1) fail(`page plane must declare exactly one generated CSS artifact, found ${pagePlaneCss.length}`);
+if (manifestCss.length !== pagePlaneCss.length || manifestCss.some((file) => !pagePlaneCss.includes(file))) fail(`content-script CSS ownership is not singular: ${manifestCss.join(', ')}`);
+const activeCosmeticCss = [...new Set(manifestCss.filter((file) => file.toLowerCase().includes('cosmetic') || pagePlaneCss.includes(file)))];
+if (activeCosmeticCss.length !== 1) fail(`more than one generated generic cosmetic baseline is active: ${activeCosmeticCss.join(', ') || 'none'}`);
+if (activeCosmeticCss[0] !== pagePlaneCss[0]) fail(`active cosmetic baseline does not match page-plane owner: ${activeCosmeticCss.join(', ')}`);
+const detectorSensitiveCss = cssFiles.flatMap((file) => detectorBaitSelectorsInCss(readFileSync(join(dist, file), 'utf8').replace(/\r\n/g, '\n').replace(/\/\*[\s\S]*?\*\//g, ' ')).map((selector) => ({ file, selector })));
+if (detectorSensitiveCss.length > 0) fail(`detector-sensitive selectors appear in production CSS: ${detectorSensitiveCss.map((entry) => `${entry.file}:${entry.selector}`).join(', ')}`);
 if ((buildManifest.pagePlane?.supportedScriptletRules || 0) < 1) fail('no packaged scriptlet rules were produced');
 if ((buildManifest.pagePlane?.domainShardCount || 0) !== domainFiles.length) fail('build manifest shard count does not match packaged artifacts');
 const coverage = buildManifest.pagePlane?.scriptletCoverage;
 if (!coverage || (coverage.parsed || 0) < (coverage.fullyExecutable || 0) || (coverage.fullyExecutable || 0) + (coverage.unsupportedByName || 0) + (coverage.unsupportedByArguments || 0) + (coverage.unsafe || 0) !== (buildManifest.pagePlane?.scriptletRules || 0)) fail('scriptlet coverage accounting is incomplete');
 if (!buildManifest.sources?.length || buildManifest.sources.some((source) => !/^[a-f0-9]{64}$/.test(source.sha256 || '') || !String(source.inputPath || '').startsWith('.phase31/'))) fail('filter provenance manifest is incomplete or non-reproducible');
 if (filesUnder(dist).some((file) => file.endsWith('.map'))) fail('source maps are present in production dist');
+
+console.log(JSON.stringify({
+  cosmeticOwners: buildManifest.pagePlane?.cosmeticOwners,
+  cosmeticOwner: buildManifest.pagePlane?.cosmeticOwner,
+  manifestCss,
+  generatedCssFiles: cssFiles,
+}, null, 2));
 
 console.log('PHASE31B INTEGRITY: PASS');

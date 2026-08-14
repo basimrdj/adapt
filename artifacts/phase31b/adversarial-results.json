@@ -13,25 +13,25 @@
       "id": "network-ad-request",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 754
+      "durationMs": 1030
     },
     {
       "id": "generic-cosmetic-ad",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1054
+      "durationMs": 1400
     },
     {
       "id": "domain-specific-cosmetic",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1
+      "durationMs": 2
     },
     {
       "id": "cosmetic-exception",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1
+      "durationMs": 0
     },
     {
       "id": "specific-generic-rule",
@@ -55,13 +55,13 @@
       "id": "scriptlet-target",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 0
+      "durationMs": 1
     },
     {
       "id": "scriptlet-exception",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1
+      "durationMs": 0
     },
     {
       "id": "main-world-detector",
@@ -73,115 +73,115 @@
       "id": "offset-height-bait",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1453
+      "durationMs": 1443
     },
     {
       "id": "bounding-rect-bait",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1450
+      "durationMs": 1446
     },
     {
       "id": "computed-style-bait",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1440
+      "durationMs": 1443
     },
     {
       "id": "element-removal-detector",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1395
+      "durationMs": 1404
     },
     {
       "id": "bait-reinsertion",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1739
+      "durationMs": 1752
     },
     {
       "id": "timer-detection",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1449
+      "durationMs": 1439
     },
     {
       "id": "scroll-lock-gate",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1742
+      "durationMs": 1750
     },
     {
       "id": "pointer-events-gate",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1741
+      "durationMs": 1750
     },
     {
       "id": "nested-frame",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 351
+      "durationMs": 315
     },
     {
       "id": "cross-origin-frame",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 279
+      "durationMs": 252
     },
     {
       "id": "open-shadow-dom",
       "pass": true,
       "resultClass": "NEGATIVE_CONTROL_PASS",
-      "durationMs": 1041
+      "durationMs": 1033
     },
     {
       "id": "csp-heavy-page",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 1048
+      "durationMs": 1047
     },
     {
       "id": "spa-route-change",
       "pass": true,
       "resultClass": "LIFECYCLE_PASS",
-      "durationMs": 1453
+      "durationMs": 1445
     },
     {
       "id": "body-replacement",
       "pass": true,
       "resultClass": "LIFECYCLE_PASS",
-      "durationMs": 713
+      "durationMs": 706
     },
     {
       "id": "mutation-storm",
       "pass": true,
       "resultClass": "BLOCKING_PASS",
-      "durationMs": 3185
+      "durationMs": 3156
     },
     {
       "id": "worker-restart",
       "pass": true,
       "resultClass": "LIFECYCLE_PASS",
-      "durationMs": 2428
+      "durationMs": 2432
     },
     {
       "id": "consent-modal",
       "pass": true,
       "resultClass": "NEGATIVE_CONTROL_PASS",
-      "durationMs": 1038
+      "durationMs": 1042
     },
     {
       "id": "login-modal",
       "pass": true,
       "resultClass": "NEGATIVE_CONTROL_PASS",
-      "durationMs": 1049
+      "durationMs": 1047
     },
     {
       "id": "paywall",
       "pass": true,
       "resultClass": "NEGATIVE_CONTROL_PASS",
-      "durationMs": 1049
+      "durationMs": 1047
     },
     {
       "id": "benign-advertisement-text",

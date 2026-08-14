@@ -31,9 +31,8 @@ verified Phase 3 causal/adaptive control loop.
 7. emits a catalog that lets the service worker greedily enable optional
    Tracking / URL tracking / anti-adblock / popup / annoyance / malicious sets
    only when live static-rule capacity allows;
-8. generates conservative generic cosmetic CSS from the Base list, dropping any
-   generic selector that has a site-specific exception anywhere in the source
-   list.
+8. delegates generic and domain-aware cosmetic compilation to the Phase 3.1B
+   page plane; the v6 network compiler does not emit cosmetic CSS.
 
 ## Debugging
 

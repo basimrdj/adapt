@@ -1,74 +1,74 @@
 {
   "schema": "adapt-phase31b-verification-v2",
-  "startedAt": "2026-08-14T10:55:00.695Z",
-  "completedAt": "2026-08-14T11:01:46.186Z",
+  "startedAt": "2026-08-14T11:57:35.204Z",
+  "completedAt": "2026-08-14T12:02:39.523Z",
   "verdict": "PASSED",
   "gates": [
     {
       "name": "TypeScript typecheck",
       "command": "npm run typecheck",
       "pass": true,
-      "durationMs": 1628
+      "durationMs": 1746
     },
     {
       "name": "Full reproducible build and indexed page compilation",
       "command": "npm run build:full",
       "pass": true,
-      "durationMs": 99604
+      "durationMs": 48445
     },
     {
       "name": "Indexed page-plane benchmark",
       "command": "npm run benchmark:page",
       "pass": true,
-      "durationMs": 427
+      "durationMs": 401
     },
     {
       "name": "Page filter compiler and index unit suite",
       "command": "npm run test:page",
       "pass": true,
-      "durationMs": 1540
+      "durationMs": 1475
     },
     {
       "name": "Filter compiler and package integrity",
       "command": "npm run verify:phase31b:integrity",
       "pass": true,
-      "durationMs": 488
+      "durationMs": 498
     },
     {
       "name": "All unit and Phase 3 regression tests",
       "command": "npm run test:unit",
       "pass": true,
-      "durationMs": 7517
+      "durationMs": 7323
     },
     {
       "name": "Passive detector-bait stealth corpus",
       "command": "npm run test:stealth",
       "pass": true,
-      "durationMs": 101239
+      "durationMs": 51908
     },
     {
       "name": "30-scenario executable adversarial corpus",
       "command": "npm run test:anti-adblock",
       "pass": true,
-      "durationMs": 32068
+      "durationMs": 32177
     },
     {
       "name": "Content runtime stability regression",
       "command": "npm run test:runtime",
       "pass": true,
-      "durationMs": 3702
+      "durationMs": 3701
     },
     {
       "name": "Chromium Phase 3 and Phase 3.1B E2E suites",
       "command": "npm run test:e2e",
       "pass": true,
-      "durationMs": 155689
+      "durationMs": 155041
     },
     {
       "name": "Bundle security and packaging checks",
       "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
       "pass": true,
-      "durationMs": 1586
+      "durationMs": 1601
     }
   ],
   "evidence": {
@@ -87,13 +87,13 @@
           "id": "network-ad-request",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 720
+          "durationMs": 1046
         },
         {
           "id": "generic-cosmetic-ad",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1409
+          "durationMs": 1398
         },
         {
           "id": "domain-specific-cosmetic",
@@ -105,7 +105,7 @@
           "id": "cosmetic-exception",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 0
         },
         {
           "id": "specific-generic-rule",
@@ -117,7 +117,7 @@
           "id": "extended-css-target",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 0
         },
         {
           "id": "procedural-has-text",
@@ -129,7 +129,7 @@
           "id": "scriptlet-target",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 0
+          "durationMs": 1
         },
         {
           "id": "scriptlet-exception",
@@ -141,127 +141,127 @@
           "id": "main-world-detector",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 0
+          "durationMs": 1
         },
         {
           "id": "offset-height-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1453
+          "durationMs": 1448
         },
         {
           "id": "bounding-rect-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1459
+          "durationMs": 1437
         },
         {
           "id": "computed-style-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1469
+          "durationMs": 1433
         },
         {
           "id": "element-removal-detector",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1405
+          "durationMs": 1396
         },
         {
           "id": "bait-reinsertion",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1743
+          "durationMs": 1756
         },
         {
           "id": "timer-detection",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1447
+          "durationMs": 1445
         },
         {
           "id": "scroll-lock-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1743
+          "durationMs": 1746
         },
         {
           "id": "pointer-events-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1744
+          "durationMs": 1749
         },
         {
           "id": "nested-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 365
+          "durationMs": 318
         },
         {
           "id": "cross-origin-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 284
+          "durationMs": 276
         },
         {
           "id": "open-shadow-dom",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1041
+          "durationMs": 1040
         },
         {
           "id": "csp-heavy-page",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1047
+          "durationMs": 1045
         },
         {
           "id": "spa-route-change",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 1452
+          "durationMs": 1437
         },
         {
           "id": "body-replacement",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 728
+          "durationMs": 703
         },
         {
           "id": "mutation-storm",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 3172
+          "durationMs": 3159
         },
         {
           "id": "worker-restart",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 2428
+          "durationMs": 2432
         },
         {
           "id": "consent-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1036
+          "durationMs": 1041
         },
         {
           "id": "login-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 833
+          "durationMs": 945
         },
         {
           "id": "paywall",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1049
+          "durationMs": 1041
         },
         {
           "id": "benign-advertisement-text",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1050
+          "durationMs": 1045
         }
       ]
     },
@@ -348,12 +348,12 @@
       "afterIndexBytes": 494,
       "afterBundleBytes": 37130908,
       "perFrameBytes": 1784162,
-      "perFrameParseMs": 8.836332,
+      "perFrameParseMs": 9.030209,
       "genericBytes": 1833,
       "relevantDomainShardBytes": 182506,
       "indexedRules": 755,
       "mutationChecks": 2000,
-      "mutationBenchmarkMs": 0.146584,
+      "mutationBenchmarkMs": 0.153291,
       "domainShardCount": 339,
       "earlyShardCount": 338,
       "noFullBundleParsePerFrame": true
@@ -372,7 +372,7 @@
     "supportedScriptletRules": 4469,
     "unsupportedScriptletFrequency": {
       "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-      "generatedAt": "2026-08-14T10:57:44.873Z",
+      "generatedAt": "2026-08-14T11:58:39.226Z",
       "totalScriptletRules": 7630,
       "unsupportedScriptletRules": 3161,
       "entries": [

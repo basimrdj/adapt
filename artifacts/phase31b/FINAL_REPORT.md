@@ -6,75 +6,96 @@ PR: #2 remains open and was not merged.
 
 ## Root cause
 
-CanYouBlockIt's passive detector bait was being collapsed by maintained cosmetic
-rules that rendered generic selectors as `display:none!important`. The specific
-failure mode was not a page-visible ADAPT marker or a detector-specific script;
-it was ordinary cosmetic filtering changing the bait element's natural layout,
-so its measured height became zero.
+CanYouBlockIt's detector bait was excluded from the Phase 3.1B page compiler,
+but `tools/phase31/v6.mjs` independently parsed Base-filter `##` rules and
+generated `phase31-generic-cosmetic.css`. That legacy `:is(...){display:none!important;}`
+stylesheet was the second cosmetic plane, so `.ad-widget` could still collapse
+to zero height and make the detector report an ad blocker.
 
-## Mechanism implemented
+## Exact fix
 
-- Added typed cosmetic classification: `ORDINARY_COSMETIC`,
-  `POSSIBLE_DETECTOR_BAIT`, and `CONFIRMED_DETECTOR_BAIT`.
-- Added conservative detector-shaped selector heuristics for exact and
-  equivalent bait names; no blanket exemption for all ad-looking selectors.
-- Excluded possible/confirmed bait from unconditional static generic CSS and
-  runtime cosmetic/procedural hiding. Network/DNR blocking remains unchanged.
-- Added audited reversible bait actions: `BAIT_PRESERVE_LAYOUT`,
-  `BAIT_RESTORE_VISIBILITY`, `BAIT_DISABLE_COSMETIC_HIDE`,
-  `BAIT_PRESERVE_CHILD_STRUCTURE`, with the existing legacy bait action kept as
-  a target-scoped compatibility alias.
-- Bait actions require content-runtime-owned opaque element refs; selectors are
-  rejected by guards, causal remapping, and the DOM executor. The fallback
-  candidate generator no longer invents selectors.
-- Bait preservation restores natural author layout only when a measured hidden
-  state is present. No global geometry, computed-style, XHR, Window, or
-  prototype monkey patches were added.
-- Added production artifact checks that reject detector bait selectors in static
-  cosmetic CSS.
+- Removed `plainSelector`, `genericHide`, `anyException`, Base `##` parsing,
+  legacy generic CSS chunking, manifest injection, and selector reporting from
+  `tools/phase31/v6.mjs`.
+- `v6.mjs` is now network/DNR and redirect-resource compilation only.
+- Removed the build-time inline generic-CSS fallback from `scripts/build.ts`
+  and the corresponding runtime branch; the page compiler owns the CSS plane.
+- Reused `renderGenericCosmeticCss()` as the single page-plane emitter.
+- Added `cosmeticOwners: 1` and `cosmeticOwner: phase31b-page-plane` to the
+  build manifest and made integrity reject duplicate or undeclared CSS planes.
+- Integrity now enumerates all manifest CSS, all production CSS artifacts, and
+  detector-sensitive selector rules, including `:is(...)` lists.
+- Added deterministic complete-build stealth assertions for the exact `dist`
+  manifest and artifact set.
+- Updated ordinary blocking fixtures to use `.sponsor-div`; `.ad-slot-wrapper`
+  remains a possible detector-bait class and is no longer used as an ordinary
+  cosmetic regression target.
+
+## Build outputs
+
+- Manifest content-script CSS: `phase31-page-cosmetic.css` only.
+- Generated filtering CSS: `dist/phase31-page-cosmetic.css`.
+- Generated UI CSS: `dist/popup/assets/index-WlGjJIoV.css`.
+- Legacy `dist/phase31-generic-cosmetic.css`: absent.
+- Detector-sensitive maintained cosmetic rules: 2,913 possible, 0 confirmed.
+- Generic selectors emitted to the authoritative page CSS: 11,718.
+- Single owner reported by build/integrity: `cosmeticOwners: 1`.
+
+## Provenance
+
+The maintained filter corpus contains `.ad-widget` twice in source filter #2:
+
+- `thewindowsclub.com##.ad-widget`
+- `##.ad-widget`
+
+Both are classified `POSSIBLE_DETECTOR_BAIT` and recorded in
+`dist/phase31/DETECTOR-BAIT-AUDIT.json` with the decision
+`NOT_EMITTED_TO_UNCONDITIONAL_COSMETIC_CSS`.
 
 ## Verification
 
 - `ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b`: PASS.
-- Typecheck: PASS.
+- TypeScript: PASS.
 - Unit suite: 154/154 tests across 32 files.
 - Full Chromium E2E suite: 69/69 tests across 9 files.
-- Existing 30-scenario adversarial corpus: 30/30, with 22
-  `BLOCKING_PASS`, 5 `NEGATIVE_CONTROL_PASS`, 3 `LIFECYCLE_PASS`, and 0
-  `PRESENCE_ONLY`.
-- Passive stealth corpus: 11/11, with 9 blocking checks and 2 negative
-  controls. The fixture covers height, `offsetHeight`, `clientHeight`,
-  `getBoundingClientRect().height`, computed display/visibility, DOM existence,
-  child structure, timed re-checks, reinsertion, blocked network probes, and a
-  hybrid detector.
-- BlockAdBlock/FuckAdBlock-style local family fixture: PASS; detector code
-  executes normally, bait remains believable, the synthetic ad script is
-  blocked, and no ad content is visible.
-- Page breakage regressions: 0 observed in the 69/69 Chromium suite.
-- Ordinary blocking regressions: 0 observed; all prior blocking and negative
-  controls remain green.
+- Adversarial suite: 34/34 tests; 30/30 corpus rows passed.
+- Corpus classes: 22 `BLOCKING_PASS`, 5 `NEGATIVE_CONTROL_PASS`, 3
+  `LIFECYCLE_PASS`, 0 `PRESENCE_ONLY`.
+- Passive stealth acceptance: 9/9 required checks plus 2 negative controls.
+- Runtime stability: 1/1.
+- Bundle/security checks: 5/5.
+- Page breakage regressions: 0 observed.
+- Ordinary blocking regressions: 0 observed after separating ordinary fixture
+  targets from detector bait.
 
-## Coverage and performance
+## Stealth fixture
 
-- Detector-sensitive maintained cosmetic rules identified: 2,913 possible;
-  0 confirmed by causal evidence in the maintained corpus.
-- Generic cosmetic selectors emitted to static CSS: 11,718.
-- Relevant YouTube sample per-frame load: 1,784,162 bytes.
-- Relevant page-plane parse: 8.84 ms.
-- Mutation benchmark: 0.147 ms for 2,000 checks.
-- Full bundle parse per frame: no; indexed startup index remains below 4 KiB.
+The local mechanism-equivalent detector executes normally. The bait exists,
+retains positive `offsetHeight`, `clientHeight`, and bounding-rect dimensions,
+keeps non-hidden computed display/visibility and child structure, survives a
+timed re-check and reinsertion, while the synthetic advertising script and
+fetch probe remain blocked and no ad content loads.
+
+## Performance
+
+- Indexed startup index: 494 bytes.
+- Relevant per-frame load for the YouTube sample: 1,784,162 bytes.
+- Relevant page-plane parse: 9.03 ms.
+- Mutation benchmark: 0.153291 ms for 2,000 checks.
+- Domain shards: 339; early shards: 338.
+- Full bundle parse per frame: no.
 
 ## Real-world status
 
-- CanYouBlockIt live result: `NOT_OBSERVED`.
-- No detector script was blocked, hidden, spoofed, or replaced in the local
+- CanYouBlockIt live result: `NOT_OBSERVED`; manual clean-profile validation is
+  still required and was intentionally not performed in this run.
+- No detector script was hidden, blocked, spoofed, or replaced in the local
   acceptance fixture.
-- The final live CanYouBlockIt comparison still requires a manual clean-profile
-  run: ADAPT off must report blocker OFF, and ADAPT on must still report blocker
-  OFF while ad requests remain blocked and visible ads remain absent.
-- YouTube: `NOT_OBSERVED`; no genuine live ad occurrence was tested.
+- YouTube live ad result: `NOT_OBSERVED`.
+- GitHub Actions: pending the post-push workflow result.
 
 ## Release status
 
-Do not merge PR #2. Technical local acceptance is green, but licensing review
-and the manual CanYouBlockIt/clean-profile live acceptance remain release gates.
+Do not merge PR #2. The duplicate cosmetic-plane P0 is removed and the local
+technical gate is green, but licensing review and manual CanYouBlockIt/clean-
+profile live acceptance remain release blockers.

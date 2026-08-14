@@ -80,7 +80,14 @@ describe('Phase 3.1B passive detector-bait stealth gate', () => {
     await servers?.close();
   });
 
-  it('passes passive bait and network-probe detector families', async () => {
+  it('passes passive bait against the exact complete-build dist', async () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(extensionPath, 'manifest.json'), 'utf8')) as {
+      content_scripts?: Array<{ css?: unknown }>;
+    };
+    const declaredCss = [...new Set(manifest.content_scripts?.flatMap((entry) => Array.isArray(entry.css) ? entry.css : []) || [])];
+    expect(declaredCss).toEqual(['phase31-page-cosmetic.css']);
+    expect(fs.existsSync(path.join(extensionPath, 'phase31-generic-cosmetic.css'))).toBe(false);
+
     const page = await browser.newPage();
     await page.goto('http://localhost:4070/t35-stealth/index.html', { waitUntil: 'domcontentloaded' });
     await settle(page);

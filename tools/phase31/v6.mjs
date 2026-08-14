@@ -113,29 +113,6 @@ function isRegexRule(rule) {
   );
 }
 
-function plainSelector(selector) {
-  if (!selector || selector.length > 700) return false;
-
-  const forbidden = [
-    '+js(',
-    ':has-text(',
-    ':matches-css',
-    ':xpath(',
-    ':upward(',
-    ':remove(',
-    ':remove-attr(',
-    ':remove-class(',
-    ':-abp-',
-    ':style(',
-    ':watch-attr(',
-    ':contains(',
-    '#%#',
-    '#$#',
-  ];
-
-  return !forbidden.some((token) => selector.includes(token));
-}
-
 function countRulesAtManifestPath(entry) {
   const file = path.join(dist, entry.path || '');
   if (!fs.existsSync(file)) {
@@ -453,77 +430,6 @@ for (const shard of packagedShards) {
   });
 }
 
-// Conservative cosmetic baseline:
-// - generic plain CSS selectors only;
-// - Base filter only;
-// - if ANY site has an explicit #@# exception for a generic selector, drop
-//   that selector globally rather than violating the exception on that site.
-const baseFilter = compiledSources.find((item) => item.fam === 'base');
-const genericHide = new Set();
-const anyException = new Set();
-
-if (baseFilter) {
-  for (const raw of fs.readFileSync(baseFilter.file, 'utf8').split(/\r?\n/)) {
-    const line = raw.trim();
-
-    if (!line || line.startsWith('!') || line.startsWith('[')) continue;
-
-    const exceptionIndex = line.indexOf('#@#');
-
-    if (exceptionIndex >= 0) {
-      const selector = line.slice(exceptionIndex + 3).trim();
-      if (plainSelector(selector)) anyException.add(selector);
-      continue;
-    }
-
-    if (line.startsWith('##')) {
-      const selector = line.slice(2).trim();
-      if (plainSelector(selector)) genericHide.add(selector);
-    }
-  }
-}
-
-for (const selector of anyException) genericHide.delete(selector);
-
-const selectors = [...genericHide];
-const cssChunks = [];
-
-for (let i = 0; i < selectors.length; i += 80) {
-  cssChunks.push(
-    `:is(${selectors.slice(i, i + 80).join(',\n')}){display:none!important;}`
-  );
-}
-
-fs.writeFileSync(
-  path.join(dist, 'phase31-generic-cosmetic.css'),
-  `/* ADAPT Phase 3.1 v6 generated generic cosmetics */\n${cssChunks.join('\n')}\n`
-);
-
-manifest.content_scripts ??= [];
-
-let contentEntry = manifest.content_scripts.find(
-  (entry) =>
-    Array.isArray(entry.matches) &&
-    entry.matches.includes('http://*/*') &&
-    entry.matches.includes('https://*/*')
-);
-
-if (!contentEntry) {
-  contentEntry = {
-    matches: ['http://*/*', 'https://*/*'],
-    css: [],
-    run_at: 'document_start',
-    all_frames: true,
-  };
-  manifest.content_scripts.push(contentEntry);
-}
-
-contentEntry.css ??= [];
-
-if (!contentEntry.css.includes('phase31-generic-cosmetic.css')) {
-  contentEntry.css.push('phase31-generic-cosmetic.css');
-}
-
 // Expose only exact generated redirect resources and request dynamic URLs to
 // avoid publishing one stable extension-resource URL surface.
 const warFiles = walk(warDir)
@@ -713,8 +619,8 @@ const report = [
   `Total packaged Phase 3.1 DNR rules: **${totalRules.toLocaleString()}**`,
   `Static regex rules packaged: **${phase31RegexRules.toLocaleString()} / ${MAX_STATIC_REGEX_RULES.toLocaleString()}**`,
   `Regex rules dropped for global safety: **${regexDropped.toLocaleString()}**`,
-  `Conservative generic cosmetic selectors: **${selectors.length.toLocaleString()}**`,
   `Generated redirect resources: **${warFiles.length.toLocaleString()}**`,
+  'Cosmetic plane: **delegated to Phase 3.1B page compiler**',
   'Verified Phase 3 ruleset_baseline preserved: **YES**',
 ].join('\n');
 
@@ -729,6 +635,5 @@ console.log('PHASE31 GUARANTEED BASE RULES:', phase31DefaultRules);
 console.log('TOTAL DEFAULT ENABLED RULES:', totalDefaultEnabledRules);
 console.log('PACKAGED STATIC REGEX RULES:', phase31RegexRules);
 console.log('PHASE31 STATIC SHARDS:', packagedShards.length);
-console.log('GENERIC COSMETIC SELECTORS:', selectors.length);
 console.log('WAR RESOURCES:', warFiles.length);
 console.log('REPORT:', reportPath);

@@ -18,6 +18,10 @@ and scriptlet syntax into a typed bundle. The build writes:
 - `dist/phase31/BUILD-MANIFEST.json` for source hashes, counts, versions, and
   artifact provenance.
 
+The page compiler is the sole cosmetic owner (`cosmeticOwners: 1` and
+`cosmeticOwner: phase31b-page-plane`). The Phase 3.1 v6 pipeline is network-only;
+it does not parse or emit generic cosmetic CSS.
+
 `PageFilteringRuntime` is event-driven, frame-local, service-worker independent,
 and re-applies on SPA history changes and bounded mutation batches. It limits
 candidate traversal, degrades under mutation storms, and catches hostile DOM

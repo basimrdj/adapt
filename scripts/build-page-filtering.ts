@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { parseFilterLists } from '../src/page/filtering/compiler';
+import { classifyDetectorBaitSelector, parseFilterLists, renderGenericCosmeticCss } from '../src/page/filtering/compiler';
 import { PageFilterRule, ScriptletSupportStatus } from '../src/page/filtering/types';
 
 interface SourceManifest {
@@ -31,29 +31,6 @@ function metadataOf(text: string, name: string): string | undefined {
 
 function sha256(text: string): string {
   return createHash('sha256').update(text).digest('hex');
-}
-
-function safeCssSelector(selector: string): boolean {
-  if (!selector || selector.length > 1000 || /[{};]/.test(selector)) return false;
-  if (/:has-text\(|:matches-css\(|:xpath\(|:upward\(|:remove\b|:remove-attr\(/i.test(selector)) return false;
-  try {
-    const probe = selector.replace(/:is\(/gi, ':is(');
-    if (!probe) return false;
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function genericCssRules(rules: PageFilterRule[], exceptions: ReturnType<typeof parseFilterLists>['exceptions']): string[] {
-  const selectors = new Set<string>();
-  for (const rule of rules) {
-    if (rule.kind !== 'css' || rule.domains.length > 0 || !safeCssSelector(rule.selector)) continue;
-    if (rule.detectorBait && rule.detectorBait !== 'ORDINARY_COSMETIC') continue;
-    const hasException = exceptions.some((exception) => !exception.scriptletName && exception.selector === rule.selector);
-    if (!hasException) selectors.add(rule.selector);
-  }
-  return [...selectors].slice(0, 20000);
 }
 
 function updateManifest(): void {
@@ -131,7 +108,27 @@ if (sources.length === 0) throw new Error('validated filter cache contains no fi
 
 const generatedAt = new Date().toISOString();
 const bundle = parseFilterLists(sources, generatedAt);
-const genericSelectors = genericCssRules(bundle.genericRules, bundle.exceptions);
+const genericCss = renderGenericCosmeticCss(bundle);
+const genericSelectors = genericCss.split('\n').filter(Boolean);
+const detectorSensitiveCosmeticProvenance = sources.flatMap((source) => source.text.split(/\r?\n/).flatMap((raw) => {
+  const line = raw.trim();
+  if (!line || line.startsWith('!') || line.startsWith('[') || line.includes('#@#')) return [];
+  const markerIndex = line.indexOf('#?#') >= 0 ? line.indexOf('#?#') : line.indexOf('##');
+  if (markerIndex < 0) return [];
+  const markerLength = line.slice(markerIndex).startsWith('#?#') ? 3 : 2;
+  const originalSelector = line.slice(markerIndex + markerLength).trim();
+  const selector = (originalSelector.split(/:(?:has-text|matches-css|remove(?:-attr)?)(?:\(|$)/i)[0] || originalSelector).trim();
+  const detectorBait = classifyDetectorBaitSelector(selector);
+  if (detectorBait === 'ORDINARY_COSMETIC') return [];
+  return [{
+    sourceFilterId: source.id,
+    originalRule: line,
+    selector,
+    detectorBait,
+    emittedArtifact: null,
+    emittedDecision: 'NOT_EMITTED_TO_UNCONDITIONAL_COSMETIC_CSS',
+  }];
+}));
 const earlyRuntimeTemplate = readFileSync(earlyRuntimeSource, 'utf8');
 if (!earlyRuntimeTemplate.includes('__EARLY_RULES__')) throw new Error('early runtime template is missing its rules placeholder');
 
@@ -245,7 +242,7 @@ writeFileSync(join(phaseDir, 'UNSUPPORTED-SCRIPTLET-FREQUENCY.json'), `${JSON.st
 writeFileSync(join(root, 'artifacts', 'phase31b', 'unsupported-scriptlet-frequency.json'), `${JSON.stringify(frequencyReport, null, 2)}\n`);
 writeFileSync(
   join(distDir, 'phase31-page-cosmetic.css'),
-  `${genericSelectors.map((selector) => `${selector}{display:none!important;}`).join('\n')}\n`
+  `${genericCss}\n`
 );
 
 const sourceManifest: SourceManifest[] = sources.map((source) => {
@@ -267,6 +264,8 @@ const buildManifest = {
   sources: sourceManifest,
   pagePlane: {
     genericCosmeticCss: genericSelectors.length,
+    cosmeticOwners: 1,
+    cosmeticOwner: 'phase31b-page-plane',
     genericRules: bundle.counts.generic,
     domainSpecificRules: bundle.counts.domainSpecific,
     exceptions: bundle.counts.exceptions,
@@ -288,6 +287,7 @@ const buildManifest = {
     earlyDomainCount: earlyManifest.reduce((count, entry) => count + entry.matches.length / 2, 0),
     scriptletFrequencyArtifact: 'dist/phase31/UNSUPPORTED-SCRIPTLET-FREQUENCY.json',
     detectorSensitiveCosmeticRules: bundle.counts.possibleDetectorBait + bundle.counts.confirmedDetectorBait,
+    detectorBaitAuditArtifact: 'dist/phase31/DETECTOR-BAIT-AUDIT.json',
   },
   networkPlane: {
     artifacts: ['rules/baseline.json', 'phase31-rulesets/catalog.json'],
@@ -301,9 +301,17 @@ const buildManifest = {
 };
 
 writeFileSync(join(phaseDir, 'BUILD-MANIFEST.json'), `${JSON.stringify(buildManifest, null, 2)}\n`);
+writeFileSync(join(phaseDir, 'DETECTOR-BAIT-AUDIT.json'), `${JSON.stringify({
+  schema: 'adapt-phase31b-detector-bait-audit-v1',
+  generatedAt,
+  expectedArtifactDecision: 'NOT_EMITTED_TO_UNCONDITIONAL_COSMETIC_CSS',
+  rules: detectorSensitiveCosmeticProvenance,
+}, null, 2)}\n`);
 updateManifest();
 
 console.log(`PAGE FILTERING: ${JSON.stringify(bundle.counts)}`);
 console.log(`PAGE FILTERING GENERIC CSS: ${genericSelectors.length}`);
 console.log(`PAGE FILTERING DETECTOR-SENSITIVE COSMETIC: ${bundle.counts.possibleDetectorBait + bundle.counts.confirmedDetectorBait}`);
+console.log(`PAGE FILTERING COSMETIC OWNERS: ${JSON.stringify({ cosmeticOwners: 1, cosmeticOwner: 'phase31b-page-plane' })}`);
+console.log(`PAGE FILTERING DETECTOR BAIT AUDIT: ${JSON.stringify({ total: detectorSensitiveCosmeticProvenance.length, adWidget: detectorSensitiveCosmeticProvenance.filter((entry) => entry.selector === '.ad-widget').length })}`);
 console.log(`PAGE FILTERING MANIFEST: ${join(phaseDir, 'BUILD-MANIFEST.json')}`);
