@@ -14,7 +14,7 @@ and unmerged.
 - Old SHA at takeover: `d2bdf36356d44e38fe185a0f8487f23ac9c90fe0`
 - Implementation SHA: `cb21df8` (`Close Phase 3.5B live autonomy gap`)
 - Pull request: `#2`, still draft and unmerged
-- Mergeable: **No**
+- GitHub mergeable field: **MERGEABLE**; acceptance mergeable: **No** because the required autonomy gate failed
 - Reserved real-world blind holdout: not inspected, searched, or tested
 
 ## Coverage split
@@ -184,9 +184,23 @@ The last live command intentionally exited nonzero after writing its artifacts:
 ## CI status
 
 The workflow now contains explicit `autonomy-fast` and `autonomy-live` jobs
-running the required autonomy commands. No new GitHub Actions run ID exists
-until this commit is pushed; the branch is not mergeable before those jobs
-complete successfully.
+running the required autonomy commands. Both jobs now prime the validated
+Phase 3.1 filter cache before entering offline verification; the branch is not
+acceptance-mergeable before those jobs complete successfully.
+
+The implementation/report commit before this CI-cache correction was evaluated
+by these workflow runs:
+
+- `31822075071` — failed; `typecheck`, `page-unit`, and
+  `build-integrity-security` passed; `autonomy-fast` failed before the
+  verifier because `ADAPT_PHASE31_OFFLINE=1` could not find the generated
+  `.phase31/text/filter_2.txt` cache in a clean GitHub runner; `autonomy-live`
+  was skipped.
+- `31822069052` — same result on the duplicate push/PR workflow trigger.
+
+The failure is an honest CI setup failure, not evidence of a passing live
+autonomy gate. The live report above remains the authoritative result and the
+final verdict remains **PHASE 3.5B NOT VERIFIED**.
 
 ## Final report SHA
 

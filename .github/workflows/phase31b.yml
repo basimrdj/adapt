@@ -58,6 +58,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      - name: Prepare validated Phase 3.1 filter cache
+        run: npm run phase31:sync
       - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b
       - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:autonomy
 
@@ -72,4 +74,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      - name: Prepare validated Phase 3.1 filter cache
+        run: npm run phase31:sync
       - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:autonomy:live
