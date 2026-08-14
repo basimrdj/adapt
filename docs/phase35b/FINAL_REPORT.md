@@ -12,7 +12,8 @@ and unmerged.
 
 - Branch: `feat/phase31b-page-plane`
 - Old SHA at takeover: `d2bdf36356d44e38fe185a0f8487f23ac9c90fe0`
-- Implementation SHA: `cb21df8` (`Close Phase 3.5B live autonomy gap`)
+- Phase 3.5 implementation SHA: `cb21df8` (`Close Phase 3.5B live autonomy gap`)
+- Final implementation head: `a3ac86c` (`Make browser gates portable across CI`)
 - Pull request: `#2`, still draft and unmerged
 - GitHub mergeable field: **MERGEABLE**; acceptance mergeable: **No** because the required autonomy gate failed
 - Reserved real-world blind holdout: not inspected, searched, or tested
@@ -139,6 +140,8 @@ The last live command intentionally exited nonzero after writing its artifacts:
 - Targeted autonomy/causal validation: `9` files, `36` tests passed
 - Full unit suite: `39` files, `169` tests passed
 - Existing Phase 3.1B Chromium verifier final run: `66` passed, `3` failed
+- Final CI Chromium E2E subset: `8` files and `68` tests passed, `1` file and
+  `1` test failed (`tests/e2e/extension-e2e.test.ts`, blocked-probe T04)
 - Real browser autonomy holdout: `4` active trials, `4` negative controls
 
 ## Exact changed files
@@ -161,6 +164,7 @@ The last live command intentionally exited nonzero after writing its artifacts:
 - `docs/phase35b/WORKER_RESTART.md`
 - `package.json`
 - `scripts/verify-autonomy-live.ts`
+- `scripts/verify-phase3.ts`
 - `scripts/verify-autonomy.ts`
 - `src/background/autonomy/executor-registry.ts`
 - `src/background/autonomy/intent-tracker.ts`
@@ -180,27 +184,38 @@ The last live command intentionally exited nonzero after writing its artifacts:
 - `src/shared/types.ts`
 - `tests/unit/autonomy/executor-registry.test.ts`
 - `tests/unit/autonomy/primitive-registry.test.ts`
+- `tests/e2e/content-runtime-stability.test.ts`
+- `tests/e2e/extension-e2e.test.ts`
+- `tests/e2e/phase3-acceptance-sequence.test.ts`
+- `tests/e2e/phase3-causal-live.test.ts`
+- `tests/e2e/phase3-recipe-lifecycle.test.ts`
+- `tests/e2e/phase3-restart-invalidation.test.ts`
+- `tests/e2e/phase31b-adversarial.test.ts`
+- `tests/e2e/release-gate-matrix.test.ts`
+- `tests/e2e/stealth.test.ts`
+- `tests/support/chrome-executable.ts`
 
 ## CI status
 
-The workflow now contains explicit `autonomy-fast` and `autonomy-live` jobs
-running the required autonomy commands. Both jobs now prime the validated
-Phase 3.1 filter cache before entering offline verification; the branch is not
-acceptance-mergeable before those jobs complete successfully.
+The workflow contains explicit `autonomy-fast` and `autonomy-live` jobs running
+the required autonomy commands. All build, typecheck, page-unit, and security
+jobs pass on the final implementation head, and both autonomy jobs prime the
+validated Phase 3.1 filter cache before entering offline verification.
 
-The implementation/report commit before this CI-cache correction was evaluated
-by these workflow runs:
+The final implementation head was evaluated by these duplicate workflow runs:
 
-- `31822075071` — failed; `typecheck`, `page-unit`, and
-  `build-integrity-security` passed; `autonomy-fast` failed before the
-  verifier because `ADAPT_PHASE31_OFFLINE=1` could not find the generated
-  `.phase31/text/filter_2.txt` cache in a clean GitHub runner; `autonomy-live`
-  was skipped.
-- `31822069052` — same result on the duplicate push/PR workflow trigger.
+- `31823372490` — failed only in `autonomy-fast`; `typecheck`, `page-unit`,
+  and `build-integrity-security` passed; `autonomy-live` was skipped because
+  it depends on `autonomy-fast`.
+- `31823370004` — same result on the duplicate push/PR workflow trigger.
 
-The failure is an honest CI setup failure, not evidence of a passing live
-autonomy gate. The live report above remains the authoritative result and the
-final verdict remains **PHASE 3.5B NOT VERIFIED**.
+The final `autonomy-fast` run reached the real Chromium suites. The portable
+resolver successfully launched Puppeteer Chrome and the stealth suite passed
+(`2/2`). The remaining failure is the genuine blocked-probe T04 assertion in
+`tests/e2e/extension-e2e.test.ts`: the expected gate removal was false. This is
+an application/test behavior failure, not a missing-browser or offline-cache
+setup failure. The live report above remains authoritative and the final
+verdict remains **PHASE 3.5B NOT VERIFIED**.
 
 ## Final report SHA
 
