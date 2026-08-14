@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import fs from 'node:fs';
 import path from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
@@ -8,6 +7,7 @@ import { parseFilterLists } from '../../src/page/filtering/compiler';
 import { exceptionMatches, matchesDomain, scriptletExceptionMatches } from '../../src/page/filtering/matching';
 import { runMainScriptlet } from '../../src/shared/main-scriptlet';
 import { startTestServers, TestServerInstances } from '../pages/server';
+import { chromeExecutable } from '../support/chrome-executable';
 
 type ScenarioClass = 'BLOCKING_PASS' | 'NEGATIVE_CONTROL_PASS' | 'LIFECYCLE_PASS' | 'PRESENCE_ONLY';
 
@@ -17,19 +17,6 @@ interface ScenarioResult {
   resultClass: ScenarioClass;
   durationMs: number;
   detail?: string;
-}
-
-function chromeExecutable(): string {
-  const envPath = process.env.CHROME_PATH;
-  if (envPath && fs.existsSync(envPath)) return envPath;
-  const chromeDir = path.resolve(__dirname, '../../chrome');
-  if (fs.existsSync(chromeDir)) {
-    for (const sub of fs.readdirSync(chromeDir)) {
-      const candidate = path.join(chromeDir, sub, 'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing');
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-  return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 }
 
 async function settle(page: Page, ms = 350): Promise<void> {

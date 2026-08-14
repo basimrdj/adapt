@@ -4,22 +4,10 @@ import path from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { startTestServers, TestServerInstances } from '../pages/server';
+import { chromeExecutable } from '../support/chrome-executable';
 
 type ResultClass = 'BLOCKING_PASS' | 'NEGATIVE_CONTROL_PASS' | 'LIFECYCLE_PASS' | 'PRESENCE_ONLY';
 interface StealthResult { id: string; pass: boolean; resultClass: ResultClass; detail?: string }
-
-function chromeExecutable(): string {
-  const envPath = process.env.CHROME_PATH;
-  if (envPath && fs.existsSync(envPath)) return envPath;
-  const chromeDir = path.resolve(__dirname, '../../chrome');
-  if (fs.existsSync(chromeDir)) {
-    for (const sub of fs.readdirSync(chromeDir)) {
-      const candidate = path.join(chromeDir, sub, 'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing');
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-  return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-}
 
 async function settle(page: Page, ms = 900): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, ms));

@@ -1,11 +1,11 @@
 import http from 'node:http';
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import puppeteer, { Browser, Target } from 'puppeteer';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { PrimitiveExecutorRegistry } from '../src/background/autonomy/executor-registry';
 import { EphemeralNavigationTargetRegistry } from '../src/background/autonomy/navigation-targets';
+import { chromeExecutable } from '../tests/support/chrome-executable';
 
 interface TrialDefinition {
   id: string;
@@ -70,21 +70,6 @@ interface ExtensionSession {
 const root = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(root, '..');
 const extensionPath = path.resolve(projectRoot, 'dist');
-const chromeDir = path.resolve(projectRoot, 'chrome');
-
-function chromeExecutable(): string {
-  if (fs.existsSync(chromeDir)) {
-    for (const entry of fs.readdirSync(chromeDir)) {
-      const candidate = path.join(
-        chromeDir,
-        entry,
-        'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-      );
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-  return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-}
 
 function token(seed: number): string {
   let value = seed >>> 0;

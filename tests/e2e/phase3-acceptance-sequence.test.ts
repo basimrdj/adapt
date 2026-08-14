@@ -1,23 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import fs from 'node:fs';
 import path from 'node:path';
 import puppeteer, { Browser, WebWorker } from 'puppeteer';
 import { startTestServers, TestServerInstances } from '../pages/server';
-
-function chromeExecutable(): string {
-  const chromeDir = path.resolve(__dirname, '../../chrome');
-  if (fs.existsSync(chromeDir)) {
-    for (const sub of fs.readdirSync(chromeDir)) {
-      const candidate = path.join(
-        chromeDir,
-        sub,
-        'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-      );
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-  return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-}
+import { chromeExecutable } from '../support/chrome-executable';
 
 interface ExperimentState {
   hypothesisId: string;

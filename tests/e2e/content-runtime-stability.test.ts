@@ -1,25 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import fs from 'node:fs';
 import path from 'node:path';
 import puppeteer, { Browser } from 'puppeteer';
 import { startTestServers, TestServerInstances } from '../pages/server';
-
-function chromeExecutable(): string {
-  const envPath = process.env.CHROME_PATH;
-  if (envPath && fs.existsSync(envPath)) return envPath;
-  const chromeDir = path.resolve(__dirname, '../../chrome');
-  if (fs.existsSync(chromeDir)) {
-    for (const sub of fs.readdirSync(chromeDir)) {
-      const candidate = path.join(chromeDir, sub, 'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing');
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-
-  const mac = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-  if (fs.existsSync(mac)) return mac;
-
-  throw new Error('No Chromium executable found');
-}
+import { chromeExecutable } from '../support/chrome-executable';
 
 describe('content-script runtime stability', () => {
   let browser: Browser;

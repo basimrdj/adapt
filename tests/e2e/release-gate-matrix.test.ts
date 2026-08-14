@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import path from 'path';
-import fs from 'fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { startTestServers, TestServerInstances } from '../pages/server';
+import { chromeExecutable } from '../support/chrome-executable';
 
 describe('ADAPT Phase 1.5 Final Release Gate Verification Suite', () => {
   let servers: TestServerInstances;
@@ -11,23 +11,7 @@ describe('ADAPT Phase 1.5 Final Release Gate Verification Suite', () => {
   const appPort = 4002;
   const adPort = 4003;
 
-  // Locate Chrome for Testing binary dynamically
-  const chromeDir = path.resolve(__dirname, '../../chrome');
-  let chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-  if (fs.existsSync(chromeDir)) {
-    const subdirs = fs.readdirSync(chromeDir);
-    for (const sub of subdirs) {
-      const candidate = path.join(
-        chromeDir,
-        sub,
-        'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-      );
-      if (fs.existsSync(candidate)) {
-        chromePath = candidate;
-        break;
-      }
-    }
-  }
+  const chromePath = chromeExecutable();
 
   beforeAll(async () => {
     servers = await startTestServers(appPort, adPort);

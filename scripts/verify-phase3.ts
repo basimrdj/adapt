@@ -6,6 +6,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import puppeteer from 'puppeteer';
 import { startTestServers } from '../tests/pages/server';
+import { chromeExecutable } from '../tests/support/chrome-executable';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const artifactDir = path.join(root, 'artifacts', 'phase3');
@@ -32,21 +33,6 @@ function run(name: string, command: string, args: string[], env?: NodeJS.Process
     pass: result.status === 0,
     durationMs: Date.now() - start,
   };
-}
-
-function chromeExecutable(): string {
-  const chromeDir = path.join(root, 'chrome');
-  if (fs.existsSync(chromeDir)) {
-    for (const sub of fs.readdirSync(chromeDir)) {
-      const candidate = path.join(
-        chromeDir,
-        sub,
-        'chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'
-      );
-      if (fs.existsSync(candidate)) return candidate;
-    }
-  }
-  return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 }
 
 async function openManualDemo(): Promise<void> {
