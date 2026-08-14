@@ -3,7 +3,8 @@
 ## Revision
 
 - Branch: `feat/phase31b-page-plane`
-- Commit: `d84e69e675ff300d90e2818a2df6d6abb8baa5be`
+- Commit: `d2bdf36356d44e38fe185a0f8487f23ac9c90fe0`
+- Implementation commit: `d84e69e675ff300d90e2818a2df6d6abb8baa5be`
 - Pull request: `#2`, still draft and unmerged
 - Real-world streaming holdout: not inspected and not included in implementation data
 
@@ -105,7 +106,7 @@ undetectability.
 - Full Chromium E2E suite: 69/69 passed
 - Phase 3 live causal/restart/recipe suites: passed
 - GitHub Actions on this SHA: 6/6 checks successful across push and pull-request runs
-  (`31812178618` and `31812176019`)
+  (`31812500867` and `31812507099`)
 
 ## Capability gaps
 

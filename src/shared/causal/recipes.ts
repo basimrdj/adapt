@@ -55,6 +55,11 @@ export interface CausalRecipeRecord {
   evidence?: ExperimentRecord[];
   /** Deterministic reason for the latest invalidation decision. */
   invalidationReason?: FingerprintCheckKind | 'REPLAY_HEALTH_OR_ROLLBACK';
+  /** Autonomous primitive sequence, persisted only as opaque refs and IDs. */
+  primitiveSequence?: Array<{
+    primitiveId: string;
+    opaqueRefs: string[];
+  }>;
 }
 
 export const CAUSAL_RECIPE_VERSION = 1 as const;

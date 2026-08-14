@@ -236,6 +236,10 @@ export interface UserIntentEnvelope {
   interactionType: InteractionType;
   navigationReasonablyExpected: boolean;
   sourceOriginHash: string;
+  eventTrusted?: boolean;
+  targetBehavior?: 'same-context' | 'new-context' | 'download' | 'unknown';
+  newContextReasonablyExpected?: boolean;
+  downloadLikeIntent?: boolean;
 }
 
 export interface NavigationTargetObservation {
@@ -253,6 +257,13 @@ export interface NavigationTargetObservation {
   recentIntentRef?: `intent:i${number}`;
   recentIntentAgeMs?: number;
   riskSignals: string[];
+  declaredDestinationClass?: DestinationClass;
+  navigationReasonablyExpected?: boolean;
+  targetCreationSequence?: number;
+  destinationMatch?: boolean;
+  intendedNavigationSucceeded?: boolean;
+  extraTarget?: boolean;
+  expectedNewContext?: boolean;
 }
 
 export interface InteractionSignal {

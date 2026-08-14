@@ -1,0 +1,230 @@
+{
+  "schema": "adapt-phase35b-live-browser-v1",
+  "generatedAt": "2026-08-14T16:57:07.759Z",
+  "results": [
+    {
+      "id": "active-overlay-xmk5ce1",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 2,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "RESOLVED:UNSUPPORTED_SCRIPTLET:Packaged scriptlet deactivation has no production rollback proof."
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:ROLLED_BACK:0.04000000000000001:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}",
+        "REMOVE_REACTION_UI:COMMITTED:0.175:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ]
+    },
+    {
+      "id": "active-overlay-xdl0l4i",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 2,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "RESOLVED:UNSUPPORTED_SCRIPTLET:Packaged scriptlet deactivation has no production rollback proof."
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:ROLLED_BACK:0.04000000000000001:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}",
+        "REMOVE_REACTION_UI:COMMITTED:0.175:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ]
+    },
+    {
+      "id": "active-popup-x115ve1j",
+      "active": true,
+      "detected": true,
+      "resolved": false,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "capabilityGaps": 3,
+      "observedEventKinds": [
+        "NAV_COMMIT",
+        "UNEXPECTED_NAV_TARGET",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:NO_EXECUTOR:No reversible browser quarantine primitive is defined.",
+        "CAPABILITY_GAP:NO_EXECUTOR:No reversible browser quarantine primitive is defined.|UNRESOLVED_OPAQUE_TARGET:Navigation target is unavailable or already closed."
+      ],
+      "experimentDetails": []
+    },
+    {
+      "id": "active-popup-xa5pc0p",
+      "active": true,
+      "detected": true,
+      "resolved": false,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "capabilityGaps": 3,
+      "observedEventKinds": [
+        "NAV_COMMIT",
+        "UNEXPECTED_NAV_TARGET",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:NO_EXECUTOR:No reversible browser quarantine primitive is defined.",
+        "CAPABILITY_GAP:NO_EXECUTOR:No reversible browser quarantine primitive is defined.|UNRESOLVED_OPAQUE_TARGET:Navigation target is unavailable or already closed."
+      ],
+      "experimentDetails": []
+    },
+    {
+      "id": "negative-legitimate-x1km8b0g",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": []
+    },
+    {
+      "id": "negative-legitimate-xps4u77",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "HEALTH_SNAPSHOT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": []
+    },
+    {
+      "id": "negative-oauth-x6vllal",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": []
+    },
+    {
+      "id": "negative-oauth-xkbeo1e",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "HEALTH_SNAPSHOT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": []
+    }
+  ],
+  "workerRestartSuccess": true,
+  "activeTrials": 4,
+  "negativeControls": 4,
+  "autonomousDetectionRate": 1,
+  "autonomousResolutionRate": 0.5,
+  "falsePositiveRate": 0,
+  "criticalFalsePositiveCount": 0,
+  "medianExperiments": 1,
+  "p95Experiments": 2,
+  "medianTimeToResolution": null,
+  "recipeReplaySuccessRate": 0,
+  "secondVisitAiCalls": 0,
+  "secondVisitExperiments": 0,
+  "workerRestartSuccessRate": 1,
+  "capabilityGapCount": 8,
+  "policyAbstentionCount": 0,
+  "primitiveExecutionCoverage": 0.125,
+  "rollbackSuccessRate": 0.5,
+  "popupUnwantedTargetRecall": 0,
+  "popupLegitimateTargetFalsePositiveRate": 0
+}

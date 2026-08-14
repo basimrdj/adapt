@@ -35,9 +35,14 @@ run('npx', ['vitest', 'run', 'tests/unit/autonomy']);
 const registry = new PrimitiveRegistry();
 const results = generateAutonomyScenarios(350, 128, 'HOLDOUT').map(runHoldoutScenario);
 const score = scoreAutonomy(results);
+const syntheticFailures: string[] = [];
+if (score.autonomousDetectionRate < 0.95) syntheticFailures.push('autonomous_detection_rate < 0.95');
+if (score.autonomousResolutionRate < 0.9) syntheticFailures.push('autonomous_resolution_rate < 0.90');
+if (score.falsePositiveRate !== 0) syntheticFailures.push('false_positive_rate != 0');
 const report = {
-  schema: 'adapt-phase35-autonomy-v1',
+  schema: 'adapt-phase35b-synthetic-autonomy-v1',
   phase31b: 'PASS',
+  verdict: syntheticFailures.length === 0 ? 'PASS' : 'FAIL',
   unseenTrials: results.length,
   sensorCoverage: 14,
   primitiveCount: registry.list().length,
@@ -52,10 +57,15 @@ const report = {
   known_case_ai_calls: knownCaseAiCalls(),
   capability_gaps: score.capabilityGaps,
   negative_controls: results.filter((result) => result.benign).length,
+  synthetic_failures: syntheticFailures,
+  real_browser_autonomy_score: null,
 };
 
 const outputDir = resolve(process.cwd(), 'artifacts/phase35');
 mkdirSync(outputDir, { recursive: true });
 writeFileSync(resolve(outputDir, 'AUTONOMY_SCORE.json'), `${JSON.stringify(report, null, 2)}\n`);
 console.log(`AUTONOMY_SCORE: ${JSON.stringify(report)}`);
-console.log('AUTONOMY VERIFICATION: PASS');
+if (syntheticFailures.length > 0) {
+  throw new Error(`PHASE 3.5B SYNTHETIC AUTONOMY VERIFICATION: FAIL (${syntheticFailures.join(', ')})`);
+}
+console.log('SYNTHETIC ALGORITHMIC AUTONOMY VERIFICATION: PASS');

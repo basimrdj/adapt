@@ -254,11 +254,14 @@ export class PromotionGate {
   }
 
   /**
-   * Compile a draft CausalRecipe from a SUPPORTED hypothesis.
+   * Compile a draft CausalRecipe from a causal finding.
    * Does not require replays and never writes CONFIRMED / RecipeSafe.
    */
   public compileDraft(input: PromotionEvaluateInput): CausalRecipe | null {
-    if (input.hypothesis.status !== 'SUPPORTED' && input.hypothesis.status !== 'CONFIRMED') {
+    const hasVerifiedEvidence = input.experiments.some(
+      (record) => record.status === 'COMMITTED' && record.epochStillFresh && Boolean(record.completedWallMs)
+    );
+    if (!hasVerifiedEvidence || input.hypothesis.status === 'REFUTED') {
       return null;
     }
     return this.buildRecipe(input, 'DRAFT');

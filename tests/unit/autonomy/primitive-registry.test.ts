@@ -33,7 +33,7 @@ describe('autonomous primitive registry', () => {
       primitiveId: 'RESTORE_SCROLL',
       mechanism: 'UNKNOWN_PLAYER_REACTION',
       opaqueRefs: [],
-      evidence: ['SCROLL_LOCK_ON'],
+      evidence: ['SCROLL_LOCK_ON', 'INTERACTION_DENIED'],
     }, { maxRisk: 0.1, maxPrivacy: 0.1, requiredRollbackConfidence: 0.95, rollbackConfidence: 0.99 }).ok).toBe(true);
     expect(validator.approve({
       primitiveId: 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET',

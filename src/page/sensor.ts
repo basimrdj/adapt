@@ -3,6 +3,7 @@ import {
   HealthVector,
   InteractionSignal,
   MutationSignal,
+  DomAction,
   OpaqueElementObservation,
   PageSignalBatch,
   SemanticSignal,
@@ -16,6 +17,44 @@ import { ContentToBackgroundMessage, BackgroundToContentMessage } from '../share
 import { calculateHealthVector } from '../core/health/scorer';
 import { OpaqueTargetRegistry } from './opaque-targets';
 import { createIntentEnvelope } from './intent-envelope';
+
+function elementRefFromOpaqueRefs(refs: readonly string[]): `element:e${number}` | undefined {
+  const ref = refs.find((value) => value.startsWith('element:e'));
+  return ref as `element:e${number}` | undefined;
+}
+
+function autonomyDomActions(
+  primitiveId: string,
+  opaqueRefs: readonly string[],
+  txId: string
+): DomAction[] | null {
+  const targetRef = elementRefFromOpaqueRefs(opaqueRefs);
+  const action = (type: DomAction['type'], index: number, target?: `element:e${number}`): DomAction => ({
+    id: `autonomy_${txId}_${primitiveId}_${index}`,
+    type,
+    ...(target ? { targetRef: target } : {}),
+  });
+  switch (primitiveId) {
+    case 'TOGGLE_COSMETIC_ACTION':
+      return targetRef ? [action('DOM_REMOVE_OVERLAY', 0, targetRef)] : null;
+    case 'PRESERVE_BAIT':
+      return targetRef ? [action('DOM_PRESERVE_BAIT_CANDIDATE', 0, targetRef)] : null;
+    case 'RESTORE_LAYOUT':
+      return targetRef ? [action('BAIT_PRESERVE_LAYOUT', 0, targetRef)] : null;
+    case 'REMOVE_REACTION_UI':
+      return targetRef
+        ? [action('DOM_REMOVE_OVERLAY', 0, targetRef), action('DOM_RESTORE_SCROLL', 1)]
+        : null;
+    case 'RESTORE_SCROLL':
+      return [action('DOM_RESTORE_SCROLL', 0)];
+    case 'RESTORE_POINTER_INTERACTION':
+      return [action('DOM_RESTORE_POINTER_EVENTS', 0)];
+    case 'PLAYER_HEALTH_RECOVERY':
+      return [action('DOM_RESTORE_SCROLL', 0), action('DOM_RESTORE_POINTER_EVENTS', 1)];
+    default:
+      return null;
+  }
+}
 
 export class PageSensor {
   private navigationId: string;
@@ -233,7 +272,7 @@ export class PageSensor {
 
   private handleBackgroundMessage(
     message: BackgroundToContentMessage
-  ): { success: boolean; actionId?: string } {
+  ): { success: boolean; actionId?: string; actionIds?: string[] } {
     if (!message || message.v !== 1) return { success: false };
 
     switch (message.type) {
@@ -272,6 +311,28 @@ export class PageSensor {
 
       case 'EXECUTE_RUNTIME_OP':
         return { success: false };
+
+      case 'APPLY_AUTONOMY_PRIMITIVE': {
+        const actions = autonomyDomActions(message.primitiveId, message.opaqueRefs, message.txId);
+        if (!actions) return { success: false };
+        const applied: string[] = [];
+        for (const action of actions) {
+          if (!this.domExecutor.applyAction(action)) {
+            for (const actionId of applied.reverse()) this.domExecutor.rollbackAction(actionId);
+            return { success: false };
+          }
+          applied.push(action.id);
+        }
+        return { success: true, actionIds: applied };
+      }
+
+      case 'ROLLBACK_AUTONOMY_PRIMITIVE': {
+        let success = true;
+        for (const actionId of message.actionIds) {
+          success = this.domExecutor.rollbackAction(actionId) && success;
+        }
+        return { success };
+      }
     }
   }
 

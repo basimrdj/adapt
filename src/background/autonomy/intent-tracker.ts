@@ -49,6 +49,7 @@ function stableNavigationRef(targetTabId: number, timestamp: number): `navigatio
 
 export class IntentTracker {
   private readonly intents: StoredIntent[] = [];
+  private readonly targetSequences = new Map<string, number>();
 
   record(tabId: number, frameId: number, documentId: string, envelope: UserIntentEnvelope): void {
     const cutoff = Date.now() - 2500;
@@ -79,6 +80,22 @@ export class IntentTracker {
     if (recent && !recent.item.envelope.navigationReasonablyExpected) risks.push('UNEXPECTED_AFTER_GESTURE');
     if (recent && recent.item.envelope.elementRole === 'media-control') risks.push('MEDIA_GESTURE_TARGET');
 
+    const declaredDestination = recent?.item.envelope.declaredDestinationClass;
+    const destinationMatch = Boolean(recent && (
+      declaredDestination === destination
+      || declaredDestination === 'cross-origin' && destination === 'cross-origin'
+    ));
+    const expectedNewContext = Boolean(recent?.item.envelope.newContextReasonablyExpected);
+    if (recent && !expectedNewContext) risks.push('EXTRA_TARGET');
+    if (recent && !expectedNewContext && destination === 'cross-origin') risks.push('DESTINATION_MISMATCH');
+    if (recent && expectedNewContext && destinationMatch) risks.push('EXPECTED_NEW_CONTEXT');
+    if (recent && expectedNewContext && !destinationMatch) risks.push('DESTINATION_MISMATCH');
+    if (recent?.item.envelope.eventTrusted === false) risks.push('UNTRUSTED_GESTURE');
+
+    const sequenceKey = recent?.item.envelope.ref ?? `orphan:${input.sourceTabId}:${input.sourceFrameId}`;
+    const targetCreationSequence = (this.targetSequences.get(sequenceKey) ?? 0) + 1;
+    this.targetSequences.set(sequenceKey, targetCreationSequence);
+
     return {
       ref: stableNavigationRef(input.targetTabId, now),
       sourceTabId: input.sourceTabId,
@@ -94,12 +111,38 @@ export class IntentTracker {
       recentIntentRef: recent?.item.envelope.ref,
       recentIntentAgeMs: recent?.age,
       riskSignals: risks,
+      declaredDestinationClass: declaredDestination,
+      navigationReasonablyExpected: recent?.item.envelope.navigationReasonablyExpected,
+      targetCreationSequence,
+      destinationMatch,
+      intendedNavigationSucceeded: false,
+      extraTarget: Boolean(recent && !expectedNewContext),
+      expectedNewContext,
     };
+  }
+
+  observeNavigationCommitted(tabId: number, frameId: number, url: string, timeStamp?: number, sourceOrigin?: string): void {
+    const now = timeStamp ?? Date.now();
+    const recent = this.intents
+      .filter((item) => item.tabId === tabId && item.frameId === frameId)
+      .map((item) => ({ item, age: Math.max(0, now - item.envelope.capturedWallMs) }))
+      .filter((item) => item.age <= 2500)
+      .sort((a, b) => a.age - b.age)[0];
+    if (!recent) return;
+    const destination = destinationClass(url, sourceOrigin ?? '');
+    const declared = recent.item.envelope.declaredDestinationClass;
+    const matches = declared === destination || declared === 'cross-origin' && destination === 'cross-origin';
+    if (matches || recent.item.envelope.navigationReasonablyExpected) {
+      recent.item.envelope = { ...recent.item.envelope, navigationReasonablyExpected: true };
+    }
   }
 
   clearTab(tabId: number): void {
     for (let index = this.intents.length - 1; index >= 0; index--) {
       if (this.intents[index]?.tabId === tabId) this.intents.splice(index, 1);
+    }
+    for (const key of this.targetSequences.keys()) {
+      if (key.includes(`:${tabId}:`)) this.targetSequences.delete(key);
     }
   }
 }

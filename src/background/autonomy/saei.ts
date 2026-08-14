@@ -59,7 +59,7 @@ export interface AutonomyLoopState {
 const PRIMITIVES_BY_FAMILY: Partial<Record<CausalHypothesis['mechanismClass'], readonly PrimitiveId[]>> = {
   UNKNOWN_NETWORK_REACTION: ['TEMPORARY_NETWORK_ALLOW', 'TARGETED_SESSION_DNR', 'TEMPORARY_NETWORK_BLOCK'],
   UNKNOWN_SCRIPT_REACTION: ['DISABLE_PACKAGED_SCRIPTLET', 'ACTIVATE_PACKAGED_SCRIPTLET', 'REMOVE_REACTION_UI'],
-  UNKNOWN_DOM_REACTION: ['PRESERVE_BAIT', 'RESTORE_LAYOUT', 'REMOVE_REACTION_UI'],
+  UNKNOWN_DOM_REACTION: ['RESTORE_SCROLL', 'PRESERVE_BAIT', 'RESTORE_LAYOUT', 'REMOVE_REACTION_UI'],
   UNKNOWN_NAVIGATION_REACTION: ['QUARANTINE_NAVIGATION_TARGET', 'STOP_MATCHED_REDIRECT_CHAIN', 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'],
   UNKNOWN_PLAYER_REACTION: ['RESTORE_POINTER_INTERACTION', 'RESTORE_SCROLL', 'PLAYER_HEALTH_RECOVERY'],
   UNKNOWN_MIXED_REACTION: ['PRESERVE_BAIT', 'RESTORE_LAYOUT', 'RESTORE_POINTER_INTERACTION', 'REMOVE_REACTION_UI'],
@@ -71,7 +71,7 @@ const PRIMITIVE_EVIDENCE: Partial<Record<PrimitiveId, string[]>> = {
   TARGETED_SESSION_DNR: ['REQUEST_START', 'VISIBLE_AD_CANDIDATE'],
   PRESERVE_BAIT: ['BAIT_STATE_CHANGED'],
   RESTORE_LAYOUT: ['CONTENT_HEIGHT_CHANGED', 'ANTI_BLOCK_REACTION'],
-  REMOVE_REACTION_UI: ['ANTI_BLOCK_REACTION', 'SEMANTIC_GATE'],
+  REMOVE_REACTION_UI: ['ANTI_BLOCK_REACTION', 'SEMANTIC_GATE', 'INTERACTION_DENIED', 'OVERLAY_APPEARED'],
   RESTORE_SCROLL: ['SCROLL_LOCK_ON', 'INTERACTION_DENIED'],
   RESTORE_POINTER_INTERACTION: ['INTERACTION_DENIED'],
   ACTIVATE_PACKAGED_SCRIPTLET: ['ANTI_BLOCK_REACTION'],
@@ -116,10 +116,18 @@ export class AutonomousExperimentLoop {
       maxRisk: 0.3,
       maxPrivacy: 0.1,
       minRollbackConfidence: 0.95,
-    }
+    },
+    initialState?: AutonomyLoopState
   ) {
     this.registry = registry;
     this.policy = new AutonomyPolicyValidator(registry);
+    if (initialState) this.state = cloneState(initialState);
+  }
+
+  restore(observation: AutonomyObservation, state: AutonomyLoopState): AutonomyLoopState {
+    this.observation = observation;
+    this.state = cloneState(state);
+    return this.snapshot();
   }
 
   start(observation: AutonomyObservation): AutonomyLoopState {
@@ -215,6 +223,17 @@ export class AutonomousExperimentLoop {
     return this.snapshot();
   }
 
+  recordCapabilityGap(experiment: AutonomousExperiment, code: string, reason: string): AutonomyLoopState {
+    if (this.state.status !== 'EXPLORING') return this.snapshot();
+    this.state.experiments.push(experiment);
+    this.state.attempts++;
+    this.state.capabilityGaps = [...this.state.capabilityGaps, `${code}:${reason}`];
+    if (this.state.attempts >= this.budget.maxExperiments || !this.nextExperiment()) {
+      this.state.status = 'CAPABILITY_GAP';
+    }
+    return this.snapshot();
+  }
+
   snapshot(): AutonomyLoopState {
     return {
       ...this.state,
@@ -224,6 +243,23 @@ export class AutonomousExperimentLoop {
       capabilityGaps: [...this.state.capabilityGaps],
     };
   }
+}
+
+function cloneState(state: AutonomyLoopState): AutonomyLoopState {
+  return {
+    ...state,
+    hypotheses: state.hypotheses.map((item) => ({
+      ...item,
+      causeRefs: [...item.causeRefs],
+      createdFrom: [...item.createdFrom],
+      updatedByExperiments: [...item.updatedByExperiments],
+    })),
+    experiments: state.experiments.map((item) => ({ ...item, opaqueRefs: [...item.opaqueRefs] })),
+    recipe: state.recipe
+      ? { ...state.recipe, preconditions: [...state.recipe.preconditions], primitiveIds: [...state.recipe.primitiveIds] }
+      : undefined,
+    capabilityGaps: [...state.capabilityGaps],
+  };
 }
 
 export function runDeterministicAutonomyTrial(

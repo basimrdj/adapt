@@ -47,3 +47,29 @@ jobs:
       - run: npm run benchmark:page
       - run: npm run verify:phase31b:integrity
       - run: npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts
+
+  autonomy-fast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b
+      - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:autonomy
+
+  autonomy-live:
+    runs-on: ubuntu-latest
+    needs: autonomy-fast
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:autonomy:live

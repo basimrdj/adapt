@@ -1,0 +1,8 @@
+{
+  "schema": "adapt-phase35b-worker-restart-v1",
+  "generatedAt": "2026-08-14T16:57:07.759Z",
+  "trials": 1,
+  "successfulTrials": 1,
+  "successRate": 1,
+  "method": "CDP service-worker execution termination during pending autonomous transaction"
+}

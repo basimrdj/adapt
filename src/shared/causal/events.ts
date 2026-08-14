@@ -213,6 +213,9 @@ export interface ExperimentRecord {
   fingerprintHash?: string;
   replay?: boolean;
   privacyScore?: number;
+  primitiveId?: string;
+  capabilityGapCode?: string;
+  policyAbstentionCode?: string;
 }
 
 /** Type stub only (M1). */

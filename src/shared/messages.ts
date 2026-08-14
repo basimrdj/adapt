@@ -80,4 +80,19 @@ export type BackgroundToContentMessage =
       type: 'EXECUTE_RUNTIME_OP';
       txId: string;
       payload: RuntimeOpAction;
+    }
+  | {
+      v: 1;
+      type: 'APPLY_AUTONOMY_PRIMITIVE';
+      txId: string;
+      primitiveId: string;
+      opaqueRefs: string[];
+      documentId?: string;
+    }
+  | {
+      v: 1;
+      type: 'ROLLBACK_AUTONOMY_PRIMITIVE';
+      txId: string;
+      actionIds: string[];
+      documentId?: string;
     };

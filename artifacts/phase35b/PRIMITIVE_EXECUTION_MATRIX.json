@@ -1,0 +1,223 @@
+{
+  "schema": "adapt-phase35b-primitive-execution-matrix-v1",
+  "generatedAt": "2026-08-14T16:57:07.759Z",
+  "entries": [
+    {
+      "primitiveId": "TEMPORARY_NETWORK_ALLOW",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "background",
+      "requiredEvidence": [
+        "REQUEST_ERROR"
+      ],
+      "requiredOpaqueRefKinds": [
+        "request"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "TEMPORARY_NETWORK_BLOCK",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "background",
+      "requiredEvidence": [
+        "REQUEST_START"
+      ],
+      "requiredOpaqueRefKinds": [
+        "request"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "TARGETED_SESSION_DNR",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "background",
+      "requiredEvidence": [
+        "REQUEST_START",
+        "VISIBLE_AD_CANDIDATE"
+      ],
+      "requiredOpaqueRefKinds": [
+        "request"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "TOGGLE_COSMETIC_ACTION",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "CONTENT_VISIBILITY_CHANGED"
+      ],
+      "requiredOpaqueRefKinds": [
+        "element"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "PRESERVE_BAIT",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "BAIT_STATE_CHANGED"
+      ],
+      "requiredOpaqueRefKinds": [
+        "element"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "RESTORE_LAYOUT",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "CONTENT_HEIGHT_CHANGED",
+        "ANTI_BLOCK_REACTION"
+      ],
+      "requiredOpaqueRefKinds": [
+        "element"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "REMOVE_REACTION_UI",
+      "status": "EXECUTABLE_AND_BROWSER_TESTED",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "ANTI_BLOCK_REACTION",
+        "SEMANTIC_GATE"
+      ],
+      "requiredOpaqueRefKinds": [
+        "element"
+      ],
+      "rollbackConfidence": 0.99,
+      "browserTestId": "remove-reaction-ui"
+    },
+    {
+      "primitiveId": "RESTORE_SCROLL",
+      "status": "EXECUTABLE_AND_BROWSER_TESTED",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0.99,
+      "browserTestId": "restore-scroll"
+    },
+    {
+      "primitiveId": "RESTORE_POINTER_INTERACTION",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "INTERACTION_DENIED"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "ACTIVATE_PACKAGED_SCRIPTLET",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "main-world",
+      "requiredEvidence": [
+        "ANTI_BLOCK_REACTION"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Packaged scriptlet activation has no production rollback proof."
+    },
+    {
+      "primitiveId": "DISABLE_PACKAGED_SCRIPTLET",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "main-world",
+      "requiredEvidence": [
+        "PLAYBACK_OBSTRUCTED",
+        "INTERACTION_DENIED"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Packaged scriptlet deactivation has no production rollback proof."
+    },
+    {
+      "primitiveId": "QUARANTINE_NAVIGATION_TARGET",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "background",
+      "requiredEvidence": [
+        "UNEXPECTED_NAV_TARGET",
+        "POPUP_OR_POPUNDER"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "No reversible browser quarantine primitive is defined."
+    },
+    {
+      "primitiveId": "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "background",
+      "requiredEvidence": [
+        "UNEXPECTED_NAV_TARGET",
+        "POPUP_OR_POPUNDER"
+      ],
+      "requiredOpaqueRefKinds": [
+        "navigation"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "SUPPRESS_MATCHED_WINDOW_OPEN_BEHAVIOR",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "WINDOW_OPEN_REACTION"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Window-open suppression would require unsafe page API interception."
+    },
+    {
+      "primitiveId": "STOP_MATCHED_REDIRECT_CHAIN",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "background",
+      "requiredEvidence": [
+        "SUSPICIOUS_REDIRECT_CHAIN",
+        "NAVIGATION_BOUNCE"
+      ],
+      "requiredOpaqueRefKinds": [
+        "navigation"
+      ],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    },
+    {
+      "primitiveId": "PLAYER_HEALTH_RECOVERY",
+      "status": "CAPABILITY_GAP",
+      "executionWorld": "isolated-world",
+      "requiredEvidence": [
+        "PLAYBACK_OBSTRUCTED",
+        "INTERACTION_DENIED"
+      ],
+      "requiredOpaqueRefKinds": [],
+      "rollbackConfidence": 0,
+      "browserTestId": "none",
+      "capabilityGapReason": "Trusted executor exists but no real browser holdout test covers this primitive yet."
+    }
+  ]
+}

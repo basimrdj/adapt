@@ -82,8 +82,8 @@ export const PRIMITIVE_DEFINITIONS: readonly PrimitiveDefinition[] = [
   definition('PRESERVE_BAIT', ['BAIT_VISIBILITY_PROBE', 'COSMETIC_REMOVAL_DEPENDENCY'], ['BAIT_STATE_CHANGED'], 'isolated-world', 0.03, 0, 'restore prior state', 'bait remains measurable', ['elementRef']),
   definition('RESTORE_LAYOUT', ['UNKNOWN_DOM_REACTION', 'UNKNOWN_MIXED_REACTION'], ['CONTENT_HEIGHT_CHANGED', 'ANTI_BLOCK_REACTION'], 'isolated-world', 0.08, 0.01, 'restore prior state', 'content geometry returns to baseline', ['elementRef']),
   definition('REMOVE_REACTION_UI', ['OVERLAY_REINSERTION', 'UNKNOWN_DOM_REACTION', 'UNKNOWN_MIXED_REACTION'], ['ANTI_BLOCK_REACTION', 'SEMANTIC_GATE'], 'isolated-world', 0.14, 0.01, 'restore prior state', 'reaction UI no longer obstructs content', ['elementRef']),
-  definition('RESTORE_SCROLL', ['SCROLL_LOCK_REACTION', 'UNKNOWN_PLAYER_REACTION'], ['SCROLL_LOCK_ON', 'INTERACTION_DENIED'], 'isolated-world', 0.05, 0, 'restore prior state', 'scrolling is available'),
-  definition('RESTORE_POINTER_INTERACTION', ['SCROLL_LOCK_REACTION', 'UNKNOWN_PLAYER_REACTION'], ['INTERACTION_DENIED'], 'isolated-world', 0.05, 0, 'restore prior state', 'pointer interaction is available'),
+  definition('RESTORE_SCROLL', ['SCROLL_LOCK_REACTION', 'UNKNOWN_PLAYER_REACTION', 'UNKNOWN_DOM_REACTION'], ['SCROLL_LOCK_ON', 'INTERACTION_DENIED'], 'isolated-world', 0.05, 0, 'restore prior state', 'scrolling is available'),
+  definition('RESTORE_POINTER_INTERACTION', ['SCROLL_LOCK_REACTION', 'UNKNOWN_PLAYER_REACTION', 'UNKNOWN_DOM_REACTION'], ['INTERACTION_DENIED'], 'isolated-world', 0.05, 0, 'restore prior state', 'pointer interaction is available'),
   definition('ACTIVATE_PACKAGED_SCRIPTLET', ['UNKNOWN_SCRIPT_REACTION', 'SCRIPT_ORDER_DEPENDENCY'], ['ANTI_BLOCK_REACTION'], 'main-world', 0.16, 0.02, 'disable packaged scriptlet', 'known packaged behavior changes', ['scriptletId']),
   definition('DISABLE_PACKAGED_SCRIPTLET', ['UNKNOWN_SCRIPT_REACTION', 'SCRIPT_ORDER_DEPENDENCY'], ['PLAYBACK_OBSTRUCTED', 'INTERACTION_DENIED'], 'main-world', 0.12, 0.02, 'restore packaged scriptlet state', 'known packaged behavior stops'),
   definition('QUARANTINE_NAVIGATION_TARGET', ['UNKNOWN_NAVIGATION_REACTION'], ['UNEXPECTED_NAV_TARGET', 'POPUP_OR_POPUNDER'], 'background', 0.12, 0.01, 'undo quarantine', 'unexpected target is isolated', ['navigationRef']),
@@ -110,6 +110,7 @@ export class PrimitiveRegistry {
     if (!item.allowedMechanisms.includes(proposal.mechanism)) return { ok: false, reason: 'mechanism not allowed' };
     if (proposal.opaqueRefs.some((ref) => !OPAQUE_REF.test(ref))) return { ok: false, reason: 'non-opaque reference' };
     if (proposal.evidence.some((item) => FORBIDDEN_TOKENS.test(item))) return { ok: false, reason: 'forbidden evidence token' };
+    if (item.requiredEvidence.some((required) => !proposal.evidence.includes(required))) return { ok: false, reason: 'required evidence missing' };
     const supplied = new Set(Object.keys(proposal.parameters ?? {}));
     if ([...supplied].some((key) => !item.parameterSchema.includes(key))) return { ok: false, reason: 'parameter outside schema' };
     if (item.forbiddenContexts.some((context) => proposal.evidence.includes(context))) return { ok: false, reason: 'forbidden context' };

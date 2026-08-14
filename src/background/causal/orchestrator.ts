@@ -7,6 +7,7 @@ import {
   CausalHypothesis,
   createEventId,
   EventNode,
+  ExperimentRecord,
   hashOrigin,
   HealthVectorCompact,
   OpaqueRef,
@@ -34,37 +35,10 @@ import { CausalRecipeStore, PromotionEvaluateInput, PromotionGate } from './prom
 import { verifyHealthOutcome } from '../../core/health/compare';
 import { generateHypothesisLattice } from '../autonomy/hypothesis-lattice';
 import { AutonomousExperiment, AutonomousExperimentLoop } from '../autonomy/saei';
-import { PrimitiveId } from '../autonomy/primitive-registry';
+import { AutonomyPendingState, AutonomySessionRepository, AutonomySessionSnapshot } from '../autonomy/session';
+import { PrimitiveExecutorRegistry, primitiveRecipeActions } from '../autonomy/executor-registry';
 
 const TRACKER_LIKE = /(^|[.-])(ads?|analytics|beacon|pixel|track(er|ing)?)([.-]|$)/i;
-
-function primitiveVariable(primitive: PrimitiveId): import('../../shared/causal/experiments').AllowedInterventionVariable | null {
-  switch (primitive) {
-    case 'TEMPORARY_NETWORK_ALLOW': return 'temp_network_exception';
-    case 'PRESERVE_BAIT': return 'preserve_bait_geometry';
-    case 'REMOVE_REACTION_UI':
-    case 'RESTORE_LAYOUT':
-    case 'TOGGLE_COSMETIC_ACTION': return 'remove_overlay_gate';
-    case 'RESTORE_SCROLL':
-    case 'RESTORE_POINTER_INTERACTION':
-    case 'PLAYER_HEALTH_RECOVERY': return 'restore_scroll';
-    default: return null;
-  }
-}
-
-function primitiveStrategyRef(primitive: PrimitiveId): OpaqueRef | null {
-  switch (primitive) {
-    case 'TEMPORARY_NETWORK_ALLOW': return 'strategy:s1';
-    case 'PRESERVE_BAIT': return 'strategy:s4';
-    case 'REMOVE_REACTION_UI':
-    case 'RESTORE_LAYOUT':
-    case 'TOGGLE_COSMETIC_ACTION': return 'strategy:s2';
-    case 'RESTORE_SCROLL':
-    case 'RESTORE_POINTER_INTERACTION':
-    case 'PLAYER_HEALTH_RECOVERY': return 'strategy:s3';
-    default: return null;
-  }
-}
 
 function compactScore(h: HealthVector): number {
   return (
@@ -128,6 +102,8 @@ export interface CausalOrchestratorDeps {
   sendTabMessage: (tabId: number, message: unknown) => Promise<void>;
   recipeStore: CausalRecipeStore;
   promotion: PromotionGate;
+  primitiveExecutors?: PrimitiveExecutorRegistry;
+  autonomySession?: AutonomySessionRepository;
   runFallback: (tabId: number, navigationId: string, siteKey: string, batch: CausalPageObservationBatch['pageSignals']) => Promise<unknown>;
 }
 
@@ -142,6 +118,11 @@ interface PendingReplay {
   applied: StrategyAction[];
   applicationKey: string;
   keepAppliedOnSuccess: boolean;
+}
+
+interface PendingAutonomy extends AutonomyPendingState {
+  execution: NonNullable<AutonomyPendingState['execution']>;
+  fingerprint?: PageFingerprint;
 }
 
 const PROMOTABLE_MECHANISMS: ReadonlySet<CausalHypothesis['mechanismClass']> = new Set([
@@ -167,10 +148,72 @@ export class CausalOrchestrator {
   private readonly lastFingerprints = new Map<string, PageFingerprint>();
   private readonly lastBatches = new Map<string, CausalPageObservationBatch['pageSignals']>();
   private readonly autonomyLoops = new Map<string, AutonomousExperimentLoop>();
-  private readonly pendingAutonomy = new Map<string, AutonomousExperiment>();
+  private readonly pendingAutonomy = new Map<string, PendingAutonomy>();
+  private readonly pendingNavigationEvidence = new Map<number, { ref: OpaqueRef; kind: EventNode['kind']; features: EventNode['features'] }>();
 
   constructor(private readonly deps: CausalOrchestratorDeps) {
     this.normalizer = new EventNormalizer(deps.registry);
+  }
+
+  async restoreAutonomy(snapshot?: AutonomySessionSnapshot): Promise<void> {
+    if (!snapshot) return;
+    this.autonomyLoops.clear();
+    this.pendingAutonomy.clear();
+    for (const [graphId, state] of snapshot.loops) {
+      const graph = this.deps.graphs.getAll().find((item) => item.graphId === graphId);
+      const fingerprint = this.lastFingerprints.get(graphId);
+      const loop = new AutonomousExperimentLoop(undefined, undefined, state);
+      loop.restore({
+        events: graph?.nodes ?? [],
+        health: {
+          pageHealth: 0.5,
+          contentHealth: 0.5,
+          interactionHealth: 0.5,
+          privacyHealth: 1,
+          reactionResolved: false,
+        },
+        fingerprintHash: fingerprint ? fingerprintEvidenceHash(fingerprint) : `restored:${graphId}`,
+        knownRecipe: false,
+        developerHint: false,
+      }, state);
+      this.autonomyLoops.set(graphId, loop);
+    }
+    for (const pending of snapshot.pending ?? []) {
+      if (!pending.execution || !pending.experiment) continue;
+      this.deps.primitiveExecutors?.hydrate(pending.execution);
+      this.pendingAutonomy.set(pending.txId, pending);
+      const live = this.deps.registry.getEpoch(pending.tabId, pending.frameId);
+      if (!live || live.documentId !== pending.documentId) {
+        await this.deps.primitiveExecutors?.rollback(pending.txId);
+        this.pendingAutonomy.delete(pending.txId);
+        continue;
+      }
+      await this.deps.sendTabMessage(pending.tabId, {
+        v: 1,
+        type: 'REQUEST_HEALTH_SNAPSHOT',
+        txId: pending.txId,
+        documentId: pending.documentId,
+      }).catch(async () => {
+        await this.deps.primitiveExecutors?.rollback(pending.txId);
+        this.pendingAutonomy.delete(pending.txId);
+      });
+    }
+    await this.persistAutonomySession();
+  }
+
+  async onNavigationTargetClassification(
+    target: NavigationTargetObservation,
+    classification: { disposition: string; confidence: number; evidence: string[] }
+  ): Promise<void> {
+    if (classification.disposition === 'OBSERVE_ONLY') return;
+    const scope = this.deps.registry.getCausalKey(target.sourceTabId, target.sourceFrameId);
+    const epoch = this.deps.registry.getEpoch(target.sourceTabId, target.sourceFrameId);
+    if (!scope || !epoch) return;
+    const graph = this.deps.graphs.get(scope);
+    if (!graph) return;
+    const baseline = this.previousHealth.get(`${target.sourceTabId}:${target.sourceFrameId}:${scope.navigationEpoch}:${scope.documentId}`)
+      ?? this.defaultHealth();
+    await this.maybeRun(graph, epoch.siteKey, epoch.navigationId, baseline, true);
   }
 
   async onNavigation(raw: RawNavigationEvent): Promise<void> {
@@ -180,6 +223,19 @@ export class CausalOrchestrator {
     if (!key) return;
     const graph = this.deps.graphs.getOrCreate(key, node.scope.originHash);
     this.deps.graphs.append(node);
+    const carried = raw.frameId === 0 ? this.pendingNavigationEvidence.get(raw.tabId) : undefined;
+    if (carried) {
+      this.deps.graphs.append(nowNode(
+        key,
+        node.scope.originHash,
+        carried.kind,
+        [carried.ref],
+        { ...carried.features, carriedAcrossDocument: true },
+        'navigationIntent',
+        raw.timeStamp ?? Date.now()
+      ));
+      this.pendingNavigationEvidence.delete(raw.tabId);
+    }
     this.candidates.update(graph);
     await this.deps.session.persist();
   }
@@ -225,9 +281,19 @@ export class CausalOrchestrator {
     const scope = this.deps.registry.getCausalKey(target.sourceTabId, target.sourceFrameId);
     if (!epoch || !scope) return;
     const graph = this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
+    const expectedNewContext = target.expectedNewContext === true
+      && target.destinationMatch === true
+      && target.extraTarget !== true;
+    if (expectedNewContext) {
+      await this.deps.session.persist();
+      return;
+    }
     const kind: EventNode['kind'] = target.redirectCount > 1
       ? 'SUSPICIOUS_REDIRECT_CHAIN'
-      : target.riskSignals.includes('NO_RECENT_INTENT') || target.riskSignals.includes('UNEXPECTED_AFTER_GESTURE')
+      : target.riskSignals.includes('NO_RECENT_INTENT')
+        || target.riskSignals.includes('UNEXPECTED_AFTER_GESTURE')
+        || target.riskSignals.includes('EXTRA_TARGET')
+        || target.riskSignals.includes('DESTINATION_MISMATCH')
         ? 'UNEXPECTED_NAV_TARGET'
         : 'POPUP_OR_POPUNDER';
     this.deps.graphs.append(nowNode(scope, graph.scope.originHash, kind, [target.ref, ...(target.recentIntentRef ? [target.recentIntentRef] : [])], {
@@ -239,6 +305,17 @@ export class CausalOrchestrator {
       riskSignalCount: target.riskSignals.length,
     }, 'navigationIntent', target.capturedWallMs));
     graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
+    this.pendingNavigationEvidence.set(target.sourceTabId, {
+      ref: target.ref,
+      kind,
+      features: {
+        destinationClass: target.destinationClass,
+        foregroundState: target.foregroundState,
+        openerRelationship: target.openerRelationship,
+        redirectCount: target.redirectCount,
+        riskSignalCount: target.riskSignals.length,
+      },
+    });
     await this.deps.session.persist();
   }
 
@@ -340,6 +417,8 @@ export class CausalOrchestrator {
     const replaying = await this.maybeReplay(graph, batch, health, epoch.url, scope);
     if (replaying) return true;
     if (!hasDeterministicCausalExperiment) {
+      const autonomousResult = await this.maybeRun(graph, epoch.siteKey, epoch.navigationId, health);
+      if (autonomousResult) return true;
       const fallbackResult = await this.deps.runFallback(tabId, epoch.navigationId, epoch.siteKey, batch.pageSignals);
       if (fallbackResult) return true;
     }
@@ -350,6 +429,11 @@ export class CausalOrchestrator {
     const replay = this.pendingReplays.get(txId);
     if (replay) {
       await this.finishReplay(replay, this.enrichHealth(health, this.deps.registry.getEpoch(tabId, frameId)?.navigationId ?? ''));
+      return true;
+    }
+    const autonomous = this.pendingAutonomy.get(txId);
+    if (autonomous) {
+      await this.finishAutonomous(autonomous, this.enrichHealth(health, autonomous.navigationId));
       return true;
     }
     const state = this.deps.engine.getRecords().find((entry) => entry.txId === txId);
@@ -366,16 +450,6 @@ export class CausalOrchestrator {
       frameId: state.frameIds[0] ?? 0,
     });
     if (graph) this.deps.beliefs.apply(graph, result.record, state.hypothesisId);
-    const autonomous = this.pendingAutonomy.get(txId);
-    if (autonomous) {
-      const loop = this.autonomyLoops.get(graph?.graphId ?? '');
-      loop?.recordOutcome(autonomous, {
-        resolved: result.record.status === 'COMMITTED',
-        pageHealthy: result.record.status === 'COMMITTED',
-        healthDelta: result.record.healthDelta ?? 0,
-      });
-      this.pendingAutonomy.delete(txId);
-    }
     if (graph) await this.maybeDraftOrPromote(
       graph,
       state.hypothesisId,
@@ -411,7 +485,37 @@ export class CausalOrchestrator {
     return { ...health, networkIntegrity, privacyPreservation: 1 };
   }
 
-  private async maybeRun(graph: ReturnType<EventGraphStore['getOrCreate']>, siteKey: string, navigationId: string, baselineHealth: HealthVector): Promise<boolean> {
+  private defaultHealth(): HealthVector {
+    return {
+      antiBlockReaction: 0,
+      contentAvailability: 1,
+      interaction: 1,
+      scrollability: 1,
+      navigationHealth: 1,
+      visualObstruction: 0,
+      mutationStability: 1,
+      networkIntegrity: 1,
+      privacyPreservation: 1,
+      confidence: 0.5,
+    };
+  }
+
+  private async persistAutonomySession(): Promise<void> {
+    if (!this.deps.autonomySession) return;
+    await this.deps.autonomySession.persist(this.autonomyLoopsToState(), [...this.pendingAutonomy.values()]);
+  }
+
+  private autonomyLoopsToState(): Map<string, ReturnType<AutonomousExperimentLoop['snapshot']>> {
+    return new Map([...this.autonomyLoops.entries()].map(([key, loop]) => [key, loop.snapshot()]));
+  }
+
+  private async maybeRun(
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    siteKey: string,
+    navigationId: string,
+    baselineHealth: HealthVector,
+    forceAutonomous = false
+  ): Promise<boolean> {
     const key = this.deps.registry.getCausalKey(graph.scope.tabId, graph.nodes[0]?.scope.frameId ?? 0);
     if (!key) return false;
     const attempted = this.attemptedMechanisms.get(graph.graphId) ?? new Set<CausalHypothesis['mechanismClass']>();
@@ -424,8 +528,11 @@ export class CausalOrchestrator {
       remaining: Math.max(0, graph.budgets.maxPerDocumentEpoch - graph.experiments.length),
     };
     const selected = this.selector.select(candidates, key, budget);
-    const autonomousSelection = selected ? null : this.autonomousSelection(graph, baselineHealth);
-    const selectedExperiment = autonomousSelection?.candidate ?? selected;
+    const autonomousSelection = forceAutonomous || !selected ? this.autonomousSelection(graph, baselineHealth) : null;
+    if (autonomousSelection && this.deps.primitiveExecutors) {
+      return this.stageAutonomousExperiment(graph, siteKey, navigationId, baselineHealth, autonomousSelection.experiment);
+    }
+    const selectedExperiment = selected;
     if (!selectedExperiment) return false;
     const selectedHypothesis = graph.hypotheses.find((item) => item.id === selectedExperiment.hypothesisRef);
     if (!selectedHypothesis) return false;
@@ -444,7 +551,6 @@ export class CausalOrchestrator {
     if (staged.record.status === 'STAGED' && staged.state) {
       if (!autonomousSelection) attempted.add(selectedHypothesis.mechanismClass);
       this.attemptedMechanisms.set(graph.graphId, attempted);
-      if (autonomousSelection) this.pendingAutonomy.set(staged.state.txId, autonomousSelection.experiment);
       await new Promise<void>((resolve) => setTimeout(resolve, Math.min(500, selectedExperiment.expected.durationMs)));
       await this.deps.sendTabMessage(graph.scope.tabId, {
         v: 1,
@@ -462,64 +568,209 @@ export class CausalOrchestrator {
   private autonomousSelection(
     graph: ReturnType<EventGraphStore['getOrCreate']>,
     baselineHealth: HealthVector
-  ): { candidate: import('../../shared/causal/experiments').ExperimentCandidate; experiment: AutonomousExperiment } | null {
+  ): { experiment: AutonomousExperiment; hypothesis: CausalHypothesis } | null {
     const loop = this.autonomyLoops.get(graph.graphId) ?? new AutonomousExperimentLoop();
+    const observation = {
+      events: graph.nodes,
+      health: {
+        pageHealth: compactScore(baselineHealth),
+        contentHealth: baselineHealth.contentAvailability,
+        interactionHealth: baselineHealth.interaction,
+        privacyHealth: baselineHealth.privacyPreservation ?? 1,
+        reactionResolved: baselineHealth.antiBlockReaction < 0.2,
+      },
+      fingerprintHash: fingerprintEvidenceHash(this.lastFingerprints.get(graph.graphId) ?? createPageFingerprint({
+        originHash: graph.scope.originHash,
+        topLevelPathClass: 'unknown',
+        detectorFeatureHash: 'unknown',
+        relevantResourceSetHash: 'unknown',
+        structuralFeatureHash: 'unknown',
+      })),
+      knownRecipe: false,
+      developerHint: false,
+    };
     if (!this.autonomyLoops.has(graph.graphId)) {
-      loop.start({
-        events: graph.nodes,
-        health: {
-          pageHealth: compactScore(baselineHealth),
-          contentHealth: baselineHealth.contentAvailability,
-          interactionHealth: baselineHealth.interaction,
-          privacyHealth: baselineHealth.privacyPreservation ?? 1,
-          reactionResolved: baselineHealth.antiBlockReaction < 0.2,
-        },
-        fingerprintHash: fingerprintEvidenceHash(this.lastFingerprints.get(graph.graphId) ?? createPageFingerprint({
-          originHash: graph.scope.originHash,
-          topLevelPathClass: 'unknown',
-          detectorFeatureHash: 'unknown',
-          relevantResourceSetHash: 'unknown',
-          structuralFeatureHash: 'unknown',
-        })),
-        knownRecipe: false,
-        developerHint: false,
-      });
+      loop.start(observation);
       this.autonomyLoops.set(graph.graphId, loop);
+    } else if (loop.snapshot().status === 'EXPLORING') {
+      loop.restore(observation, loop.snapshot());
     }
     const experiment = loop.nextExperiment();
     if (!experiment) return null;
+    const currentOpaqueRefs = graph.nodes.flatMap((node) => node.refs)
+      .filter((ref) => ref.startsWith('element:') || ref.startsWith('request:') || ref.startsWith('navigation:'));
+    experiment.opaqueRefs = [...new Set([...experiment.opaqueRefs, ...currentOpaqueRefs])];
     const hypothesis = graph.hypotheses.find((item) => item.id === experiment.hypothesisId);
     if (!hypothesis) return null;
-    const variable = primitiveVariable(experiment.primitiveId);
-    if (!variable) return null;
-    const strategyRef = primitiveStrategyRef(experiment.primitiveId);
-    if (!strategyRef) return null;
-    const actionRefs = [...new Set([...hypothesis.causeRefs, ...hypothesis.createdFrom].filter((ref) =>
-      !ref.startsWith('event:') && (ref.startsWith('element:') || ref.startsWith('request:') || ref.startsWith('frame:') || ref.startsWith('strategy:'))
-    ))];
-    return {
+    return { experiment, hypothesis };
+  }
+
+  private async stageAutonomousExperiment(
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    siteKey: string,
+    navigationId: string,
+    baselineHealth: HealthVector,
+    experiment: AutonomousExperiment
+  ): Promise<boolean> {
+    const executors = this.deps.primitiveExecutors;
+    const loop = this.autonomyLoops.get(graph.graphId);
+    if (!executors || !loop) return false;
+    const currentOpaqueRefs = graph.nodes.flatMap((node) => node.refs)
+      .filter((ref) => ref.startsWith('element:') || ref.startsWith('request:') || ref.startsWith('navigation:'));
+    experiment.opaqueRefs = [...new Set([...experiment.opaqueRefs, ...currentOpaqueRefs])];
+    const frameId = graph.nodes.at(-1)?.scope.frameId ?? 0;
+    const txId = `autonomy_${graph.scope.tabId}_${graph.scope.navigationEpoch}_${Date.now()}`;
+    const staged = await executors.stage({
+      txId,
+      tabId: graph.scope.tabId,
+      frameId,
+      documentId: graph.scope.documentId,
+      primitiveId: experiment.primitiveId,
+      opaqueRefs: [...experiment.opaqueRefs],
+      evidence: [],
+    }).catch((error: unknown) => ({
+      ok: false as const,
+      gap: { code: 'EXECUTOR_ERROR' as const, reason: error instanceof Error ? error.message : String(error) },
+    }));
+
+    if (!staged.ok) {
+      loop.recordCapabilityGap(experiment, staged.gap.code, staged.gap.reason);
+      await this.persistAutonomySession();
+      const next = loop.nextExperiment();
+      const nextHypothesis = next ? graph.hypotheses.find((item) => item.id === next.hypothesisId) : undefined;
+      if (next && nextHypothesis) {
+        return this.stageAutonomousExperiment(graph, siteKey, navigationId, baselineHealth, next);
+      }
+      return false;
+    }
+
+    const pending: PendingAutonomy = {
+      txId,
+      graphId: graph.graphId,
       experiment,
-      candidate: {
-        id: experiment.id,
-        hypothesisRef: hypothesis.id,
-        intervention: { variable, actionRefs: [strategyRef, ...actionRefs], desiredValue: true },
-        scope: {
-          tabId: graph.scope.tabId,
-          navigationEpoch: graph.scope.navigationEpoch,
-          documentId: graph.scope.documentId,
-          frameIds: [...new Set(graph.nodes.map((node) => node.scope.frameId))],
-        },
-        expected: {
-          informationGain: experiment.expectedInformationGain,
-          healthRisk: experiment.expectedRisk,
-          privacyRisk: experiment.expectedPrivacyRisk,
-          rollbackConfidence: 0.99,
-          durationMs: experiment.durationMs,
-        },
-        controls: { oneVariable: true, requiresReload: false, pairedBaselineAvailable: true },
-        rollbackPlanRef: `rollback:${experiment.primitiveId}`,
-      },
+      execution: staged.record,
+      baseline: baselineHealth,
+      fingerprint: this.lastFingerprints.get(graph.graphId),
+      siteKey,
+      navigationId,
+      frameId,
+      documentId: graph.scope.documentId,
+      tabId: graph.scope.tabId,
     };
+    this.pendingAutonomy.set(txId, pending);
+    await this.persistAutonomySession();
+    await new Promise<void>((resolve) => setTimeout(resolve, Math.min(500, experiment.durationMs)));
+    if (!this.pendingAutonomy.has(txId)) return true;
+    await this.deps.sendTabMessage(graph.scope.tabId, {
+      v: 1,
+      type: 'REQUEST_HEALTH_SNAPSHOT',
+      txId,
+      documentId: graph.scope.documentId,
+    });
+    return true;
+  }
+
+  private async finishAutonomous(
+    pending: PendingAutonomy,
+    postHealth: HealthVector
+  ): Promise<void> {
+    const executors = this.deps.primitiveExecutors;
+    const verification = verifyHealthOutcome(pending.baseline, postHealth);
+    const rollback = verification.success
+      ? { ok: true, errors: [] as string[] }
+      : await executors?.rollback(pending.txId) ?? { ok: false, errors: ['executor unavailable'] };
+    if (verification.success) await executors?.commit(pending.txId);
+
+    const record: ExperimentRecord = {
+      id: pending.experiment.id,
+      candidateHash: hashOrigin(`${pending.graphId}:${pending.experiment.primitiveId}`),
+      startedWallMs: pending.execution.startedWallMs,
+      completedWallMs: Date.now(),
+      status: verification.success ? 'COMMITTED' : 'ROLLED_BACK',
+      preHealth: this.toCompact(pending.baseline),
+      postHealth: this.toCompact(postHealth),
+      healthDelta: verification.scoreDelta,
+      observedRefs: pending.experiment.opaqueRefs as OpaqueRef[],
+      policyDecisionId: `policy:autonomy:${pending.experiment.primitiveId}`,
+      transactionId: pending.txId,
+      rollbackVerified: rollback.ok,
+      epochStillFresh: this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.documentId === pending.documentId,
+      visitId: pending.documentId,
+      fingerprintHash: pending.fingerprint ? fingerprintEvidenceHash(pending.fingerprint) : undefined,
+      privacyScore: postHealth.privacyPreservation ?? 1,
+      primitiveId: pending.experiment.primitiveId,
+      ...(rollback.ok ? {} : { capabilityGapCode: 'ROLLBACK_NOT_RELIABLE' }),
+    };
+    const graph = this.deps.graphs.get({
+      tabId: pending.tabId,
+      navigationEpoch: this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.navigationEpoch ?? 0,
+      documentId: pending.documentId,
+      frameId: pending.frameId,
+    });
+    const loop = this.autonomyLoops.get(pending.graphId);
+    if (graph) {
+      this.deps.beliefs.apply(graph, record, pending.experiment.hypothesisId);
+      const hypothesis = graph.hypotheses.find((item) => item.id === pending.experiment.hypothesisId);
+      if (hypothesis && verification.success) {
+        await this.promoteAutonomous(graph, hypothesis, pending, record);
+      }
+    }
+    loop?.recordOutcome(pending.experiment, {
+      resolved: verification.success,
+      pageHealthy: postHealth.interaction >= 0.7 && postHealth.scrollability >= 0.7,
+      healthDelta: verification.scoreDelta,
+      durationMs: Date.now() - pending.execution.startedWallMs,
+    });
+    this.pendingAutonomy.delete(pending.txId);
+    await executors?.discard(pending.txId);
+    await this.persistAutonomySession();
+    if (!verification.success && graph && loop?.nextExperiment()) {
+      const epoch = this.deps.registry.getEpoch(pending.tabId, pending.frameId);
+      if (epoch) await this.maybeRun(graph, epoch.siteKey, epoch.navigationId, postHealth, true);
+    }
+  }
+
+  private async promoteAutonomous(
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    hypothesis: CausalHypothesis,
+    pending: PendingAutonomy,
+    record: ExperimentRecord
+  ): Promise<void> {
+    const fingerprint = pending.fingerprint ?? this.lastFingerprints.get(graph.graphId);
+    const actions = primitiveRecipeActions(pending.experiment.primitiveId, pending.experiment.opaqueRefs);
+    if (!fingerprint || actions.length === 0) return;
+    const existing = (await this.deps.recipeStore.getByOriginHash(fingerprint.originHash))
+      .find((item) => item.recipe.causalSupport.hypothesisClass === hypothesis.mechanismClass);
+    const evidence = [...(existing?.evidence ?? []), record];
+    const input: PromotionEvaluateInput = {
+      hypothesis,
+      fingerprint,
+      fingerprintConstraints: existing?.recipe.fingerprintConstraints,
+      actionRefs: pending.experiment.opaqueRefs as OpaqueRef[],
+      actions: existing?.actions ? [...existing.actions] : actions,
+      expectedHealthDelta: record.healthDelta ?? 0,
+      minPrivacyScore: record.privacyScore ?? 1,
+      rollbackPlanRef: `rollback:${pending.experiment.primitiveId}`,
+      preconditions: [...new Set(graph.nodes.map((node) => node.kind))],
+      stableReplays: existing?.recipe.causalSupport.stableReplays ?? 0,
+      experiments: evidence,
+      existingRecipeId: existing?.recipe.id,
+    };
+    const draft = existing?.recipe ?? this.deps.promotion.compileDraft(input);
+    if (!draft) return;
+    const evaluated = this.deps.promotion.evaluate(input);
+    const recipe = evaluated.pass ? evaluated.recipe : draft;
+    await this.deps.recipeStore.save({
+      recipe,
+      lifecycle: evaluated.pass ? 'RECIPE_SAFE' : existing?.lifecycle ?? 'DRAFT',
+      updatedWallMs: Date.now(),
+      actions: input.actions,
+      evidence,
+      primitiveSequence: [...(existing?.primitiveSequence ?? []), {
+        primitiveId: pending.experiment.primitiveId,
+        opaqueRefs: [...pending.experiment.opaqueRefs],
+      }],
+    });
   }
 
   private fingerprint(graph: ReturnType<EventGraphStore['getOrCreate']>, batch: CausalPageObservationBatch, url: string): PageFingerprint {

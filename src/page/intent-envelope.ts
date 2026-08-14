@@ -38,6 +38,12 @@ function destinationClassFor(element: HTMLElement): DestinationClass {
   }
 }
 
+function targetBehaviorFor(element: HTMLElement, destinationClass: DestinationClass): UserIntentEnvelope['targetBehavior'] {
+  if (destinationClass === 'download') return 'download';
+  if (element instanceof HTMLAnchorElement && element.target === '_blank') return 'new-context';
+  return destinationClass === 'unknown' ? 'unknown' : 'same-context';
+}
+
 function relevantTarget(event: Event): HTMLElement | null {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return null;
@@ -54,6 +60,11 @@ export function createIntentEnvelope(
   const ref = targets.register(element);
   const role = roleFor(element);
   const destinationClass = destinationClassFor(element);
+  const targetBehavior = targetBehaviorFor(element, destinationClass);
+  const newContextReasonablyExpected = targetBehavior === 'new-context'
+    || event.button === 1
+    || event.metaKey
+    || event.ctrlKey;
   return {
     ref: nextIntentRef(),
     documentMonotonicMs: typeof performance.now === 'function' ? performance.now() : 0,
@@ -72,5 +83,9 @@ export function createIntentEnvelope(
     navigationReasonablyExpected:
       role === 'link' || role === 'button' && destinationClass !== 'unknown',
     sourceOriginHash: hashOrigin(window.location.origin),
+    eventTrusted: event.isTrusted,
+    targetBehavior,
+    newContextReasonablyExpected,
+    downloadLikeIntent: destinationClass === 'download',
   };
 }

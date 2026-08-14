@@ -1,0 +1,7 @@
+{
+  "schema": "adapt-phase35b-ai-usage-v1",
+  "generatedAt": "2026-08-14T16:57:07.759Z",
+  "plannerConfigured": false,
+  "aiCalls": 0,
+  "reason": "No safe production Phase 2 planner is wired into SAEI; deterministic routing remains authoritative."
+}

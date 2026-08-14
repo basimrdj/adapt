@@ -20,6 +20,9 @@ import { reconcilePhase31StaticRulesets } from '../background/phase31/static-rul
 import { runMainScriptlet } from '../shared/main-scriptlet';
 import { IntentTracker } from '../background/autonomy/intent-tracker';
 import { classifyNavigationTarget } from '../background/autonomy/popup-classifier';
+import { EphemeralNavigationTargetRegistry } from '../background/autonomy/navigation-targets';
+import { PrimitiveExecutorRegistry } from '../background/autonomy/executor-registry';
+import { AutonomySessionRepository } from '../background/autonomy/session';
 
 const ALLOWED_MAIN_SCRIPTLETS = new Set([
   'set-constant',
@@ -49,8 +52,8 @@ const chromeDnrBackend = {
 };
 
 // 3. Tab Message Sender
-const sendTabMessage = async (tabId: number, msg: unknown) => {
-  return new Promise<void>((resolve, reject) => {
+const sendTabMessageResponse = async (tabId: number, msg: unknown) => {
+  return new Promise<{ success?: boolean; actionIds?: string[] }>((resolve, reject) => {
     const documentId =
       typeof msg === 'object' && msg !== null && 'documentId' in msg && typeof msg.documentId === 'string'
         ? msg.documentId
@@ -61,15 +64,19 @@ const sendTabMessage = async (tabId: number, msg: unknown) => {
         reject(new Error(lastError.message));
         return;
       }
-      if (!response || response.success !== true) {
+      if (!response) {
         reject(new Error('Content script did not acknowledge action'));
         return;
       }
-      resolve();
+      resolve(response);
     };
     if (documentId) chrome.tabs.sendMessage(tabId, msg, { documentId }, callback);
     else chrome.tabs.sendMessage(tabId, msg, callback);
   });
+};
+
+const sendTabMessage = async (tabId: number, msg: unknown): Promise<void> => {
+  await sendTabMessageResponse(tabId, msg);
 };
 
 // 4. Instantiate Core Domain Modules
@@ -89,6 +96,15 @@ const adaptEngine = new AdaptationTransactionEngine(
   (tabId, navigationId) => navRegistry.isEpochValid(tabId, navigationId)
 );
 const causalResources = new CausalResourceRegistry();
+const navigationTargets = new EphemeralNavigationTargetRegistry(chromeSessionBackend);
+const autonomySession = new AutonomySessionRepository(chromeSessionBackend);
+const primitiveExecutors = new PrimitiveExecutorRegistry({
+  dnrController,
+  sendTabMessage: sendTabMessageResponse,
+  resolveRequest: (ref) => causalResources.resolveRequest(ref as `request:r${number}`),
+  navigationTargets,
+  tabsApi: chrome.tabs,
+});
 const causalGraphs = new EventGraphStore(new EpochRouter(navRegistry));
 const beliefUpdater = new BeliefUpdater();
 const causalSession = new CausalSessionStateRepository(
@@ -119,12 +135,16 @@ const causalOrchestrator = new CausalOrchestrator({
   sendTabMessage,
   recipeStore: causalRecipeStore,
   promotion: promotionGate,
+  primitiveExecutors,
+  autonomySession,
   runFallback: (tabId, navigationId, siteKey, batch) =>
     adaptEngine.evaluateSignals(tabId, navigationId, siteKey, batch),
 });
 const intentTracker = new IntentTracker();
 const startupReady = (async () => {
   await causalSession.restore().catch(() => false);
+  await navigationTargets.restore().catch(() => undefined);
+  await causalOrchestrator.restoreAutonomy(await autonomySession.restoreSnapshot().catch(() => undefined));
   await adaptEngine.init();
   await causalEngine.init();
   await reconcilePhase31StaticRulesets();
@@ -137,6 +157,8 @@ const causalHandledBatches = new Map<number, Map<number, boolean>>();
 // WebNavigation Lifecycle
 chrome.webNavigation.onCommitted.addListener(async (details) => {
   await startupReady;
+  const committedSourceOrigin = navRegistry.getEpoch(details.tabId, details.frameId)?.origin;
+  intentTracker.observeNavigationCommitted(details.tabId, details.frameId, details.url, details.timeStamp, committedSourceOrigin);
   const previous = navRegistry.getCausalKey(details.tabId, details.frameId);
   if (!previous || previous.documentId !== details.documentId) {
     await causalEngine.onNavigation(details.tabId, previous);
@@ -203,17 +225,20 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener((details) => {
       openerRelationship: 'implicit',
       foregroundState: 'unknown',
     });
+    navigationTargets.record(target, details.url);
     await causalOrchestrator.onNavigationTarget(target);
     const classification = classifyNavigationTarget(target);
-    if (classification.disposition === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' && classification.confidence >= 0.85) {
-      await chrome.tabs.remove(details.tabId).catch(() => undefined);
-    }
+    // The autonomous executor owns destructive target actions. This listener
+    // only records the causal classification and never bypasses the policy
+    // and rollback path.
+    await causalOrchestrator.onNavigationTargetClassification(target, classification);
   });
 });
 
 chrome.tabs.onRemoved.addListener(async (tabId) => {
   await startupReady;
   navRegistry.onTabClosed(tabId);
+  navigationTargets.clearTab(tabId);
   const activeTxs = adaptEngine.getActiveTransactions().filter((tx) => tx.tabId === tabId);
   for (const tx of activeTxs) {
     if (tx.sessionRuleIds.length > 0) {
