@@ -1,4 +1,4 @@
-import { PageSignalBatch, DomAction, HealthVector, RuntimeOpAction, CausalPageObservationBatch } from './types';
+import { PageSignalBatch, DomAction, HealthVector, RuntimeOpAction, CausalPageObservationBatch, UserIntentEnvelope } from './types';
 
 /**
  * Message protocol definitions between content scripts and background service worker.
@@ -23,6 +23,12 @@ export type ContentToBackgroundMessage =
       type: 'CAUSAL_OBSERVATION_BATCH';
       navigationId: string;
       payload: CausalPageObservationBatch;
+    }
+  | {
+      v: 1;
+      type: 'USER_INTENT_ENVELOPE';
+      navigationId: string;
+      payload: UserIntentEnvelope;
     }
   | {
       v: 1;

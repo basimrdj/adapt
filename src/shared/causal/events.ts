@@ -35,6 +35,9 @@ export type OpaqueRef =
   | `request:r${number}`
   | `resource:res${number}`
   | `frame:f${number}`
+  | `intent:i${number}`
+  | `navigation:n${number}`
+  | `primitive:p${number}`
   | `strategy:s${number}`
   | `hypothesis:h${number}`
   | `experiment:x${number}`
@@ -57,6 +60,20 @@ export type EventKind =
   | 'CONTENT_VISIBILITY_CHANGED'
   | 'CONTENT_HEIGHT_CHANGED'
   | 'BAIT_STATE_CHANGED'
+  | 'USER_INTENT'
+  | 'ANTI_BLOCK_REACTION'
+  | 'SEMANTIC_GATE'
+  | 'INTERACTION_DENIED'
+  | 'PLAYBACK_OBSTRUCTED'
+  | 'VISIBLE_AD_CANDIDATE'
+  | 'UNEXPECTED_NAV_TARGET'
+  | 'POPUP_OR_POPUNDER'
+  | 'SUSPICIOUS_REDIRECT_CHAIN'
+  | 'WINDOW_OPEN_REACTION'
+  | 'NAVIGATION_BOUNCE'
+  | 'NETWORK_PROBE_REACTION'
+  | 'REPEATED_REINSERTION'
+  | 'UNKNOWN_REACTION'
   | 'HEALTH_SNAPSHOT'
   | 'EXPERIMENT_STAGE'
   | 'EXPERIMENT_COMMIT'
@@ -72,7 +89,11 @@ export type EventProvenance =
   | 'healthVector'
   | 'transactionEngine'
   | 'recipeEngine'
-  | 'labCDP';
+  | 'labCDP'
+  | 'semanticObserver'
+  | 'navigationIntent'
+  | 'windowApi'
+  | 'autonomyLab';
 
 export interface EventNode {
   id: `event:${string}`;
@@ -131,7 +152,12 @@ export interface EventEdge {
 export interface CausalHypothesis {
   id: `hypothesis:h${number}`;
   causeRefs: OpaqueRef[];
-  outcome: 'PAGE_BREAKAGE' | 'ANTI_BLOCK_REACTION' | 'PRIVACY_REGRESSION';
+  outcome:
+    | 'PAGE_BREAKAGE'
+    | 'ANTI_BLOCK_REACTION'
+    | 'PRIVACY_REGRESSION'
+    | 'UNWANTED_NAVIGATION'
+    | 'INTERACTION_BLOCKED';
   mechanismClass:
     | 'BLOCKED_RESOURCE_PROBE'
     | 'BAIT_VISIBILITY_PROBE'
@@ -140,6 +166,12 @@ export interface CausalHypothesis {
     | 'SCROLL_LOCK_REACTION'
     | 'SERVICE_WORKER_CACHE_PATH'
     | 'SCRIPT_ORDER_DEPENDENCY'
+    | 'UNKNOWN_NETWORK_REACTION'
+    | 'UNKNOWN_SCRIPT_REACTION'
+    | 'UNKNOWN_DOM_REACTION'
+    | 'UNKNOWN_NAVIGATION_REACTION'
+    | 'UNKNOWN_PLAYER_REACTION'
+    | 'UNKNOWN_MIXED_REACTION'
     | 'UNKNOWN';
   prior: number;
   posterior: number;

@@ -43,6 +43,7 @@ export const STORAGE_KEYS = {
   CAUSAL_EXPERIMENTS: 'adapt_causal_experiments_v1',
   CAUSAL_SESSION_STATE: 'adapt_causal_session_state_v1',
   CAUSAL_RECIPES: 'adapt_causal_recipes_v1',
+  AUTONOMY_STATE: 'adapt_autonomy_state_v1',
   SETTINGS: 'adapt_settings_v1',
   AUDIT_LOGS: 'adapt_audit_logs_v1',
   SCHEMA_VERSION: 'adapt_schema_version',

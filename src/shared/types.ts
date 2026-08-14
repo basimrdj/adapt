@@ -196,8 +196,63 @@ export interface GeometrySignal {
 
 export interface SemanticSignal {
   detectedPhrases: string[];
+  /** Coarse semantic categories; raw page text is never emitted. */
+  categories?: Array<
+    | 'ANTI_BLOCK_INSTRUCTION'
+    | 'AD_REVENUE_APPEAL'
+    | 'PLAYBACK_GATE'
+    | 'INTERACTION_DENIAL'
+    | 'BENIGN_CONSENT'
+    | 'BENIGN_NEWSLETTER'
+    | 'BENIGN_LOGIN'
+    | 'BENIGN_PAYWALL'
+    | 'UNKNOWN_SEMANTIC_REACTION'
+  >;
+  featureHash?: string;
   adblockKeywordDensity: number;
   confidenceScore: number;
+}
+
+export type InteractionType = 'click' | 'pointerup' | 'keyboard-activate';
+export type ElementSemanticRole = 'link' | 'button' | 'media-control' | 'unknown';
+export type DestinationClass =
+  | 'same-origin'
+  | 'cross-origin'
+  | 'download'
+  | 'oauth-like'
+  | 'payment-like'
+  | 'document'
+  | 'unknown';
+
+export interface UserIntentEnvelope {
+  ref: `intent:i${number}`;
+  documentMonotonicMs: number;
+  capturedWallMs: number;
+  elementRef: `element:e${number}`;
+  elementRole: ElementSemanticRole;
+  declaredDestinationClass: DestinationClass;
+  button: number;
+  modifiers: string[];
+  interactionType: InteractionType;
+  navigationReasonablyExpected: boolean;
+  sourceOriginHash: string;
+}
+
+export interface NavigationTargetObservation {
+  ref: `navigation:n${number}`;
+  sourceTabId: number;
+  sourceFrameId: number;
+  targetTabId: number;
+  capturedWallMs: number;
+  sourceOriginHash: string;
+  destinationOriginHash: string;
+  destinationClass: DestinationClass;
+  redirectCount: number;
+  foregroundState: 'foreground' | 'background' | 'unknown';
+  openerRelationship: 'explicit' | 'implicit' | 'unknown';
+  recentIntentRef?: `intent:i${number}`;
+  recentIntentAgeMs?: number;
+  riskSignals: string[];
 }
 
 export interface InteractionSignal {
@@ -221,6 +276,7 @@ export interface PageSignalBatch {
   interaction: InteractionSignal;
   mutation: MutationSignal;
   suspectedDetectorTypes: string[];
+  anomalyCategories?: string[];
 }
 
 export interface OpaqueElementObservation {
@@ -234,6 +290,7 @@ export interface CausalPageObservationBatch {
   timestamp: number;
   pageSignals: PageSignalBatch;
   elements: OpaqueElementObservation[];
+  intents?: UserIntentEnvelope[];
 }
 
 export interface AuditEvent {

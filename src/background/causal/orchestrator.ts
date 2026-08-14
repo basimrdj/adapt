@@ -12,7 +12,7 @@ import {
   OpaqueRef,
 } from '../../shared/causal/events';
 import { ExperimentSelectionBudget } from '../../shared/causal/experiments';
-import { CausalPageObservationBatch, HealthVector, StrategyAction } from '../../shared/types';
+import { CausalPageObservationBatch, HealthVector, NavigationTargetObservation, StrategyAction, UserIntentEnvelope } from '../../shared/types';
 import {
   checkFingerprint,
   CausalRecipeLifecycle,
@@ -32,8 +32,39 @@ import { CausalSessionStateRepository } from './session-state';
 import { ResolvedNetworkTarget, StrategyResolutionContext } from './experiment-to-strategy';
 import { CausalRecipeStore, PromotionEvaluateInput, PromotionGate } from './promotion-gate';
 import { verifyHealthOutcome } from '../../core/health/compare';
+import { generateHypothesisLattice } from '../autonomy/hypothesis-lattice';
+import { AutonomousExperiment, AutonomousExperimentLoop } from '../autonomy/saei';
+import { PrimitiveId } from '../autonomy/primitive-registry';
 
 const TRACKER_LIKE = /(^|[.-])(ads?|analytics|beacon|pixel|track(er|ing)?)([.-]|$)/i;
+
+function primitiveVariable(primitive: PrimitiveId): import('../../shared/causal/experiments').AllowedInterventionVariable | null {
+  switch (primitive) {
+    case 'TEMPORARY_NETWORK_ALLOW': return 'temp_network_exception';
+    case 'PRESERVE_BAIT': return 'preserve_bait_geometry';
+    case 'REMOVE_REACTION_UI':
+    case 'RESTORE_LAYOUT':
+    case 'TOGGLE_COSMETIC_ACTION': return 'remove_overlay_gate';
+    case 'RESTORE_SCROLL':
+    case 'RESTORE_POINTER_INTERACTION':
+    case 'PLAYER_HEALTH_RECOVERY': return 'restore_scroll';
+    default: return null;
+  }
+}
+
+function primitiveStrategyRef(primitive: PrimitiveId): OpaqueRef | null {
+  switch (primitive) {
+    case 'TEMPORARY_NETWORK_ALLOW': return 'strategy:s1';
+    case 'PRESERVE_BAIT': return 'strategy:s4';
+    case 'REMOVE_REACTION_UI':
+    case 'RESTORE_LAYOUT':
+    case 'TOGGLE_COSMETIC_ACTION': return 'strategy:s2';
+    case 'RESTORE_SCROLL':
+    case 'RESTORE_POINTER_INTERACTION':
+    case 'PLAYER_HEALTH_RECOVERY': return 'strategy:s3';
+    default: return null;
+  }
+}
 
 function compactScore(h: HealthVector): number {
   return (
@@ -135,6 +166,8 @@ export class CausalOrchestrator {
   private readonly attemptedMechanisms = new Map<string, Set<CausalHypothesis['mechanismClass']>>();
   private readonly lastFingerprints = new Map<string, PageFingerprint>();
   private readonly lastBatches = new Map<string, CausalPageObservationBatch['pageSignals']>();
+  private readonly autonomyLoops = new Map<string, AutonomousExperimentLoop>();
+  private readonly pendingAutonomy = new Map<string, AutonomousExperiment>();
 
   constructor(private readonly deps: CausalOrchestratorDeps) {
     this.normalizer = new EventNormalizer(deps.registry);
@@ -161,7 +194,51 @@ export class CausalOrchestrator {
     if (!key) return;
     const graph = this.deps.graphs.getOrCreate(key, node.scope.originHash);
     this.deps.graphs.append(node);
+    if (raw.type === 'error') {
+      this.deps.graphs.append(nowNode(key, graph.scope.originHash, 'NETWORK_PROBE_REACTION', node.refs, {
+        resourceType: raw.resourceType ?? null,
+        errorClass: raw.error ? 'REQUEST_ERROR' : 'UNKNOWN',
+      }, 'webRequest', raw.timeStamp ?? Date.now()));
+    }
     this.candidates.update(graph);
+    await this.deps.session.persist();
+  }
+
+  async onIntentEnvelope(tabId: number, frameId: number, envelope: UserIntentEnvelope): Promise<void> {
+    const epoch = this.deps.registry.getEpoch(tabId, frameId);
+    const scope = this.deps.registry.getCausalKey(tabId, frameId);
+    if (!epoch || !scope) return;
+    const graph = this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
+    this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'USER_INTENT', [envelope.ref, envelope.elementRef], {
+      elementRole: envelope.elementRole,
+      destinationClass: envelope.declaredDestinationClass,
+      expectedNavigation: envelope.navigationReasonablyExpected,
+      interactionType: envelope.interactionType,
+      button: envelope.button,
+    }, 'navigationIntent', envelope.capturedWallMs));
+    graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
+    await this.deps.session.persist();
+  }
+
+  async onNavigationTarget(target: NavigationTargetObservation): Promise<void> {
+    const epoch = this.deps.registry.getEpoch(target.sourceTabId, target.sourceFrameId);
+    const scope = this.deps.registry.getCausalKey(target.sourceTabId, target.sourceFrameId);
+    if (!epoch || !scope) return;
+    const graph = this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
+    const kind: EventNode['kind'] = target.redirectCount > 1
+      ? 'SUSPICIOUS_REDIRECT_CHAIN'
+      : target.riskSignals.includes('NO_RECENT_INTENT') || target.riskSignals.includes('UNEXPECTED_AFTER_GESTURE')
+        ? 'UNEXPECTED_NAV_TARGET'
+        : 'POPUP_OR_POPUNDER';
+    this.deps.graphs.append(nowNode(scope, graph.scope.originHash, kind, [target.ref, ...(target.recentIntentRef ? [target.recentIntentRef] : [])], {
+      destinationClass: target.destinationClass,
+      foregroundState: target.foregroundState,
+      openerRelationship: target.openerRelationship,
+      redirectCount: target.redirectCount,
+      recentIntentAgeMs: target.recentIntentAgeMs ?? null,
+      riskSignalCount: target.riskSignals.length,
+    }, 'navigationIntent', target.capturedWallMs));
+    graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
     await this.deps.session.persist();
   }
 
@@ -197,6 +274,11 @@ export class CausalOrchestrator {
         this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'BAIT_STATE_CHANGED', [element.ref], {
           visible: element.visible,
         }, 'mutationObserver', batch.timestamp));
+        if (element.visible) {
+          this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'VISIBLE_AD_CANDIDATE', [element.ref], {
+            coverage: element.viewportCoverage,
+          }, 'mutationObserver', batch.timestamp));
+        }
       }
     }
     if (batch.pageSignals.geometry.bodyScrollLocked || batch.pageSignals.geometry.htmlScrollLocked) {
@@ -207,12 +289,60 @@ export class CausalOrchestrator {
         rate: batch.pageSignals.mutation.mutationRatePerSecond,
         overlayReinsertedCount: batch.pageSignals.mutation.overlayReinsertedCount,
       }, 'mutationObserver', batch.timestamp));
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'REPEATED_REINSERTION', [], {
+        count: batch.pageSignals.mutation.overlayReinsertedCount,
+      }, 'mutationObserver', batch.timestamp));
+    }
+
+    const categories = batch.pageSignals.semantic.categories ?? [];
+    if (categories.includes('ANTI_BLOCK_INSTRUCTION')) {
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'ANTI_BLOCK_REACTION', [], {
+        semanticCategory: 'ANTI_BLOCK_INSTRUCTION',
+        confidence: batch.pageSignals.semantic.confidenceScore,
+      }, 'semanticObserver', batch.timestamp));
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'SEMANTIC_GATE', [], {
+        category: 'ANTI_BLOCK_INSTRUCTION',
+      }, 'semanticObserver', batch.timestamp));
+    }
+    if (categories.includes('PLAYBACK_GATE')) {
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'PLAYBACK_OBSTRUCTED', [], {
+        semanticCategory: 'PLAYBACK_GATE',
+      }, 'semanticObserver', batch.timestamp));
+    }
+    if (categories.includes('INTERACTION_DENIAL') || batch.pageSignals.interaction.pointerEventsSuppressed) {
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'INTERACTION_DENIED', [], {
+        pointerSuppressed: batch.pageSignals.interaction.pointerEventsSuppressed,
+      }, 'semanticObserver', batch.timestamp));
+    }
+    if (batch.pageSignals.anomalyCategories?.includes('UNKNOWN_REACTION')) {
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'UNKNOWN_REACTION', [], {
+        categoryCount: batch.pageSignals.anomalyCategories.length,
+      }, 'semanticObserver', batch.timestamp));
+    }
+    if (batch.intents) {
+      for (const intent of batch.intents) {
+        this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'USER_INTENT', [intent.ref, intent.elementRef], {
+          elementRole: intent.elementRole,
+          destinationClass: intent.declaredDestinationClass,
+          expectedNavigation: intent.navigationReasonablyExpected,
+        }, 'navigationIntent', intent.capturedWallMs));
+      }
     }
 
     this.candidates.update(graph);
+    const hasDeterministicCausalExperiment = this.experiments.generate(graph).length > 0;
+    // Preserve the established deterministic path whenever it already has a
+    // valid intervention. SAEI expands the lattice only for unresolved cases.
+    if (!hasDeterministicCausalExperiment) {
+      graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
+    }
     await this.deps.session.persist();
     const replaying = await this.maybeReplay(graph, batch, health, epoch.url, scope);
     if (replaying) return true;
+    if (!hasDeterministicCausalExperiment) {
+      const fallbackResult = await this.deps.runFallback(tabId, epoch.navigationId, epoch.siteKey, batch.pageSignals);
+      if (fallbackResult) return true;
+    }
     return this.maybeRun(graph, epoch.siteKey, epoch.navigationId, health);
   }
 
@@ -236,6 +366,16 @@ export class CausalOrchestrator {
       frameId: state.frameIds[0] ?? 0,
     });
     if (graph) this.deps.beliefs.apply(graph, result.record, state.hypothesisId);
+    const autonomous = this.pendingAutonomy.get(txId);
+    if (autonomous) {
+      const loop = this.autonomyLoops.get(graph?.graphId ?? '');
+      loop?.recordOutcome(autonomous, {
+        resolved: result.record.status === 'COMMITTED',
+        pageHealthy: result.record.status === 'COMMITTED',
+        healthDelta: result.record.healthDelta ?? 0,
+      });
+      this.pendingAutonomy.delete(txId);
+    }
     if (graph) await this.maybeDraftOrPromote(
       graph,
       state.hypothesisId,
@@ -284,15 +424,17 @@ export class CausalOrchestrator {
       remaining: Math.max(0, graph.budgets.maxPerDocumentEpoch - graph.experiments.length),
     };
     const selected = this.selector.select(candidates, key, budget);
-    if (!selected) return false;
-    const selectedHypothesis = graph.hypotheses.find((item) => item.id === selected.hypothesisRef);
+    const autonomousSelection = selected ? null : this.autonomousSelection(graph, baselineHealth);
+    const selectedExperiment = autonomousSelection?.candidate ?? selected;
+    if (!selectedExperiment) return false;
+    const selectedHypothesis = graph.hypotheses.find((item) => item.id === selectedExperiment.hypothesisRef);
     if (!selectedHypothesis) return false;
     const maxId = this.deps.engine.getRecords().reduce((max, state) => {
       const n = Number(state.record.id.slice('experiment:x'.length));
       return Number.isFinite(n) ? Math.max(max, n) : max;
     }, 0);
-    selected.id = `experiment:x${maxId + 1}`;
-    const staged = await this.deps.engine.runCausalExperiment(selected, {
+    selectedExperiment.id = `experiment:x${maxId + 1}`;
+    const staged = await this.deps.engine.runCausalExperiment(selectedExperiment, {
       now: key,
       siteKey,
       navigationId,
@@ -300,9 +442,10 @@ export class CausalOrchestrator {
       pageFingerprint: this.lastFingerprints.get(graph.graphId),
     });
     if (staged.record.status === 'STAGED' && staged.state) {
-      attempted.add(selectedHypothesis.mechanismClass);
+      if (!autonomousSelection) attempted.add(selectedHypothesis.mechanismClass);
       this.attemptedMechanisms.set(graph.graphId, attempted);
-      await new Promise<void>((resolve) => setTimeout(resolve, Math.min(500, selected.expected.durationMs)));
+      if (autonomousSelection) this.pendingAutonomy.set(staged.state.txId, autonomousSelection.experiment);
+      await new Promise<void>((resolve) => setTimeout(resolve, Math.min(500, selectedExperiment.expected.durationMs)));
       await this.deps.sendTabMessage(graph.scope.tabId, {
         v: 1,
         type: 'REQUEST_HEALTH_SNAPSHOT',
@@ -314,6 +457,69 @@ export class CausalOrchestrator {
     // legacy fallback from racing and erasing the discriminating sequence; a
     // subsequent mutation/health batch retries after the active run settles.
     return true;
+  }
+
+  private autonomousSelection(
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    baselineHealth: HealthVector
+  ): { candidate: import('../../shared/causal/experiments').ExperimentCandidate; experiment: AutonomousExperiment } | null {
+    const loop = this.autonomyLoops.get(graph.graphId) ?? new AutonomousExperimentLoop();
+    if (!this.autonomyLoops.has(graph.graphId)) {
+      loop.start({
+        events: graph.nodes,
+        health: {
+          pageHealth: compactScore(baselineHealth),
+          contentHealth: baselineHealth.contentAvailability,
+          interactionHealth: baselineHealth.interaction,
+          privacyHealth: baselineHealth.privacyPreservation ?? 1,
+          reactionResolved: baselineHealth.antiBlockReaction < 0.2,
+        },
+        fingerprintHash: fingerprintEvidenceHash(this.lastFingerprints.get(graph.graphId) ?? createPageFingerprint({
+          originHash: graph.scope.originHash,
+          topLevelPathClass: 'unknown',
+          detectorFeatureHash: 'unknown',
+          relevantResourceSetHash: 'unknown',
+          structuralFeatureHash: 'unknown',
+        })),
+        knownRecipe: false,
+        developerHint: false,
+      });
+      this.autonomyLoops.set(graph.graphId, loop);
+    }
+    const experiment = loop.nextExperiment();
+    if (!experiment) return null;
+    const hypothesis = graph.hypotheses.find((item) => item.id === experiment.hypothesisId);
+    if (!hypothesis) return null;
+    const variable = primitiveVariable(experiment.primitiveId);
+    if (!variable) return null;
+    const strategyRef = primitiveStrategyRef(experiment.primitiveId);
+    if (!strategyRef) return null;
+    const actionRefs = [...new Set([...hypothesis.causeRefs, ...hypothesis.createdFrom].filter((ref) =>
+      !ref.startsWith('event:') && (ref.startsWith('element:') || ref.startsWith('request:') || ref.startsWith('frame:') || ref.startsWith('strategy:'))
+    ))];
+    return {
+      experiment,
+      candidate: {
+        id: experiment.id,
+        hypothesisRef: hypothesis.id,
+        intervention: { variable, actionRefs: [strategyRef, ...actionRefs], desiredValue: true },
+        scope: {
+          tabId: graph.scope.tabId,
+          navigationEpoch: graph.scope.navigationEpoch,
+          documentId: graph.scope.documentId,
+          frameIds: [...new Set(graph.nodes.map((node) => node.scope.frameId))],
+        },
+        expected: {
+          informationGain: experiment.expectedInformationGain,
+          healthRisk: experiment.expectedRisk,
+          privacyRisk: experiment.expectedPrivacyRisk,
+          rollbackConfidence: 0.99,
+          durationMs: experiment.durationMs,
+        },
+        controls: { oneVariable: true, requiresReload: false, pairedBaselineAvailable: true },
+        rollbackPlanRef: `rollback:${experiment.primitiveId}`,
+      },
+    };
   }
 
   private fingerprint(graph: ReturnType<EventGraphStore['getOrCreate']>, batch: CausalPageObservationBatch, url: string): PageFingerprint {

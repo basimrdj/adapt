@@ -15,9 +15,11 @@ import { CausalSessionStateRepository } from '../background/causal/session-state
 import { CausalEngine } from '../background/causal/causal-engine';
 import { CausalOrchestrator, CausalResourceRegistry } from '../background/causal/orchestrator';
 import { CausalRecipeStore, PromotionGate } from '../background/causal/promotion-gate';
-import { isHealthVector, isPageSignalBatch } from '../shared/guards';
+import { isHealthVector, isPageSignalBatch, isUserIntentEnvelope } from '../shared/guards';
 import { reconcilePhase31StaticRulesets } from '../background/phase31/static-rulesets';
 import { runMainScriptlet } from '../shared/main-scriptlet';
+import { IntentTracker } from '../background/autonomy/intent-tracker';
+import { classifyNavigationTarget } from '../background/autonomy/popup-classifier';
 
 const ALLOWED_MAIN_SCRIPTLETS = new Set([
   'set-constant',
@@ -120,6 +122,7 @@ const causalOrchestrator = new CausalOrchestrator({
   runFallback: (tabId, navigationId, siteKey, batch) =>
     adaptEngine.evaluateSignals(tabId, navigationId, siteKey, batch),
 });
+const intentTracker = new IntentTracker();
 const startupReady = (async () => {
   await causalSession.restore().catch(() => false);
   await adaptEngine.init();
@@ -184,6 +187,27 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
       documentId: details.documentId,
       timeStamp: details.timeStamp,
     });
+  });
+});
+
+chrome.webNavigation.onCreatedNavigationTarget.addListener((details) => {
+  void startupReady.then(async () => {
+    const sourceEpoch = navRegistry.getEpoch(details.sourceTabId, details.sourceFrameId);
+    const target = intentTracker.correlate({
+      sourceTabId: details.sourceTabId,
+      sourceFrameId: details.sourceFrameId,
+      targetTabId: details.tabId,
+      url: details.url,
+      timeStamp: details.timeStamp,
+      sourceOrigin: sourceEpoch?.origin,
+      openerRelationship: 'implicit',
+      foregroundState: 'unknown',
+    });
+    await causalOrchestrator.onNavigationTarget(target);
+    const classification = classifyNavigationTarget(target);
+    if (classification.disposition === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' && classification.confidence >= 0.85) {
+      await chrome.tabs.remove(details.tabId).catch(() => undefined);
+    }
   });
 });
 
@@ -314,6 +338,15 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
         if (handled) break;
       }
       await adaptEngine.evaluateSignals(tabId, epoch.navigationId, siteKey, message.payload);
+      break;
+    }
+
+    case 'USER_INTENT_ENVELOPE': {
+      if (!isUserIntentEnvelope(message.payload)) break;
+      const documentId = (sender as chrome.runtime.MessageSender & { documentId?: string }).documentId;
+      if (!documentId) break;
+      intentTracker.record(tabId, frameId, documentId, message.payload);
+      await causalOrchestrator.onIntentEnvelope(tabId, frameId, message.payload);
       break;
     }
 

@@ -27,7 +27,8 @@
     "test:stealth": "npm run build:full && vitest run tests/e2e/stealth.test.ts",
     "test:runtime": "vitest run tests/e2e/content-runtime-stability.test.ts",
     "benchmark:page": "tsx scripts/benchmark-page-filtering.ts",
-    "verify:phase31b": "tsx scripts/verify-phase31b.ts"
+    "verify:phase31b": "tsx scripts/verify-phase31b.ts",
+    "verify:autonomy": "tsx scripts/verify-autonomy.ts"
   },
   "devDependencies": {
     "@adguard/dnr-rulesets": "^4.2.20260813130145",

@@ -1,4 +1,4 @@
-import { HealthVector, PageSignalBatch, DomAction, StrategyCandidate, SiteRecipe } from './types';
+import { HealthVector, PageSignalBatch, DomAction, StrategyCandidate, SiteRecipe, UserIntentEnvelope } from './types';
 
 /**
  * Deep runtime schema guards to reject untrusted, malformed, or malicious messages.
@@ -82,6 +82,19 @@ export function isPageSignalBatch(val: unknown): val is PageSignalBatch {
   }
 
   return true;
+}
+
+export function isUserIntentEnvelope(val: unknown): val is UserIntentEnvelope {
+  if (!isObject(val)) return false;
+  return (
+    isString(val.ref) && /^intent:i\d+$/.test(val.ref) &&
+    isNumber(val.documentMonotonicMs) && isNumber(val.capturedWallMs) &&
+    isString(val.elementRef) && /^element:e\d+$/.test(val.elementRef) &&
+    isString(val.elementRole) && isString(val.declaredDestinationClass) &&
+    isNumber(val.button) && Array.isArray(val.modifiers) &&
+    val.modifiers.every(isString) && isString(val.interactionType) &&
+    isBoolean(val.navigationReasonablyExpected) && isString(val.sourceOriginHash)
+  );
 }
 
 export function isDomAction(val: unknown): val is DomAction {

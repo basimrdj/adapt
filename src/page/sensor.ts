@@ -15,6 +15,7 @@ import { DomActionExecutor } from './dom-actions';
 import { ContentToBackgroundMessage, BackgroundToContentMessage } from '../shared/messages';
 import { calculateHealthVector } from '../core/health/scorer';
 import { OpaqueTargetRegistry } from './opaque-targets';
+import { createIntentEnvelope } from './intent-envelope';
 
 export class PageSensor {
   private navigationId: string;
@@ -56,6 +57,24 @@ export class PageSensor {
 
     window.addEventListener('popstate', () => this.handleSpaTransition());
     window.addEventListener('hashchange', () => this.handleSpaTransition());
+    document.addEventListener(
+      'click',
+      (event) => {
+        try {
+          const intent = createIntentEnvelope(event, this.targets);
+          if (!intent) return;
+          this.sendMessage({
+            v: 1,
+            type: 'USER_INTENT_ENVELOPE',
+            navigationId: this.navigationId,
+            payload: intent,
+          });
+        } catch {
+          this.sensorFaults++;
+        }
+      },
+      true
+    );
 
     if (document.readyState === 'loading') {
       document.addEventListener(
