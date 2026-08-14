@@ -38,12 +38,6 @@ interface PageFilterMetrics {
   lastApplyMs: number;
 }
 
-declare global {
-  interface Window {
-    __adaptPageFilterMetrics?: PageFilterMetrics;
-  }
-}
-
 function safeSelector(selector: string): boolean {
   if (!selector || selector.length > 1000) return false;
   if (/[{};]/.test(selector)) return false;
@@ -83,7 +77,6 @@ export class PageFilteringRuntime {
   private readonly scriptletExceptions = new Set<string>();
 
   public init(): void {
-    window.__adaptPageFilterMetrics = this.metrics;
     this.attachObserver();
     window.addEventListener('popstate', () => this.handleNavigation());
     window.addEventListener('hashchange', () => this.handleNavigation());
@@ -179,6 +172,7 @@ export class PageFilteringRuntime {
             unsupported: 0,
             parsed: scriptlets.length,
             fullyExecutable: scriptlets.filter((rule) => rule.supported).length,
+            fullyExecutableEarly: scriptlets.filter((rule) => rule.supported && rule.early).length,
             unsupportedByName: 0,
             unsupportedByArguments: 0,
             unsafe: 0,

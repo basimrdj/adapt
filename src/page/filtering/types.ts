@@ -72,6 +72,7 @@ export interface PageFilterBundle {
     unsupported: number;
     parsed: number;
     fullyExecutable: number;
+    fullyExecutableEarly: number;
     unsupportedByName: number;
     unsupportedByArguments: number;
     unsafe: number;

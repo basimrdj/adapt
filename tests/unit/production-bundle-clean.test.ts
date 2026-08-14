@@ -2,6 +2,14 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
+function filesUnder(directory: string): string[] {
+  if (!fs.existsSync(directory)) return [];
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const file = path.join(directory, entry.name);
+    return entry.isDirectory() ? filesUnder(file) : [file];
+  });
+}
+
 describe('Production Bundle Cleanliness & Security Invariant', () => {
   const distDir = path.resolve(__dirname, '../../dist');
   const bgPath = path.join(distDir, 'background.js');
@@ -34,6 +42,26 @@ describe('Production Bundle Cleanliness & Security Invariant', () => {
       expect(bgContent).not.toContain(forbidden);
       expect(contentScriptContent).not.toContain(forbidden);
       expect(manifestContent).not.toContain(forbidden);
+    }
+  });
+
+  it('rejects page-visible extension fingerprints and branded page-world errors', () => {
+    const pageVisibleArtifacts = [
+      contentPath,
+      ...filesUnder(path.join(distDir, 'page-filtering', 'early')).filter((file) => file.endsWith('.js')),
+    ];
+    expect(pageVisibleArtifacts.length).toBeGreaterThan(0);
+    const forbidden = [
+      /__adapt/i,
+      /adapt(?:early|main|blocked|url|method)/i,
+      /ADAPT\s+blocked\s+fetch/i,
+      /ADAPT\s+scriptlet\s+abort/i,
+      /ADAPT\s+rejected\s+promise/i,
+      /data-adapt-(?:blocker|hidden)/i,
+    ];
+    for (const file of pageVisibleArtifacts) {
+      const content = fs.readFileSync(file, 'utf8');
+      for (const pattern of forbidden) expect(content).not.toMatch(pattern);
     }
   });
 });

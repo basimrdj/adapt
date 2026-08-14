@@ -20,12 +20,35 @@ function filesUnder(directory: string): string[] {
   });
 }
 
+function codeWithoutStringLiterals(source: string): string {
+  let output = '';
+  let quote = '';
+  let escaped = false;
+  for (const char of source) {
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      output += ' ';
+      continue;
+    }
+    if (char === '"' || char === "'" || char === '`') {
+      quote = char;
+      output += ' ';
+      continue;
+    }
+    output += char;
+  }
+  return output;
+}
+
 if (!existsSync(manifestPath)) fail('dist/manifest.json is missing');
 if (!existsSync(buildManifestPath)) fail('dist/phase31/BUILD-MANIFEST.json is missing');
 if (!existsSync(frequencyReportPath)) fail('unsupported scriptlet frequency report is missing');
-for (const resource of ['index.json', 'generic.json', 'domain-index.json', 'early-manifest.json', 'early-runtime.js']) {
+for (const resource of ['index.json', 'generic.json', 'domain-index.json', 'early-manifest.json']) {
   if (!existsSync(join(pageDir, resource))) fail(`page filtering artifact is missing: ${resource}`);
 }
+if (existsSync(join(pageDir, 'early-runtime.js'))) fail('page filtering early runtime bridge must not be packaged');
 if (!existsSync(join(pageDir, 'domains')) || !existsSync(join(pageDir, 'early'))) fail('page filtering shard directories are missing');
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
@@ -61,10 +84,14 @@ if (domainFiles.length < 2 || Object.keys(domainIndex).length < domainFiles.leng
 const earlyManifest = JSON.parse(readFileSync(join(pageDir, 'early-manifest.json'), 'utf8')) as Array<{ file?: string; matches?: string[] }>;
 if (!Array.isArray(earlyManifest)) fail('early scriptlet manifest is not an array');
 if (earlyManifest.some((entry) => !entry.file || !entry.matches?.length)) fail('early scriptlet manifest contains an incomplete registration');
+const staticEarlyEntries = (JSON.parse(readFileSync(manifestPath, 'utf8')) as { content_scripts?: Array<{ js?: unknown; run_at?: unknown; world?: unknown }> }).content_scripts?.filter((entry) => Array.isArray(entry.js) && (entry.js as unknown[]).some((value) => String(value).startsWith('page-filtering/early/'))) || [];
+if (staticEarlyEntries.length !== earlyManifest.length) fail('static early manifest registrations do not reconcile with generated early shards');
+if (new Set(staticEarlyEntries.flatMap((entry) => Array.isArray(entry.js) ? entry.js.map(String) : [])).size !== staticEarlyEntries.length) fail('early shard is registered more than once');
 
 for (const file of filesUnder(pageDir).filter((entry) => entry.endsWith('.js'))) {
   const content = readFileSync(file, 'utf8');
-  if (/\beval\s*\(/.test(content) || /\bnew\s+Function\s*\(/.test(content)) fail(`unsafe dynamic code found in ${file}`);
+  const code = codeWithoutStringLiterals(content);
+  if (/\beval\s*\(/.test(code) || /\bnew\s+Function\s*\(/.test(code)) fail(`unsafe dynamic code found in ${file}`);
 }
 for (const scriptlet of generic.scriptlets || []) {
   if (scriptlet.supported && scriptlet.world === 'MAIN' && !['set-constant', 'abort-current-inline-script', 'abort-on-property-read', 'abort-on-property-write', 'prevent-fetch', 'prevent-xhr', 'prevent-setTimeout', 'prevent-eval-if', 'prevent-window-open', 'json-prune'].includes(scriptlet.name || '')) {

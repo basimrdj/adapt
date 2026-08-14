@@ -8,10 +8,30 @@
   <div id="probe-results"></div>
 
   <script>
+    const knownPlatformKeys = new Set(['GPUAdapter', 'GPUAdapterInfo']);
+    const markerKeys = (value) => Object.getOwnPropertyNames(value).filter((key) => /adapt/i.test(key) && !knownPlatformKeys.has(key));
+    const descriptorMarkers = (value) => markerKeys(value).map((key) => ({ key, descriptor: Object.getOwnPropertyDescriptor(value, key) }));
+    const xhr = new XMLHttpRequest();
+    const probeNode = document.createElement('div');
+    const markerKeysByObject = {
+      window: markerKeys(window),
+      globalThis: markerKeys(globalThis),
+      windowDescriptors: descriptorMarkers(window),
+      globalThisDescriptors: descriptorMarkers(globalThis),
+      xhrPrototype: markerKeys(XMLHttpRequest.prototype),
+      xhrInstance: markerKeys(xhr),
+      domNode: markerKeys(probeNode)
+    };
+    const brandedErrors = [];
+    for (const candidate of [window.__last_error__, window.__error__, window.__rejection__]) {
+      if (candidate instanceof Error && /adapt/i.test(candidate.message || '')) brandedErrors.push(candidate.message);
+    }
     const results = {
       windowAdaptGlobal: typeof window.ADAPT !== 'undefined',
-      windowCustomGlobals: Object.keys(window).filter(k => k.toLowerCase().includes('adapt')),
-      domMarkersFound: document.querySelectorAll('[data-adapt-blocker], [data-adapt-hidden]').length > 0
+      windowCustomGlobals: markerKeysByObject.window,
+      markerKeysByObject,
+      brandedErrors,
+      domMarkersFound: document.querySelectorAll('[data-adapt-blocker], [data-adapt-hidden], [id*="adapt" i], [class*="adapt" i]').length > 0
     };
 
     window.__fingerprint_probe_results = results;

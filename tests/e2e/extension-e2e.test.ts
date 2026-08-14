@@ -219,6 +219,8 @@ describe('ADAPT Extension Phase 1.5 Adversarial Laboratory Suite', () => {
     const probeResults = await page.evaluate(() => (window as any).__fingerprint_probe_results);
     expect(probeResults.windowAdaptGlobal).toBe(false);
     expect(probeResults.windowCustomGlobals).toHaveLength(0);
+    expect(Object.values(probeResults.markerKeysByObject).flat().filter((value: any) => typeof value === 'string' || value?.key)).toHaveLength(0);
+    expect(probeResults.brandedErrors).toHaveLength(0);
     expect(probeResults.domMarkersFound).toBe(false);
     await page.close();
   });

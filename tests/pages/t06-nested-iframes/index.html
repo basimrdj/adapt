@@ -19,11 +19,11 @@
 
   <script>
     const sub = document.getElementById('subframe');
-    sub.contentDocument.write('<h2>Subframe Level 1</h2><p>Subframe content</p>');
+    sub.contentDocument.write('<h2>Subframe Level 1</h2><p id="frame-content">Subframe content</p><div class="ad-slot-wrapper">Nested advertisement</div><iframe srcdoc="<p id=\'frame-content\'>Nested content</p><div class=\'ad-slot-wrapper\'>Deep advertisement</div>"></iframe>');
     sub.contentDocument.close();
 
     const sand = document.getElementById('sandboxed-frame');
-    sand.srcdoc = '<h3>Sandboxed Frame</h3><p>Sandboxed content</p>';
+    sand.srcdoc = '<h3>Sandboxed Frame</h3><p id="frame-content">Sandboxed content</p><div class="ad-slot-wrapper">Sandboxed advertisement</div>';
     window.__frames_loaded = true;
   </script>
 </body>

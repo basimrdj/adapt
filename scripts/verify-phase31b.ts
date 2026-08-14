@@ -23,8 +23,18 @@ function readArtifact<T>(name: string): T {
 }
 
 function validateEvidence(): Record<string, unknown> {
-  const adversarial = readArtifact<{ total: number; passed: number; failed: number }>('adversarial-results.json');
+  const adversarial = readArtifact<{
+    total: number;
+    passed: number;
+    failed: number;
+    results?: Array<{ id: string; pass: boolean; resultClass?: string }>;
+    classCounts?: Record<string, number>;
+  }>('adversarial-results.json');
   if (adversarial.total !== 30 || adversarial.passed !== 30 || adversarial.failed !== 0) throw new Error(`adversarial corpus evidence is ${adversarial.passed}/${adversarial.total}`);
+  if (!adversarial.results || adversarial.results.length !== 30 || adversarial.results.some((result) => !result.pass || !result.resultClass)) throw new Error('adversarial evidence is missing executable result classifications');
+  const corpus = JSON.parse(readFileSync(join(root, 'tests/fixtures/phase31b/adversarial-corpus.json'), 'utf8')) as Array<{ id: string; category: string; negativeControl: boolean }>;
+  const categories = new Map(corpus.map((entry) => [entry.id, entry]));
+  if (adversarial.results.some((result) => result.resultClass === 'PRESENCE_ONLY' && categories.get(result.id)?.category === 'anti-adblock')) throw new Error('anti-adblock success is being counted from a presence-only scenario');
   const benchmark = readArtifact<{ baselineIndexBytes: number; afterIndexBytes: number; perFrameBytes: number; perFrameParseMs: number; mutationBenchmarkMs: number; noFullBundleParsePerFrame: boolean }>('page-filter-benchmark.json');
   if (!benchmark.noFullBundleParsePerFrame || benchmark.afterIndexBytes >= 4096 || benchmark.perFrameBytes >= 14_000_000) throw new Error('page-filter benchmark exceeded startup/per-frame bounds');
   const buildManifest = readArtifact<{ pagePlane?: { scriptletRules?: number; supportedScriptletRules?: number; scriptletCoverage?: Record<string, number> } }>(join('..', '..', 'dist/phase31/BUILD-MANIFEST.json'));

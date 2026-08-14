@@ -107,6 +107,16 @@ const EXECUTABLE_SCRIPTLETS = new Set([
   'set-constant',
 ]);
 
+const EARLY_SCRIPTLETS = new Set([
+  'set-constant',
+  'abort-current-inline-script',
+  'abort-on-property-read',
+  'abort-on-property-write',
+  'prevent-setTimeout',
+  'prevent-eval-if',
+  'json-prune',
+]);
+
 function stableId(value: string): string {
   return createHash('sha256').update(value).digest('hex').slice(0, 16);
 }
@@ -217,7 +227,7 @@ function validateScriptlet(name: string, args: string[], scope: DomainScope): Sc
   const isolated = name === 'remove-attr' || name === 'remove-class' || name === 'remove-node-attr' || name === 'remove-node-text';
   const world: ScriptletWorld = isolated ? 'ISOLATED' : 'MAIN';
   const lifecycle: ScriptletLifecycle = isolated ? 'REAPPLY_ON_MUTATION' : name === 'set-constant' ? 'PERSISTENT_MAIN_WORLD' : 'ONE_SHOT_MAIN_WORLD';
-  const early = world === 'MAIN' && scope.domains.length > 0;
+  const early = world === 'MAIN' && scope.domains.length > 0 && EARLY_SCRIPTLETS.has(name);
 
   if (!EXECUTABLE_SCRIPTLETS.has(name)) {
     return { world, lifecycle, early: false, status: 'unsupported-by-name', reason: `scriptlet '${name}' is known but not implemented in the audited runtime` };
@@ -371,7 +381,11 @@ export function parseFilterLists(sources: FilterSource[], generatedAt = new Date
         const scope = splitDomains(line.slice(0, scriptletExceptionIndex));
         const parsed = parseScriptlet(line.slice(scriptletExceptionIndex + 4));
         if (!parsed) unsupported.push({ kind: 'scriptlet', sourceFilterId: source.id, line, reason: 'invalid scriptlet exception syntax' });
-        else exceptions.push({ selector: '', ...scope, scriptletName: parsed.name, scriptletArgs: parsed.args, sourceFilterId: source.id });
+        else {
+          const validation = validateScriptlet(parsed.name, parsed.args, scope);
+          if (validation.status === 'fully-executable') exceptions.push({ selector: '', ...scope, scriptletName: parsed.name, scriptletArgs: parsed.args, sourceFilterId: source.id });
+          else unsupported.push({ kind: 'scriptlet', sourceFilterId: source.id, line, reason: `scriptlet exception is not compatible with the audited runtime: ${validation.reason || validation.status}` });
+        }
         continue;
       }
 
@@ -392,8 +406,11 @@ export function parseFilterLists(sources: FilterSource[], generatedAt = new Date
         const scope = splitDomains(line.slice(0, cosmeticExceptionIndex));
         const selector = line.slice(cosmeticExceptionIndex + 3).trim();
         const parsed = parseScriptlet(selector);
-        if (parsed) exceptions.push({ selector: '', ...scope, scriptletName: parsed.name, scriptletArgs: parsed.args, sourceFilterId: source.id });
-        else exceptions.push({ selector, ...scope, sourceFilterId: source.id });
+        if (parsed) {
+          const validation = validateScriptlet(parsed.name, parsed.args, scope);
+          if (validation.status === 'fully-executable') exceptions.push({ selector: '', ...scope, scriptletName: parsed.name, scriptletArgs: parsed.args, sourceFilterId: source.id });
+          else unsupported.push({ kind: 'scriptlet', sourceFilterId: source.id, line, reason: `scriptlet exception is not compatible with the audited runtime: ${validation.reason || validation.status}` });
+        } else exceptions.push({ selector, ...scope, sourceFilterId: source.id });
         continue;
       }
 
@@ -415,6 +432,7 @@ export function parseFilterLists(sources: FilterSource[], generatedAt = new Date
   const exceptionSuppressed = exceptions.filter((exception) => exception.scriptletName).length;
   const parsed = scriptlets.length + exceptionSuppressed;
   const fullyExecutable = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'fully-executable').length;
+  const fullyExecutableEarly = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'fully-executable' && scriptlet.early).length;
   const unsupportedByName = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'unsupported-by-name').length;
   const unsupportedByArguments = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'unsupported-by-arguments').length;
   const unsafe = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'unsafe').length;
@@ -437,6 +455,7 @@ export function parseFilterLists(sources: FilterSource[], generatedAt = new Date
       unsupported: unsupported.length,
       parsed,
       fullyExecutable,
+      fullyExecutableEarly,
       unsupportedByName,
       unsupportedByArguments,
       unsafe,

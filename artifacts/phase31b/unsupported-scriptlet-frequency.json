@@ -1,8 +1,8 @@
 {
   "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-  "generatedAt": "2026-08-13T21:21:17.584Z",
-  "totalScriptletRules": 7631,
-  "unsupportedScriptletRules": 3158,
+  "generatedAt": "2026-08-14T09:47:16.155Z",
+  "totalScriptletRules": 7630,
+  "unsupportedScriptletRules": 3161,
   "entries": [
     {
       "name": "prevent-addEventListener",
@@ -30,24 +30,24 @@
     },
     {
       "name": "set-cookie",
-      "total": 337,
+      "total": 336,
       "fullyExecutable": 0,
-      "unsupported": 337,
+      "unsupported": 336,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 337,
+        "unsupported-by-name": 336,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
     },
     {
       "name": "set-local-storage-item",
-      "total": 292,
+      "total": 296,
       "fullyExecutable": 0,
-      "unsupported": 292,
+      "unsupported": 296,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 292,
+        "unsupported-by-name": 296,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
@@ -66,11 +66,11 @@
     },
     {
       "name": "set-constant",
-      "total": 1345,
-      "fullyExecutable": 1179,
+      "total": 1343,
+      "fullyExecutable": 1177,
       "unsupported": 166,
       "statuses": {
-        "fully-executable": 1179,
+        "fully-executable": 1177,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
         "unsafe": 165
@@ -366,11 +366,11 @@
     },
     {
       "name": "abort-current-inline-script",
-      "total": 697,
-      "fullyExecutable": 688,
+      "total": 696,
+      "fullyExecutable": 687,
       "unsupported": 9,
       "statuses": {
-        "fully-executable": 688,
+        "fully-executable": 687,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 9,
         "unsafe": 0
@@ -426,11 +426,11 @@
     },
     {
       "name": "prevent-setTimeout",
-      "total": 477,
-      "fullyExecutable": 469,
+      "total": 476,
+      "fullyExecutable": 468,
       "unsupported": 8,
       "statuses": {
-        "fully-executable": 469,
+        "fully-executable": 468,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 8,
         "unsafe": 0

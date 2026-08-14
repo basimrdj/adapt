@@ -1,158 +1,193 @@
 {
-  "schema": "adapt-phase31b-adversarial-v2",
+  "schema": "adapt-phase31b-adversarial-v3",
   "total": 30,
   "passed": 30,
   "failed": 0,
+  "classCounts": {
+    "BLOCKING_PASS": 22,
+    "NEGATIVE_CONTROL_PASS": 5,
+    "LIFECYCLE_PASS": 3
+  },
   "results": [
     {
       "id": "network-ad-request",
       "pass": true,
-      "durationMs": 5140
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1035
     },
     {
       "id": "generic-cosmetic-ad",
       "pass": true,
-      "durationMs": 1149
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1402
     },
     {
       "id": "domain-specific-cosmetic",
       "pass": true,
-      "durationMs": 1
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 2
     },
     {
       "id": "cosmetic-exception",
       "pass": true,
+      "resultClass": "BLOCKING_PASS",
       "durationMs": 1
     },
     {
       "id": "specific-generic-rule",
       "pass": true,
+      "resultClass": "BLOCKING_PASS",
       "durationMs": 0
     },
     {
       "id": "extended-css-target",
       "pass": true,
-      "durationMs": 0
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1
     },
     {
       "id": "procedural-has-text",
       "pass": true,
-      "durationMs": 1
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 0
     },
     {
       "id": "scriptlet-target",
       "pass": true,
-      "durationMs": 0
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1
     },
     {
       "id": "scriptlet-exception",
       "pass": true,
+      "resultClass": "BLOCKING_PASS",
       "durationMs": 0
     },
     {
       "id": "main-world-detector",
       "pass": true,
-      "durationMs": 0
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1
     },
     {
       "id": "offset-height-bait",
       "pass": true,
-      "durationMs": 1481
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1470
     },
     {
       "id": "bounding-rect-bait",
       "pass": true,
-      "durationMs": 1491
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1452
     },
     {
       "id": "computed-style-bait",
       "pass": true,
-      "durationMs": 1474
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1451
     },
     {
       "id": "element-removal-detector",
       "pass": true,
-      "durationMs": 1417
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1398
     },
     {
       "id": "bait-reinsertion",
       "pass": true,
-      "durationMs": 1759
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1745
     },
     {
       "id": "timer-detection",
       "pass": true,
-      "durationMs": 1483
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1554
     },
     {
       "id": "scroll-lock-gate",
       "pass": true,
-      "durationMs": 1759
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1743
     },
     {
       "id": "pointer-events-gate",
       "pass": true,
-      "durationMs": 1758
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1743
     },
     {
       "id": "nested-frame",
       "pass": true,
-      "durationMs": 392
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 371
     },
     {
       "id": "cross-origin-frame",
       "pass": true,
-      "durationMs": 326
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 327
     },
     {
       "id": "open-shadow-dom",
       "pass": true,
-      "durationMs": 1056
+      "resultClass": "NEGATIVE_CONTROL_PASS",
+      "durationMs": 1039
     },
     {
       "id": "csp-heavy-page",
       "pass": true,
-      "durationMs": 1060
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 1053
     },
     {
       "id": "spa-route-change",
       "pass": true,
-      "durationMs": 1474
+      "resultClass": "LIFECYCLE_PASS",
+      "durationMs": 1464
     },
     {
       "id": "body-replacement",
       "pass": true,
-      "durationMs": 765
+      "resultClass": "LIFECYCLE_PASS",
+      "durationMs": 972
     },
     {
       "id": "mutation-storm",
       "pass": true,
-      "durationMs": 3183
+      "resultClass": "BLOCKING_PASS",
+      "durationMs": 3195
     },
     {
       "id": "worker-restart",
       "pass": true,
-      "durationMs": 1058
+      "resultClass": "LIFECYCLE_PASS",
+      "durationMs": 2450
     },
     {
       "id": "consent-modal",
       "pass": true,
-      "durationMs": 1060
+      "resultClass": "NEGATIVE_CONTROL_PASS",
+      "durationMs": 1043
     },
     {
       "id": "login-modal",
       "pass": true,
-      "durationMs": 764
+      "resultClass": "NEGATIVE_CONTROL_PASS",
+      "durationMs": 744
     },
     {
       "id": "paywall",
       "pass": true,
-      "durationMs": 1059
+      "resultClass": "NEGATIVE_CONTROL_PASS",
+      "durationMs": 1047
     },
     {
       "id": "benign-advertisement-text",
       "pass": true,
-      "durationMs": 1067
+      "resultClass": "NEGATIVE_CONTROL_PASS",
+      "durationMs": 1051
     }
   ]
 }

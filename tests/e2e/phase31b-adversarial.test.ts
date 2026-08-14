@@ -9,9 +9,12 @@ import { exceptionMatches, matchesDomain, scriptletExceptionMatches } from '../.
 import { runMainScriptlet } from '../../src/shared/main-scriptlet';
 import { startTestServers, TestServerInstances } from '../pages/server';
 
+type ScenarioClass = 'BLOCKING_PASS' | 'NEGATIVE_CONTROL_PASS' | 'LIFECYCLE_PASS' | 'PRESENCE_ONLY';
+
 interface ScenarioResult {
   id: string;
   pass: boolean;
+  resultClass: ScenarioClass;
   durationMs: number;
   detail?: string;
 }
@@ -48,7 +51,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
       headless: false,
       executablePath: chromeExecutable(),
       ignoreDefaultArgs: ['--disable-extensions'],
-      args: ['--headless=new', '--host-resolver-rules=MAP 1bit.space 127.0.0.1,MAP *.1bit.space 127.0.0.1', `--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
+      args: ['--headless=new', '--host-resolver-rules=MAP 1bit.space 127.0.0.1,MAP *.1bit.space 127.0.0.1,MAP kasilyrics.co.za 127.0.0.1,MAP *.kasilyrics.co.za 127.0.0.1,MAP marriedgames.com.br 127.0.0.1,MAP *.marriedgames.com.br 127.0.0.1', `--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`, '--no-sandbox'],
     });
   });
 
@@ -56,18 +59,29 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     const artifactDir = path.resolve(__dirname, '../../artifacts/phase31b');
     mkdirSync(artifactDir, { recursive: true });
     const passed = results.filter((result) => result.pass).length;
-    writeFileSync(path.join(artifactDir, 'adversarial-results.json'), `${JSON.stringify({ schema: 'adapt-phase31b-adversarial-v2', total: corpus.length, passed, failed: corpus.length - passed, results }, null, 2)}\n`);
+    const classCounts = results.reduce<Record<string, number>>((counts, result) => {
+      counts[result.resultClass] = (counts[result.resultClass] || 0) + 1;
+      return counts;
+    }, {});
+    writeFileSync(path.join(artifactDir, 'adversarial-results.json'), `${JSON.stringify({ schema: 'adapt-phase31b-adversarial-v3', total: corpus.length, passed, failed: corpus.length - passed, classCounts, results }, null, 2)}\n`);
     await browser?.close();
     await servers?.close();
   });
 
-  async function scenario(id: string, run: () => Promise<void> | void): Promise<void> {
+  function defaultClass(id: string): ScenarioClass {
+    const entry = corpus.find((candidate) => candidate.id === id);
+    if (entry?.negativeControl) return 'NEGATIVE_CONTROL_PASS';
+    if (['spa-route-change', 'body-replacement', 'worker-restart'].includes(id)) return 'LIFECYCLE_PASS';
+    return 'BLOCKING_PASS';
+  }
+
+  async function scenario(id: string, run: () => Promise<void> | void, resultClass = defaultClass(id)): Promise<void> {
     const startedAt = Date.now();
     try {
       await run();
-      results.push({ id, pass: true, durationMs: Date.now() - startedAt });
+      results.push({ id, pass: true, resultClass, durationMs: Date.now() - startedAt });
     } catch (error) {
-      results.push({ id, pass: false, durationMs: Date.now() - startedAt, detail: error instanceof Error ? error.message : String(error) });
+      results.push({ id, pass: false, resultClass, durationMs: Date.now() - startedAt, detail: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -81,8 +95,22 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
 
   it('early MAIN-world race', async () => {
     const page = await browser.newPage();
-    await page.goto('http://1bit.space:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
+    await page.goto('http://marriedgames.com.br:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
     expect(await page.evaluate(() => (window as unknown as { __early_observed?: boolean }).__early_observed)).toBe(true);
+    await page.close();
+  });
+
+  it('early abort-current-inline-script race', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://kasilyrics.co.za:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
+    expect(await page.evaluate(() => (window as unknown as { __inline_abort_caught?: boolean }).__inline_abort_caught)).toBe(true);
+    await page.close();
+  });
+
+  it('early abort-on-property-read race', async () => {
+    const page = await browser.newPage();
+    await page.goto('http://marriedgames.com.br:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
+    expect(await page.evaluate(() => (window as unknown as { __property_abort_caught?: boolean }).__property_abort_caught)).toBe(true);
     await page.close();
   });
 
@@ -210,7 +238,15 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:4060/t06-nested-iframes/index.html', { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => (window as unknown as { __frames_loaded?: boolean }).__frames_loaded === true);
-    expect(page.frames().length).toBeGreaterThanOrEqual(3);
+    const nestedFrames = page.frames().filter((frame) => frame !== page.mainFrame());
+    expect(nestedFrames.length).toBeGreaterThanOrEqual(3);
+    let contentFrames = 0;
+    for (const frame of nestedFrames) {
+      const ad = await frame.$('.ad-slot-wrapper');
+      if (ad) expect(await ad.evaluate((element) => getComputedStyle(element).display)).toBe('none');
+      if (await frame.$('#frame-content')) contentFrames += 1;
+    }
+    expect(contentFrames).toBeGreaterThanOrEqual(2);
     await page.close();
   }));
 
@@ -220,25 +256,36 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     await page.evaluate(() => {
       const frame = document.createElement('iframe');
       frame.id = 'cross-origin-fixture';
-      frame.src = 'http://localhost:4061/ad-probe.js';
+      frame.src = 'http://localhost:4061/cross-origin-fixture.html';
       document.body.appendChild(frame);
     });
     await page.waitForFunction(() => Boolean(document.querySelector('#cross-origin-fixture')));
-    expect(page.frames().length).toBeGreaterThanOrEqual(2);
+    const child = page.frames().find((frame) => frame.url().includes('cross-origin-fixture.html'));
+    expect(child).toBeDefined();
+    await child?.waitForSelector('.ad-slot-wrapper');
+    expect(await child?.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    expect(await child?.$eval('#child-content', (element) => element.textContent)).toContain('Cross-origin content survives');
     await page.close();
   }));
 
   it('open shadow DOM', async () => scenario('open-shadow-dom', async () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:4060/t07-shadow-dom/index.html', { waitUntil: 'networkidle2' });
-    expect(await page.evaluate(() => Boolean(document.querySelector('#host-element')?.shadowRoot?.querySelector('#shadow-modal')))).toBe(true);
+    expect(await page.evaluate(() => {
+      const root = document.querySelector('#host-element')?.shadowRoot;
+      const modal = root?.querySelector('#shadow-modal');
+      const ad = root?.querySelector('.ad-slot-wrapper');
+      return { mounted: Boolean(modal), adDisplay: ad ? getComputedStyle(ad).display : null, text: modal?.textContent || '' };
+    })).toEqual({ mounted: true, adDisplay: 'block', text: expect.stringContaining('Anti-Adblock') });
     await page.close();
-  }));
+  }, 'NEGATIVE_CONTROL_PASS'));
 
   it('CSP-heavy page', async () => scenario('csp-heavy-page', async () => {
     const page = await browser.newPage();
     await page.goto('http://localhost:4060/t33-csp-heavy-page/index.html', { waitUntil: 'networkidle2' });
     expect(await page.evaluate(() => (window as unknown as { __csp_fixture_loaded?: boolean }).__csp_fixture_loaded)).toBe(true);
+    expect(await page.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    expect(await page.$eval('#csp-content', (element) => element.textContent)).toContain('CSP content survives');
     await page.close();
   }));
 
@@ -273,6 +320,18 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
     await page.goto('http://localhost:4060/t21-sw-worker-page/index.html', { waitUntil: 'networkidle2' });
     await page.waitForFunction(() => (window as unknown as { __sw_registered?: boolean }).__sw_registered === true, { timeout: 10000 });
     expect(await page.evaluate(() => (window as unknown as { __cache_stored?: boolean }).__cache_stored)).toBe(true);
+    const extensionWorker = browser.targets().find((target) => target.type() === 'service_worker' && target.url().startsWith('chrome-extension://'));
+    expect(extensionWorker).toBeDefined();
+    const browserSession = await page.target().createCDPSession();
+    const targetId = (extensionWorker as unknown as { _targetId?: string })._targetId;
+    if (!targetId) throw new Error('extension service worker target id is unavailable');
+    await browserSession.send('Target.closeTarget', { targetId });
+    const restartedPage = await browser.newPage();
+    await restartedPage.goto('http://localhost:4060/t32-phase31b-lab/index.html', { waitUntil: 'networkidle2' });
+    await settle(restartedPage);
+    expect(await restartedPage.$eval('.ad-slot-wrapper', (element) => getComputedStyle(element).display)).toBe('none');
+    expect(await restartedPage.$eval('#main-content', (element) => element.textContent)).toContain('Phase 3.1B lab');
+    await restartedPage.close();
     await page.close();
   }));
 

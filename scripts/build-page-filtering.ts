@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { parseFilterLists } from '../src/page/filtering/compiler';
 import { PageFilterRule, ScriptletSupportStatus } from '../src/page/filtering/types';
@@ -84,7 +84,7 @@ function updateManifest(): void {
     use_dynamic_url: true,
   };
   const resources = Array.isArray(resourceEntry.resources) ? resourceEntry.resources.filter((value): value is string => typeof value === 'string') : [];
-  for (const resource of ['page-filtering/index.json', 'page-filtering/generic.json', 'page-filtering/domain-index.json', 'page-filtering/early-manifest.json', 'phase31-page-cosmetic.css']) {
+  for (const resource of ['page-filtering/index.json', 'page-filtering/generic.json', 'page-filtering/domain-index.json', 'phase31-page-cosmetic.css']) {
     if (!resources.includes(resource)) resources.push(resource);
   }
   resourceEntry.resources = resources;
@@ -92,9 +92,9 @@ function updateManifest(): void {
   resourceEntry.use_dynamic_url = true;
   if (!pageResources) manifest.web_accessible_resources.push(resourceEntry);
   const earlyEntries = earlyManifest.map((entry) => ({
-    matches: ['*://*/*'],
-    include_globs: entry.matches,
-    js: ['page-filtering/early-runtime.js', entry.file],
+    matches: ['http://*/*', 'https://*/*'],
+    include_globs: [...new Set(entry.matches.map((match) => `*${match.replace(/^\*:\/\/(?:\*\.)?/, '').replace(/\/\*$/, '')}*`))],
+    js: [entry.file],
     run_at: 'document_start',
     all_frames: true,
     match_about_blank: true,
@@ -131,6 +131,8 @@ if (sources.length === 0) throw new Error('validated filter cache contains no fi
 const generatedAt = new Date().toISOString();
 const bundle = parseFilterLists(sources, generatedAt);
 const genericSelectors = genericCssRules(bundle.genericRules, bundle.exceptions);
+const earlyRuntimeTemplate = readFileSync(earlyRuntimeSource, 'utf8');
+if (!earlyRuntimeTemplate.includes('__EARLY_RULES__')) throw new Error('early runtime template is missing its rules placeholder');
 
 mkdirSync(pageDir, { recursive: true });
 mkdirSync(phaseDir, { recursive: true });
@@ -217,7 +219,7 @@ for (let offset = 0; offset < sortedDomainEntries.length; offset += domainBucket
       scriptlets: data.scriptlets.map((rule) => ({ ...rule, domains: [] })),
       exceptions: data.exceptions.map((exception) => ({ ...exception, domains: [] })),
     };
-    const earlyRules = data.scriptlets.filter((rule) => rule.supported && rule.early && rule.world === 'MAIN' && rule.name === 'set-constant');
+    const earlyRules = data.scriptlets.filter((rule) => rule.supported && rule.early && rule.world === 'MAIN');
     const validEarlyDomain = !domain.includes('*') && /^[a-z0-9.-]+$/i.test(domain) && domain.length <= 253;
     domainIndex[domain] = file;
     if (validEarlyDomain) {
@@ -228,13 +230,12 @@ for (let offset = 0; offset < sortedDomainEntries.length; offset += domainBucket
   writeFileSync(join(pageDir, file), `${JSON.stringify(scopedShard)}\n`);
   if (Object.keys(earlyShard).length > 0) {
     const earlyFile = `early/${String(shardNumber).padStart(4, '0')}.js`;
-    const serializedRules = JSON.stringify(earlyShard);
-    writeFileSync(join(pageDir, earlyFile), `(() => { const state = globalThis.__adaptEarlyScriptletState__; if (!state || typeof state.apply !== 'function') return; const groups = Object.freeze(${serializedRules}); const host = location.hostname.toLowerCase(); for (const [domain, rules] of Object.entries(groups)) { if (host === domain || host.endsWith('.' + domain)) for (const rule of rules) state.apply(rule); } })();\n`);
+    writeFileSync(join(pageDir, earlyFile), `${earlyRuntimeTemplate.replace('__EARLY_RULES__', JSON.stringify(earlyShard))}\n`);
     earlyManifest.push({ file: `page-filtering/${earlyFile}`, matches: [...new Set(matches)] });
   }
 }
 
-copyFileSync(earlyRuntimeSource, join(pageDir, 'early-runtime.js'));
+rmSync(join(pageDir, 'early-runtime.js'), { force: true });
 writeFileSync(join(pageDir, 'generic.json'), `${JSON.stringify({ genericRules, scriptlets: genericScriptlets, exceptions: genericExceptions })}\n`);
 writeFileSync(join(pageDir, 'domain-index.json'), `${JSON.stringify(domainIndex)}\n`);
 writeFileSync(join(pageDir, 'early-manifest.json'), `${JSON.stringify(earlyManifest)}\n`);
@@ -274,12 +275,13 @@ const buildManifest = {
     scriptletCoverage: {
       parsed: bundle.counts.parsed,
       fullyExecutable: bundle.counts.fullyExecutable,
+      fullyExecutableEarly: bundle.counts.fullyExecutableEarly,
       unsupportedByName: bundle.counts.unsupportedByName,
       unsupportedByArguments: bundle.counts.unsupportedByArguments,
       unsafe: bundle.counts.unsafe,
       exceptionSuppressed: bundle.counts.exceptionSuppressed,
     },
-    artifacts: ['page-filtering/index.json', 'page-filtering/generic.json', 'page-filtering/domain-index.json', 'page-filtering/domains/', 'page-filtering/early-manifest.json', 'page-filtering/early-runtime.js', 'page-filtering/early/', 'phase31-page-cosmetic.css'],
+    artifacts: ['page-filtering/index.json', 'page-filtering/generic.json', 'page-filtering/domain-index.json', 'page-filtering/domains/', 'page-filtering/early/', 'phase31-page-cosmetic.css'],
     domainShardCount: shardNumber,
     indexedDomainCount: domainData.size,
     earlyDomainCount: earlyManifest.reduce((count, entry) => count + entry.matches.length / 2, 0),

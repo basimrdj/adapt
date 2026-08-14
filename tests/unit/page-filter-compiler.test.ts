@@ -69,4 +69,29 @@ describe('Phase 3.1B page filter compiler', () => {
     expect(matchesDomain('cdn.example.com', ['example.com'], ['cdn.example.com'])).toBe(false);
     expect(matchesDomain('other.test', [], [])).toBe(true);
   });
+
+  it('counts only complete descriptors and separates runtime from early execution', () => {
+    const bundle = parseFilterLists([
+      {
+        id: 7,
+        text: [
+          "example.com#%#//scriptlet('abort-on-property-read', 'detector')",
+          "example.com#%#//scriptlet('prevent-fetch', 'ads.example')",
+          "example.com#%#//scriptlet('set-constant', 'detector', 'unsupported-value')",
+          "example.com#@%#//scriptlet('prevent-fetch', 'ads.example')",
+        ].join('\n'),
+      },
+    ]);
+
+    expect(bundle.scriptlets).toEqual([
+      expect.objectContaining({ name: 'abort-on-property-read', supported: true, early: true }),
+      expect.objectContaining({ name: 'prevent-fetch', supported: true, early: false }),
+      expect.objectContaining({ name: 'set-constant', supported: false, supportStatus: 'unsupported-by-arguments', early: false }),
+    ]);
+    expect(bundle.counts.parsed).toBe(4);
+    expect(bundle.counts.fullyExecutable).toBe(2);
+    expect(bundle.counts.fullyExecutableEarly).toBe(1);
+    expect(bundle.counts.unsupportedByArguments).toBe(1);
+    expect(bundle.counts.exceptionSuppressed).toBe(1);
+  });
 });

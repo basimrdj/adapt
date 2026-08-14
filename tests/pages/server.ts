@@ -73,6 +73,9 @@ export function startTestServers(appPort = 4000, adPort = 4001): Promise<TestSer
       } else if (urlPath.includes('ad-probe.js')) {
         res.writeHead(200, { 'Content-Type': 'application/javascript' });
         res.end('window.__probe_loaded = true;');
+      } else if (urlPath.includes('cross-origin-fixture.html')) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<!doctype html><html><body><main id="child-content">Cross-origin content survives</main><div class="ad-slot-wrapper">Cross-origin advertisement</div></body></html>');
       } else {
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end('Ad Server Ok');
