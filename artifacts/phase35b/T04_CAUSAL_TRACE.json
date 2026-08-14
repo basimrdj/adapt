@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "scenario": "T04 blocked resource probe reaction",
+  "capturedAt": "2026-08-14T18:12:05.113Z",
+  "run": {
+    "startedWallMs": 1786731121894,
+    "completedWallMs": 1786731125113,
+    "elapsedMs": 3219,
+    "independentChromium": true
+  },
+  "orderedEventNodes": [
+    {
+      "order": 1,
+      "features": {
+        "antiBlockReaction": 0.85,
+        "delta": 0,
+        "networkIntegrity": 0.5,
+        "privacyPreservation": 1
+      },
+      "id": "event:mst9ktsi_1_3lw1m6cd",
+      "kind": "HEALTH_SNAPSHOT",
+      "observationConfidence": 0.9,
+      "provenance": "healthVector",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731122896
+      }
+    },
+    {
+      "order": 2,
+      "features": {
+        "benignModal": false,
+        "coverage": 1
+      },
+      "id": "event:mst9ktsi_2_puskqq8u",
+      "kind": "OVERLAY_APPEARED",
+      "observationConfidence": 0.9,
+      "provenance": "mutationObserver",
+      "refs": [
+        "element:e1"
+      ],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731122896
+      }
+    },
+    {
+      "order": 3,
+      "features": {},
+      "id": "event:mst9ktsi_3_cwk1n9bn",
+      "kind": "SCROLL_LOCK_ON",
+      "observationConfidence": 0.9,
+      "provenance": "mutationObserver",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731122896
+      }
+    },
+    {
+      "order": 4,
+      "features": {
+        "confidence": 1,
+        "semanticCategory": "ANTI_BLOCK_INSTRUCTION"
+      },
+      "id": "event:mst9ktsi_4_iiwyqs4a",
+      "kind": "ANTI_BLOCK_REACTION",
+      "observationConfidence": 0.9,
+      "provenance": "semanticObserver",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731122896
+      }
+    },
+    {
+      "order": 5,
+      "features": {
+        "category": "ANTI_BLOCK_INSTRUCTION"
+      },
+      "id": "event:mst9ktsi_5_8ctib2hl",
+      "kind": "SEMANTIC_GATE",
+      "observationConfidence": 0.9,
+      "provenance": "semanticObserver",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731122896
+      }
+    },
+    {
+      "order": 6,
+      "features": {
+        "antiBlockReaction": 0,
+        "delta": 0.5874999999999999,
+        "networkIntegrity": 0.5,
+        "privacyPreservation": 1
+      },
+      "id": "event:mst9ku6s_6_6tnjimdv",
+      "kind": "HEALTH_SNAPSHOT",
+      "observationConfidence": 0.9,
+      "provenance": "healthVector",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731122958
+      }
+    },
+    {
+      "order": 7,
+      "features": {
+        "antiBlockReaction": 0,
+        "delta": 0,
+        "networkIntegrity": 0.5,
+        "privacyPreservation": 1
+      },
+      "id": "event:mst9ku6u_7_04vr41yq",
+      "kind": "HEALTH_SNAPSHOT",
+      "observationConfidence": 0.9,
+      "provenance": "healthVector",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731123023
+      }
+    },
+    {
+      "order": 8,
+      "features": {
+        "antiBlockReaction": 0,
+        "delta": 0,
+        "networkIntegrity": 0.5,
+        "privacyPreservation": 1
+      },
+      "id": "event:mst9ku6v_8_m7p60h1g",
+      "kind": "HEALTH_SNAPSHOT",
+      "observationConfidence": 0.9,
+      "provenance": "healthVector",
+      "refs": [],
+      "scope": {
+        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "frameId": 0,
+        "navigationEpoch": 1,
+        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
+        "tabId": 1499588247
+      },
+      "timestamp": {
+        "domain": "extension.wall_ms",
+        "value": 1786731123409
+      }
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "hypothesis:h1",
+      "mechanismClass": "UNKNOWN_SCRIPT_REACTION",
+      "status": "CANDIDATE",
+      "posterior": 0.12,
+      "prior": 0.12,
+      "causeRefs": [
+        "event:mst9ktsi_4_iiwyqs4a",
+        "event:mst9ktsi_5_8ctib2hl"
+      ],
+      "createdFrom": [
+        "event:mst9ktsi_4_iiwyqs4a",
+        "event:mst9ktsi_5_8ctib2hl"
+      ],
+      "updatedByExperiments": []
+    },
+    {
+      "id": "hypothesis:h2",
+      "mechanismClass": "UNKNOWN_DOM_REACTION",
+      "status": "SUPPORTED",
+      "posterior": 0.32,
+      "prior": 0.12,
+      "causeRefs": [
+        "event:mst9ktsi_4_iiwyqs4a",
+        "event:mst9ktsi_5_8ctib2hl"
+      ],
+      "createdFrom": [
+        "event:mst9ktsi_4_iiwyqs4a",
+        "event:mst9ktsi_5_8ctib2hl"
+      ],
+      "updatedByExperiments": [
+        "experiment:x1"
+      ]
+    }
+  ],
+  "deterministicCandidates": [
+    {
+      "mechanismClass": "BLOCKED_RESOURCE_PROBE",
+      "outcome": "ANTI_BLOCK_REACTION",
+      "status": "ABSTAINED",
+      "reason": "The deterministic generator intentionally skips blocked-resource probes until bounded retry exists."
+    }
+  ],
+  "saeiCandidates": [
+    {
+      "id": "experiment:x1",
+      "hypothesisId": "hypothesis:h2",
+      "primitiveId": "REMOVE_REACTION_UI",
+      "expectedInformationGain": 0.1832,
+      "expectedRisk": 0.14,
+      "expectedPrivacyRisk": 0.01,
+      "opaqueRefs": [
+        "event:mst9ktsi_4_iiwyqs4a",
+        "event:mst9ktsi_5_8ctib2hl",
+        "element:e1"
+      ],
+      "status": "SELECTED_AND_COMMITTED"
+    }
+  ],
+  "selectedExperiment": {
+    "durationMs": 640,
+    "expectedInformationGain": 0.1832,
+    "expectedPrivacyRisk": 0.01,
+    "expectedRisk": 0.14,
+    "hypothesisId": "hypothesis:h2",
+    "id": "experiment:x1",
+    "opaqueRefs": [
+      "event:mst9ktsi_4_iiwyqs4a",
+      "event:mst9ktsi_5_8ctib2hl",
+      "element:e1"
+    ],
+    "primitiveId": "REMOVE_REACTION_UI"
+  },
+  "selectedPrimitive": "REMOVE_REACTION_UI",
+  "browserActionStaged": {
+    "transactionId": "autonomy_1499588247_1_1786731122900",
+    "primitiveId": "REMOVE_REACTION_UI",
+    "observedRefs": [
+      "event:mst9ktsi_4_iiwyqs4a",
+      "event:mst9ktsi_5_8ctib2hl",
+      "element:e1"
+    ],
+    "startedWallMs": 1786731122901
+  },
+  "healthBefore": {
+    "confidence": 1,
+    "contentAccess": 0.6,
+    "interaction": 1,
+    "mutationStability": 1,
+    "networkIntegrity": 0.5,
+    "privacyPreservation": 1,
+    "scrollability": 0.1,
+    "visualObstruction": 1
+  },
+  "healthAfter": {
+    "confidence": 0.5,
+    "contentAccess": 1,
+    "interaction": 1,
+    "mutationStability": 1,
+    "networkIntegrity": 0.5,
+    "privacyPreservation": 1,
+    "scrollability": 1,
+    "visualObstruction": 0
+  },
+  "rollbackResult": {
+    "ok": true,
+    "verified": true,
+    "status": "COMMITTED",
+    "errors": []
+  },
+  "fallbackInvocation": {
+    "invoked": false,
+    "reason": "Causal autonomy committed the primitive; legacy fallback was not invoked"
+  },
+  "elapsedTimestamps": {
+    "observationFirstWallMs": 1786731122898,
+    "experimentStartedWallMs": 1786731122901,
+    "experimentCompletedWallMs": 1786731123410,
+    "artifactCapturedWallMs": 1786731125113
+  },
+  "observedPage": {
+    "gatePresent": true,
+    "gateDisplay": "none",
+    "gateComputed": "none",
+    "bodyOverflow": "auto",
+    "contentVisible": true
+  },
+  "diagnosis": {
+    "regression": "The old path admitted partial-evidence low-risk probes and allowed concurrent autonomous staging, exhausting the bounded loop before the gate-removal primitive.",
+    "fixes": [
+      "Primitive selection now honors declared required evidence",
+      "Complete evidence coverage ranks the direct reaction primitive",
+      "Concurrent autonomous stages for one graph are suppressed"
+    ]
+  }
+}

@@ -28,6 +28,8 @@ interface TrialResult {
   secondVisitExperiments: number;
   secondVisitAiCalls: number;
   secondVisitSuccess: boolean;
+  timeToResolutionMs: number | null;
+  rollbackSuccess: boolean;
   capabilityGaps: number;
   observedEventKinds: string[];
   autonomyStatuses: string[];
@@ -212,6 +214,7 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
   let resolved = false;
   let falsePositive = false;
+  const resolutionStarted = Date.now();
   if (definition.kind === 'overlay') {
     await page.waitForFunction(() => {
       const overlay = document.querySelector('div[style*="position:fixed"]');
@@ -289,6 +292,9 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   if (definition.kind === 'popup') {
     resolved = resolved && (definition.active ? signals.interventions > 0 : true);
   }
+  const timeToResolutionMs = resolved ? Date.now() - resolutionStarted : null;
+  const rollbackSuccess = signals.interventions > 0
+    && signals.experimentDetails.every((detail) => detail.includes(':rollback-ok:'));
   return {
     id: definition.id,
     active: definition.active,
@@ -301,6 +307,8 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     secondVisitExperiments,
     secondVisitAiCalls,
     secondVisitSuccess,
+    timeToResolutionMs,
+    rollbackSuccess,
     capabilityGaps: signals.capabilityGaps,
     observedEventKinds: signals.observedEventKinds,
     autonomyStatuses: signals.autonomyStatuses,
@@ -363,7 +371,7 @@ function score(results: readonly TrialResult[], workerRestartSuccess: boolean, p
     criticalFalsePositiveCount: controls.filter((result) => result.falsePositive).length,
     medianExperiments: median(experiments) ?? 0,
     p95Experiments: percentile(experiments, 0.95),
-    medianTimeToResolution: null,
+    medianTimeToResolution: median(active.map((result) => result.timeToResolutionMs).filter((value): value is number => value !== null)),
     recipeReplaySuccessRate: active.length === 0 ? 1 : active.filter((result) => result.recipeReplay).length / active.length,
     secondVisitAiCalls: results.reduce((sum, result) => sum + result.secondVisitAiCalls, 0),
     secondVisitExperiments: results.reduce((sum, result) => sum + result.secondVisitExperiments, 0),
@@ -371,7 +379,7 @@ function score(results: readonly TrialResult[], workerRestartSuccess: boolean, p
     capabilityGapCount: results.reduce((sum, result) => sum + result.capabilityGaps, 0),
     policyAbstentionCount: 0,
     primitiveExecutionCoverage,
-    rollbackSuccessRate: active.length === 0 ? 0 : active.filter((result) => result.resolved).length / active.length,
+    rollbackSuccessRate: active.length === 0 ? 0 : active.filter((result) => result.rollbackSuccess).length / active.length,
     popupUnwantedTargetRecall: popupActive.length === 0 ? 1 : popupActive.filter((result) => result.resolved).length / popupActive.length,
     popupLegitimateTargetFalsePositiveRate: popupControls.length === 0 ? 0 : popupControls.filter((result) => result.falsePositive).length / popupControls.length,
   };

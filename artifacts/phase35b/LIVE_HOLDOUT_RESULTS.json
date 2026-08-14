@@ -1,36 +1,32 @@
 {
   "schema": "adapt-phase35b-live-browser-v1",
-  "generatedAt": "2026-08-14T16:57:07.759Z",
+  "generatedAt": "2026-08-14T18:23:50.423Z",
   "results": [
     {
       "id": "active-overlay-xmk5ce1",
       "active": true,
       "detected": true,
-      "resolved": true,
+      "resolved": false,
       "falsePositive": false,
-      "experiments": 2,
+      "experiments": 0,
       "aiCalls": 0,
       "recipeReplay": false,
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
-      "secondVisitSuccess": true,
-      "capabilityGaps": 1,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": null,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "INTERACTION_DENIED"
       ],
-      "autonomyStatuses": [
-        "RESOLVED:UNSUPPORTED_SCRIPTLET:Packaged scriptlet deactivation has no production rollback proof."
-      ],
-      "experimentDetails": [
-        "RESTORE_SCROLL:ROLLED_BACK:0.04000000000000001:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}",
-        "REMOVE_REACTION_UI:COMMITTED:0.175:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
-      ]
+      "autonomyStatuses": [],
+      "experimentDetails": []
     },
     {
       "id": "active-overlay-xdl0l4i",
@@ -38,13 +34,15 @@
       "detected": true,
       "resolved": true,
       "falsePositive": false,
-      "experiments": 2,
+      "experiments": 1,
       "aiCalls": 0,
       "recipeReplay": false,
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "capabilityGaps": 1,
+      "timeToResolutionMs": 6075,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
@@ -55,11 +53,10 @@
         "INTERACTION_DENIED"
       ],
       "autonomyStatuses": [
-        "RESOLVED:UNSUPPORTED_SCRIPTLET:Packaged scriptlet deactivation has no production rollback proof."
+        "RESOLVED:"
       ],
       "experimentDetails": [
-        "RESTORE_SCROLL:ROLLED_BACK:0.04000000000000001:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}",
-        "REMOVE_REACTION_UI:COMMITTED:0.175:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
       ]
     },
     {
@@ -74,7 +71,9 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "capabilityGaps": 3,
+      "timeToResolutionMs": null,
+      "rollbackSuccess": false,
+      "capabilityGaps": 1,
       "observedEventKinds": [
         "NAV_COMMIT",
         "UNEXPECTED_NAV_TARGET",
@@ -83,8 +82,7 @@
         "HEALTH_SNAPSHOT"
       ],
       "autonomyStatuses": [
-        "EXPLORING:NO_EXECUTOR:No reversible browser quarantine primitive is defined.",
-        "CAPABILITY_GAP:NO_EXECUTOR:No reversible browser quarantine primitive is defined.|UNRESOLVED_OPAQUE_TARGET:Navigation target is unavailable or already closed."
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
       ],
       "experimentDetails": []
     },
@@ -100,7 +98,9 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "capabilityGaps": 3,
+      "timeToResolutionMs": null,
+      "rollbackSuccess": false,
+      "capabilityGaps": 1,
       "observedEventKinds": [
         "NAV_COMMIT",
         "UNEXPECTED_NAV_TARGET",
@@ -109,8 +109,7 @@
         "HEALTH_SNAPSHOT"
       ],
       "autonomyStatuses": [
-        "EXPLORING:NO_EXECUTOR:No reversible browser quarantine primitive is defined.",
-        "CAPABILITY_GAP:NO_EXECUTOR:No reversible browser quarantine primitive is defined.|UNRESOLVED_OPAQUE_TARGET:Navigation target is unavailable or already closed."
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
       ],
       "experimentDetails": []
     },
@@ -126,13 +125,15 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
+      "timeToResolutionMs": 2339,
+      "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "USER_INTENT",
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT"
+        "HEALTH_SNAPSHOT"
       ],
       "autonomyStatuses": [],
       "experimentDetails": []
@@ -149,6 +150,8 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
+      "timeToResolutionMs": 2346,
+      "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
@@ -172,13 +175,15 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
+      "timeToResolutionMs": 2366,
+      "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "REQUEST_START",
         "REQUEST_COMPLETE",
-        "USER_INTENT",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
-        "REQUEST_START"
+        "USER_INTENT",
+        "HEALTH_SNAPSHOT"
       ],
       "autonomyStatuses": [],
       "experimentDetails": []
@@ -195,6 +200,8 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
+      "timeToResolutionMs": 2381,
+      "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
@@ -211,20 +218,20 @@
   "activeTrials": 4,
   "negativeControls": 4,
   "autonomousDetectionRate": 1,
-  "autonomousResolutionRate": 0.5,
+  "autonomousResolutionRate": 0.25,
   "falsePositiveRate": 0,
   "criticalFalsePositiveCount": 0,
-  "medianExperiments": 1,
-  "p95Experiments": 2,
-  "medianTimeToResolution": null,
+  "medianExperiments": 0,
+  "p95Experiments": 0,
+  "medianTimeToResolution": 6075,
   "recipeReplaySuccessRate": 0,
   "secondVisitAiCalls": 0,
   "secondVisitExperiments": 0,
   "workerRestartSuccessRate": 1,
-  "capabilityGapCount": 8,
+  "capabilityGapCount": 2,
   "policyAbstentionCount": 0,
   "primitiveExecutionCoverage": 0.125,
-  "rollbackSuccessRate": 0.5,
+  "rollbackSuccessRate": 0.25,
   "popupUnwantedTargetRecall": 0,
   "popupLegitimateTargetFalsePositiveRate": 0
 }

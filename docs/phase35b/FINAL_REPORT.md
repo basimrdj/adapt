@@ -219,6 +219,29 @@ verdict remains **PHASE 3.5B NOT VERIFIED**.
 
 ## Final report SHA
 
+## Continuation Update — 2026-08-14
+
+This continuation fixed the T04 regression in the production orchestration
+path. The root cause was partial-evidence SAEI ranking plus concurrent staging
+of the same graph; the loop could spend its bounded budget on scroll/layout
+probes before reaching `REMOVE_REACTION_UI`. Live selection now honors each
+primitive's declared evidence, suppresses concurrent staging, and records the
+successful run in `artifacts/phase35b/T04_CAUSAL_TRACE.json`.
+
+- T04: `20/20` independent Chromium runs passed.
+- T03/T04/T05 targeted regression: `3/3` passed.
+- Primitive-specific verification now covers scroll restoration, reaction-UI
+  removal, pointer/player safety floors, network preservation, and navigation
+  outcome contracts.
+- Pending popup closure is reconciled across same-tab source navigation and
+  stale handled navigation refs are not re-explored.
+- Latest live score: detection `1.0`, resolution `0.25`, median resolution
+  time `6075ms`, false positives `0`, worker restart `1.0`, popup recall `0`,
+  recipe replay `0`, primitive browser coverage `0.125`, rollback `0.25`.
+- Final verdict remains **PHASE 3.5B NOT VERIFIED** because popup recall,
+  recipe replay, rollback coverage, and primitive browser coverage remain below
+  hard thresholds.
+
 The final report commit SHA is supplied in the agent handoff after this file is
 committed, because a commit cannot contain its own hash without changing that
 hash.

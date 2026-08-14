@@ -8,17 +8,19 @@ real DNR/DOM/navigation change or returns a typed capability gap. On success,
 the pending mapping is persisted before the health request is sent.
 
 `onHealthSnapshot()` routes the actual content-script health vector to
-`finishAutonomous()`. `verifyHealthOutcome()` decides whether the page became
-healthier while preserving content, network integrity, privacy, and
-interaction. Successful actions commit; failed actions roll back idempotently.
+`finishAutonomous()`. `PrimitiveOutcomeVerifierRegistry` checks the selected
+primitive's observable contract together with content, network, privacy, and
+interaction safety floors. Successful actions commit; failed actions roll back
+idempotently.
 
 ## Implemented reversible path
 
 The final browser holdout exercised `RESTORE_SCROLL` and
 `REMOVE_REACTION_UI`. The latter is an atomic reversible action sequence:
-remove the authenticated overlay target and restore scroll state. The final
-recorded run committed both overlay repairs and verified rollback on the failed
-scroll-only discriminator.
+remove the authenticated overlay target and restore scroll state. T04 now
+passes `20/20`; popup close execution is staged through SAEI and reconciled
+across same-tab source navigation, but the full holdout still needs additional
+browser coverage before acceptance.
 
 ## Current gaps
 

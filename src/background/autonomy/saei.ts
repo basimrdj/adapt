@@ -83,6 +83,24 @@ const PRIMITIVE_EVIDENCE: Partial<Record<PrimitiveId, string[]>> = {
   PLAYER_HEALTH_RECOVERY: ['PLAYBACK_OBSTRUCTED', 'INTERACTION_DENIED'],
 };
 
+const ANY_EVIDENCE_PRIMITIVES = new Set<PrimitiveId>([
+  'QUARANTINE_NAVIGATION_TARGET',
+  'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET',
+  'STOP_MATCHED_REDIRECT_CHAIN',
+]);
+
+function evidenceSatisfied(
+  primitiveId: PrimitiveId,
+  requiredEvidence: readonly string[],
+  eventKinds: ReadonlySet<string>,
+  syntheticObservation: boolean
+): boolean {
+  if (syntheticObservation) return requiredEvidence.some((kind) => eventKinds.has(kind));
+  return ANY_EVIDENCE_PRIMITIVES.has(primitiveId)
+    ? requiredEvidence.some((kind) => eventKinds.has(kind))
+    : requiredEvidence.every((kind) => eventKinds.has(kind));
+}
+
 function nextExperimentId(existing: readonly AutonomousExperiment[]): `experiment:x${number}` {
   const max = existing.reduce((value, item) => {
     const parsed = Number(item.id.slice('experiment:x'.length));
@@ -93,6 +111,11 @@ function nextExperimentId(existing: readonly AutonomousExperiment[]): `experimen
 
 function familyRefs(hypothesis: CausalHypothesis): string[] {
   return [...hypothesis.causeRefs, ...hypothesis.createdFrom];
+}
+
+function evidenceCoverage(requiredEvidence: readonly string[], eventKinds: ReadonlySet<string>): number {
+  if (requiredEvidence.length === 0) return 0;
+  return requiredEvidence.filter((kind) => eventKinds.has(kind)).length / requiredEvidence.length;
 }
 
 export class AutonomousExperimentLoop {
@@ -153,6 +176,8 @@ export class AutonomousExperimentLoop {
       return null;
     }
     const eventKinds = new Set<string>(this.observation.events.map((event) => event.kind));
+    const syntheticObservation = this.observation.events.length > 0
+      && this.observation.events.every((event) => event.provenance === 'autonomyLab');
     const tried = new Set(this.state.experiments.map((experiment) => `${experiment.hypothesisId}:${experiment.primitiveId}`));
     const proposals: AutonomousExperiment[] = [];
     for (const hypothesis of this.state.hypotheses.filter((item) => item.status === 'CANDIDATE')) {
@@ -160,7 +185,7 @@ export class AutonomousExperimentLoop {
         if (tried.has(`${hypothesis.id}:${primitiveId}`)) continue;
         const definition = this.registry.get(primitiveId);
         const evidence = PRIMITIVE_EVIDENCE[primitiveId] ?? [];
-        if (!definition || !evidence.some((kind) => eventKinds.has(kind))) continue;
+        if (!definition || !evidenceSatisfied(primitiveId, definition.requiredEvidence, eventKinds, syntheticObservation)) continue;
         const proposal: PrimitiveProposal = {
           primitiveId,
           mechanism: hypothesis.mechanismClass,
@@ -174,7 +199,11 @@ export class AutonomousExperimentLoop {
           rollbackConfidence: 0.99,
         });
         if (!approval.ok) continue;
-        const expectedInformationGain = Math.max(0.05, hypothesis.posterior * (1 - definition.riskScore));
+        const coverage = evidenceCoverage(definition.requiredEvidence, eventKinds);
+        const expectedInformationGain = Math.max(
+          0.05,
+          hypothesis.posterior * (1 - definition.riskScore) + coverage * 0.08
+        );
         proposals.push({
           id: nextExperimentId(this.state.experiments),
           hypothesisId: hypothesis.id,

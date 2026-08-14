@@ -33,6 +33,7 @@ import { CausalSessionStateRepository } from './session-state';
 import { ResolvedNetworkTarget, StrategyResolutionContext } from './experiment-to-strategy';
 import { CausalRecipeStore, PromotionEvaluateInput, PromotionGate } from './promotion-gate';
 import { verifyHealthOutcome } from '../../core/health/compare';
+import { PrimitiveOutcomeVerifierRegistry } from '../autonomy/outcome-verifier';
 import { generateHypothesisLattice } from '../autonomy/hypothesis-lattice';
 import { AutonomousExperiment, AutonomousExperimentLoop } from '../autonomy/saei';
 import { AutonomyPendingState, AutonomySessionRepository, AutonomySessionSnapshot } from '../autonomy/session';
@@ -150,6 +151,8 @@ export class CausalOrchestrator {
   private readonly autonomyLoops = new Map<string, AutonomousExperimentLoop>();
   private readonly pendingAutonomy = new Map<string, PendingAutonomy>();
   private readonly pendingNavigationEvidence = new Map<number, { ref: OpaqueRef; kind: EventNode['kind']; features: EventNode['features'] }>();
+  private readonly handledNavigationRefs = new Set<string>();
+  private readonly outcomeVerifiers = new PrimitiveOutcomeVerifierRegistry();
 
   constructor(private readonly deps: CausalOrchestratorDeps) {
     this.normalizer = new EventNormalizer(deps.registry);
@@ -333,6 +336,14 @@ export class CausalOrchestrator {
     const prior = this.previousHealth.get(key);
     const delta = prior ? compactScore(health) - compactScore(prior) : 0;
     this.previousHealth.set(key, health);
+
+    const carriedNavigation = [...this.pendingAutonomy.values()].find((pending) =>
+      pending.tabId === tabId
+      && pending.frameId === frameId
+      && pending.documentId !== scope.documentId
+      && pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+    );
+    if (carriedNavigation) await this.finishAutonomous(carriedNavigation, health);
 
     this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'HEALTH_SNAPSHOT', [], {
       delta,
@@ -518,6 +529,11 @@ export class CausalOrchestrator {
   ): Promise<boolean> {
     const key = this.deps.registry.getCausalKey(graph.scope.tabId, graph.nodes[0]?.scope.frameId ?? 0);
     if (!key) return false;
+    if (graph.nodes.some((node) =>
+      (node.kind === 'UNEXPECTED_NAV_TARGET' || node.kind === 'POPUP_OR_POPUNDER')
+      && node.refs.some((ref) => this.handledNavigationRefs.has(ref))
+    )) return true;
+    if ([...this.pendingAutonomy.values()].some((pending) => pending.graphId === graph.graphId)) return true;
     const attempted = this.attemptedMechanisms.get(graph.graphId) ?? new Set<CausalHypothesis['mechanismClass']>();
     const candidates = this.experiments.generate(graph).filter((candidate) => {
       const hypothesis = graph.hypotheses.find((item) => item.id === candidate.hypothesisRef);
@@ -675,11 +691,22 @@ export class CausalOrchestrator {
     postHealth: HealthVector
   ): Promise<void> {
     const executors = this.deps.primitiveExecutors;
-    const verification = verifyHealthOutcome(pending.baseline, postHealth);
+    const verification = this.outcomeVerifiers.verify(
+      pending.experiment.primitiveId,
+      pending.baseline,
+      postHealth,
+      {
+        targetClosed: pending.execution.closedTargetUrl !== undefined,
+        redirectStopped: pending.execution.navigationRef !== undefined,
+      }
+    );
     const rollback = verification.success
       ? { ok: true, errors: [] as string[] }
       : await executors?.rollback(pending.txId) ?? { ok: false, errors: ['executor unavailable'] };
     if (verification.success) await executors?.commit(pending.txId);
+    if (verification.success && pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' && pending.execution.navigationRef) {
+      this.handledNavigationRefs.add(pending.execution.navigationRef);
+    }
 
     const record: ExperimentRecord = {
       id: pending.experiment.id,
@@ -694,7 +721,8 @@ export class CausalOrchestrator {
       policyDecisionId: `policy:autonomy:${pending.experiment.primitiveId}`,
       transactionId: pending.txId,
       rollbackVerified: rollback.ok,
-      epochStillFresh: this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.documentId === pending.documentId,
+      epochStillFresh: pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+        || this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.documentId === pending.documentId,
       visitId: pending.documentId,
       fingerprintHash: pending.fingerprint ? fingerprintEvidenceHash(pending.fingerprint) : undefined,
       privacyScore: postHealth.privacyPreservation ?? 1,
@@ -706,7 +734,7 @@ export class CausalOrchestrator {
       navigationEpoch: this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.navigationEpoch ?? 0,
       documentId: pending.documentId,
       frameId: pending.frameId,
-    });
+    }) ?? this.deps.graphs.getAll().find((item) => item.graphId === pending.graphId);
     const loop = this.autonomyLoops.get(pending.graphId);
     if (graph) {
       this.deps.beliefs.apply(graph, record, pending.experiment.hypothesisId);
