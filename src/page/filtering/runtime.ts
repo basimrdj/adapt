@@ -36,6 +36,7 @@ interface PageFilterMetrics {
   proceduralEvaluations: number;
   scriptletExecutions: number;
   lastApplyMs: number;
+  detectorBaitRulesSkipped: number;
 }
 
 function safeSelector(selector: string): boolean {
@@ -57,7 +58,7 @@ function domainCandidates(hostname: string): string[] {
 }
 
 function createMetrics(): PageFilterMetrics {
-  return { loadedArtifacts: [], loadedBytes: 0, candidateDomainKeys: [], mutationBatches: 0, proceduralEvaluations: 0, scriptletExecutions: 0, lastApplyMs: 0 };
+  return { loadedArtifacts: [], loadedBytes: 0, candidateDomainKeys: [], mutationBatches: 0, proceduralEvaluations: 0, scriptletExecutions: 0, lastApplyMs: 0, detectorBaitRulesSkipped: 0 };
 }
 
 export class PageFilteringRuntime {
@@ -177,6 +178,8 @@ export class PageFilteringRuntime {
             unsupportedByArguments: 0,
             unsafe: 0,
             exceptionSuppressed: exceptions.filter((exception) => Boolean(exception.scriptletName)).length,
+            possibleDetectorBait: 0,
+            confirmedDetectorBait: 0,
           },
         };
       } else {
@@ -241,8 +244,10 @@ export class PageFilteringRuntime {
       ...this.bundle.domainRules.filter((rule) => matchesDomain(hostname, rule.domains, rule.excludedDomains)),
     ];
     const active = allRules.filter((rule) => !exceptionMatches(hostname, rule.selector, this.bundle?.exceptions || []));
-    const css = active.filter((rule) => rule.kind === 'css' && safeSelector(rule.selector));
-    const procedural = active.filter((rule) => rule.kind !== 'css');
+    const detectorBait = active.filter((rule) => rule.detectorBait && rule.detectorBait !== 'ORDINARY_COSMETIC');
+    this.metrics.detectorBaitRulesSkipped += detectorBait.length;
+    const css = active.filter((rule) => rule.kind === 'css' && (!rule.detectorBait || rule.detectorBait === 'ORDINARY_COSMETIC') && safeSelector(rule.selector));
+    const procedural = active.filter((rule) => rule.kind !== 'css' && (!rule.detectorBait || rule.detectorBait === 'ORDINARY_COSMETIC'));
     const scriptlets = this.bundle.scriptlets.filter((rule) => {
       if (!rule.supported || !matchesDomain(hostname, rule.domains, rule.excludedDomains)) return false;
       if (this.scriptletExceptions.has(`${rule.name}|${JSON.stringify(rule.args)}`) && scriptletExceptionMatches(hostname, rule.name, rule.args, this.bundle?.exceptions || [])) return false;

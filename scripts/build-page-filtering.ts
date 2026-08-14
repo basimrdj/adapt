@@ -49,6 +49,7 @@ function genericCssRules(rules: PageFilterRule[], exceptions: ReturnType<typeof 
   const selectors = new Set<string>();
   for (const rule of rules) {
     if (rule.kind !== 'css' || rule.domains.length > 0 || !safeCssSelector(rule.selector)) continue;
+    if (rule.detectorBait && rule.detectorBait !== 'ORDINARY_COSMETIC') continue;
     const hasException = exceptions.some((exception) => !exception.scriptletName && exception.selector === rule.selector);
     if (!hasException) selectors.add(rule.selector);
   }
@@ -286,6 +287,7 @@ const buildManifest = {
     indexedDomainCount: domainData.size,
     earlyDomainCount: earlyManifest.reduce((count, entry) => count + entry.matches.length / 2, 0),
     scriptletFrequencyArtifact: 'dist/phase31/UNSUPPORTED-SCRIPTLET-FREQUENCY.json',
+    detectorSensitiveCosmeticRules: bundle.counts.possibleDetectorBait + bundle.counts.confirmedDetectorBait,
   },
   networkPlane: {
     artifacts: ['rules/baseline.json', 'phase31-rulesets/catalog.json'],
@@ -303,4 +305,5 @@ updateManifest();
 
 console.log(`PAGE FILTERING: ${JSON.stringify(bundle.counts)}`);
 console.log(`PAGE FILTERING GENERIC CSS: ${genericSelectors.length}`);
+console.log(`PAGE FILTERING DETECTOR-SENSITIVE COSMETIC: ${bundle.counts.possibleDetectorBait + bundle.counts.confirmedDetectorBait}`);
 console.log(`PAGE FILTERING MANIFEST: ${join(phaseDir, 'BUILD-MANIFEST.json')}`);

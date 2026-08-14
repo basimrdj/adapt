@@ -345,11 +345,16 @@ export class CausalOrchestrator {
     const bait = batch.elements.find((element) => element.role === 'bait-candidate')?.ref;
     const out: StrategyAction[] = [];
     for (const action of actions) {
-      if (!action.type.startsWith('DOM_')) return null;
+      const isBaitAction = action.type === 'DOM_PRESERVE_BAIT_CANDIDATE'
+        || action.type === 'BAIT_PRESERVE_LAYOUT'
+        || action.type === 'BAIT_RESTORE_VISIBILITY'
+        || action.type === 'BAIT_DISABLE_COSMETIC_HIDE'
+        || action.type === 'BAIT_PRESERVE_CHILD_STRUCTURE';
+      if (!action.type.startsWith('DOM_') && !isBaitAction) return null;
       if (action.type === 'DOM_REMOVE_OVERLAY' || action.type === 'DOM_HIDE' || action.type === 'DOM_COLLAPSE') {
         if (!overlay) return null;
         out.push({ ...action, id: `${action.id}_replay_${Date.now()}`, targetRef: overlay });
-      } else if (action.type === 'DOM_PRESERVE_BAIT_CANDIDATE') {
+      } else if (isBaitAction) {
         if (!bait) return null;
         out.push({ ...action, id: `${action.id}_replay_${Date.now()}`, targetRef: bait });
       } else {

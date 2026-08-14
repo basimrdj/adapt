@@ -35,6 +35,11 @@ export class DomActionExecutor {
     return null;
   }
 
+  private baitTargets(action: DomAction): HTMLElement[] | null {
+    if (!action.targetRef || action.selector) return null;
+    return this.targetElements(action);
+  }
+
   public applyAction(action: DomAction): boolean {
     // Deterministic recipe fast-path actions may be re-sent after an MV3
     // worker restart. Treat an already-applied action ID as an idempotent ACK
@@ -138,30 +143,35 @@ export class DomActionExecutor {
           break;
         }
 
-        case 'DOM_PRESERVE_BAIT_CANDIDATE': {
-          // Keep dummy layout bait elements dimensions without executing external scripts
-          const opaqueTargets = this.targetElements(action);
-          const baits = opaqueTargets ?? (action.selector ? Array.from(document.querySelectorAll<HTMLElement>(sanitizeCssSelector(action.selector))) : []);
-          if (baits.length > 0) {
-            baits.forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              record.mutatedElements.push({
-                element: htmlEl,
-                originalStyles: {
-                  display: htmlEl.style.display,
-                  visibility: htmlEl.style.visibility,
-                  height: htmlEl.style.height,
-                  width: htmlEl.style.width,
-                  opacity: htmlEl.style.opacity,
-                },
-              });
-              htmlEl.style.setProperty('display', 'block', 'important');
-              htmlEl.style.setProperty('visibility', 'visible', 'important');
-              htmlEl.style.setProperty('width', '1px', 'important');
-              htmlEl.style.setProperty('height', '1px', 'important');
-              htmlEl.style.setProperty('opacity', '0.01', 'important');
-            });
-          }
+        case 'DOM_PRESERVE_BAIT_CANDIDATE':
+        case 'BAIT_PRESERVE_LAYOUT':
+        case 'BAIT_RESTORE_VISIBILITY':
+        case 'BAIT_DISABLE_COSMETIC_HIDE':
+        case 'BAIT_PRESERVE_CHILD_STRUCTURE': {
+          const baits = this.baitTargets(action);
+          if (!baits) return false;
+          baits.forEach((htmlEl) => {
+            const computed = safeGetComputedStyle(htmlEl);
+            const originalStyles: Record<string, string> = {
+              display: htmlEl.style.display,
+              visibility: htmlEl.style.visibility,
+            };
+            if (action.type !== 'BAIT_PRESERVE_CHILD_STRUCTURE') {
+              originalStyles.contentVisibility = htmlEl.style.contentVisibility;
+              originalStyles.contain = htmlEl.style.contain;
+            }
+            record.mutatedElements.push({ element: htmlEl, originalStyles });
+
+            if (action.type === 'BAIT_PRESERVE_CHILD_STRUCTURE') return;
+            if (computed?.display === 'none') htmlEl.style.setProperty('display', 'revert', 'important');
+            if (computed?.visibility === 'hidden' || computed?.visibility === 'collapse') {
+              htmlEl.style.setProperty('visibility', 'revert', 'important');
+            }
+            if (action.type === 'BAIT_PRESERVE_LAYOUT') {
+              if (computed?.contentVisibility === 'hidden') htmlEl.style.setProperty('content-visibility', 'revert', 'important');
+              if (computed?.contain === 'strict' || computed?.contain === 'content') htmlEl.style.setProperty('contain', 'revert', 'important');
+            }
+          });
           break;
         }
 

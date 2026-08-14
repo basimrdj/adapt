@@ -70,6 +70,9 @@ export function startTestServers(appPort = 4000, adPort = 4001): Promise<TestSer
       if (urlPath.includes('synthetic-ad.js')) {
         res.writeHead(200, { 'Content-Type': 'application/javascript' });
         res.end('window.__ad_loaded = true; console.log("Synthetic ad script executed!");');
+      } else if (urlPath.includes('/ads/stealth-creative.js')) {
+        res.writeHead(200, { 'Content-Type': 'application/javascript' });
+        res.end('window.__stealth_ad_visible = true; document.body.dataset.adLoaded = "true";');
       } else if (urlPath.includes('ad-probe.js')) {
         res.writeHead(200, { 'Content-Type': 'application/javascript' });
         res.end('window.__probe_loaded = true;');

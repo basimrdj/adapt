@@ -1,5 +1,10 @@
 export type PageRuleKind = 'css' | 'has-text' | 'matches-css' | 'remove' | 'remove-attr';
 
+export type DetectorBaitClassification =
+  | 'ORDINARY_COSMETIC'
+  | 'POSSIBLE_DETECTOR_BAIT'
+  | 'CONFIRMED_DETECTOR_BAIT';
+
 export type ScriptletWorld = 'ISOLATED' | 'MAIN';
 
 export type ScriptletLifecycle =
@@ -25,6 +30,7 @@ export interface PageFilterRule {
   domains: string[];
   excludedDomains: string[];
   sourceFilterId: number;
+  detectorBait: DetectorBaitClassification;
 }
 
 export interface ScriptletRule {
@@ -77,5 +83,7 @@ export interface PageFilterBundle {
     unsupportedByArguments: number;
     unsafe: number;
     exceptionSuppressed: number;
+    possibleDetectorBait: number;
+    confirmedDetectorBait: number;
   };
 }

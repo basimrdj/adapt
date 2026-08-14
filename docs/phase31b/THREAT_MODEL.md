@@ -17,6 +17,25 @@ logging, ADAPT globals, arbitrary injected source, and permanent polling loops.
 Generic CSS is declarative. Runtime observation is bounded and event-driven.
 The existing redirect resources use dynamic WAR URLs when present.
 
+## Passive side-effect detection
+
+Passive side-effect detection is distinct from extension fingerprinting. A
+detector can infer blocking without observing an extension name or global by
+measuring the consequences of filtering:
+
+- Cosmetic collapse of detector bait into `display:none`.
+- Missing bait DOM nodes or changed child structure.
+- Zero `offsetHeight`, `clientHeight`, or bounding-rectangle dimensions.
+- `getComputedStyle()` differences in display or visibility.
+- Blocked resource probes, timed re-checks, and bait reinsertion.
+
+The page plane classifies conservative detector-shaped cosmetic selectors as
+possible bait and excludes them from unconditional static hiding. Network
+blocking remains active. Causal bait actions are audited, opaque-ref-only,
+document/frame scoped by the owning content runtime, reversible, and rolled
+back when health checks fail. ADAPT does not globally monkey-patch geometry or
+computed-style APIs and does not whitelist advertising requests.
+
 ## Safety model
 
 - Isolated-world scriptlets are the default.

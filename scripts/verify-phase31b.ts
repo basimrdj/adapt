@@ -37,13 +37,26 @@ function validateEvidence(): Record<string, unknown> {
   if (adversarial.results.some((result) => result.resultClass === 'PRESENCE_ONLY' && categories.get(result.id)?.category === 'anti-adblock')) throw new Error('anti-adblock success is being counted from a presence-only scenario');
   const benchmark = readArtifact<{ baselineIndexBytes: number; afterIndexBytes: number; perFrameBytes: number; perFrameParseMs: number; mutationBenchmarkMs: number; noFullBundleParsePerFrame: boolean }>('page-filter-benchmark.json');
   if (!benchmark.noFullBundleParsePerFrame || benchmark.afterIndexBytes >= 4096 || benchmark.perFrameBytes >= 14_000_000) throw new Error('page-filter benchmark exceeded startup/per-frame bounds');
-  const buildManifest = readArtifact<{ pagePlane?: { scriptletRules?: number; supportedScriptletRules?: number; scriptletCoverage?: Record<string, number> } }>(join('..', '..', 'dist/phase31/BUILD-MANIFEST.json'));
+  const buildManifest = readArtifact<{ pagePlane?: { scriptletRules?: number; supportedScriptletRules?: number; scriptletCoverage?: Record<string, number>; detectorSensitiveCosmeticRules?: number } }>(join('..', '..', 'dist/phase31/BUILD-MANIFEST.json'));
   const frequency = readArtifact<{ totalScriptletRules: number; unsupportedScriptletRules: number; entries: Array<{ name: string; unsupported: number }> }>('unsupported-scriptlet-frequency.json');
   const coverage = buildManifest.pagePlane?.scriptletCoverage || {};
   const coverageTotal = ['fullyExecutable', 'unsupportedByName', 'unsupportedByArguments', 'unsafe'].reduce((total, key) => total + (coverage[key] || 0), 0);
   if ((buildManifest.pagePlane?.scriptletRules || 0) !== coverageTotal) throw new Error('scriptlet coverage totals do not reconcile');
   if (frequency.totalScriptletRules !== buildManifest.pagePlane?.scriptletRules) throw new Error('unsupported scriptlet frequency evidence does not reconcile');
-  return { adversarial, benchmark, scriptletCoverage: coverage, scriptletRules: buildManifest.pagePlane?.scriptletRules, supportedScriptletRules: buildManifest.pagePlane?.supportedScriptletRules, unsupportedScriptletFrequency: frequency };
+  const stealth = readArtifact<{
+    total: number;
+    passed: number;
+    failed: number;
+    results?: Array<{ id: string; pass: boolean; resultClass?: string }>;
+    resultClasses?: Record<string, number>;
+    liveCanYouBlockIt?: string;
+  }>('stealth-results.json');
+  if (stealth.total !== 11 || stealth.passed !== 11 || stealth.failed !== 0) throw new Error(`stealth corpus evidence is ${stealth.passed}/${stealth.total}`);
+  if (!stealth.results || stealth.results.length !== 11 || stealth.results.some((result) => !result.pass || !result.resultClass)) throw new Error('stealth evidence is missing executable result classifications');
+  if (stealth.results.some((result) => result.resultClass === 'PRESENCE_ONLY')) throw new Error('stealth evidence contains presence-only success');
+  if (stealth.liveCanYouBlockIt !== 'NOT_OBSERVED') throw new Error('live CanYouBlockIt status must remain NOT_OBSERVED before manual acceptance');
+  if ((buildManifest.pagePlane?.detectorSensitiveCosmeticRules || 0) < 1) throw new Error('detector-sensitive cosmetic rule count is missing');
+  return { adversarial, stealth, benchmark, detectorSensitiveCosmeticRules: buildManifest.pagePlane?.detectorSensitiveCosmeticRules, scriptletCoverage: coverage, scriptletRules: buildManifest.pagePlane?.scriptletRules, supportedScriptletRules: buildManifest.pagePlane?.supportedScriptletRules, unsupportedScriptletFrequency: frequency };
 }
 
 let evidence: Record<string, unknown> | undefined;
@@ -54,6 +67,7 @@ try {
   run('Page filter compiler and index unit suite', 'npm', ['run', 'test:page']);
   run('Filter compiler and package integrity', 'npm', ['run', 'verify:phase31b:integrity']);
   run('All unit and Phase 3 regression tests', 'npm', ['run', 'test:unit']);
+  run('Passive detector-bait stealth corpus', 'npm', ['run', 'test:stealth']);
   run('30-scenario executable adversarial corpus', 'npm', ['run', 'test:anti-adblock']);
   evidence = validateEvidence();
   run('Content runtime stability regression', 'npm', ['run', 'test:runtime']);

@@ -106,6 +106,11 @@ for (const resource of manifest.web_accessible_resources || []) {
 }
 const css = manifest.content_scripts?.flatMap((entry) => Array.isArray(entry.css) ? entry.css : []) || [];
 if (!css.includes('phase31-page-cosmetic.css')) fail('page filtering CSS is not declared in content_scripts');
+const cosmeticCss = readFileSync(join(dist, 'phase31-page-cosmetic.css'), 'utf8');
+for (const selector of ['.ad-widget', '.adsbox', '.ad-banner', '#adblock', '#ads']) {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (new RegExp(`(^|[,{\\s])${escaped}(?=\\s*\\{)`).test(cosmeticCss)) fail(`detector bait selector escaped into static cosmetic CSS: ${selector}`);
+}
 if ((buildManifest.pagePlane?.supportedScriptletRules || 0) < 1) fail('no packaged scriptlet rules were produced');
 if ((buildManifest.pagePlane?.domainShardCount || 0) !== domainFiles.length) fail('build manifest shard count does not match packaged artifacts');
 const coverage = buildManifest.pagePlane?.scriptletCoverage;

@@ -1,150 +1,80 @@
 # Phase 3.1B Final Report
 
-Date: 2026-08-13 UTC  
-Branch: `feat/phase31b-page-plane`  
-PR: #2 remains open and was not merged. No commit or push was created by this run.
+Date: 2026-08-14 UTC
+Branch: `feat/phase31b-page-plane`
+PR: #2 remains open and was not merged.
+
+## Root cause
+
+CanYouBlockIt's passive detector bait was being collapsed by maintained cosmetic
+rules that rendered generic selectors as `display:none!important`. The specific
+failure mode was not a page-visible ADAPT marker or a detector-specific script;
+it was ordinary cosmetic filtering changing the bait element's natural layout,
+so its measured height became zero.
+
+## Mechanism implemented
+
+- Added typed cosmetic classification: `ORDINARY_COSMETIC`,
+  `POSSIBLE_DETECTOR_BAIT`, and `CONFIRMED_DETECTOR_BAIT`.
+- Added conservative detector-shaped selector heuristics for exact and
+  equivalent bait names; no blanket exemption for all ad-looking selectors.
+- Excluded possible/confirmed bait from unconditional static generic CSS and
+  runtime cosmetic/procedural hiding. Network/DNR blocking remains unchanged.
+- Added audited reversible bait actions: `BAIT_PRESERVE_LAYOUT`,
+  `BAIT_RESTORE_VISIBILITY`, `BAIT_DISABLE_COSMETIC_HIDE`,
+  `BAIT_PRESERVE_CHILD_STRUCTURE`, with the existing legacy bait action kept as
+  a target-scoped compatibility alias.
+- Bait actions require content-runtime-owned opaque element refs; selectors are
+  rejected by guards, causal remapping, and the DOM executor. The fallback
+  candidate generator no longer invents selectors.
+- Bait preservation restores natural author layout only when a measured hidden
+  state is present. No global geometry, computed-style, XHR, Window, or
+  prototype monkey patches were added.
+- Added production artifact checks that reject detector bait selectors in static
+  cosmetic CSS.
 
 ## Verification
 
-- Authoritative command: `ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b`
-- Verdict: `PASSED`
-- Gate count: 10
-- Typecheck: PASS
-- Unit: 151/151 tests across 32 files
-- Focused page/index tests: 8/8
-- Runtime stability: 1/1
-- Chromium E2E: 65/65 tests across 8 files
-- Bundle security: 4/4
-- Package integrity: PASS
-- Adversarial corpus: 30/30 executable scenarios
+- `ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b`: PASS.
+- Typecheck: PASS.
+- Unit suite: 154/154 tests across 32 files.
+- Full Chromium E2E suite: 69/69 tests across 9 files.
+- Existing 30-scenario adversarial corpus: 30/30, with 22
+  `BLOCKING_PASS`, 5 `NEGATIVE_CONTROL_PASS`, 3 `LIFECYCLE_PASS`, and 0
+  `PRESENCE_ONLY`.
+- Passive stealth corpus: 11/11, with 9 blocking checks and 2 negative
+  controls. The fixture covers height, `offsetHeight`, `clientHeight`,
+  `getBoundingClientRect().height`, computed display/visibility, DOM existence,
+  child structure, timed re-checks, reinsertion, blocked network probes, and a
+  hybrid detector.
+- BlockAdBlock/FuckAdBlock-style local family fixture: PASS; detector code
+  executes normally, bait remains believable, the synthetic ad script is
+  blocked, and no ad content is visible.
+- Page breakage regressions: 0 observed in the 69/69 Chromium suite.
+- Ordinary blocking regressions: 0 observed; all prior blocking and negative
+  controls remain green.
 
-## Coverage
+## Coverage and performance
 
-- Cosmetic rules: 68,185
-- Exceptions: 1,623
-- Scriptlet descriptors: 7,631
-- Parsed descriptors including scriptlet exceptions: 7,637
-- Fully executable: 4,473
-- Unsupported by name: 2,884
-- Unsupported by arguments: 49
-- Unsafe: 225
-- Exception-suppressed: 6
+- Detector-sensitive maintained cosmetic rules identified: 2,913 possible;
+  0 confirmed by causal evidence in the maintained corpus.
+- Generic cosmetic selectors emitted to static CSS: 11,718.
+- Relevant YouTube sample per-frame load: 1,784,162 bytes.
+- Relevant page-plane parse: 8.84 ms.
+- Mutation benchmark: 0.147 ms for 2,000 checks.
+- Full bundle parse per frame: no; indexed startup index remains below 4 KiB.
 
-The counts reconcile without optimistic support claims. A descriptor is counted
-as fully executable only when its name, complete argument grammar, property path,
-execution world, domain scope, and exception behavior pass compiler validation.
+## Real-world status
 
-## Indexed Page Plane
+- CanYouBlockIt live result: `NOT_OBSERVED`.
+- No detector script was blocked, hidden, spoofed, or replaced in the local
+  acceptance fixture.
+- The final live CanYouBlockIt comparison still requires a manual clean-profile
+  run: ADAPT off must report blocker OFF, and ADAPT on must still report blocker
+  OFF while ad requests remain blocked and visible ads remain absent.
+- YouTube: `NOT_OBSERVED`; no genuine live ad occurrence was tested.
 
-- Previous monolithic index: 15,022,819 bytes
-- New startup index: 412 bytes
-- Total page-filtering artifacts: 30,235,251 bytes
-- YouTube sample per-frame load: 1,760,804 bytes
-- YouTube sample parse: 10.18 ms in the final benchmark run
-- Selected indexed rules: 735
-- Domain shards: 339
-- Early shards: 337
-- Mutation lookup: 0.161 ms for 2,000 checks
-- Full 14 MB bundle parse per frame: no
+## Release status
 
-Static early registrations use hostname-filtered `include_globs`; this avoids
-the Chromium startup failure caused by parsing tens of thousands of host match
-patterns while retaining document-start MAIN-world ordering.
-
-## Early Plane
-
-- Race fixture: PASS
-- Ordering: the early MAIN-world set-constant is observed before the page's
-  extremely early inline detector
-- Exact wall-clock script execution timestamp: not instrumented; the acceptance
-  assertion is deterministic ordering, not a guessed microsecond measurement
-
-## Unsupported Demand
-
-Generated report: `artifacts/phase31b/unsupported-scriptlet-frequency.json`.
-The current maintained corpus has 3,158 unsupported descriptors. Highest demand:
-
-| Primitive | Unsupported | Total | Reason |
-|---|---:|---:|---|
-| `prevent-addEventListener` | 421 | 421 | unsupported by name |
-| `adjust-setInterval` | 348 | 348 | unsupported by name |
-| `set-cookie` | 337 | 337 | unsupported by name |
-| `set-local-storage-item` | 292 | 292 | unsupported by name |
-| `prevent-element-src-loading` | 213 | 213 | unsupported by name |
-| `adjust-setTimeout` | 165 | 165 | unsupported by name |
-| `trusted-set-local-storage-item` | 143 | 143 | unsupported by name |
-| `trusted-click-element` | 136 | 136 | unsupported by name |
-| `abort-on-stack-trace` | 130 | 130 | unsupported by name |
-| `trusted-replace-node-text` | 91 | 91 | unsupported by name |
-
-Requested high-impact primitives are audited and counted accurately. Current
-coverage includes `abort-on-property-read` 324/368, `abort-on-property-write`
-142/156, `abort-current-inline-script` 688/697, `prevent-setTimeout` 469/477,
-`prevent-eval-if` 39/40, `json-prune` 121/143, and `prevent-window-open` 478/479.
-`prevent-fetch` and `prevent-xhr` have no parsed descriptors in the current
-maintained corpus, although the audited runtime implementations are present.
-
-## Mutation And Lifecycle
-
-- DOM transformation scriptlets are classified as reapply-on-mutation or
-  element-scoped where required.
-- SPA navigation and body replacement reapply deterministically.
-- Mutation storm handling is coalesced and bounded; no unbounded polling was
-  introduced.
-- Lifecycle, frame, CSP, shadow DOM, worker restart, and negative-control rows
-  are included in the 30/30 corpus artifact.
-
-## YouTube And Real-World Validation
-
-- YouTube: `NOT OBSERVED`
-- Pre-roll: not observed
-- Mid-roll: not observed
-- Playback, seeking, volume, captions, comments, playlists, Shorts, sponsored
-  cards, and live SPA behavior: not manually validated
-- uBO Lite comparison: pending
-- AdGuard MV3 comparison: pending
-- No-blocker comparison: pending
-
-No live-site success claim is made. A genuine ad occurrence must be observed on
-a clean profile before YouTube can be marked PASS.
-
-## Licensing And Merge Recommendation
-
-The existing AdGuard build/toolchain and related data path remain an explicit
-GPL/licensing review blocker for proprietary distribution. No GPL runtime code
-was imported to implement the new primitives. The page-plane engineering gate
-is green, but the merge recommendation remains **NO for proprietary release**
-until licensing is resolved and clean-profile real-world validation is complete.
-
-## Exact Changed Files
-
-- `.github/workflows/phase31b.yml`
-- `artifacts/phase31b/FINAL_REPORT.md`
-- `artifacts/phase31b/adversarial-results.json`
-- `artifacts/phase31b/latest.json`
-- `artifacts/phase31b/page-filter-benchmark.json`
-- `artifacts/phase31b/unsupported-scriptlet-frequency.json`
-- `docs/phase31b/ARCHITECTURE.md`
-- `docs/phase31b/FINAL_VERIFICATION.md`
-- `docs/phase31b/HANDOFF.md`
-- `docs/phase31b/LICENSE_REVIEW.md`
-- `docs/phase31b/PERFORMANCE.md`
-- `docs/phase31b/REAL_WORLD_VALIDATION.md`
-- `package.json`
-- `scripts/benchmark-page-filtering.ts`
-- `scripts/build-page-filtering.ts`
-- `scripts/verify-phase31b-integrity.ts`
-- `scripts/verify-phase31b.ts`
-- `src/entrypoints/background.ts`
-- `src/page/filtering/compiler.ts`
-- `src/page/filtering/early-runtime.js`
-- `src/page/filtering/runtime.ts`
-- `src/page/filtering/types.ts`
-- `src/shared/main-scriptlet.ts`
-- `tests/e2e/phase31b-adversarial.test.ts`
-- `tests/pages/t33-csp-heavy-page/index.html`
-- `tests/pages/t34-early-race/index.html`
-- `tests/unit/main-scriptlet.test.ts`
-- `tests/unit/page-filter-compiler.test.ts`
-- `tests/unit/page-filter-index.test.ts`
-- `tests/unit/page-filter-lifecycle.test.ts`
+Do not merge PR #2. Technical local acceptance is green, but licensing review
+and the manual CanYouBlockIt/clean-profile live acceptance remain release gates.

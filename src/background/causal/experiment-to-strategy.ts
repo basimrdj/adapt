@@ -92,16 +92,20 @@ export function experimentToStrategy(
       break;
       }
     case 'preserve_bait_geometry':
+      {
+      const targetRef = selected.intervention.actionRefs.find(
+        (ref): ref is `element:e${number}` => ref.startsWith('element:e')
+      );
+      if (!targetRef) return null;
       tier = 'S2';
       name = 'Causal: preserve bait geometry';
       actions.push({
         id: `dom_bait_${selected.id}`,
         type: 'DOM_PRESERVE_BAIT_CANDIDATE',
-        targetRef: selected.intervention.actionRefs.find(
-          (ref): ref is `element:e${number}` => ref.startsWith('element:e')
-        ),
+        targetRef,
       });
       break;
+      }
     case 'remove_overlay_gate':
       tier = 'S3';
       name = 'Causal: remove overlay gate';

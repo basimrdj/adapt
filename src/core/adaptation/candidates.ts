@@ -41,27 +41,13 @@ export class StrategyCandidateGenerator {
       });
     }
 
-    // S2: Preserve Suspected Bait Element Layout (only if bait detector identified)
+    // S2 bait actions require an opaque element ref from the observation plane.
+    // This signal-only generator has no refs, so it must not invent selectors.
     if (
       suspectedDetectorTypes.includes('BAIT_DETECTOR') ||
       semantic.detectedPhrases.some((p) => p.toLowerCase().includes('bait'))
     ) {
-      candidates.push({
-        id: `cand_s2_${Date.now()}`,
-        tier: 'S2',
-        name: 'Preserve Harmless Bait Layout',
-        rationale:
-          'Preserves non-intrusive layout dimensions for dummy bait containers to satisfy detector queries.',
-        isReversible: true,
-        estimatedRisk: 'LOW',
-        actions: [
-          {
-            id: `dom_bait_${Date.now()}`,
-            type: 'DOM_PRESERVE_BAIT_CANDIDATE',
-            selector: '.ad-banner, #ad-container, .advertisement, [id*="google_ads"]',
-          },
-        ],
-      });
+      return candidates;
     }
 
     // S1: Cosmetic Filter Rollback (only if cosmetic collapse identified)

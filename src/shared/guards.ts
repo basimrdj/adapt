@@ -95,8 +95,16 @@ export function isDomAction(val: unknown): val is DomAction {
     'DOM_RESTORE_SCROLL',
     'DOM_RESTORE_POINTER_EVENTS',
     'DOM_PRESERVE_BAIT_CANDIDATE',
+    'BAIT_PRESERVE_LAYOUT',
+    'BAIT_RESTORE_VISIBILITY',
+    'BAIT_DISABLE_COSMETIC_HIDE',
+    'BAIT_PRESERVE_CHILD_STRUCTURE',
   ];
-  return validTypes.includes(val.type);
+  if (!validTypes.includes(val.type)) return false;
+  if (String(val.type).startsWith('BAIT_') || val.type === 'DOM_PRESERVE_BAIT_CANDIDATE') {
+    return isString(val.targetRef) && /^element:e\d+$/.test(val.targetRef) && val.selector === undefined;
+  }
+  return true;
 }
 
 export function isStrategyCandidate(val: unknown): val is StrategyCandidate {

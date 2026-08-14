@@ -1,8 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { parseFilterLists } from '../../src/page/filtering/compiler';
+import { classifyDetectorBaitSelector, parseFilterLists, renderGenericCosmeticCss } from '../../src/page/filtering/compiler';
 import { matchesDomain } from '../../src/page/filtering/matching';
 
 describe('Phase 3.1B page filter compiler', () => {
+  it('classifies conservative detector-bait selectors and excludes them from static hiding', () => {
+    expect(classifyDetectorBaitSelector('.ad-widget')).toBe('POSSIBLE_DETECTOR_BAIT');
+    expect(classifyDetectorBaitSelector('#ads')).toBe('POSSIBLE_DETECTOR_BAIT');
+    expect(classifyDetectorBaitSelector('.sponsored-card')).toBe('ORDINARY_COSMETIC');
+
+    const bundle = parseFilterLists([{ id: 7, text: '##.ad-widget\n##.ordinary-card\n' }]);
+    expect(bundle.counts.possibleDetectorBait).toBe(1);
+    expect(renderGenericCosmeticCss(bundle)).toContain('.ordinary-card');
+    expect(renderGenericCosmeticCss(bundle)).not.toContain('.ad-widget');
+  });
+
   it('keeps generic, domain-specific, and exception semantics separate', () => {
     const bundle = parseFilterLists([
       {

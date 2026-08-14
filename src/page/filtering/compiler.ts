@@ -3,6 +3,7 @@ import {
   PageFilterBundle,
   PageFilterRule,
   PageRuleKind,
+  DetectorBaitClassification,
   ScriptletLifecycle,
   ScriptletRule,
   ScriptletSupportStatus,
@@ -117,8 +118,50 @@ const EARLY_SCRIPTLETS = new Set([
   'json-prune',
 ]);
 
+const DETECTOR_BAIT_EXACT_NAMES = new Set([
+  'ad',
+  'ads',
+  'adblock',
+  'ad-banner',
+  'ad-box',
+  'ad-container',
+  'ad-placeholder',
+  'ad-slot',
+  'ad-space',
+  'ad-widget',
+  'ad-wrapper',
+  'advertisement',
+  'adsbox',
+  'banner-ad',
+]);
+
+const DETECTOR_BAIT_ROLE_WORDS = new Set([
+  'banner',
+  'block',
+  'box',
+  'container',
+  'placeholder',
+  'slot',
+  'space',
+  'widget',
+  'wrapper',
+]);
+
 function stableId(value: string): string {
   return createHash('sha256').update(value).digest('hex').slice(0, 16);
+}
+
+export function classifyDetectorBaitSelector(selector: string): DetectorBaitClassification {
+  const match = selector.trim().match(/^[.#]([A-Za-z][A-Za-z0-9_-]*)$/);
+  if (!match) return 'ORDINARY_COSMETIC';
+
+  const name = match[1]!.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  if (DETECTOR_BAIT_EXACT_NAMES.has(name)) return 'POSSIBLE_DETECTOR_BAIT';
+
+  const words = name.split(/[-_]+/).filter(Boolean);
+  const hasAdWord = words.some((word) => word === 'ad' || word === 'ads' || word === 'advert' || word === 'advertisement');
+  const hasRoleWord = words.some((word) => DETECTOR_BAIT_ROLE_WORDS.has(word));
+  return hasAdWord && hasRoleWord && words.length <= 5 ? 'POSSIBLE_DETECTOR_BAIT' : 'ORDINARY_COSMETIC';
 }
 
 function splitDomains(value: string): DomainScope {
@@ -296,6 +339,7 @@ function validateScriptlet(name: string, args: string[], scope: DomainScope): Sc
 function classifyCosmeticSelector(selector: string): {
   kind: PageRuleKind;
   selector: string;
+  detectorBait: DetectorBaitClassification;
   argument?: string;
   property?: string;
   value?: string;
@@ -305,23 +349,31 @@ function classifyCosmeticSelector(selector: string): {
   if (UNSUPPORTED_COSMETIC_MARKERS.some((marker) => trimmed.includes(marker))) return null;
 
   const hasText = trimmed.match(/^(.*):has-text\((['"]?)(.*?)\2\)$/i);
-  if (hasText) return { kind: 'has-text', selector: hasText[1] || '*', argument: hasText[3] };
+  if (hasText) {
+    const target = hasText[1] || '*';
+    return { kind: 'has-text', selector: target, detectorBait: classifyDetectorBaitSelector(target), argument: hasText[3] };
+  }
 
   const matchesCss = trimmed.match(/^(.*):matches-css\(([^,]+),\s*(.*?)\)$/i);
   if (matchesCss) {
     const property = matchesCss[2];
     const value = matchesCss[3];
     if (!property || value === undefined) return null;
-    return { kind: 'matches-css', selector: matchesCss[1] || '*', property: property.trim(), value: value.trim() };
+    const target = matchesCss[1] || '*';
+    return { kind: 'matches-css', selector: target, detectorBait: classifyDetectorBaitSelector(target), property: property.trim(), value: value.trim() };
   }
 
-  if (trimmed.endsWith(':remove')) return { kind: 'remove', selector: trimmed.slice(0, -7).trim() || '*' };
+  if (trimmed.endsWith(':remove')) {
+    const target = trimmed.slice(0, -7).trim() || '*';
+    return { kind: 'remove', selector: target, detectorBait: classifyDetectorBaitSelector(target) };
+  }
 
   const removeAttr = trimmed.match(/^(.*):remove-attr\(([^)]+)\)$/i);
   if (removeAttr) {
     const attribute = removeAttr[2];
     if (!attribute) return null;
-    return { kind: 'remove-attr', selector: removeAttr[1] || '*', argument: attribute.trim() };
+    const target = removeAttr[1] || '*';
+    return { kind: 'remove-attr', selector: target, detectorBait: classifyDetectorBaitSelector(target), argument: attribute.trim() };
   }
 
   if (trimmed.includes(':')) {
@@ -330,7 +382,7 @@ function classifyCosmeticSelector(selector: string): {
     if (customPseudo.some((pseudo) => !safePseudo.test(pseudo))) return null;
   }
 
-  return { kind: 'css', selector: trimmed };
+  return { kind: 'css', selector: trimmed, detectorBait: classifyDetectorBaitSelector(trimmed) };
 }
 
 function addUnique<T extends { id: string }>(target: T[], value: T): void {
@@ -436,6 +488,9 @@ export function parseFilterLists(sources: FilterSource[], generatedAt = new Date
   const unsupportedByName = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'unsupported-by-name').length;
   const unsupportedByArguments = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'unsupported-by-arguments').length;
   const unsafe = scriptlets.filter((scriptlet) => scriptlet.supportStatus === 'unsafe').length;
+  const allCosmeticRules = [...genericRules, ...domainRules];
+  const possibleDetectorBait = allCosmeticRules.filter((rule) => rule.detectorBait === 'POSSIBLE_DETECTOR_BAIT').length;
+  const confirmedDetectorBait = allCosmeticRules.filter((rule) => rule.detectorBait === 'CONFIRMED_DETECTOR_BAIT').length;
 
   return {
     schemaVersion: 2,
@@ -460,6 +515,8 @@ export function parseFilterLists(sources: FilterSource[], generatedAt = new Date
       unsupportedByArguments,
       unsafe,
       exceptionSuppressed,
+      possibleDetectorBait,
+      confirmedDetectorBait,
     },
   };
 }
@@ -468,6 +525,7 @@ export function renderGenericCosmeticCss(bundle: PageFilterBundle): string {
   const selectors = new Set<string>();
   for (const rule of bundle.genericRules) {
     if (rule.kind !== 'css' || rule.domains.length > 0 || rule.selector.length > 1000) continue;
+    if (rule.detectorBait !== 'ORDINARY_COSMETIC') continue;
     if (/[{};]/.test(rule.selector)) continue;
     if (/:has-text\(|:matches-css\(|:xpath\(|:upward\(|:remove\b|:remove-attr\(/i.test(rule.selector)) continue;
     if (bundle.exceptions.some((exception) => !exception.scriptletName && exception.selector === rule.selector)) continue;

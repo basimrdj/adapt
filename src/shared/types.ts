@@ -30,6 +30,10 @@ export type ActionType =
   | 'DOM_RESTORE_SCROLL'
   | 'DOM_RESTORE_POINTER_EVENTS'
   | 'DOM_PRESERVE_BAIT_CANDIDATE'
+  | 'BAIT_PRESERVE_LAYOUT'
+  | 'BAIT_RESTORE_VISIBILITY'
+  | 'BAIT_DISABLE_COSMETIC_HIDE'
+  | 'BAIT_PRESERVE_CHILD_STRUCTURE'
   | 'RUNTIME_OP'
   | 'OBSERVE'
   | 'WAIT_STABILITY'
@@ -69,7 +73,11 @@ export interface DomAction extends BaseAction {
     | 'DOM_REMOVE_OVERLAY'
     | 'DOM_RESTORE_SCROLL'
     | 'DOM_RESTORE_POINTER_EVENTS'
-    | 'DOM_PRESERVE_BAIT_CANDIDATE';
+    | 'DOM_PRESERVE_BAIT_CANDIDATE'
+    | 'BAIT_PRESERVE_LAYOUT'
+    | 'BAIT_RESTORE_VISIBILITY'
+    | 'BAIT_DISABLE_COSMETIC_HIDE'
+    | 'BAIT_PRESERVE_CHILD_STRUCTURE';
   selector?: string;
   /** Content-script-owned opaque element reference. AI never sees or creates selectors. */
   targetRef?: `element:e${number}`;

@@ -63,6 +63,13 @@ export class PolicyValidator {
             reasons.push(`Action [${i}] has invalid targetRef format: ${act.targetRef}`);
           }
         }
+
+        if (act.actionType === 'DOM_PRESERVE_BAIT') {
+          if (!act.targetRef || !validElementRefs.has(act.targetRef)) {
+            reasons.push(`Action [${i}] bait preservation requires a valid opaque element ref`);
+          }
+          if (act.parameter) reasons.push(`Action [${i}] bait preservation does not accept parameters`);
+        }
       }
     }
 
@@ -115,7 +122,8 @@ export class PolicyValidator {
           case 'DOM_PRESERVE_BAIT':
             mappedStrategyActions.push({
               id: `ai_act_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-              type: 'DOM_PRESERVE_BAIT_CANDIDATE',
+              type: 'BAIT_PRESERVE_LAYOUT',
+              targetRef: act.targetRef as `element:e${number}`,
             });
             break;
           case 'DOM_HIDE_CANDIDATE':

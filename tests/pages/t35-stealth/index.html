@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>T35 — Passive Bait Stealth Lab</title>
+  <style>
+    .ad-widget, .adsbox, .ad-banner, #adblock {
+      display: block;
+      width: 160px;
+      height: 32px;
+      min-height: 32px;
+      visibility: visible;
+      contain: layout;
+    }
+    .bait-child { display: block; height: 8px; }
+    .ordinary-content { display: block; height: 24px; }
+  </style>
+</head>
+<body>
+  <main id="article">
+    <h1>Stealth detector fixture</h1>
+    <div id="bait-wrapper">
+      <div class="ad-widget"><span class="bait-child">slot</span></div>
+      <div class="adsbox"><span class="bait-child">slot</span></div>
+      <div class="ad-banner"><span class="bait-child">slot</span></div>
+      <div id="adblock"><span class="bait-child">slot</span></div>
+    </div>
+    <div class="ordinary-content">Readable content remains available.</div>
+  </main>
+  <script>
+    window.__stealth = { reinsertion: false, timed: false, adLoaded: false };
+    const baitSelectors = ['.ad-widget', '.adsbox', '.ad-banner', '#adblock'];
+    const measure = (selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return { exists: false, offsetHeight: 0, clientHeight: 0, rectHeight: 0, display: 'none', visibility: 'hidden', children: -1 };
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return {
+        exists: true,
+        offsetHeight: element.offsetHeight,
+        clientHeight: element.clientHeight,
+        rectHeight: rect.height,
+        display: style.display,
+        visibility: style.visibility,
+        children: element.children.length,
+      };
+    };
+    const detector = () => baitSelectors.map(measure);
+    window.__stealth.initial = detector();
+    window.__stealth.timed = window.__stealth.initial.every((item) => item.exists && item.offsetHeight > 0 && item.rectHeight > 0 && item.display !== 'none' && item.visibility !== 'hidden' && item.children > 0);
+    window.setTimeout(() => {
+      window.__stealth.recheck = detector();
+      window.__stealth.timed = window.__stealth.timed && window.__stealth.recheck.every((item) => item.exists && item.offsetHeight > 0 && item.rectHeight > 0 && item.display !== 'none' && item.visibility !== 'hidden');
+    }, 450);
+    window.setTimeout(() => {
+      const replacement = document.createElement('div');
+      replacement.className = 'ad-widget';
+      replacement.innerHTML = '<span class="bait-child">reinserted</span>';
+      document.querySelector('#bait-wrapper').appendChild(replacement);
+      window.__stealth.reinsertion = measure('.ad-widget:last-child').offsetHeight > 0;
+    }, 650);
+    const ad = document.createElement('script');
+    ad.src = 'http://kasilyrics.co.za:4071/synthetic-ad.js';
+    ad.onload = () => { window.__stealth.adLoaded = true; };
+    ad.onerror = () => { window.__stealth.adBlocked = true; };
+    document.head.appendChild(ad);
+    fetch('http://kasilyrics.co.za:4071/synthetic-ad.js', { cache: 'no-store' })
+      .then(() => { window.__stealth.fetchProbe = 'loaded'; })
+      .catch(() => { window.__stealth.fetchProbe = 'blocked'; });
+    window.__stealth.detector = () => {
+      const values = detector();
+      return {
+        height: values[0].rectHeight > 0,
+        offsetHeight: values[0].offsetHeight > 0,
+        boundingRect: values[0].rectHeight > 0,
+        computedStyle: values[0].display !== 'none' && values[0].visibility !== 'hidden',
+        existence: values.every((item) => item.exists),
+        childCount: values.every((item) => item.children > 0),
+        networkProbe: window.__stealth.adLoaded !== true,
+        hybrid: values.every((item) => item.exists && item.offsetHeight > 0) && window.__stealth.adLoaded !== true,
+      };
+    };
+  </script>
+</body>
+</html>
