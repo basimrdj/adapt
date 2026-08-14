@@ -92,7 +92,8 @@ fetch probe remain blocked and no ad content loads.
 - No detector script was hidden, blocked, spoofed, or replaced in the local
   acceptance fixture.
 - YouTube live ad result: `NOT_OBSERVED`.
-- GitHub Actions: pending the post-push workflow result.
+- GitHub Actions: PASS for push run `31798853194` and PR run `31798855777`;
+  typecheck, page-unit, and build-integrity-security all passed.
 
 ## Release status
 
