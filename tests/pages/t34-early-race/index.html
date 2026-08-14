@@ -5,17 +5,20 @@
   <title>ADAPT document-start race fixture</title>
   <script>
     window.__early_observed = window.adning_no_adblock === true;
+    window.__early_observed_at = performance.now();
   </script>
   <script>
     try {
       void window.stopPrntScr;
     } catch {
       window.__inline_abort_caught = true;
+      window.__inline_abort_caught_at = performance.now();
     }
     try {
       void window.videoIds;
     } catch {
       window.__property_abort_caught = true;
+      window.__property_abort_caught_at = performance.now();
     }
   </script>
 </head>

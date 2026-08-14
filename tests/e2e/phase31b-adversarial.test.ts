@@ -96,21 +96,39 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
   it('early MAIN-world race', async () => {
     const page = await browser.newPage();
     await page.goto('http://marriedgames.com.br:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
-    expect(await page.evaluate(() => (window as unknown as { __early_observed?: boolean }).__early_observed)).toBe(true);
+    const evidence = await page.evaluate(() => ({
+      observed: (window as unknown as { __early_observed?: boolean }).__early_observed,
+      observedAt: (window as unknown as { __early_observed_at?: number }).__early_observed_at,
+    }));
+    console.log('EARLY_RACE_EVIDENCE', JSON.stringify({ fixture: 'main-world', ...evidence }));
+    expect(evidence.observed).toBe(true);
+    expect(evidence.observedAt).toEqual(expect.any(Number));
     await page.close();
   });
 
   it('early abort-current-inline-script race', async () => {
     const page = await browser.newPage();
     await page.goto('http://kasilyrics.co.za:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
-    expect(await page.evaluate(() => (window as unknown as { __inline_abort_caught?: boolean }).__inline_abort_caught)).toBe(true);
+    const evidence = await page.evaluate(() => ({
+      caught: (window as unknown as { __inline_abort_caught?: boolean }).__inline_abort_caught,
+      caughtAt: (window as unknown as { __inline_abort_caught_at?: number }).__inline_abort_caught_at,
+    }));
+    console.log('EARLY_RACE_EVIDENCE', JSON.stringify({ fixture: 'abort-current-inline-script', ...evidence }));
+    expect(evidence.caught).toBe(true);
+    expect(evidence.caughtAt).toEqual(expect.any(Number));
     await page.close();
   });
 
   it('early abort-on-property-read race', async () => {
     const page = await browser.newPage();
     await page.goto('http://marriedgames.com.br:4060/t34-early-race/index.html', { waitUntil: 'domcontentloaded' });
-    expect(await page.evaluate(() => (window as unknown as { __property_abort_caught?: boolean }).__property_abort_caught)).toBe(true);
+    const evidence = await page.evaluate(() => ({
+      caught: (window as unknown as { __property_abort_caught?: boolean }).__property_abort_caught,
+      caughtAt: (window as unknown as { __property_abort_caught_at?: number }).__property_abort_caught_at,
+    }));
+    console.log('EARLY_RACE_EVIDENCE', JSON.stringify({ fixture: 'abort-on-property-read', ...evidence }));
+    expect(evidence.caught).toBe(true);
+    expect(evidence.caughtAt).toEqual(expect.any(Number));
     await page.close();
   });
 
