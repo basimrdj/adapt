@@ -19,6 +19,7 @@ export type CapabilityGapCode =
 
 export interface PrimitiveExecutionMatrixEntry {
   primitiveId: PrimitiveId;
+  executorRegistered: boolean;
   status: PrimitiveExecutionStatus;
   executionWorld: PrimitiveDefinition['executionWorld'];
   requiredEvidence: string[];
@@ -48,6 +49,7 @@ export interface PrimitiveExecutionRecord {
   sessionRuleIds: number[];
   domActionIds: string[];
   navigationRef?: string;
+  targetTabId?: number;
   closedTargetUrl?: string;
   undoTabId?: number;
   startedWallMs: number;
@@ -71,7 +73,7 @@ export interface PrimitiveExecutorDeps {
   sendTabMessage: SendTabMessage;
   resolveRequest: (ref: string) => NetworkTarget | undefined;
   navigationTargets: EphemeralNavigationTargetRegistry;
-  tabsApi?: Pick<typeof chrome.tabs, 'remove' | 'create'>;
+  tabsApi?: Pick<typeof chrome.tabs, 'remove' | 'create'> & Partial<Pick<typeof chrome.tabs, 'get'>>;
 }
 
 const EXECUTABLE: ReadonlyMap<PrimitiveId, { browserTestId: string; requiredOpaqueRefKinds: string[] }> = new Map([
@@ -114,18 +116,46 @@ function navigationRef(refs: readonly string[]): string | undefined {
   return refs.find((ref) => ref.startsWith('navigation:n'));
 }
 
+async function removeAndVerifyTab(
+  tabsApi: PrimitiveExecutorDeps['tabsApi'],
+  tabId: number
+): Promise<boolean> {
+  if (!tabsApi) return false;
+  const getTab = tabsApi.get;
+  await new Promise<void>((resolve) => setTimeout(resolve, 50));
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    try {
+      await tabsApi.remove(tabId);
+    } catch {
+      if (!getTab) return true;
+    }
+    if (!getTab) return true;
+    try {
+      await getTab(tabId);
+    } catch {
+      return true;
+    }
+    await new Promise<void>((resolve) => setTimeout(resolve, 40 * (attempt + 1)));
+  }
+  return false;
+}
+
 export class PrimitiveExecutorRegistry {
   private readonly staged = new Map<string, PrimitiveExecutionRecord>();
 
-  constructor(private readonly deps: PrimitiveExecutorDeps) {}
+  constructor(
+    private readonly deps: PrimitiveExecutorDeps,
+    private readonly browserTestedPrimitiveIds: ReadonlySet<PrimitiveId> = BROWSER_TESTED,
+  ) {}
 
   matrix(): PrimitiveExecutionMatrixEntry[] {
     return PRIMITIVE_DEFINITIONS.map((definition) => {
       const executable = EXECUTABLE.get(definition.id);
       const gap = GAP_REASONS[definition.id];
-      const browserTested = executable !== undefined && BROWSER_TESTED.has(definition.id);
+      const browserTested = executable !== undefined && this.browserTestedPrimitiveIds.has(definition.id);
       return {
         primitiveId: definition.id,
+        executorRegistered: executable !== undefined,
         status: browserTested ? 'EXECUTABLE_AND_BROWSER_TESTED' : 'CAPABILITY_GAP',
         executionWorld: definition.executionWorld,
         requiredEvidence: [...definition.requiredEvidence],
@@ -189,10 +219,10 @@ export class PrimitiveExecutorRegistry {
       if (!ref || !target || target.closed || !this.deps.tabsApi) {
         return { ok: false, gap: { code: 'UNRESOLVED_OPAQUE_TARGET', reason: 'Navigation target is unavailable or already closed.' } };
       }
-      await this.deps.tabsApi.remove(target.tabId).catch(() => {
-        throw new Error('navigation target could not be closed');
-      });
+      const closed = await removeAndVerifyTab(this.deps.tabsApi, target.tabId);
+      if (!closed) throw new Error('navigation target could not be closed');
       record.navigationRef = ref;
+      record.targetTabId = target.tabId;
       record.closedTargetUrl = target.url;
       this.deps.navigationTargets.markClosed(ref);
       this.staged.set(context.txId, record);
@@ -211,8 +241,8 @@ export class PrimitiveExecutorRegistry {
         const parsed = new URL(navigation.url);
         const normalized = normalizeUrlForTelemetry(navigation.url);
         target = {
-          urlFilter: `|${parsed.protocol}//${normalized.hostname}${normalized.coarsePath}*`,
-          resourceTypes: [chrome.declarativeNetRequest.ResourceType.MAIN_FRAME],
+          urlFilter: `|${parsed.protocol}//${parsed.host}${normalized.coarsePath}*`,
+          resourceTypes: ['main_frame' as chrome.declarativeNetRequest.ResourceType],
           firstParty: false,
           trackerLike: true,
         };
@@ -273,8 +303,14 @@ export class PrimitiveExecutorRegistry {
       if (!response.success) errors.push('DOM primitive rollback was not acknowledged');
     }
     if (record.closedTargetUrl && record.navigationRef && this.deps.tabsApi) {
-      const recreated = await this.deps.tabsApi.create({ url: record.closedTargetUrl, active: false }).catch(() => undefined);
-      if (!recreated?.id) errors.push('closed navigation target could not be reopened');
+      let targetStillExists = false;
+      if (record.targetTabId !== undefined && this.deps.tabsApi.get) {
+        targetStillExists = await this.deps.tabsApi.get(record.targetTabId).then(() => true).catch(() => false);
+      }
+      if (!targetStillExists) {
+        const recreated = await this.deps.tabsApi.create({ url: record.closedTargetUrl, active: false }).catch(() => undefined);
+        if (!recreated?.id) errors.push('closed navigation target could not be reopened');
+      }
     }
     this.staged.delete(txId);
     return { ok: errors.length === 0, errors };
@@ -283,6 +319,24 @@ export class PrimitiveExecutorRegistry {
   async commit(txId: string): Promise<void> {
     const record = this.staged.get(txId);
     if (record) record.committed = true;
+  }
+
+  async ensureNavigationTargetClosed(txId: string): Promise<boolean> {
+    const record = this.staged.get(txId);
+    if (!record?.navigationRef || record.targetTabId === undefined || !this.deps.tabsApi) {
+      return record?.closedTargetUrl !== undefined;
+    }
+    if (this.deps.tabsApi.get) {
+      const stillExists = await this.deps.tabsApi.get(record.targetTabId).then(() => true).catch(() => false);
+      if (!stillExists) return record.closedTargetUrl !== undefined;
+    }
+    const target = this.deps.navigationTargets.get(record.navigationRef);
+    const closed = await removeAndVerifyTab(this.deps.tabsApi, record.targetTabId);
+    if (closed) {
+      if (record.closedTargetUrl === undefined && target) record.closedTargetUrl = target.url;
+      this.deps.navigationTargets.markClosed(record.navigationRef);
+    }
+    return closed;
   }
 
   discard(txId: string): void {

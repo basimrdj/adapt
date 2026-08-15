@@ -38,6 +38,19 @@ function destinationClassFor(element: HTMLElement): DestinationClass {
   }
 }
 
+function destinationFingerprintFor(element: HTMLElement, destinationClass: DestinationClass): string | undefined {
+  if (destinationClass === 'download') return hashOrigin('download:root');
+  const rawHref = element instanceof HTMLAnchorElement ? element.href : '';
+  if (!rawHref) return undefined;
+  try {
+    const destination = new URL(rawHref, window.location.href);
+    const pathClass = destination.pathname.split('/').filter(Boolean)[0] ?? 'root';
+    return `${hashOrigin(destination.origin)}:${destinationClass}:${pathClass}`;
+  } catch {
+    return undefined;
+  }
+}
+
 function targetBehaviorFor(element: HTMLElement, destinationClass: DestinationClass): UserIntentEnvelope['targetBehavior'] {
   if (destinationClass === 'download') return 'download';
   if (element instanceof HTMLAnchorElement && element.target === '_blank') return 'new-context';
@@ -72,6 +85,7 @@ export function createIntentEnvelope(
     elementRef: ref,
     elementRole: role,
     declaredDestinationClass: destinationClass,
+    declaredDestinationFingerprint: destinationFingerprintFor(element, destinationClass),
     button: event.button,
     modifiers: [
       event.altKey ? 'alt' : '',

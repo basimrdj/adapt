@@ -1,0 +1,15 @@
+{
+  "schema": "adapt-phase35b-recipe-lifecycle-live-v1",
+  "generatedAt": "2026-08-15T07:08:15.631Z",
+  "visit1_experiments": 1,
+  "visit2_experiments": 0,
+  "visit3_experiments": 0,
+  "visit4_experiments": 0,
+  "visit_ai_calls": 0,
+  "lifecycle_after_each_visit": [
+    "DRAFT",
+    "CONFIRMED",
+    "RECIPE_SAFE",
+    "RECIPE_SAFE"
+  ]
+}

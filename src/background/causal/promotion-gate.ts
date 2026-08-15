@@ -33,6 +33,7 @@ import {
   recipeId,
   replayHealthOk,
   fingerprintEvidenceHash,
+  PrimitiveRecipeStep,
 } from '../../shared/causal/recipes';
 import { STORAGE_KEYS } from '../../shared/constants';
 import { ActionType, StrategyAction, StrategyCandidate } from '../../shared/types';
@@ -70,6 +71,7 @@ export interface PromotionEvaluateInput {
   experiments: ReadonlyArray<ExperimentRecord>;
   mappedStrategy?: StrategyCandidate;
   existingRecipeId?: CausalRecipe['id'];
+  primitiveSequence?: PrimitiveRecipeStep[];
 }
 
 export type PromotionEvaluateResult =
@@ -398,7 +400,8 @@ export class PromotionGate {
     if (input.hypothesis.status !== 'SUPPORTED' && input.hypothesis.status !== 'CONFIRMED') {
       return false;
     }
-    if (input.actions.length === 0) return false;
+    if (input.actions.length === 0 && (input.primitiveSequence?.length ?? 0) === 0) return false;
+    if (input.primitiveSequence?.some((step) => step.rollbackClass === 'CAPABILITY_GAP')) return false;
     for (const action of input.actions) {
       if (!REVERSIBLE_ACTION_TYPES.has(action.type)) return false;
       if (action.type === 'NET_ALLOW_EXCEPTION' && isNoopInvalidAllow(action.urlFilter)) return false;

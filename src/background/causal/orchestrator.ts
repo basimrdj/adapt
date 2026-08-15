@@ -21,6 +21,8 @@ import {
   fingerprintEvidenceHash,
   isIdentityMismatch,
   PageFingerprint,
+  PrimitiveRecipeStep,
+  RECIPE_SAFE_MIN_STABLE_REPLAYS,
 } from '../../shared/causal/recipes';
 import { BeliefUpdater } from './belief-updater';
 import { CandidateGenerator } from './candidate-generator';
@@ -35,9 +37,10 @@ import { CausalRecipeStore, PromotionEvaluateInput, PromotionGate } from './prom
 import { verifyHealthOutcome } from '../../core/health/compare';
 import { PrimitiveOutcomeVerifierRegistry } from '../autonomy/outcome-verifier';
 import { generateHypothesisLattice } from '../autonomy/hypothesis-lattice';
-import { AutonomousExperiment, AutonomousExperimentLoop } from '../autonomy/saei';
+import { AutonomousExperiment, AutonomousExperimentLoop, requiredEvidenceForPrimitive } from '../autonomy/saei';
 import { AutonomyPendingState, AutonomySessionRepository, AutonomySessionSnapshot } from '../autonomy/session';
 import { PrimitiveExecutorRegistry, primitiveRecipeActions } from '../autonomy/executor-registry';
+import { PrimitiveId } from '../autonomy/primitive-registry';
 
 const TRACKER_LIKE = /(^|[.-])(ads?|analytics|beacon|pixel|track(er|ing)?)([.-]|$)/i;
 
@@ -77,7 +80,7 @@ export class CausalResourceRegistry implements StrategyResolutionContext {
       const ref = `request:r${stablePositiveIntFromRequestId(raw.requestId)}` as const;
       const type = (raw.resourceType || 'xmlhttprequest') as chrome.declarativeNetRequest.ResourceType;
       this.requests.set(ref, {
-        urlFilter: `|${target.protocol}//${normalized.hostname}${normalized.coarsePath}*`,
+      urlFilter: `|${target.protocol}//${target.host}${normalized.coarsePath}*`,
         resourceTypes: [type],
         firstParty: target.hostname === page.hostname,
         trackerLike: TRACKER_LIKE.test(target.hostname),
@@ -134,8 +137,48 @@ const PROMOTABLE_MECHANISMS: ReadonlySet<CausalHypothesis['mechanismClass']> = n
   'SERVICE_WORKER_CACHE_PATH',
   'SCRIPT_ORDER_DEPENDENCY',
   'COSMETIC_REMOVAL_DEPENDENCY',
+  'UNKNOWN_DOM_REACTION',
+  'UNKNOWN_NAVIGATION_REACTION',
   'UNKNOWN',
 ]);
+
+function primitiveRecipeStep(
+  primitiveId: AutonomousExperiment['primitiveId'],
+  graph: ReturnType<EventGraphStore['getOrCreate']>,
+  fingerprint: PageFingerprint
+): PrimitiveRecipeStep {
+  const navigationPrimitive = primitiveId.includes('NAVIGATION')
+    || primitiveId === 'STOP_MATCHED_REDIRECT_CHAIN'
+    || primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET';
+  const remapping = primitiveId.includes('NETWORK') || primitiveId === 'TARGETED_SESSION_DNR'
+    ? 'CURRENT_REQUEST_REF' as const
+    : navigationPrimitive
+      ? 'CURRENT_NAVIGATION_REF' as const
+      : primitiveId === 'RESTORE_SCROLL' || primitiveId === 'RESTORE_POINTER_INTERACTION' || primitiveId === 'PLAYER_HEALTH_RECOVERY'
+        ? 'NONE' as const
+        : 'CURRENT_ELEMENT_REF' as const;
+  const rollbackClass = primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+    ? 'CLOSED_TAB_REOPEN' as const
+    : primitiveId.includes('NETWORK') || primitiveId === 'TARGETED_SESSION_DNR' || primitiveId === 'STOP_MATCHED_REDIRECT_CHAIN'
+      ? 'SESSION_RULE' as const
+      : 'DOM_ACTION' as const;
+  return {
+    primitiveId,
+    requiredEvidenceClasses: requiredEvidenceForPrimitive(primitiveId),
+    structuralPreconditions: [...new Set(graph.nodes.map((node) => node.kind))],
+    behavioralPreconditions: primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+      ? ['INTENT_OUTCOME_FANOUT', 'DESTINATION_MISMATCH']
+      : [primitiveId],
+    opaqueRefRemappingRule: remapping,
+    rollbackClass,
+    fingerprintConstraints: {
+      originHash: fingerprint.originHash,
+      detectorFeatureHash: fingerprint.detectorFeatureHash,
+      structuralFeatureHash: fingerprint.structuralFeatureHash,
+      ...(navigationPrimitive ? {} : { topLevelPathClass: fingerprint.topLevelPathClass }),
+    },
+  };
+}
 
 export class CausalOrchestrator {
   private readonly normalizer: EventNormalizer;
@@ -148,14 +191,23 @@ export class CausalOrchestrator {
   private readonly attemptedMechanisms = new Map<string, Set<CausalHypothesis['mechanismClass']>>();
   private readonly lastFingerprints = new Map<string, PageFingerprint>();
   private readonly lastBatches = new Map<string, CausalPageObservationBatch['pageSignals']>();
+  private readonly lastElements = new Map<string, CausalPageObservationBatch['elements']>();
   private readonly autonomyLoops = new Map<string, AutonomousExperimentLoop>();
   private readonly pendingAutonomy = new Map<string, PendingAutonomy>();
+  private readonly finalizingAutonomy = new Set<string>();
   private readonly pendingNavigationEvidence = new Map<number, { ref: OpaqueRef; kind: EventNode['kind']; features: EventNode['features'] }>();
   private readonly handledNavigationRefs = new Set<string>();
   private readonly outcomeVerifiers = new PrimitiveOutcomeVerifierRegistry();
 
   constructor(private readonly deps: CausalOrchestratorDeps) {
     this.normalizer = new EventNormalizer(deps.registry);
+  }
+
+  hasPendingNavigationClosure(tabId: number): boolean {
+    return [...this.pendingAutonomy.values()].some((pending) =>
+      pending.tabId === tabId
+      && pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+    );
   }
 
   async restoreAutonomy(snapshot?: AutonomySessionSnapshot): Promise<void> {
@@ -212,10 +264,19 @@ export class CausalOrchestrator {
     const scope = this.deps.registry.getCausalKey(target.sourceTabId, target.sourceFrameId);
     const epoch = this.deps.registry.getEpoch(target.sourceTabId, target.sourceFrameId);
     if (!scope || !epoch) return;
-    const graph = this.deps.graphs.get(scope);
+    const graph = this.navigationSourceGraph(target, scope);
     if (!graph) return;
+    const targetNode = graph.nodes.find((node) => node.refs.includes(target.ref));
+    if (targetNode) {
+      targetNode.features.classificationDisposition = classification.disposition;
+      targetNode.features.classificationConfidence = classification.confidence;
+    }
     const baseline = this.previousHealth.get(`${target.sourceTabId}:${target.sourceFrameId}:${scope.navigationEpoch}:${scope.documentId}`)
       ?? this.defaultHealth();
+    if (classification.disposition === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET') {
+      const replayed = await this.maybeReplayPrimitiveNavigation(target, graph, baseline);
+      if (replayed) return;
+    }
     await this.maybeRun(graph, epoch.siteKey, epoch.navigationId, baseline, true);
   }
 
@@ -240,6 +301,22 @@ export class CausalOrchestrator {
       this.pendingNavigationEvidence.delete(raw.tabId);
     }
     this.candidates.update(graph);
+    if (raw.frameId === 0) {
+      const carriedAutonomy = [...this.pendingAutonomy.values()].find((pending) =>
+        pending.tabId === raw.tabId
+        && pending.frameId === raw.frameId
+        && pending.documentId !== raw.documentId
+        && pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+      );
+      if (carriedAutonomy) {
+        await this.deps.sendTabMessage(raw.tabId, {
+          v: 1,
+          type: 'REQUEST_HEALTH_SNAPSHOT',
+          txId: carriedAutonomy.txId,
+          documentId: raw.documentId,
+        }).catch(() => undefined);
+      }
+    }
     await this.deps.session.persist();
   }
 
@@ -283,7 +360,8 @@ export class CausalOrchestrator {
     const epoch = this.deps.registry.getEpoch(target.sourceTabId, target.sourceFrameId);
     const scope = this.deps.registry.getCausalKey(target.sourceTabId, target.sourceFrameId);
     if (!epoch || !scope) return;
-    const graph = this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
+    const graph = this.navigationSourceGraph(target, scope)
+      ?? this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
     const expectedNewContext = target.expectedNewContext === true
       && target.destinationMatch === true
       && target.extraTarget !== true;
@@ -308,6 +386,15 @@ export class CausalOrchestrator {
       riskSignalCount: target.riskSignals.length,
     }, 'navigationIntent', target.capturedWallMs));
     graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
+    const hasSameTabOutcome = target.recentIntentRef !== undefined
+      && graph.nodes.some((node) => node.kind === 'NAV_COMMIT' && node.timestamp.value >= target.capturedWallMs - 2500);
+    if (target.extraTarget && hasSameTabOutcome) {
+      this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'INTENT_OUTCOME_FANOUT', [target.ref], {
+        destinationClass: target.destinationClass,
+        destinationMatch: target.destinationMatch ?? null,
+      }, 'navigationIntent', target.capturedWallMs));
+      graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
+    }
     this.pendingNavigationEvidence.set(target.sourceTabId, {
       ref: target.ref,
       kind,
@@ -330,6 +417,7 @@ export class CausalOrchestrator {
     if (!epoch || !scope) return false;
     const graph = this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
     this.lastBatches.set(`${tabId}:${frameId}:${scope.documentId}`, batch.pageSignals);
+    this.lastElements.set(`${tabId}:${frameId}:${scope.documentId}`, batch.elements);
     this.lastFingerprints.set(graph.graphId, this.fingerprint(graph, batch, epoch.url));
     const health = this.enrichHealth(calculateHealthVector(batch.pageSignals), epoch.navigationId);
     const key = `${tabId}:${frameId}:${scope.navigationEpoch}:${scope.documentId}`;
@@ -418,12 +506,10 @@ export class CausalOrchestrator {
     }
 
     this.candidates.update(graph);
+    graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
     const hasDeterministicCausalExperiment = this.experiments.generate(graph).length > 0;
     // Preserve the established deterministic path whenever it already has a
     // valid intervention. SAEI expands the lattice only for unresolved cases.
-    if (!hasDeterministicCausalExperiment) {
-      graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
-    }
     await this.deps.session.persist();
     const replaying = await this.maybeReplay(graph, batch, health, epoch.url, scope);
     if (replaying) return true;
@@ -543,8 +629,16 @@ export class CausalOrchestrator {
       ...graph.budgets,
       remaining: Math.max(0, graph.budgets.maxPerDocumentEpoch - graph.experiments.length),
     };
-    const selected = this.selector.select(candidates, key, budget);
-    const autonomousSelection = forceAutonomous || !selected ? this.autonomousSelection(graph, baselineHealth) : null;
+    const eventKinds = new Set(graph.nodes.map((node) => node.kind));
+    const reactionEvidenceReady = eventKinds.has('ANTI_BLOCK_REACTION') || eventKinds.has('SEMANTIC_GATE');
+    const selected = eventKinds.has('OVERLAY_APPEARED') && !reactionEvidenceReady
+      ? undefined
+      : this.selector.select(candidates, key, budget);
+    const preferReactionUi = eventKinds.has('OVERLAY_APPEARED')
+      && (eventKinds.has('ANTI_BLOCK_REACTION') || eventKinds.has('SEMANTIC_GATE'));
+    const autonomousSelection = forceAutonomous || !selected || preferReactionUi
+      ? this.autonomousSelection(graph, baselineHealth)
+      : null;
     if (autonomousSelection && this.deps.primitiveExecutors) {
       return this.stageAutonomousExperiment(graph, siteKey, navigationId, baselineHealth, autonomousSelection.experiment);
     }
@@ -611,7 +705,25 @@ export class CausalOrchestrator {
     } else if (loop.snapshot().status === 'EXPLORING') {
       loop.restore(observation, loop.snapshot());
     }
-    const experiment = loop.nextExperiment();
+    const eventKinds = new Set(graph.nodes.map((node) => node.kind));
+    const hasReactionOverlay = eventKinds.has('OVERLAY_APPEARED')
+      && (eventKinds.has('ANTI_BLOCK_REACTION') || eventKinds.has('SEMANTIC_GATE'));
+    const preferredPrimitive = hasReactionOverlay
+      ? 'REMOVE_REACTION_UI'
+      : graph.nodes
+        .slice()
+        .reverse()
+        .map((node) => node.features.classificationDisposition)
+        .find((value): value is string => typeof value === 'string');
+    const experiment = loop.nextExperiment(
+      preferredPrimitive === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+        ? 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+        : preferredPrimitive === 'STOP_MATCHED_REDIRECT_CHAIN'
+          ? 'STOP_MATCHED_REDIRECT_CHAIN'
+          : preferredPrimitive === 'REMOVE_REACTION_UI'
+            ? 'REMOVE_REACTION_UI'
+            : undefined
+    );
     if (!experiment) return null;
     const currentOpaqueRefs = graph.nodes.flatMap((node) => node.refs)
       .filter((ref) => ref.startsWith('element:') || ref.startsWith('request:') || ref.startsWith('navigation:'));
@@ -677,27 +789,57 @@ export class CausalOrchestrator {
     await this.persistAutonomySession();
     await new Promise<void>((resolve) => setTimeout(resolve, Math.min(500, experiment.durationMs)));
     if (!this.pendingAutonomy.has(txId)) return true;
-    await this.deps.sendTabMessage(graph.scope.tabId, {
+    await this.requestAutonomyHealth(pending);
+    return true;
+  }
+
+  private async requestAutonomyHealth(pending: PendingAutonomy): Promise<void> {
+    const liveEpoch = this.deps.registry.getEpoch(pending.tabId, pending.frameId);
+    const documentId = pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+      && liveEpoch
+      && liveEpoch.documentId !== pending.documentId
+      ? liveEpoch.documentId
+      : pending.documentId;
+    await this.deps.sendTabMessage(pending.tabId, {
       v: 1,
       type: 'REQUEST_HEALTH_SNAPSHOT',
-      txId,
-      documentId: graph.scope.documentId,
-    });
-    return true;
+      txId: pending.txId,
+      documentId,
+    }).catch(() => undefined);
   }
 
   private async finishAutonomous(
     pending: PendingAutonomy,
     postHealth: HealthVector
   ): Promise<void> {
+    if (this.finalizingAutonomy.has(pending.txId) || !this.pendingAutonomy.has(pending.txId)) return;
+    this.finalizingAutonomy.add(pending.txId);
+    try {
+      await this.finishAutonomousInternal(pending, postHealth);
+    } finally {
+      this.finalizingAutonomy.delete(pending.txId);
+    }
+  }
+
+  private async finishAutonomousInternal(
+    pending: PendingAutonomy,
+    postHealth: HealthVector
+  ): Promise<void> {
     const executors = this.deps.primitiveExecutors;
+    const targetClosed = pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+      ? await executors?.ensureNavigationTargetClosed(pending.txId) ?? false
+      : undefined;
+    const postElements = this.lastElements.get(`${pending.tabId}:${pending.frameId}:${pending.documentId}`);
     const verification = this.outcomeVerifiers.verify(
       pending.experiment.primitiveId,
       pending.baseline,
       postHealth,
       {
-        targetClosed: pending.execution.closedTargetUrl !== undefined,
+        targetClosed: targetClosed ?? pending.execution.closedTargetUrl !== undefined,
+        targetExists: targetClosed === false ? true : pending.execution.closedTargetUrl !== undefined ? false : undefined,
         redirectStopped: pending.execution.navigationRef !== undefined,
+        baitPreserved: postElements?.some((element) => element.role === 'bait-candidate' && element.visible),
+        layoutRestored: postElements?.some((element) => element.role === 'bait-candidate'),
       }
     );
     const rollback = verification.success
@@ -729,20 +871,42 @@ export class CausalOrchestrator {
       primitiveId: pending.experiment.primitiveId,
       ...(rollback.ok ? {} : { capabilityGapCode: 'ROLLBACK_NOT_RELIABLE' }),
     };
-    const graph = this.deps.graphs.get({
+    await this.deps.engine.recordAutonomousExperiment({
+      record,
       tabId: pending.tabId,
       navigationEpoch: this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.navigationEpoch ?? 0,
       documentId: pending.documentId,
       frameId: pending.frameId,
-    }) ?? this.deps.graphs.getAll().find((item) => item.graphId === pending.graphId);
+      siteKey: pending.siteKey,
+      navigationId: pending.navigationId,
+      txId: pending.txId,
+      baselineHealth: pending.baseline,
+      hypothesisId: pending.experiment.hypothesisId,
+      baselineFingerprint: pending.fingerprint,
+    });
+    const graph = this.deps.graphs.getAll().find((item) => item.graphId === pending.graphId)
+      ?? this.deps.graphs.get({
+        tabId: pending.tabId,
+        navigationEpoch: this.deps.registry.getEpoch(pending.tabId, pending.frameId)?.navigationEpoch ?? 0,
+        documentId: pending.documentId,
+        frameId: pending.frameId,
+      });
     const loop = this.autonomyLoops.get(pending.graphId);
     if (graph) {
+      if (!graph.experiments.some((item) => item.id === record.id)) {
+        graph.experiments.push(record);
+      }
       this.deps.beliefs.apply(graph, record, pending.experiment.hypothesisId);
       const hypothesis = graph.hypotheses.find((item) => item.id === pending.experiment.hypothesisId);
       if (hypothesis && verification.success) {
-        await this.promoteAutonomous(graph, hypothesis, pending, record);
+        if (pending.recipeReplay) {
+          await this.finishPrimitiveRecipeReplay(pending, record);
+        } else {
+          await this.promoteAutonomous(graph, hypothesis, pending, record);
+        }
       }
     }
+    await this.deps.session.persist();
     loop?.recordOutcome(pending.experiment, {
       resolved: verification.success,
       pageHealthy: postHealth.interaction >= 0.7 && postHealth.scrollability >= 0.7,
@@ -758,6 +922,267 @@ export class CausalOrchestrator {
     }
   }
 
+  private async maybeReplayPrimitiveNavigation(
+    target: NavigationTargetObservation,
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    baseline: HealthVector
+  ): Promise<boolean> {
+    const fingerprint = this.lastFingerprints.get(graph.graphId);
+    if (!fingerprint || !this.deps.primitiveExecutors) return false;
+    const records = await this.deps.recipeStore.getByOriginHash(graph.scope.originHash);
+    const record = records.find((item) => {
+      if (item.lifecycle === 'INVALIDATED' || !item.primitiveSequence?.some((step) => step.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET')) return false;
+      return checkFingerprint({
+        originHash: item.recipe.originHash,
+        ...item.recipe.fingerprintConstraints,
+        relevantResourceSetHash: undefined,
+      }, fingerprint).ok;
+    });
+    const step = record?.primitiveSequence?.find((item) => item.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET');
+    if (!record || !step || step.opaqueRefRemappingRule !== 'CURRENT_NAVIGATION_REF') return false;
+    const hypothesis = graph.hypotheses.find((item) => item.mechanismClass === 'UNKNOWN_NAVIGATION_REACTION');
+    if (!hypothesis) return false;
+    const primitiveId = step.primitiveId as AutonomousExperiment['primitiveId'];
+    const experiment: AutonomousExperiment = {
+      id: `experiment:x${Date.now()}` as `experiment:x${number}`,
+      hypothesisId: hypothesis.id,
+      primitiveId,
+      expectedInformationGain: 1,
+      expectedRisk: 0,
+      expectedPrivacyRisk: 0,
+      durationMs: 500,
+      opaqueRefs: [target.ref],
+    };
+    const txId = `recipe_replay_${record.recipe.id}_${Date.now()}`;
+    const staged = await this.deps.primitiveExecutors.stage({
+      txId,
+      tabId: target.sourceTabId,
+      frameId: target.sourceFrameId,
+      documentId: graph.scope.documentId,
+      primitiveId,
+      opaqueRefs: [target.ref],
+      evidence: step.requiredEvidenceClasses,
+    }).catch(() => ({ ok: false as const, gap: { code: 'EXECUTOR_ERROR' as const, reason: 'recipe replay executor failed' } }));
+    if (!staged.ok) return false;
+    this.pendingAutonomy.set(txId, {
+      txId,
+      graphId: graph.graphId,
+      experiment,
+      execution: staged.record,
+      baseline,
+      fingerprint,
+      siteKey: this.deps.registry.getEpoch(target.sourceTabId, target.sourceFrameId)?.siteKey ?? '',
+      navigationId: this.deps.registry.getEpoch(target.sourceTabId, target.sourceFrameId)?.navigationId ?? '',
+      frameId: target.sourceFrameId,
+      documentId: graph.scope.documentId,
+      tabId: target.sourceTabId,
+      recipeReplay: {
+        recordId: record.recipe.id,
+        applicationKey: `${record.recipe.id}:${graph.scope.documentId}`,
+        fingerprint,
+      },
+    });
+    await this.persistAutonomySession();
+    await new Promise<void>((resolve) => setTimeout(resolve, 250));
+    await this.deps.sendTabMessage(target.sourceTabId, {
+      v: 1,
+      type: 'REQUEST_HEALTH_SNAPSHOT',
+      txId,
+      documentId: graph.scope.documentId,
+    }).catch(() => undefined);
+    return true;
+  }
+
+  private navigationSourceGraph(
+    target: NavigationTargetObservation,
+    currentScope: CausalDocumentKey
+  ): ReturnType<EventGraphStore['getOrCreate']> | undefined {
+    const referencedGraph = this.deps.graphs.getAll().find((candidate) =>
+      candidate.nodes.some((node) =>
+        node.refs.includes(target.ref)
+        || (target.recentIntentRef !== undefined && node.refs.includes(target.recentIntentRef))
+      )
+    );
+    if (referencedGraph) return referencedGraph;
+    if (!target.sourceDocumentId || target.sourceDocumentId === currentScope.documentId) {
+      return this.deps.graphs.get(currentScope);
+    }
+    return this.deps.graphs.getAll().find((candidate) =>
+      candidate.scope.tabId === target.sourceTabId
+      && candidate.nodes[0]?.scope.frameId === target.sourceFrameId
+      && candidate.scope.documentId === target.sourceDocumentId
+    );
+  }
+
+  private primitiveReplayRefs(
+    primitiveId: PrimitiveId,
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    batch: CausalPageObservationBatch,
+  ): string[] | null {
+    const requiredEvidence = requiredEvidenceForPrimitive(primitiveId);
+    const eventKinds = new Set<string>(graph.nodes.map((node) => node.kind));
+    if (primitiveId === 'REMOVE_REACTION_UI') {
+      const overlayObserved = batch.pageSignals.geometry.hasFixedOverlay
+        || batch.elements.some((element) => element.role === 'fullscreen-overlay');
+      if (!overlayObserved) return null;
+    } else if (requiredEvidence.some((kind) => !eventKinds.has(kind))) {
+      return null;
+    }
+
+    if (primitiveId === 'RESTORE_SCROLL' || primitiveId === 'RESTORE_POINTER_INTERACTION' || primitiveId === 'PLAYER_HEALTH_RECOVERY') {
+      return [];
+    }
+    if (primitiveId.includes('NETWORK') || primitiveId === 'TARGETED_SESSION_DNR') {
+      const ref = [...graph.nodes].reverse().flatMap((node) => node.refs).find((value) => value.startsWith('request:'));
+      return ref ? [ref] : null;
+    }
+    if (primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' || primitiveId === 'STOP_MATCHED_REDIRECT_CHAIN') {
+      return null;
+    }
+    const wantsBait = primitiveId === 'PRESERVE_BAIT' || primitiveId === 'RESTORE_LAYOUT';
+    const element = batch.elements.find((item) => item.visible && (wantsBait ? item.role === 'bait-candidate' : item.role === 'fullscreen-overlay'))
+      ?? batch.elements.find((item) => wantsBait ? item.role === 'bait-candidate' : item.role === 'fullscreen-overlay')
+      ?? [...graph.nodes].reverse().find((node) => node.kind === 'OVERLAY_APPEARED')?.refs
+        .find((ref): ref is `element:e${number}` => ref.startsWith('element:'));
+    const elementRef = typeof element === 'string' ? element : element?.ref;
+    return elementRef ? [elementRef] : null;
+  }
+
+  private async maybeReplayPrimitivePage(
+    record: NonNullable<Awaited<ReturnType<CausalRecipeStore['getByOriginHash']>>[number]>,
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    batch: CausalPageObservationBatch,
+    baseline: HealthVector,
+    fingerprint: PageFingerprint,
+    scope: CausalDocumentKey,
+  ): Promise<boolean> {
+    const step = record.primitiveSequence?.find((item) => item.primitiveId !== 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' && item.primitiveId !== 'STOP_MATCHED_REDIRECT_CHAIN');
+    if (!step || step.opaqueRefRemappingRule === 'CURRENT_NAVIGATION_REF') return false;
+    const applicationKey = `${record.recipe.id}:${scope.documentId}`;
+    if (this.completedRecipeApplications.has(applicationKey)) return true;
+    if ([...this.pendingAutonomy.values()].some((pending) => pending.recipeReplay?.applicationKey === applicationKey)) return true;
+    const primitiveId = step.primitiveId as PrimitiveId;
+    const refs = this.primitiveReplayRefs(primitiveId, graph, batch);
+    if (refs === null) return true;
+    const txId = `recipe_replay_${record.recipe.id}_${Date.now()}`;
+    const experiment: AutonomousExperiment = {
+      id: `experiment:x${Date.now()}` as `experiment:x${number}`,
+      hypothesisId: 'hypothesis:h1',
+      primitiveId,
+      expectedInformationGain: 1,
+      expectedRisk: 0,
+      expectedPrivacyRisk: 0,
+      durationMs: 500,
+      opaqueRefs: refs,
+    };
+    const staged = await this.deps.primitiveExecutors?.stage({
+      txId,
+      tabId: scope.tabId,
+      frameId: scope.frameId,
+      documentId: scope.documentId,
+      primitiveId,
+      opaqueRefs: refs,
+      evidence: step.requiredEvidenceClasses,
+    }).catch(() => undefined);
+    if (!staged?.ok) return false;
+    const hypothesis = graph.hypotheses.find((item) => item.mechanismClass === record.recipe.causalSupport.hypothesisClass)
+      ?? graph.hypotheses[0];
+    if (!hypothesis) {
+      await this.deps.primitiveExecutors?.rollback(txId);
+      return false;
+    }
+    this.pendingAutonomy.set(txId, {
+      txId,
+      graphId: graph.graphId,
+      experiment: { ...experiment, hypothesisId: hypothesis.id },
+      execution: staged.record,
+      baseline,
+      fingerprint,
+      siteKey: this.deps.registry.getEpoch(scope.tabId, scope.frameId)?.siteKey ?? '',
+      navigationId: this.deps.registry.getEpoch(scope.tabId, scope.frameId)?.navigationId ?? '',
+      frameId: scope.frameId,
+      documentId: scope.documentId,
+      tabId: scope.tabId,
+      recipeReplay: {
+        recordId: record.recipe.id,
+        applicationKey: `${record.recipe.id}:${scope.documentId}`,
+        fingerprint,
+      },
+    });
+    await this.persistAutonomySession();
+    await new Promise<void>((resolve) => setTimeout(resolve, 250));
+    await this.deps.sendTabMessage(scope.tabId, {
+      v: 1,
+      type: 'REQUEST_HEALTH_SNAPSHOT',
+      txId,
+      documentId: scope.documentId,
+    }).catch(() => undefined);
+    return true;
+  }
+
+  private async finishPrimitiveRecipeReplay(
+    pending: PendingAutonomy,
+    record: ExperimentRecord
+  ): Promise<void> {
+    const replay = pending.recipeReplay;
+    if (!replay) return;
+    const stored = await this.deps.recipeStore.getRecipe(replay.recordId as `recipe:rcp${number}`);
+    if (!stored) return;
+    const replayed = this.deps.promotion.replay(
+      stored.recipe,
+      replay.fingerprint,
+      record.healthDelta ?? 0,
+      record.status === 'COMMITTED' && record.rollbackVerified !== false
+    );
+    const evidence = [...(stored.evidence ?? []), { ...record, replay: true }];
+    let lifecycle: CausalRecipeLifecycle = replayed.lifecycle === 'INVALIDATED'
+      ? 'INVALIDATED'
+      : replayed.recipe.causalSupport.stableReplays >= 2 ? 'RECIPE_SAFE' : 'CONFIRMED';
+    let recipe = replayed.recipe;
+    if (lifecycle !== 'INVALIDATED' && replayed.recipe.causalSupport.stableReplays >= 2) {
+      const hypothesis: CausalHypothesis = {
+        id: 'hypothesis:h0',
+        causeRefs: [],
+        outcome: 'UNWANTED_NAVIGATION',
+        mechanismClass: stored.recipe.causalSupport.hypothesisClass as CausalHypothesis['mechanismClass'],
+        prior: stored.recipe.causalSupport.posterior,
+        posterior: stored.recipe.causalSupport.posterior,
+        confoundingRisk: 'LOW',
+        status: 'SUPPORTED',
+        createdFrom: [],
+        updatedByExperiments: evidence.map((item) => item.id),
+      };
+      const promoted = this.deps.promotion.evaluate({
+        hypothesis,
+        fingerprint: replay.fingerprint,
+        fingerprintConstraints: stored.recipe.fingerprintConstraints,
+        actionRefs: [...stored.recipe.actionRefs],
+        actions: stored.actions ?? [],
+        primitiveSequence: stored.primitiveSequence,
+        expectedHealthDelta: stored.recipe.expectedHealthDelta,
+        minPrivacyScore: Math.min(...evidence.map((item) => item.privacyScore ?? 1), 1),
+        rollbackPlanRef: stored.recipe.rollbackPlanRef,
+        preconditions: [...stored.recipe.preconditions],
+        stableReplays: replayed.recipe.causalSupport.stableReplays,
+        experiments: evidence,
+        existingRecipeId: stored.recipe.id,
+      });
+      if (promoted.pass) {
+        recipe = promoted.recipe;
+        lifecycle = 'RECIPE_SAFE';
+      }
+    }
+    await this.deps.recipeStore.save({
+      ...stored,
+      recipe,
+      lifecycle,
+      evidence,
+      updatedWallMs: Date.now(),
+      invalidationReason: lifecycle === 'INVALIDATED' ? 'REPLAY_HEALTH_OR_ROLLBACK' : undefined,
+    });
+    this.completedRecipeApplications.add(replay.applicationKey);
+  }
+
   private async promoteAutonomous(
     graph: ReturnType<EventGraphStore['getOrCreate']>,
     hypothesis: CausalHypothesis,
@@ -766,15 +1191,35 @@ export class CausalOrchestrator {
   ): Promise<void> {
     const fingerprint = pending.fingerprint ?? this.lastFingerprints.get(graph.graphId);
     const actions = primitiveRecipeActions(pending.experiment.primitiveId, pending.experiment.opaqueRefs);
-    if (!fingerprint || actions.length === 0) return;
+    if (!fingerprint) return;
     const existing = (await this.deps.recipeStore.getByOriginHash(fingerprint.originHash))
       .find((item) => item.recipe.causalSupport.hypothesisClass === hypothesis.mechanismClass);
     const evidence = [...(existing?.evidence ?? []), record];
+    const step = primitiveRecipeStep(pending.experiment.primitiveId, graph, fingerprint);
+    const navigationPrimitive = pending.experiment.primitiveId.includes('NAVIGATION')
+      || pending.experiment.primitiveId === 'STOP_MATCHED_REDIRECT_CHAIN'
+      || pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET';
+    const networkPrimitive = pending.experiment.primitiveId.includes('NETWORK')
+      || pending.experiment.primitiveId === 'TARGETED_SESSION_DNR';
+    const primitiveSequence = existing?.primitiveSequence?.some((item) => item.primitiveId === step.primitiveId)
+      ? [...existing.primitiveSequence]
+      : [...(existing?.primitiveSequence ?? []), step];
+    const replayActionRefs = actions.length > 0
+      ? pending.experiment.opaqueRefs.filter((ref) => !ref.startsWith('navigation:')) as OpaqueRef[]
+      : [];
     const input: PromotionEvaluateInput = {
       hypothesis,
       fingerprint,
-      fingerprintConstraints: existing?.recipe.fingerprintConstraints,
-      actionRefs: pending.experiment.opaqueRefs as OpaqueRef[],
+      fingerprintConstraints: existing?.recipe.fingerprintConstraints ?? {
+        originHash: fingerprint.originHash,
+        detectorFeatureHash: fingerprint.detectorFeatureHash,
+        structuralFeatureHash: fingerprint.structuralFeatureHash,
+        ...(navigationPrimitive ? {} : {
+          topLevelPathClass: fingerprint.topLevelPathClass,
+          ...(networkPrimitive ? { relevantResourceSetHash: fingerprint.relevantResourceSetHash } : {}),
+        }),
+      },
+      actionRefs: existing?.recipe.actionRefs ? [...existing.recipe.actionRefs] : replayActionRefs,
       actions: existing?.actions ? [...existing.actions] : actions,
       expectedHealthDelta: record.healthDelta ?? 0,
       minPrivacyScore: record.privacyScore ?? 1,
@@ -783,6 +1228,7 @@ export class CausalOrchestrator {
       stableReplays: existing?.recipe.causalSupport.stableReplays ?? 0,
       experiments: evidence,
       existingRecipeId: existing?.recipe.id,
+      primitiveSequence,
     };
     const draft = existing?.recipe ?? this.deps.promotion.compileDraft(input);
     if (!draft) return;
@@ -794,11 +1240,9 @@ export class CausalOrchestrator {
       updatedWallMs: Date.now(),
       actions: input.actions,
       evidence,
-      primitiveSequence: [...(existing?.primitiveSequence ?? []), {
-        primitiveId: pending.experiment.primitiveId,
-        opaqueRefs: [...pending.experiment.opaqueRefs],
-      }],
+      primitiveSequence,
     });
+    this.completedRecipeApplications.add(`${recipe.id}:${graph.scope.documentId}`);
   }
 
   private fingerprint(graph: ReturnType<EventGraphStore['getOrCreate']>, batch: CausalPageObservationBatch, url: string): PageFingerprint {
@@ -812,9 +1256,13 @@ export class CausalOrchestrator {
     // fluctuate while a reversible trial is settling. Detector identity uses
     // stable detector-class signals; observability guards separately require
     // mechanism-specific scroll/pointer preconditions before replay.
-    const detectorIdentityTypes = batch.pageSignals.suspectedDetectorTypes
-      .filter((type) => type === 'SEMANTIC_PROMPT' || type === 'FULLSCREEN_GATE')
+    const detectorIdentityTypes: string[] = batch.pageSignals.suspectedDetectorTypes
+      .filter((type) => type === 'FULLSCREEN_GATE')
       .sort();
+    for (const category of batch.pageSignals.semantic.categories ?? []) {
+      detectorIdentityTypes.push(`SEMANTIC_CATEGORY:${category}`);
+    }
+    detectorIdentityTypes.sort();
     return createPageFingerprint({
       originHash: graph.scope.originHash,
       topLevelPathClass: path,
@@ -858,12 +1306,25 @@ export class CausalOrchestrator {
    */
   private recipeBaselineObservable(
     mechanism: string,
+    primitiveId: string,
     batch: CausalPageObservationBatch
   ): boolean {
     const hasVisibleOverlay = batch.elements.some(
       (element) => element.role === 'fullscreen-overlay' && element.visible
     );
     const hasBait = batch.elements.some((element) => element.role === 'bait-candidate');
+    if (primitiveId === 'RESTORE_SCROLL') {
+      return hasVisibleOverlay && (
+        batch.pageSignals.geometry.bodyScrollLocked
+        || batch.pageSignals.geometry.htmlScrollLocked
+      );
+    }
+    if (primitiveId === 'RESTORE_POINTER_INTERACTION') {
+      return batch.pageSignals.interaction.pointerEventsSuppressed || hasVisibleOverlay;
+    }
+    if (primitiveId === 'REMOVE_REACTION_UI' || primitiveId === 'RESTORE_LAYOUT') {
+      return hasVisibleOverlay || batch.pageSignals.semantic.categories?.includes('ANTI_BLOCK_INSTRUCTION') === true;
+    }
     switch (mechanism) {
       case 'BAIT_VISIBILITY_PROBE':
         return hasBait && hasVisibleOverlay;
@@ -888,14 +1349,28 @@ export class CausalOrchestrator {
   ): Promise<boolean> {
     if (Array.from(this.pendingReplays.values()).some((pending) => pending.tabId === scope.tabId)) return true;
     const records = await this.deps.recipeStore.getByOriginHash(graph.scope.originHash);
-    const record = records.find((item) => item.lifecycle !== 'INVALIDATED' && item.actions?.length);
-    if (!record?.actions) return false;
-    if (!this.recipeBaselineObservable(record.recipe.causalSupport.hypothesisClass, batch)) {
+    const fp = this.fingerprint(graph, batch, url);
+    const record = records.find((item) => {
+      if (item.lifecycle === 'INVALIDATED' || (!item.primitiveSequence?.length && !item.actions?.length)) return false;
+      const pathConstraint = item.recipe.fingerprintConstraints.topLevelPathClass;
+      if (pathConstraint === undefined) return true;
+      return checkFingerprint({
+        originHash: item.recipe.originHash,
+        topLevelPathClass: pathConstraint,
+      }, fp).ok;
+    });
+    if (!record) return false;
+    const primitiveStep = record.primitiveSequence?.[0];
+    if (primitiveStep?.requiredEvidenceClasses.includes('OVERLAY_APPEARED')
+      && !batch.pageSignals.geometry.hasFixedOverlay
+      && !batch.elements.some((element) => element.role === 'fullscreen-overlay' && element.visible)) {
+      return true;
+    }
+    if (!this.recipeBaselineObservable(record.recipe.causalSupport.hypothesisClass, primitiveStep?.primitiveId ?? '', batch)) {
       // The document is still assembling the causal baseline. Abstain until a
       // later observation instead of applying or invalidating on partial data.
       return true;
     }
-    const fp = this.fingerprint(graph, batch, url);
     const fingerprint = checkFingerprint(
       { originHash: record.recipe.originHash, ...record.recipe.fingerprintConstraints },
       fp
@@ -914,8 +1389,12 @@ export class CausalOrchestrator {
       // the recipe or launching a competing experiment in this document.
       return true;
     }
+    if (record.primitiveSequence?.length) {
+      return this.maybeReplayPrimitivePage(record, graph, batch, baseline, fp, scope);
+    }
     const applicationKey = `${record.recipe.id}:${scope.documentId}`;
     if (this.completedRecipeApplications.has(applicationKey)) return true;
+    if (!record.actions) return false;
     const actions = this.remapActions(record.actions, batch);
     if (!actions) return false;
     const keepAppliedOnSuccess = record.lifecycle === 'RECIPE_SAFE';
@@ -959,7 +1438,15 @@ export class CausalOrchestrator {
     this.pendingReplays.delete(pending.txId);
     const stored = await this.deps.recipeStore.getRecipe(pending.recordId);
     if (!stored) return;
-    const verification = verifyHealthOutcome(pending.baseline, post);
+    const replayPrimitive = stored.primitiveSequence?.[0]?.primitiveId as PrimitiveId | undefined;
+    const mechanismVerification = replayPrimitive === 'REMOVE_REACTION_UI'
+      || replayPrimitive === 'TOGGLE_COSMETIC_ACTION'
+      || replayPrimitive === 'RESTORE_SCROLL'
+      || replayPrimitive === 'RESTORE_POINTER_INTERACTION'
+      || replayPrimitive === 'PLAYER_HEALTH_RECOVERY'
+      ? this.outcomeVerifiers.verify(replayPrimitive, pending.baseline, post)
+      : undefined;
+    const verification = mechanismVerification ?? verifyHealthOutcome(pending.baseline, post);
     let rollbackOk = true;
     if (!pending.keepAppliedOnSuccess || !verification.success) {
       for (const action of [...pending.applied].reverse()) {
@@ -983,16 +1470,18 @@ export class CausalOrchestrator {
       preHealth: this.toCompact(pending.baseline), postHealth: this.toCompact(post),
       healthDelta: verification.scoreDelta, observedRefs: [...stored.recipe.actionRefs],
       policyDecisionId: `policy:${stored.recipe.id}`, transactionId: pending.txId,
-      rollbackVerified: pending.keepAppliedOnSuccess ? false : rollbackOk,
+      rollbackVerified: pending.keepAppliedOnSuccess ? verification.success : rollbackOk,
       epochStillFresh: this.deps.registry.getCausalKey(pending.tabId, pending.frameId)?.documentId === pending.documentId,
       visitId: pending.documentId, fingerprintHash: fingerprintEvidenceHash(pending.fingerprint), replay: true,
       privacyScore: post.privacyPreservation ?? 0.5,
     }];
     let lifecycle: CausalRecipeLifecycle = replayed.lifecycle === 'INVALIDATED'
       ? 'INVALIDATED'
-      : stored.lifecycle === 'RECIPE_SAFE' || replayed.lifecycle === 'RECIPE_SAFE'
+      : replayed.recipe.causalSupport.stableReplays >= RECIPE_SAFE_MIN_STABLE_REPLAYS
         ? 'RECIPE_SAFE'
-        : replayed.recipe.causalSupport.stableReplays >= 1 ? 'CONFIRMED' : stored.lifecycle;
+        : replayed.recipe.causalSupport.stableReplays >= 1
+          ? 'CONFIRMED'
+          : stored.lifecycle;
     let recipe = replayed.recipe;
     if (lifecycle !== 'INVALIDATED' && !pending.keepAppliedOnSuccess) {
       const mechanism = stored.recipe.causalSupport.hypothesisClass;
@@ -1024,6 +1513,7 @@ export class CausalOrchestrator {
           stableReplays: replayed.recipe.causalSupport.stableReplays,
           experiments: evidence,
           existingRecipeId: stored.recipe.id,
+          primitiveSequence: stored.primitiveSequence,
         });
         if (promoted.pass) {
           recipe = promoted.recipe;
@@ -1098,9 +1588,13 @@ export class CausalOrchestrator {
     const promoted = this.deps.promotion.evaluate(input);
     if (promoted.pass) {
       await this.deps.recipeStore.save({ recipe: promoted.recipe, lifecycle: 'RECIPE_SAFE', actions, evidence: [...input.experiments], updatedWallMs: Date.now() });
+      this.completedRecipeApplications.add(`${promoted.recipe.id}:${graph.scope.documentId}`);
     } else if (!existing) {
       const draft = this.deps.promotion.compileDraft(input);
-      if (draft) await this.deps.recipeStore.save({ recipe: draft, lifecycle: 'DRAFT', actions, evidence: experiments, updatedWallMs: Date.now() });
+      if (draft) {
+        await this.deps.recipeStore.save({ recipe: draft, lifecycle: 'DRAFT', actions, evidence: experiments, updatedWallMs: Date.now() });
+        this.completedRecipeApplications.add(`${draft.id}:${graph.scope.documentId}`);
+      }
     }
   }
 }

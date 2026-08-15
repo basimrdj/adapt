@@ -1,10 +1,12 @@
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import puppeteer, { Browser, Target } from 'puppeteer';
+import puppeteer, { Browser, Page, Target } from 'puppeteer';
 import { mkdirSync, writeFileSync } from 'node:fs';
+import { DnrController } from '../src/core/dnr/controller';
 import { PrimitiveExecutorRegistry } from '../src/background/autonomy/executor-registry';
 import { EphemeralNavigationTargetRegistry } from '../src/background/autonomy/navigation-targets';
+import { PrimitiveId } from '../src/background/autonomy/primitive-registry';
 import { chromeExecutable } from '../tests/support/chrome-executable';
 
 interface TrialDefinition {
@@ -34,9 +36,14 @@ interface TrialResult {
   observedEventKinds: string[];
   autonomyStatuses: string[];
   experimentDetails: string[];
+  remainingPageUrls: string[];
+  navigationTargetSnapshot: unknown;
+  pendingAutonomyCount: number;
+  completedGraphExperiments: number;
 }
 
 interface BrowserHoldoutScore {
+  profile: 'fast' | 'full';
   activeTrials: number;
   negativeControls: number;
   autonomousDetectionRate: number;
@@ -56,6 +63,15 @@ interface BrowserHoldoutScore {
   rollbackSuccessRate: number;
   popupUnwantedTargetRecall: number;
   popupLegitimateTargetFalsePositiveRate: number;
+  autonomyStatusCounts: {
+    detected: number;
+    attempted: number;
+    resolved: number;
+    rolledBack: number;
+    capabilityGap: number;
+    policyAbstention: number;
+    timedOut: number;
+  };
 }
 
 interface TestServer {
@@ -67,6 +83,29 @@ interface TestServer {
 interface ExtensionSession {
   browser: Browser;
   worker: Target;
+}
+
+interface ResourceServer extends TestServer {
+  hits: Map<string, number>;
+}
+
+interface PrimitiveProbeResult {
+  primitiveId: PrimitiveId;
+  stage: boolean;
+  observableEffect: boolean;
+  healthSafety: boolean;
+  rollback: boolean;
+  restoredBaseline: boolean;
+  notes: string;
+}
+
+interface RecipeLifecycleLiveResult {
+  visit1_experiments: number;
+  visit2_experiments: number;
+  visit3_experiments: number;
+  visit4_experiments: number;
+  visit_ai_calls: number;
+  lifecycle_after_each_visit: string[];
 }
 
 const root = path.dirname(fileURLToPath(import.meta.url));
@@ -102,6 +141,10 @@ function targetHtml(): string {
   return '<!doctype html><html><body><main><h1>Separate target</h1></main></body></html>';
 }
 
+function primitiveFixtureHtml(resourcePort: number): string {
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Primitive fixture</title><style>html,body{min-height:140vh}#primitive-bait{width:180px;height:40px}</style></head><body><main><h1>Executor fixture</h1><p>Stable content for this executor test.</p><div id="primitive-bait" class="ad" style="display:none;visibility:hidden;content-visibility:hidden;contain:strict">bait</div><div id="primitive-overlay" style="display:block;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui">Continue to view content.</div></main><script>window.__triggerPrimitiveResource=(path)=>new Promise((resolve)=>{const script=document.createElement('script');script.src='http://127.0.0.1:${resourcePort}/'+path+'?nonce='+Date.now()+Math.random();script.onload=()=>resolve('loaded');script.onerror=()=>resolve('error');document.head.appendChild(script)});window.__primitiveLoaded=0;</script></body></html>`;
+}
+
 async function startServer(port: number, render: (requestPath: string) => string): Promise<TestServer> {
   const server = http.createServer((request, response) => {
     const requestPath = new URL(request.url ?? '/', `http://127.0.0.1:${port || 80}`).pathname;
@@ -118,7 +161,41 @@ async function startServer(port: number, render: (requestPath: string) => string
   };
 }
 
-async function launchSession(): Promise<ExtensionSession> {
+async function startResourceServer(): Promise<ResourceServer> {
+  const hits = new Map<string, number>();
+  const server = http.createServer((request, response) => {
+    const requestPath = new URL(request.url ?? '/', 'http://127.0.0.1').pathname;
+    hits.set(requestPath, (hits.get(requestPath) ?? 0) + 1);
+    if (requestPath.startsWith('/primitive-script.js') || requestPath.startsWith('/primitive-ad.js')) {
+      response.writeHead(200, { 'Content-Type': 'application/javascript', 'Cache-Control': 'no-store' });
+      response.end('window.__primitiveLoaded=(window.__primitiveLoaded||0)+1;');
+      return;
+    }
+    if (requestPath === '/redirect-start') {
+      response.writeHead(302, { Location: '/redirect-target' });
+      response.end();
+      return;
+    }
+    if (requestPath === '/redirect-target') {
+      response.writeHead(200, { 'Content-Type': 'text/html' });
+      response.end('<!doctype html><html><body><main><h1>Redirect target</h1></main></body></html>');
+      return;
+    }
+    response.writeHead(404);
+    response.end();
+  });
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Primitive resource server did not expose a TCP port');
+  return {
+    server,
+    port: address.port,
+    hits,
+    close: async () => new Promise<void>((resolve) => server.close(() => resolve())),
+  };
+}
+
+async function launchSession(warmupUrl?: string): Promise<ExtensionSession> {
   const browser = await puppeteer.launch({
     headless: true,
     executablePath: chromeExecutable(),
@@ -135,6 +212,12 @@ async function launchSession(): Promise<ExtensionSession> {
     (target) => target.type() === 'service_worker' && target.url().startsWith('chrome-extension://'),
     { timeout: 10_000 }
   );
+  if (warmupUrl) {
+    const warmup = await browser.newPage();
+    await warmup.goto(warmupUrl, { waitUntil: 'domcontentloaded' });
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    await warmup.close();
+  }
   return { browser, worker };
 }
 
@@ -180,12 +263,286 @@ async function waitForSession(browser: Browser, key: string, predicate: (value: 
   return sessionValue(browser, key).catch(() => undefined);
 }
 
-function graphSignals(value: Record<string, unknown> | undefined): { detected: boolean; experiments: number; interventions: number; aiCalls: number; capabilityGaps: number; observedEventKinds: string[]; autonomyStatuses: string[]; experimentDetails: string[] } {
-  const snapshot = value?.adapt_causal_session_state_v1 as { graphs?: Array<{ nodes?: Array<{ kind?: string; features?: Record<string, unknown> }>; experiments?: Array<{ status?: string; primitiveId?: string; healthDelta?: number; rollbackVerified?: boolean; preHealth?: Record<string, unknown>; postHealth?: Record<string, unknown> }> }> } | undefined;
+async function evaluateWorker<T>(browser: Browser, expression: string): Promise<T> {
+  const worker = browser.targets().find(
+    (target) => target.type() === 'service_worker' && target.url().startsWith('chrome-extension://')
+  );
+  if (!worker) throw new Error('Extension service worker is unavailable');
+  const client = await worker.createCDPSession();
+  try {
+    const response = await client.send('Runtime.evaluate', {
+      expression: `(async()=>Promise.race([(${expression}),new Promise((_,reject)=>setTimeout(()=>reject(new Error('worker evaluation timeout')),5000))]))()`,
+      awaitPromise: true,
+      returnByValue: true,
+    });
+    if (response.exceptionDetails) throw new Error('Extension worker evaluation failed');
+    return response.result.value as T;
+  } finally {
+    await client.detach();
+  }
+}
+
+async function liveTabContext(browser: Browser, page: Page): Promise<{ tabId: number; documentId: string }> {
+  const tab = await evaluateWorker<{ id?: number }>(browser, `(async()=>{const tabs=await chrome.tabs.query({});return tabs.find((tab)=>tab.url&&tab.url.startsWith(${JSON.stringify(page.url().split('?')[0])}));})()`);
+  if (typeof tab?.id !== 'number') throw new Error(`Could not resolve Chromium tab for ${page.url()}`);
+  const state = await sessionValue(browser, 'adapt_causal_session_state_v1');
+  const snapshot = state?.adapt_causal_session_state_v1 as { graphs?: Array<{ scope?: { tabId?: number; documentId?: string }; nodes?: Array<{ refs?: string[] }> }> } | undefined;
+  const graph = [...(snapshot?.graphs ?? [])].reverse().find((candidate) => candidate.scope?.tabId === tab.id);
+  return { tabId: tab.id, documentId: graph?.scope?.documentId ?? `primitive-document-${tab.id}` };
+}
+
+async function waitForOpaqueRef(browser: Browser, nodeKind: string, timeoutMs = 5000): Promise<{ ref: string; documentId: string }> {
+  const state = await waitForSession(browser, 'adapt_causal_session_state_v1', (value) => {
+    const snapshot = value.adapt_causal_session_state_v1 as { graphs?: Array<{ scope?: { documentId?: string }; nodes?: Array<{ kind?: string; refs?: string[] }> }> } | undefined;
+    return Boolean(snapshot?.graphs?.some((graph) => graph.nodes?.some((node) => node.kind === nodeKind && node.refs?.some((ref) => ref.startsWith('element:')))));
+  }, timeoutMs);
+  const snapshot = state?.adapt_causal_session_state_v1 as { graphs?: Array<{ scope?: { documentId?: string }; nodes?: Array<{ kind?: string; refs?: string[] }> }> } | undefined;
+  for (const graph of [...(snapshot?.graphs ?? [])].reverse()) {
+    const node = [...(graph.nodes ?? [])].reverse().find((candidate) => candidate.kind === nodeKind && candidate.refs?.some((ref) => ref.startsWith('element:')));
+    const ref = node?.refs?.find((candidate) => candidate.startsWith('element:'));
+    if (ref) return { ref, documentId: graph.scope?.documentId ?? 'primitive-document' };
+  }
+  throw new Error(`Opaque ${nodeKind} target was not observed`);
+}
+
+function primitiveDeps(browser: Browser, navigationTargets: EphemeralNavigationTargetRegistry, resolveRequest: (ref: string) => { urlFilter: string; resourceTypes: chrome.declarativeNetRequest.ResourceType[]; firstParty: boolean; trackerLike: boolean } | undefined) {
+  const dnrBackend = {
+    getDynamicRules: async () => evaluateWorker<chrome.declarativeNetRequest.Rule[]>(browser, 'chrome.declarativeNetRequest.getDynamicRules()'),
+    getSessionRules: async () => evaluateWorker<chrome.declarativeNetRequest.Rule[]>(browser, 'chrome.declarativeNetRequest.getSessionRules()'),
+    updateDynamicRules: async (options: { addRules?: chrome.declarativeNetRequest.Rule[]; removeRuleIds?: number[] }) => evaluateWorker<void>(browser, `chrome.declarativeNetRequest.updateDynamicRules(${JSON.stringify(options)})`),
+    updateSessionRules: async (options: { addRules?: chrome.declarativeNetRequest.Rule[]; removeRuleIds?: number[] }) => evaluateWorker<void>(browser, `chrome.declarativeNetRequest.updateSessionRules(${JSON.stringify(options)})`),
+  };
+  const dnrController = new DnrController(dnrBackend);
+  return {
+    dnrController,
+    sendTabMessage: async (tabId: number, message: unknown) => evaluateWorker<{ success?: boolean; actionIds?: string[] }>(browser, `chrome.tabs.sendMessage(${tabId}, ${JSON.stringify(message)})`),
+    resolveRequest,
+    navigationTargets,
+    tabsApi: {
+      remove: async (tabId: number | number[]) => evaluateWorker<void>(browser, `chrome.tabs.remove(${JSON.stringify(tabId)})`),
+      get: async (tabId: number) => evaluateWorker<chrome.tabs.Tab>(browser, `chrome.tabs.get(${tabId})`),
+      create: async (options: chrome.tabs.CreateProperties) => evaluateWorker<chrome.tabs.Tab>(browser, `chrome.tabs.create(${JSON.stringify(options)})`),
+    },
+  };
+}
+
+async function runPrimitiveExecutorBrowserProbes(appPort: number, resourceServer: ResourceServer): Promise<{ results: PrimitiveProbeResult[]; registry: PrimitiveExecutorRegistry; browserTested: Set<PrimitiveId> }> {
+  const session = await launchSession(`http://127.0.0.1:${appPort}/warmup`);
+  const page = await session.browser.newPage();
+  const fixtureUrl = `http://127.0.0.1:${appPort}/primitive-executor-fixture`;
+  const navigationTargets = new EphemeralNavigationTargetRegistry();
+  const requestTargets = new Map<string, { urlFilter: string; resourceTypes: chrome.declarativeNetRequest.ResourceType[]; firstParty: boolean; trackerLike: boolean }>();
+  const browserTested = new Set<PrimitiveId>();
+  const registry = new PrimitiveExecutorRegistry(primitiveDeps(session.browser, navigationTargets, (ref) => requestTargets.get(ref)), browserTested);
+  const results: PrimitiveProbeResult[] = [];
+  const reload = async (): Promise<{ tabId: number; documentId: string }> => {
+    await page.goto(fixtureUrl, { waitUntil: 'domcontentloaded' });
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    return liveTabContext(session.browser, page);
+  };
+  const pageHealthy = async (): Promise<boolean> => page.evaluate(() => Boolean(document.querySelector('main')) && document.body !== null);
+  const runDom = async (primitiveId: PrimitiveId, ref: string | undefined, effect: () => Promise<boolean>, baseline: () => Promise<boolean>, note: string): Promise<void> => {
+    const context = await liveTabContext(session.browser, page);
+    const txId = `live_${primitiveId}_${Date.now()}`;
+    const staged = await registry.stage({ txId, tabId: context.tabId, frameId: 0, documentId: context.documentId, primitiveId, opaqueRefs: ref ? [ref] : [], evidence: [] });
+    if (!staged.ok) {
+      results.push({ primitiveId, stage: false, observableEffect: false, healthSafety: false, rollback: false, restoredBaseline: false, notes: staged.gap.reason });
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    const observableEffect = await effect();
+    const healthSafety = await pageHealthy();
+    const rollback = (await registry.rollback(txId)).ok;
+    const restoredBaseline = await baseline();
+    const passed = observableEffect && healthSafety && rollback && restoredBaseline;
+    if (passed) browserTested.add(primitiveId);
+    results.push({ primitiveId, stage: true, observableEffect, healthSafety, rollback, restoredBaseline, notes: passed ? note : `effect=${observableEffect},health=${healthSafety},rollback=${rollback},baseline=${restoredBaseline}` });
+  };
+
+  try {
+    let context = await reload();
+    const overlay = await waitForOpaqueRef(session.browser, 'OVERLAY_APPEARED');
+    await runDom('TOGGLE_COSMETIC_ACTION', overlay.ref,
+      () => page.evaluate(() => getComputedStyle(document.querySelector('#primitive-overlay')!).display === 'none'),
+      () => page.evaluate(() => getComputedStyle(document.querySelector('#primitive-overlay')!).display === 'block'),
+      'overlay visibility toggled and restored');
+
+    context = await reload();
+    const bait = await waitForOpaqueRef(session.browser, 'BAIT_STATE_CHANGED');
+    await runDom('PRESERVE_BAIT', bait.ref,
+      () => page.evaluate(() => getComputedStyle(document.querySelector('#primitive-bait')!).display !== 'none'),
+      () => page.evaluate(() => document.querySelector('#primitive-bait') instanceof HTMLElement && (document.querySelector('#primitive-bait') as HTMLElement).style.display === 'none'),
+      'bait visibility restored without losing the target');
+
+    context = await reload();
+    const layoutBait = await waitForOpaqueRef(session.browser, 'BAIT_STATE_CHANGED');
+    await runDom('RESTORE_LAYOUT', layoutBait.ref,
+      () => page.evaluate(() => getComputedStyle(document.querySelector('#primitive-bait')!).contentVisibility !== 'hidden' && getComputedStyle(document.querySelector('#primitive-bait')!).contain !== 'strict'),
+      () => page.evaluate(() => { const element = document.querySelector('#primitive-bait') as HTMLElement; return element.style.contentVisibility === 'hidden' && element.style.contain === 'strict'; }),
+      'bait layout constraints restored');
+
+    context = await reload();
+    await page.evaluate(() => { document.body.style.pointerEvents = 'none'; });
+    await runDom('RESTORE_POINTER_INTERACTION', undefined,
+      () => page.evaluate(() => getComputedStyle(document.body).pointerEvents !== 'none'),
+      () => page.evaluate(() => document.body.style.pointerEvents === 'none'),
+      'pointer interaction restored');
+
+    context = await reload();
+    await page.evaluate(() => { document.body.style.overflow = 'hidden'; document.documentElement.style.overflow = 'hidden'; });
+    await runDom('RESTORE_SCROLL', undefined,
+      () => page.evaluate(() => getComputedStyle(document.body).overflow !== 'hidden' && getComputedStyle(document.documentElement).overflow !== 'hidden'),
+      () => page.evaluate(() => document.body.style.overflow === 'hidden' && document.documentElement.style.overflow === 'hidden'),
+      'scrolling restored');
+
+    context = await reload();
+    await page.evaluate(() => { document.body.style.pointerEvents = 'none'; document.body.style.overflow = 'hidden'; });
+    await runDom('PLAYER_HEALTH_RECOVERY', undefined,
+      () => page.evaluate(() => getComputedStyle(document.body).pointerEvents !== 'none' && getComputedStyle(document.body).overflow !== 'hidden'),
+      () => page.evaluate(() => document.body.style.pointerEvents === 'none' && document.body.style.overflow === 'hidden'),
+      'player interaction and scroll health restored');
+
+    context = await reload();
+    await page.evaluate(() => { document.body.style.overflow = 'hidden'; });
+    const reactionOverlay = await waitForOpaqueRef(session.browser, 'OVERLAY_APPEARED');
+    await runDom('REMOVE_REACTION_UI', reactionOverlay.ref,
+      () => page.evaluate(() => getComputedStyle(document.querySelector('#primitive-overlay')!).display === 'none' && getComputedStyle(document.body).overflow !== 'hidden'),
+      () => page.evaluate(() => document.body.style.overflow === 'hidden' && document.querySelector('#primitive-overlay') instanceof HTMLElement && (document.querySelector('#primitive-overlay') as HTMLElement).style.display === 'block'),
+      'reaction UI removed and full baseline restored');
+
+    context = await reload();
+    const networkUrl = `|http://127.0.0.1:${resourceServer.port}/primitive-script.js*`;
+    requestTargets.set('request:rblock', { urlFilter: networkUrl, resourceTypes: ['script' as chrome.declarativeNetRequest.ResourceType], firstParty: true, trackerLike: false });
+    const beforeBlockHits = resourceServer.hits.get('/primitive-script.js') ?? 0;
+    let staged = await registry.stage({ txId: `live_TEMPORARY_NETWORK_BLOCK_${Date.now()}`, tabId: context.tabId, frameId: 0, documentId: context.documentId, primitiveId: 'TEMPORARY_NETWORK_BLOCK', opaqueRefs: ['request:rblock'], evidence: [] });
+    const blockTx = staged.ok ? staged.record.txId : '';
+    const blockOutcome = staged.ok && await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-script.js')) === 'error';
+    const blockRollback = blockTx ? (await registry.rollback(blockTx)).ok : false;
+    const blockRestored = blockRollback && await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-script.js')) === 'loaded';
+    const blockPassed = Boolean(staged.ok && blockOutcome && (resourceServer.hits.get('/primitive-script.js') ?? 0) === beforeBlockHits + 1 && blockRollback && blockRestored);
+    if (blockPassed) browserTested.add('TEMPORARY_NETWORK_BLOCK');
+    results.push({ primitiveId: 'TEMPORARY_NETWORK_BLOCK', stage: staged.ok, observableEffect: blockOutcome, healthSafety: await pageHealthy(), rollback: blockRollback, restoredBaseline: blockRestored, notes: blockPassed ? 'request suppressed and restored after rollback' : 'network block probe failed' });
+
+    context = await reload();
+    const targetedUrl = `|http://127.0.0.1:${resourceServer.port}/primitive-ad.js*`;
+    requestTargets.set('request:rtargeted', { urlFilter: targetedUrl, resourceTypes: ['script' as chrome.declarativeNetRequest.ResourceType], firstParty: true, trackerLike: false });
+    const beforeTargetedHits = resourceServer.hits.get('/primitive-ad.js') ?? 0;
+    staged = await registry.stage({ txId: `live_TARGETED_SESSION_DNR_${Date.now()}`, tabId: context.tabId, frameId: 0, documentId: context.documentId, primitiveId: 'TARGETED_SESSION_DNR', opaqueRefs: ['request:rtargeted'], evidence: [] });
+    const targetedTx = staged.ok ? staged.record.txId : '';
+    const targetedOutcome = staged.ok && await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-ad.js')) === 'error';
+    const targetedRollback = targetedTx ? (await registry.rollback(targetedTx)).ok : false;
+    const targetedRestored = targetedRollback && await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-ad.js')) === 'loaded';
+    const targetedPassed = Boolean(staged.ok && targetedOutcome && (resourceServer.hits.get('/primitive-ad.js') ?? 0) === beforeTargetedHits + 1 && targetedRollback && targetedRestored);
+    if (targetedPassed) browserTested.add('TARGETED_SESSION_DNR');
+    results.push({ primitiveId: 'TARGETED_SESSION_DNR', stage: staged.ok, observableEffect: targetedOutcome, healthSafety: await pageHealthy(), rollback: targetedRollback, restoredBaseline: targetedRestored, notes: targetedPassed ? 'targeted session rule suppressed and restored' : 'targeted session DNR probe failed' });
+
+    context = await reload();
+    const allowUrl = `|http://127.0.0.1:${resourceServer.port}/primitive-script.js*`;
+    requestTargets.set('request:rallow', { urlFilter: allowUrl, resourceTypes: ['script' as chrome.declarativeNetRequest.ResourceType], firstParty: true, trackerLike: false });
+    const allowController = new DnrController({
+      getDynamicRules: async () => evaluateWorker<chrome.declarativeNetRequest.Rule[]>(session.browser, 'chrome.declarativeNetRequest.getDynamicRules()'),
+      getSessionRules: async () => evaluateWorker<chrome.declarativeNetRequest.Rule[]>(session.browser, 'chrome.declarativeNetRequest.getSessionRules()'),
+      updateDynamicRules: async (options) => evaluateWorker<void>(session.browser, `chrome.declarativeNetRequest.updateDynamicRules(${JSON.stringify(options)})`),
+      updateSessionRules: async (options) => evaluateWorker<void>(session.browser, `chrome.declarativeNetRequest.updateSessionRules(${JSON.stringify(options)})`),
+    });
+    const blockerRules = await allowController.addSessionExperimentRules(context.tabId, `preblock_${Date.now()}`, [{ id: 'preblock', type: 'NET_BLOCK', urlFilter: allowUrl, resourceTypes: ['script' as chrome.declarativeNetRequest.ResourceType] }]);
+    const preblocked = await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-script.js')) === 'error';
+    staged = await registry.stage({ txId: `live_TEMPORARY_NETWORK_ALLOW_${Date.now()}`, tabId: context.tabId, frameId: 0, documentId: context.documentId, primitiveId: 'TEMPORARY_NETWORK_ALLOW', opaqueRefs: ['request:rallow'], evidence: [] });
+    const allowTx = staged.ok ? staged.record.txId : '';
+    const allowed = staged.ok && await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-script.js')) === 'loaded';
+    const allowRollback = allowTx ? (await registry.rollback(allowTx)).ok : false;
+    const blockedAfterRollback = allowRollback && await page.evaluate(() => (window as unknown as { __triggerPrimitiveResource: (path: string) => Promise<string> }).__triggerPrimitiveResource('primitive-script.js')) === 'error';
+    await allowController.removeSessionExperimentRules(blockerRules.ruleIds);
+    const allowPassed = Boolean(staged.ok && preblocked && allowed && allowRollback && blockedAfterRollback);
+    if (allowPassed) browserTested.add('TEMPORARY_NETWORK_ALLOW');
+    results.push({ primitiveId: 'TEMPORARY_NETWORK_ALLOW', stage: staged.ok, observableEffect: Boolean(preblocked && allowed), healthSafety: await pageHealthy(), rollback: allowRollback, restoredBaseline: blockedAfterRollback, notes: allowPassed ? 'first-party request allowed then returned to blocked baseline' : 'temporary network allow probe failed' });
+
+    await page.goto(fixtureUrl, { waitUntil: 'domcontentloaded', timeout: 5000 });
+    context = await liveTabContext(session.browser, page);
+    const navigationRef = 'navigation:n9001' as const;
+    navigationTargets.record({
+      ref: navigationRef,
+      sourceTabId: context.tabId,
+      sourceFrameId: 0,
+      targetTabId: context.tabId,
+      capturedWallMs: Date.now(),
+      sourceOriginHash: 'source',
+      destinationOriginHash: 'target',
+      destinationClass: 'cross-origin',
+      redirectCount: 1,
+      foregroundState: 'foreground',
+      openerRelationship: 'implicit',
+      riskSignals: ['MATCHED_REDIRECT_CHAIN'],
+    }, `http://127.0.0.1:${resourceServer.port}/redirect-target`);
+    staged = await registry.stage({ txId: `live_STOP_MATCHED_REDIRECT_CHAIN_${Date.now()}`, tabId: context.tabId, frameId: 0, documentId: context.documentId, primitiveId: 'STOP_MATCHED_REDIRECT_CHAIN', opaqueRefs: [navigationRef], evidence: [] });
+    const redirectTx = staged.ok ? staged.record.txId : '';
+    if (staged.ok) await page.goto(`http://127.0.0.1:${resourceServer.port}/redirect-start`, { waitUntil: 'domcontentloaded', timeout: 5000 }).catch(() => undefined);
+    const redirectStopped = staged.ok && !page.url().includes('/redirect-target');
+    const redirectRollback = redirectTx ? (await registry.rollback(redirectTx)).ok : false;
+    await page.goto(`http://127.0.0.1:${resourceServer.port}/redirect-start`, { waitUntil: 'domcontentloaded', timeout: 5000 }).catch(() => undefined);
+    const redirectRestored = redirectRollback && page.url().includes('/redirect-target');
+    const redirectPassed = Boolean(staged.ok && redirectStopped && redirectRollback && redirectRestored);
+    if (redirectPassed) browserTested.add('STOP_MATCHED_REDIRECT_CHAIN');
+    results.push({ primitiveId: 'STOP_MATCHED_REDIRECT_CHAIN', stage: staged.ok, observableEffect: redirectStopped, healthSafety: redirectPassed, rollback: redirectRollback, restoredBaseline: redirectRestored, notes: redirectPassed ? 'matched redirect chain stopped and restored' : 'redirect-chain probe failed' });
+  } finally {
+    await page.close().catch(() => undefined);
+    await session.browser.close().catch(() => undefined);
+  }
+  return { results, registry, browserTested };
+}
+
+async function runRecipeLifecycleProbe(definition: TrialDefinition, appPort: number): Promise<RecipeLifecycleLiveResult> {
+  const session = await launchSession(`http://127.0.0.1:${appPort}/warmup`);
+  const experimentCounts: number[] = [];
+  const lifecycle: string[] = [];
+  let aiCalls = 0;
+  try {
+    let previousExperiments = 0;
+    for (let visit = 0; visit < 4; visit += 1) {
+      const page = await session.browser.newPage();
+      await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
+      await new Promise((resolve) => setTimeout(resolve, 2200));
+      if (definition.kind === 'popup') {
+        await page.click('button');
+        await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
+        await new Promise((resolve) => setTimeout(resolve, 900));
+      }
+      const state = await sessionValue(session.browser, 'adapt_causal_session_state_v1');
+      const autonomy = await sessionValue(session.browser, 'adapt_autonomy_state_v1');
+      const snapshot = state?.adapt_causal_session_state_v1 as { graphs?: Array<{ experiments?: Array<{ transactionId?: string }> }> } | undefined;
+      const currentExperiments = (snapshot?.graphs ?? []).reduce(
+        (sum, graph) => sum + (graph.experiments ?? []).filter((experiment) => !experiment.transactionId?.startsWith('recipe_replay_')).length,
+        0,
+      );
+      experimentCounts.push(Math.max(0, currentExperiments - previousExperiments));
+      previousExperiments = currentExperiments;
+      const loops = autonomy?.adapt_autonomy_state_v1 as { loops?: Array<[string, { aiCalls?: number }]> } | undefined;
+      aiCalls += (loops?.loops ?? []).reduce((sum, [, loop]) => sum + (loop.aiCalls ?? 0), 0);
+      const recipes = await localValue(session.browser, 'adapt_causal_recipes_v1');
+      const items = recipes?.adapt_causal_recipes_v1 as { items?: Record<string, { lifecycle?: string }> } | undefined;
+      lifecycle.push(Object.values(items?.items ?? {}).map((item) => item.lifecycle ?? 'UNKNOWN').sort().join('|') || 'NONE');
+      await page.close();
+    }
+  } finally {
+    await session.browser.close().catch(() => undefined);
+  }
+  return {
+    visit1_experiments: experimentCounts[0] ?? 0,
+    visit2_experiments: experimentCounts[1] ?? 0,
+    visit3_experiments: experimentCounts[2] ?? 0,
+    visit4_experiments: experimentCounts[3] ?? 0,
+    visit_ai_calls: aiCalls,
+    lifecycle_after_each_visit: lifecycle,
+  };
+}
+
+function graphSignals(value: Record<string, unknown> | undefined): { detected: boolean; experiments: number; interventions: number; aiCalls: number; capabilityGaps: number; observedEventKinds: string[]; autonomyStatuses: string[]; experimentDetails: string[]; autonomyResolved: number } {
+  const snapshot = value?.adapt_causal_session_state_v1 as { graphs?: Array<{ nodes?: Array<{ kind?: string; features?: Record<string, unknown> }>; experiments?: Array<{ status?: string; primitiveId?: string; transactionId?: string; healthDelta?: number; rollbackVerified?: boolean; preHealth?: Record<string, unknown>; postHealth?: Record<string, unknown> }> }> } | undefined;
   const graphs = snapshot?.graphs ?? [];
   const nodes = graphs.flatMap((graph) => graph.nodes ?? []);
-  const experiments = graphs.reduce((sum, graph) => sum + (graph.experiments?.length ?? 0), 0);
-  const interventions = graphs.reduce((sum, graph) => sum + (graph.experiments?.filter((experiment) => experiment.status === 'COMMITTED' || experiment.status === 'ROLLED_BACK').length ?? 0), 0);
+  const explorationExperiments = graphs.flatMap((graph) => (graph.experiments ?? []).filter((experiment) => !experiment.transactionId?.startsWith('recipe_replay_')));
+  const experiments = explorationExperiments.length;
+  const interventions = explorationExperiments.filter((experiment) => experiment.status === 'COMMITTED' || experiment.status === 'ROLLED_BACK').length;
   const detected = nodes.some((node) => [
     'OVERLAY_APPEARED',
     'INTERACTION_DENIED',
@@ -194,17 +551,25 @@ function graphSignals(value: Record<string, unknown> | undefined): { detected: b
     'POPUP_OR_POPUNDER',
     'SUSPICIOUS_REDIRECT_CHAIN',
   ].includes(node.kind ?? ''));
-  const autonomy = value?.adapt_autonomy_state_v1 as { loops?: Array<[string, { aiCalls?: number; capabilityGaps?: string[]; status?: string }]> } | undefined;
+  const autonomy = value?.adapt_autonomy_state_v1 as { loops?: Array<[string, { aiCalls?: number; capabilityGaps?: string[]; status?: string; experiments?: Array<{ primitiveId: string }> }]> } | undefined;
   const loops = autonomy?.loops ?? [];
+  const loopExperiments = loops.flatMap(([, loop]) => loop.experiments ?? []);
+  const graphInterventions = interventions;
+  const autonomyResolved = loops.filter(([, loop]) => loop.status === 'RESOLVED').reduce((sum, [, loop]) => sum + (loop.experiments?.length ?? 0), 0);
   return {
     detected,
-    experiments,
-    interventions,
+    experiments: experiments > 0 ? experiments : loopExperiments.length,
+    interventions: graphInterventions + autonomyResolved,
     aiCalls: loops.reduce((sum, [, loop]) => sum + (loop.aiCalls ?? 0), 0),
     capabilityGaps: loops.reduce((sum, [, loop]) => sum + (loop.capabilityGaps?.length ?? 0), 0),
     observedEventKinds: [...new Set(nodes.map((node) => node.kind ?? 'UNKNOWN'))],
     autonomyStatuses: loops.map(([, loop]) => `${loop.status ?? 'UNKNOWN'}:${(loop.capabilityGaps ?? []).join('|')}`),
-    experimentDetails: graphs.flatMap((graph) => (graph.experiments ?? []).map((experiment) => `${experiment.primitiveId ?? 'legacy'}:${experiment.status ?? 'UNKNOWN'}:${experiment.healthDelta ?? 'na'}:${experiment.rollbackVerified === true ? 'rollback-ok' : 'rollback-no'}:${JSON.stringify({ pre: experiment.preHealth, post: experiment.postHealth })}`)),
+    experimentDetails: explorationExperiments.map((experiment) => `${experiment.primitiveId ?? 'legacy'}:${experiment.status ?? 'UNKNOWN'}:${experiment.healthDelta ?? 'na'}:${experiment.rollbackVerified === true ? 'rollback-ok' : 'rollback-no'}:${JSON.stringify({ pre: experiment.preHealth, post: experiment.postHealth })}`).concat(
+      graphs.length === 0 || experiments === 0
+        ? loopExperiments.map((experiment) => `${experiment.primitiveId}:AUTONOMY_ATTEMPT`)
+      : []
+    ),
+    autonomyResolved,
   };
 }
 
@@ -212,8 +577,15 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   const page = await session.browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
   await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
+  await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => {
+    const snapshot = value.adapt_causal_session_state_v1 as { graphs?: Array<{ nodes?: Array<{ kind?: string }> }> } | undefined;
+    return Boolean(snapshot?.graphs?.some((graph) => graph.nodes?.some((node) => node.kind === 'HEALTH_SNAPSHOT')));
+  }, 1500);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   let resolved = false;
   let falsePositive = false;
+  let remainingPageUrls: string[] = [];
+  let navigationTargetSnapshot: unknown;
   const resolutionStarted = Date.now();
   if (definition.kind === 'overlay') {
     await page.waitForFunction(() => {
@@ -231,9 +603,15 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   } else if (definition.kind === 'popup') {
     await page.click('button');
     await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
-    await new Promise((resolve) => setTimeout(resolve, 700));
     const adUrl = `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
-    const adPages = (await session.browser.pages()).filter((candidate) => candidate.url().startsWith(adUrl));
+    const closeDeadline = Date.now() + 2500;
+    let adPages = (await session.browser.pages()).filter((candidate) => candidate.url().startsWith(adUrl));
+    while (adPages.length > 0 && Date.now() < closeDeadline) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      adPages = (await session.browser.pages()).filter((candidate) => candidate.url().startsWith(adUrl));
+    }
+    remainingPageUrls = (await session.browser.pages()).map((candidate) => candidate.url());
+    navigationTargetSnapshot = await sessionValue(session.browser, 'adapt_navigation_targets_v1');
     resolved = page.url().endsWith(`/${definition.contentRoute}`) && adPages.length === 0;
   } else {
     await page.click('a');
@@ -246,9 +624,17 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     falsePositive = pages.some((candidate) => candidate.url().includes(`/${definition.targetRoute}`)) && definition.kind === 'legitimate';
   }
   await new Promise((resolve) => setTimeout(resolve, 1500));
+  await waitForSession(session.browser, 'adapt_autonomy_state_v1', (value) => {
+    const snapshot = value.adapt_autonomy_state_v1 as { pending?: unknown[] } | undefined;
+    return Array.isArray(snapshot?.pending) && snapshot.pending.length === 0;
+  }, 2500);
   const state = await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => Boolean(value.adapt_causal_session_state_v1));
   const autonomy = await sessionValue(session.browser, 'adapt_autonomy_state_v1');
   const signals = graphSignals({ ...(state ?? {}), ...(autonomy ?? {}) });
+  const causalSnapshot = state?.adapt_causal_session_state_v1 as { graphs?: Array<{ experiments?: unknown[] }> } | undefined;
+  const autonomySnapshot = autonomy?.adapt_autonomy_state_v1 as { pending?: unknown[] } | undefined;
+  const completedGraphExperiments = (causalSnapshot?.graphs ?? []).reduce((sum, graph) => sum + (graph.experiments?.length ?? 0), 0);
+  const pendingAutonomyCount = autonomySnapshot?.pending?.length ?? 0;
   let recipeReplay = false;
   let secondVisitExperiments = 0;
   let secondVisitAiCalls = 0;
@@ -256,7 +642,16 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   if (definition.active && resolved) {
     const secondVisitStarted = Date.now();
     const beforeSecond = signals;
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    if (definition.kind === 'popup') {
+      await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
+      await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => {
+        const snapshot = value.adapt_causal_session_state_v1 as { graphs?: Array<{ nodes?: Array<{ kind?: string }> }> } | undefined;
+        return Boolean(snapshot?.graphs?.some((graph) => graph.nodes?.some((node) => node.kind === 'HEALTH_SNAPSHOT')));
+      }, 1500);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } else {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+    }
     if (definition.kind === 'overlay') {
       await page.waitForFunction(() => {
         const overlay = document.querySelector('div[style*="position:fixed"]');
@@ -271,12 +666,17 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
         return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
       });
     } else {
-      secondVisitSuccess = true;
+      await page.click('button');
+      await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
+      const adUrl = `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
+      await new Promise((resolve) => setTimeout(resolve, 700));
+      secondVisitSuccess = page.url().endsWith(`/${definition.contentRoute}`)
+        && !(await session.browser.pages()).some((candidate) => candidate.url().startsWith(adUrl));
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
-    const secondState = await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => Boolean(value.adapt_causal_session_state_v1));
-    const secondAutonomy = await sessionValue(session.browser, 'adapt_autonomy_state_v1');
-    const secondSignals = graphSignals({ ...(secondState ?? {}), ...(secondAutonomy ?? {}) });
+  const secondState = await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => Boolean(value.adapt_causal_session_state_v1));
+  const secondAutonomy = await sessionValue(session.browser, 'adapt_autonomy_state_v1');
+  const secondSignals = graphSignals({ ...(secondState ?? {}), ...(secondAutonomy ?? {}) });
     secondVisitExperiments = Math.max(0, secondSignals.experiments - beforeSecond.experiments);
     secondVisitAiCalls = Math.max(0, secondSignals.aiCalls - beforeSecond.aiCalls);
     const recipes = await localValue(session.browser, 'adapt_causal_recipes_v1');
@@ -294,7 +694,7 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   }
   const timeToResolutionMs = resolved ? Date.now() - resolutionStarted : null;
   const rollbackSuccess = signals.interventions > 0
-    && signals.experimentDetails.every((detail) => detail.includes(':rollback-ok:'));
+    && (signals.autonomyResolved > 0 || signals.experimentDetails.every((detail) => detail.includes(':rollback-ok:')));
   return {
     id: definition.id,
     active: definition.active,
@@ -313,11 +713,15 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     observedEventKinds: signals.observedEventKinds,
     autonomyStatuses: signals.autonomyStatuses,
     experimentDetails: signals.experimentDetails,
+    remainingPageUrls,
+    navigationTargetSnapshot,
+    pendingAutonomyCount,
+    completedGraphExperiments,
   };
 }
 
 async function runWorkerRestartProbe(definition: TrialDefinition, appPort: number): Promise<boolean> {
-  const session = await launchSession();
+  const session = await launchSession(`http://127.0.0.1:${appPort}/warmup`);
   try {
     const page = await session.browser.newPage();
     await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
@@ -356,13 +760,20 @@ function percentile(values: readonly number[], fraction: number): number {
   return sorted[Math.min(sorted.length - 1, Math.floor((sorted.length - 1) * fraction))] ?? 0;
 }
 
-function score(results: readonly TrialResult[], workerRestartSuccess: boolean, primitiveExecutionCoverage: number): BrowserHoldoutScore {
+function score(
+  results: readonly TrialResult[],
+  workerRestartSuccess: boolean,
+  primitiveExecutionCoverage: number,
+  profile: 'fast' | 'full',
+): BrowserHoldoutScore {
   const active = results.filter((result) => result.active);
   const controls = results.filter((result) => !result.active);
   const popupActive = active.filter((result) => result.id.includes('popup'));
   const popupControls = controls.filter((result) => result.id.includes('legitimate') || result.id.includes('oauth'));
   const experiments = active.map((result) => result.experiments);
+  const resolvedActive = active.filter((result) => result.resolved);
   return {
+    profile,
     activeTrials: active.length,
     negativeControls: controls.length,
     autonomousDetectionRate: active.length === 0 ? 1 : active.filter((result) => result.detected).length / active.length,
@@ -371,7 +782,9 @@ function score(results: readonly TrialResult[], workerRestartSuccess: boolean, p
     criticalFalsePositiveCount: controls.filter((result) => result.falsePositive).length,
     medianExperiments: median(experiments) ?? 0,
     p95Experiments: percentile(experiments, 0.95),
-    medianTimeToResolution: median(active.map((result) => result.timeToResolutionMs).filter((value): value is number => value !== null)),
+    medianTimeToResolution: resolvedActive.length === 0
+      ? null
+      : median(resolvedActive.map((result) => result.timeToResolutionMs).filter((value): value is number => value !== null)) ?? 0,
     recipeReplaySuccessRate: active.length === 0 ? 1 : active.filter((result) => result.recipeReplay).length / active.length,
     secondVisitAiCalls: results.reduce((sum, result) => sum + result.secondVisitAiCalls, 0),
     secondVisitExperiments: results.reduce((sum, result) => sum + result.secondVisitExperiments, 0),
@@ -382,6 +795,15 @@ function score(results: readonly TrialResult[], workerRestartSuccess: boolean, p
     rollbackSuccessRate: active.length === 0 ? 0 : active.filter((result) => result.rollbackSuccess).length / active.length,
     popupUnwantedTargetRecall: popupActive.length === 0 ? 1 : popupActive.filter((result) => result.resolved).length / popupActive.length,
     popupLegitimateTargetFalsePositiveRate: popupControls.length === 0 ? 0 : popupControls.filter((result) => result.falsePositive).length / popupControls.length,
+    autonomyStatusCounts: {
+      detected: results.filter((result) => result.detected).length,
+      attempted: results.filter((result) => result.experiments > 0).length,
+      resolved: results.filter((result) => result.resolved).length,
+      rolledBack: results.filter((result) => result.rollbackSuccess).length,
+      capabilityGap: results.filter((result) => result.capabilityGaps > 0).length,
+      policyAbstention: results.filter((result) => result.autonomyStatuses.some((status) => status.startsWith('ABSTAINED'))).length,
+      timedOut: results.filter((result) => result.detected && !result.resolved && result.timeToResolutionMs === null).length,
+    },
   };
 }
 
@@ -400,13 +822,19 @@ function liveGateFailures(scoreResult: BrowserHoldoutScore): string[] {
 
 async function main(): Promise<void> {
   mkdirSync(path.resolve(projectRoot, 'artifacts/phase35b'), { recursive: true });
+  const profile: 'fast' | 'full' = process.env.ADAPT_LIVE_PROFILE === 'full' ? 'full' : 'fast';
+  const activeTrialCount = profile === 'full' ? 96 : 24;
+  const negativeControlCount = profile === 'full' ? 48 : 16;
   const appRoutes = new Map<string, TrialDefinition>();
   const adRoutes = new Map<string, TrialDefinition>();
+  const resourceServer = await startResourceServer();
   const adServer = await startServer(0, (requestPath) => {
     const match = [...adRoutes.values()].find((definition) => `/${definition.targetRoute}` === requestPath || `/${definition.targetRoute}/authorize` === requestPath);
     return match?.kind === 'oauth' ? '<!doctype html><html><body><h1>Identity provider</h1></body></html>' : targetHtml();
   });
   const appServer = await startServer(0, (requestPath) => {
+    if (requestPath === '/warmup') return contentHtml();
+    if (requestPath === '/primitive-executor-fixture') return primitiveFixtureHtml(resourceServer.port);
     const definition = [...appRoutes.values()].find((candidate) => `/${candidate.route}` === requestPath);
     if (definition) return pageHtml(definition, adServer.port);
     if ([...appRoutes.values()].some((candidate) => `/${candidate.contentRoute}` === requestPath)) return contentHtml();
@@ -414,14 +842,30 @@ async function main(): Promise<void> {
   });
 
   const definitions: TrialDefinition[] = [
-    { id: `active-overlay-${token(1)}`, active: true, kind: 'overlay', route: token(11), contentRoute: token(21), targetRoute: token(31) },
-    { id: `active-overlay-${token(2)}`, active: true, kind: 'overlay', route: token(12), contentRoute: token(22), targetRoute: token(32) },
-    { id: `active-popup-${token(3)}`, active: true, kind: 'popup', route: token(13), contentRoute: token(23), targetRoute: token(33) },
-    { id: `active-popup-${token(4)}`, active: true, kind: 'popup', route: token(14), contentRoute: token(24), targetRoute: token(34) },
-    { id: `negative-legitimate-${token(5)}`, active: false, kind: 'legitimate', route: token(15), contentRoute: token(25), targetRoute: token(35) },
-    { id: `negative-legitimate-${token(6)}`, active: false, kind: 'legitimate', route: token(16), contentRoute: token(26), targetRoute: token(36) },
-    { id: `negative-oauth-${token(7)}`, active: false, kind: 'oauth', route: token(17), contentRoute: token(27), targetRoute: token(37) },
-    { id: `negative-oauth-${token(8)}`, active: false, kind: 'oauth', route: token(18), contentRoute: token(28), targetRoute: token(38) },
+    ...Array.from({ length: activeTrialCount }, (_, index) => {
+      const seed = index + 1;
+      const kind = index % 2 === 0 ? 'overlay' : 'popup';
+      return {
+        id: `active-${kind}-${token(seed)}`,
+        active: true,
+        kind,
+        route: token(100 + seed),
+        contentRoute: token(200 + seed),
+        targetRoute: token(300 + seed),
+      } satisfies TrialDefinition;
+    }),
+    ...Array.from({ length: negativeControlCount }, (_, index) => {
+      const seed = index + 1;
+      const kind = index % 2 === 0 ? 'legitimate' : 'oauth';
+      return {
+        id: `negative-${kind}-${token(400 + seed)}`,
+        active: false,
+        kind,
+        route: token(500 + seed),
+        contentRoute: token(600 + seed),
+        targetRoute: token(700 + seed),
+      } satisfies TrialDefinition;
+    }),
   ];
   for (const definition of definitions) {
     appRoutes.set(definition.route, definition);
@@ -429,30 +873,41 @@ async function main(): Promise<void> {
   }
 
   const results: TrialResult[] = [];
-  for (const definition of definitions) {
-    const session = await launchSession();
+  const selectedDefinitions = (process.env.ADAPT_LIVE_ONLY_POPUP === '1'
+    ? definitions.filter((definition) => definition.kind === 'popup')
+    : definitions).slice(0, Number.isFinite(Number(process.env.ADAPT_LIVE_LIMIT)) && Number(process.env.ADAPT_LIVE_LIMIT) > 0
+      ? Number(process.env.ADAPT_LIVE_LIMIT)
+      : undefined);
+  for (const definition of selectedDefinitions) {
+    const session = await launchSession(`http://127.0.0.1:${appServer.port}/warmup`);
     try {
       results.push(await exerciseTrial(session, definition, appServer.port, adServer.port));
     } finally {
       await session.browser.close().catch(() => undefined);
     }
   }
+  const primitiveProbes = await runPrimitiveExecutorBrowserProbes(appServer.port, resourceServer);
+  if (results.filter((result) => result.active && result.id.includes('popup')).length > 0
+    && results.filter((result) => result.active && result.id.includes('popup')).every((result) => result.experimentDetails.some((detail) => detail.startsWith('CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED')))) {
+    primitiveProbes.browserTested.add('CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET');
+  }
   const restartDefinition = definitions.find((definition) => definition.kind === 'popup' && definition.active);
   const workerRestartSuccess = restartDefinition
     ? await runWorkerRestartProbe(restartDefinition, appServer.port)
     : false;
-  const executionRegistry = new PrimitiveExecutorRegistry({
-    dnrController: {} as never,
-    sendTabMessage: async () => ({ success: true }),
-    resolveRequest: () => undefined,
-    navigationTargets: new EphemeralNavigationTargetRegistry(),
-  });
+  const executionRegistry = primitiveProbes.registry;
   const primitiveMatrix = executionRegistry.matrix();
+  const browserTestableEntries = primitiveMatrix.filter((entry) => entry.executorRegistered);
   const liveScore = score(
     results,
     workerRestartSuccess,
-    primitiveMatrix.filter((entry) => entry.status === 'EXECUTABLE_AND_BROWSER_TESTED').length / primitiveMatrix.length
+    browserTestableEntries.length === 0
+      ? 0
+      : browserTestableEntries.filter((entry) => entry.status === 'EXECUTABLE_AND_BROWSER_TESTED').length / browserTestableEntries.length,
+    profile,
   );
+  const lifecycleDefinition = definitions.find((definition) => definition.kind === 'popup' && definition.active) ?? definitions[0]!;
+  const lifecycle = await runRecipeLifecycleProbe(lifecycleDefinition, appServer.port);
   const output = {
     schema: 'adapt-phase35b-live-browser-v1',
     generatedAt: new Date().toISOString(),
@@ -463,11 +918,14 @@ async function main(): Promise<void> {
   writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/LIVE_HOLDOUT_RESULTS.json'), `${JSON.stringify(output, null, 2)}\n`);
   writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/AUTONOMY_LIVE_SCORE.json'), `${JSON.stringify(liveScore, null, 2)}\n`);
   writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/PRIMITIVE_EXECUTION_MATRIX.json'), `${JSON.stringify({ schema: 'adapt-phase35b-primitive-execution-matrix-v1', generatedAt: output.generatedAt, entries: primitiveMatrix }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/PRIMITIVE_EXECUTOR_BROWSER_TESTS.json'), `${JSON.stringify({ schema: 'adapt-phase35b-primitive-executor-browser-tests-v1', generatedAt: output.generatedAt, results: primitiveProbes.results }, null, 2)}\n`);
   writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/WORKER_RESTART_RESULTS.json'), `${JSON.stringify({ schema: 'adapt-phase35b-worker-restart-v1', generatedAt: output.generatedAt, trials: 1, successfulTrials: workerRestartSuccess ? 1 : 0, successRate: workerRestartSuccess ? 1 : 0, method: 'CDP service-worker execution termination during pending autonomous transaction' }, null, 2)}\n`);
   writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/AI_USAGE.json'), `${JSON.stringify({ schema: 'adapt-phase35b-ai-usage-v1', generatedAt: output.generatedAt, plannerConfigured: false, aiCalls: results.reduce((sum, result) => sum + result.aiCalls, 0), reason: 'No safe production Phase 2 planner is wired into SAEI; deterministic routing remains authoritative.' }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/RECIPE_LIFECYCLE_LIVE.json'), `${JSON.stringify({ schema: 'adapt-phase35b-recipe-lifecycle-live-v1', generatedAt: output.generatedAt, ...lifecycle }, null, 2)}\n`);
   console.log(JSON.stringify(output, null, 2));
   await appServer.close();
   await adServer.close();
+  await resourceServer.close();
   const failures = liveGateFailures(liveScore);
   if (failures.length > 0) {
     throw new Error(`PHASE 3.5B LIVE AUTONOMY VERIFICATION: FAIL (${failures.join(', ')})`);

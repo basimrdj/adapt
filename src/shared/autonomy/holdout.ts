@@ -47,7 +47,7 @@ const ACTIVE_EVENT_COMBINATIONS: readonly EventKind[][] = [
   ['PLAYBACK_OBSTRUCTED', 'INTERACTION_DENIED'],
   ['UNEXPECTED_NAV_TARGET', 'POPUP_OR_POPUNDER'],
   ['SUSPICIOUS_REDIRECT_CHAIN', 'NAVIGATION_BOUNCE'],
-  ['REPEATED_REINSERTION', 'UNKNOWN_REACTION'],
+  ['REPEATED_REINSERTION', 'CONTENT_HEIGHT_CHANGED', 'ANTI_BLOCK_REACTION'],
   ['ANTI_BLOCK_REACTION', 'PLAYBACK_OBSTRUCTED', 'UNKNOWN_REACTION'],
 ];
 
@@ -82,14 +82,14 @@ function event(id: string, kind: EventKind, index: number): EventNode {
   };
 }
 
-function requiredPrimitiveFor(eventKinds: readonly EventKind[], seed: number): PrimitiveId | null {
+function requiredPrimitiveFor(eventKinds: readonly EventKind[]): PrimitiveId | null {
   if (eventKinds.includes('REQUEST_ERROR')) return 'TEMPORARY_NETWORK_ALLOW';
   if (eventKinds.includes('BAIT_STATE_CHANGED')) return 'PRESERVE_BAIT';
   if (eventKinds.includes('PLAYBACK_OBSTRUCTED')) return 'PLAYER_HEALTH_RECOVERY';
-  if (eventKinds.includes('POPUP_OR_POPUNDER')) return 'QUARANTINE_NAVIGATION_TARGET';
+  if (eventKinds.includes('POPUP_OR_POPUNDER')) return 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET';
   if (eventKinds.includes('SUSPICIOUS_REDIRECT_CHAIN')) return 'STOP_MATCHED_REDIRECT_CHAIN';
   if (eventKinds.includes('REPEATED_REINSERTION')) return 'RESTORE_LAYOUT';
-  if (eventKinds.includes('SEMANTIC_GATE')) return random(seed) > 0.5 ? 'REMOVE_REACTION_UI' : 'DISABLE_PACKAGED_SCRIPTLET';
+  if (eventKinds.includes('SEMANTIC_GATE')) return 'REMOVE_REACTION_UI';
   return 'REMOVE_REACTION_UI';
 }
 
@@ -106,7 +106,7 @@ export function generateAutonomyScenarios(seed = 35, count = 128, split: Holdout
       split,
       seed: scenarioSeed,
       eventKinds: [...combination],
-      requiredPrimitive: benign ? null : requiredPrimitiveFor(combination, scenarioSeed),
+      requiredPrimitive: benign ? null : requiredPrimitiveFor(combination),
       benign,
       pageHealth: benign ? 0.95 : 0.7 + random(scenarioSeed + 3) * 0.2,
     });

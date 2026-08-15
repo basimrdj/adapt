@@ -64,6 +64,7 @@ export interface CausalExperimentState {
   commitProof: boolean;
   hypothesisId: `hypothesis:h${number}`;
   baselineFingerprint?: PageFingerprint;
+  autonomous?: boolean;
 }
 
 export interface CausalExperimentResult {
@@ -225,6 +226,64 @@ export class CausalEngine {
 
   public getRecord(id: string): CausalExperimentState | undefined {
     return this.records.get(id);
+  }
+
+  public async recordAutonomousExperiment(input: {
+    record: ExperimentRecord;
+    tabId: number;
+    navigationEpoch: number;
+    documentId: string;
+    frameId: number;
+    siteKey: string;
+    navigationId: string;
+    txId: string;
+    baselineHealth: HealthVector;
+    hypothesisId: `hypothesis:h${number}`;
+    baselineFingerprint?: PageFingerprint;
+  }): Promise<void> {
+    await this.init();
+    const state: CausalExperimentState = {
+      record: { ...input.record },
+      tabId: input.tabId,
+      navigationEpoch: input.navigationEpoch,
+      documentId: input.documentId,
+      frameIds: [input.frameId],
+      siteKey: input.siteKey,
+      navigationId: input.navigationId,
+      txId: input.txId,
+      sessionRuleIds: [],
+      domActionIds: [],
+      plannedActions: [],
+      preSessionRuleIds: [],
+      baselineHealth: input.baselineHealth,
+      candidate: {
+        id: `autonomy:${input.record.id}`,
+        tier: 'S1',
+        name: input.record.primitiveId ?? 'AUTONOMOUS_PRIMITIVE',
+        rationale: 'autonomous primitive execution',
+        actions: [],
+        isReversible: input.record.rollbackVerified,
+        estimatedRisk: 'LOW',
+      },
+      commitProof: input.record.status === 'COMMITTED',
+      hypothesisId: input.hypothesisId,
+      baselineFingerprint: input.baselineFingerprint,
+      autonomous: true,
+    };
+    this.records.set(`autonomy:${input.tabId}:${input.documentId}:${input.record.id}`, state);
+    await this.persistRecords();
+  }
+
+  public async onTabClosed(tabId: number): Promise<void> {
+    await this.init();
+    let changed = false;
+    for (const [id, state] of this.records.entries()) {
+      if (state.autonomous && state.tabId === tabId) {
+        this.records.delete(id);
+        changed = true;
+      }
+    }
+    if (changed) await this.persistRecords();
   }
 
   /**
@@ -420,7 +479,11 @@ export class CausalEngine {
   /**
    * On documentId change (or any navigation of the tab): rollback then discard graph epoch.
    */
-  public async onNavigation(tabId: number, previous?: CausalDocumentKey): Promise<void> {
+  public async onNavigation(
+    tabId: number,
+    previous?: CausalDocumentKey,
+    options: { preservePreviousGraph?: boolean } = {}
+  ): Promise<void> {
     await this.init();
     const toRollback: CausalExperimentState[] = [];
     for (const rec of this.records.values()) {
@@ -433,7 +496,7 @@ export class CausalEngine {
       await this.rollbackState(rec);
       this.discardGraph(rec);
     }
-    if (previous) {
+    if (previous && !options.preservePreviousGraph) {
       this.graphStore.discard(previous);
     }
   }

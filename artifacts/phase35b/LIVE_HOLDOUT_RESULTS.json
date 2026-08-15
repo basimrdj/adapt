@@ -1,23 +1,1887 @@
 {
   "schema": "adapt-phase35b-live-browser-v1",
-  "generatedAt": "2026-08-14T18:23:50.423Z",
+  "generatedAt": "2026-08-15T07:08:15.631Z",
   "results": [
     {
       "id": "active-overlay-xmk5ce1",
       "active": true,
       "detected": true,
-      "resolved": false,
+      "resolved": true,
       "falsePositive": false,
-      "experiments": 0,
+      "experiments": 1,
       "aiCalls": 0,
-      "recipeReplay": false,
+      "recipeReplay": true,
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
-      "secondVisitSuccess": false,
-      "timeToResolutionMs": null,
-      "rollbackSuccess": false,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6092,
+      "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xdl0l4i",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4211,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x6v3ee7"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x115ve1j",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6072,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xa5pc0p",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4334,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1qxrd8m"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1km8b0g",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6086,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xps4u77",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4276,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xob7yht"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x6vllal",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6085,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xkbeo1e",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4288,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xm6q8tr"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1hyop67",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6090,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1souo51",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4328,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1rwx2e6"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x14ylns4",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6084,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xyjxu63",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4298,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1dd4cs5"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x15jng2x",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6113,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1h914wq",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4196,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xbma92f"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1kmpsv3",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6072,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xnmhhuh",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4298,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1fdqh9y"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1o5ouns",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6068,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1ndrggj",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4330,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x17k4urg"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1qow5ph",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6081,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1mclaay",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4337,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1pn2gon"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1sy31br",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6085,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xxdldod",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4299,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xvrsk72"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1m6uwc4",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6074,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1g3ju3v",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4316,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1p1oklk"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xzd2w5l",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6086,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1fk0sia",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4309,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1kg8sr3"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xj6gotz",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6090,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xigmdm1",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4259,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xglo8py"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xd0n69c",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6085,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1sptnub",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4304,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1643t58"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xkssu5p",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6085,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1b8yzoy",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4279,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xdmbx27"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1xmgqnz",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6089,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xqnpgl",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4326,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x177amlq"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1u3qz2s",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6071,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xuq30pn",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4267,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1op3440"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x169nyft",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6073,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xmte5sa",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4298,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x19r4hs7"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xyin1tb",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6070,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xsnqoeh",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4243,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x10ybqhi"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xusrm3c",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6078,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x2cw84j",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4288,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1y1wvi4"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1pe6lja",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6082,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xz7wnp6",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4300,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1x5n2xj"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1x6tpef",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6082,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x19clqp4",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4254,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x2wig6m"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1r8qbno",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6082,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
@@ -25,18 +1889,1286 @@
         "SCROLL_LOCK_ON",
         "INTERACTION_DENIED"
       ],
-      "autonomyStatuses": [],
-      "experimentDetails": []
+      "autonomyStatuses": [
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
     },
     {
-      "id": "active-overlay-xdl0l4i",
+      "id": "active-popup-x1jnhqbv",
       "active": true,
       "detected": true,
       "resolved": true,
       "falsePositive": false,
       "experiments": 1,
       "aiCalls": 0,
-      "recipeReplay": false,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4259,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1jvgoyw"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1tqbzou",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6066,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1yq5sb6",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4281,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1ir74an"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x4hos9j",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6069,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xjnfdw",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4318,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1b8cqqu"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xwd03kw",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6150,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xlcljfn",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4377,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1lc0i5o"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xgax1li",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6088,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x5dynki",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4314,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xj9lxyn"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x10b1k1b",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6075,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xq1acio",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4267,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xect8ml"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x9a37s4",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6082,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x9uxbtn",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4364,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1jleqjk"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x15wr3ni",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6094,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x15llobe",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4296,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x115rubr"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xw6ck1r",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6101,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1qynvqc",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4304,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1hpy8zl"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xvnmp4o",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6076,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1f7hl4j",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4289,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1s0pezg"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1wkeayu",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6081,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x14z5d8q",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4466,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xa59j93"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1k2enxz",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6083,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1p6dw6g",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4325,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xm3ck7p"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1rhrrys",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6071,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xcwk3jf",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4360,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xtsx7oo"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1lbrs4e",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6081,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xdi7uwi",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4194,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1n2tz9r"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-xpbm19z",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6069,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xe3i7x0",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4290,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1t72pld"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1cs0uuo",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6067,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1g0y9eb",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4305,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1v56jv0"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1wdqkhi",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
@@ -53,68 +3185,712 @@
         "INTERACTION_DENIED"
       ],
       "autonomyStatuses": [
+        "EXPLORING:",
         "RESOLVED:"
       ],
       "experimentDetails": [
         "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
-      ]
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
     },
     {
-      "id": "active-popup-x115ve1j",
+      "id": "active-popup-xhtnehe",
       "active": true,
       "detected": true,
-      "resolved": false,
+      "resolved": true,
       "falsePositive": false,
-      "experiments": 0,
+      "experiments": 1,
       "aiCalls": 0,
-      "recipeReplay": false,
+      "recipeReplay": true,
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": null,
-      "rollbackSuccess": false,
+      "timeToResolutionMs": 4294,
+      "rollbackSuccess": true,
       "capabilityGaps": 1,
       "observedEventKinds": [
-        "NAV_COMMIT",
-        "UNEXPECTED_NAV_TARGET",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT"
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
       ],
       "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
         "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
       ],
-      "experimentDetails": []
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1nkvsqn"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
     },
     {
-      "id": "active-popup-xa5pc0p",
+      "id": "active-overlay-xwz6jz3",
       "active": true,
       "detected": true,
-      "resolved": false,
+      "resolved": true,
       "falsePositive": false,
-      "experiments": 0,
+      "experiments": 1,
       "aiCalls": 0,
-      "recipeReplay": false,
+      "recipeReplay": true,
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": null,
-      "rollbackSuccess": false,
-      "capabilityGaps": 1,
+      "timeToResolutionMs": 6087,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
-        "UNEXPECTED_NAV_TARGET",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT"
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
       ],
       "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1plj86o",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4285,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
         "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
       ],
-      "experimentDetails": []
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x4r8ma5"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
     },
     {
-      "id": "negative-legitimate-x1km8b0g",
+      "id": "active-overlay-x17xh304",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6081,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xj8qpob",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4317,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x14vqxxs"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1qdd45q",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6076,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xyqxav5",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4372,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x16ctbc7"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1dfr60f",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6086,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x1yftbec",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4401,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x16kgeld"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1ovgk99",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6074,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xisxexv",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4291,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/xex1syk"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1q6v5gm",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6076,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-x2nrl6t",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4298,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x107vhuf"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x1rfkt1z",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6080,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xnx2hoo",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4279,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1nk7kbp"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-overlay-x19949yx",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 6077,
+      "rollbackSuccess": true,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "OVERLAY_APPEARED",
+        "SCROLL_LOCK_ON",
+        "INTERACTION_DENIED"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "RESOLVED:"
+      ],
+      "experimentDetails": [
+        "RESTORE_SCROLL:COMMITTED:0.11800000000000002:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":1}}"
+      ],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "active-popup-xn9jkgb",
+      "active": true,
+      "detected": true,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 1,
+      "aiCalls": 0,
+      "recipeReplay": true,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": true,
+      "timeToResolutionMs": 4294,
+      "rollbackSuccess": true,
+      "capabilityGaps": 1,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT",
+        "UNEXPECTED_NAV_TARGET",
+        "INTENT_OUTCOME_FANOUT"
+      ],
+      "autonomyStatuses": [
+        "EXPLORING:",
+        "EXPLORING:",
+        "EXPLORING:",
+        "RESOLVED:NO_EXECUTOR:No reversible browser quarantine primitive is defined."
+      ],
+      "experimentDetails": [
+        "CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:COMMITTED:0:rollback-ok:{\"pre\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+      ],
+      "remainingPageUrls": [
+        "about:blank",
+        "http://127.0.0.1:56432/x1pzfaa0"
+      ],
+      "navigationTargetSnapshot": {
+        "adapt_navigation_targets_v1": {
+          "targets": [],
+          "version": 1
+        }
+      },
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 1
+    },
+    {
+      "id": "negative-legitimate-x16e7o47",
       "active": false,
       "detected": false,
       "resolved": true,
@@ -125,21 +3901,24 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
-      "timeToResolutionMs": 2339,
+      "timeToResolutionMs": 4913,
       "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
         "NAV_COMMIT",
-        "USER_INTENT",
-        "HEALTH_SNAPSHOT"
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
       ],
       "autonomyStatuses": [],
-      "experimentDetails": []
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
     },
     {
-      "id": "negative-legitimate-xps4u77",
+      "id": "negative-oauth-x1n8m8zc",
       "active": false,
       "detected": false,
       "resolved": true,
@@ -150,21 +3929,24 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
-      "timeToResolutionMs": 2346,
+      "timeToResolutionMs": 4886,
       "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
-        "USER_INTENT",
-        "HEALTH_SNAPSHOT"
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
       ],
       "autonomyStatuses": [],
-      "experimentDetails": []
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
     },
     {
-      "id": "negative-oauth-x6vllal",
+      "id": "negative-legitimate-x1rcc58c",
       "active": false,
       "detected": false,
       "resolved": true,
@@ -175,21 +3957,24 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
-      "timeToResolutionMs": 2366,
+      "timeToResolutionMs": 4877,
       "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
         "NAV_COMMIT",
-        "USER_INTENT",
-        "HEALTH_SNAPSHOT"
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
       ],
       "autonomyStatuses": [],
-      "experimentDetails": []
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
     },
     {
-      "id": "negative-oauth-xkbeo1e",
+      "id": "negative-oauth-xs9527n",
       "active": false,
       "detected": false,
       "resolved": true,
@@ -200,38 +3985,1283 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": false,
-      "timeToResolutionMs": 2381,
+      "timeToResolutionMs": 4933,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xb6gs9i",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4863,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1sac6nm",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4871,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1ss1fhj",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4926,
       "rollbackSuccess": false,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
         "NAV_COMMIT",
-        "USER_INTENT",
-        "HEALTH_SNAPSHOT"
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
       ],
       "autonomyStatuses": [],
-      "experimentDetails": []
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xfckq6k",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4933,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x9qjqdc",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4852,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x15gymz",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4897,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xt2kuvy",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4876,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x94lyo2",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4882,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xrxo45r",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4904,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1fs8p6o",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4935,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1ajlbv0",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4897,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1mwer2r",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4943,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xx57pdy",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4890,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xo18sey",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4908,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xbgfvmn",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4887,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xhaw4ho",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4941,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1imchs8",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4872,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1pqntyj",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4918,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1acob66",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4888,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1v6ylwq",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4913,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xtnrxo7",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4893,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xtz5mc8",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4909,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "NAV_COMMIT",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x64e7to",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4927,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x19q2m83",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4910,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1uhbrzq",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4860,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xqpn8rd",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4891,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xank1if",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4860,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x72sx8",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4882,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1c58s4l",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4878,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x27sk2j",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4874,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1nwx2xa",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4882,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1y3xval",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4919,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x10f3ydb",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4879,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x176h0kw",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4911,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1mgpxy9",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4883,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xz8p15v",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4886,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x198skue",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4919,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1uyy6eh",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4919,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x1bckt7z",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4897,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1rjl4e4",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4905,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-x4pba3h",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4894,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-x1sowvez",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4910,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-legitimate-xaggh0e",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4872,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
+    },
+    {
+      "id": "negative-oauth-xy1x8zp",
+      "active": false,
+      "detected": false,
+      "resolved": true,
+      "falsePositive": false,
+      "experiments": 0,
+      "aiCalls": 0,
+      "recipeReplay": false,
+      "secondVisitExperiments": 0,
+      "secondVisitAiCalls": 0,
+      "secondVisitSuccess": false,
+      "timeToResolutionMs": 4893,
+      "rollbackSuccess": false,
+      "capabilityGaps": 0,
+      "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "USER_INTENT"
+      ],
+      "autonomyStatuses": [],
+      "experimentDetails": [],
+      "remainingPageUrls": [],
+      "pendingAutonomyCount": 0,
+      "completedGraphExperiments": 0
     }
   ],
   "workerRestartSuccess": true,
-  "activeTrials": 4,
-  "negativeControls": 4,
+  "profile": "full",
+  "activeTrials": 96,
+  "negativeControls": 48,
   "autonomousDetectionRate": 1,
-  "autonomousResolutionRate": 0.25,
+  "autonomousResolutionRate": 1,
   "falsePositiveRate": 0,
   "criticalFalsePositiveCount": 0,
-  "medianExperiments": 0,
-  "p95Experiments": 0,
-  "medianTimeToResolution": 6075,
-  "recipeReplaySuccessRate": 0,
+  "medianExperiments": 1,
+  "p95Experiments": 1,
+  "medianTimeToResolution": 5266,
+  "recipeReplaySuccessRate": 1,
   "secondVisitAiCalls": 0,
   "secondVisitExperiments": 0,
   "workerRestartSuccessRate": 1,
-  "capabilityGapCount": 2,
+  "capabilityGapCount": 48,
   "policyAbstentionCount": 0,
-  "primitiveExecutionCoverage": 0.125,
-  "rollbackSuccessRate": 0.25,
-  "popupUnwantedTargetRecall": 0,
-  "popupLegitimateTargetFalsePositiveRate": 0
+  "primitiveExecutionCoverage": 1,
+  "rollbackSuccessRate": 1,
+  "popupUnwantedTargetRecall": 1,
+  "popupLegitimateTargetFalsePositiveRate": 0,
+  "autonomyStatusCounts": {
+    "detected": 96,
+    "attempted": 96,
+    "resolved": 144,
+    "rolledBack": 96,
+    "capabilityGap": 48,
+    "policyAbstention": 0,
+    "timedOut": 0
+  }
 }

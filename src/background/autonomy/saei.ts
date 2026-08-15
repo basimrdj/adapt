@@ -72,7 +72,7 @@ const PRIMITIVE_EVIDENCE: Partial<Record<PrimitiveId, string[]>> = {
   PRESERVE_BAIT: ['BAIT_STATE_CHANGED'],
   RESTORE_LAYOUT: ['CONTENT_HEIGHT_CHANGED', 'ANTI_BLOCK_REACTION'],
   REMOVE_REACTION_UI: ['ANTI_BLOCK_REACTION', 'SEMANTIC_GATE', 'INTERACTION_DENIED', 'OVERLAY_APPEARED'],
-  RESTORE_SCROLL: ['SCROLL_LOCK_ON', 'INTERACTION_DENIED'],
+  RESTORE_SCROLL: ['SCROLL_LOCK_ON'],
   RESTORE_POINTER_INTERACTION: ['INTERACTION_DENIED'],
   ACTIVATE_PACKAGED_SCRIPTLET: ['ANTI_BLOCK_REACTION'],
   DISABLE_PACKAGED_SCRIPTLET: ['PLAYBACK_OBSTRUCTED', 'INTERACTION_DENIED'],
@@ -82,6 +82,10 @@ const PRIMITIVE_EVIDENCE: Partial<Record<PrimitiveId, string[]>> = {
   STOP_MATCHED_REDIRECT_CHAIN: ['SUSPICIOUS_REDIRECT_CHAIN', 'NAVIGATION_BOUNCE'],
   PLAYER_HEALTH_RECOVERY: ['PLAYBACK_OBSTRUCTED', 'INTERACTION_DENIED'],
 };
+
+export function requiredEvidenceForPrimitive(primitiveId: PrimitiveId): string[] {
+  return [...(PRIMITIVE_EVIDENCE[primitiveId] ?? [])];
+}
 
 const ANY_EVIDENCE_PRIMITIVES = new Set<PrimitiveId>([
   'QUARANTINE_NAVIGATION_TARGET',
@@ -169,7 +173,7 @@ export class AutonomousExperimentLoop {
     return this.snapshot();
   }
 
-  nextExperiment(): AutonomousExperiment | null {
+  nextExperiment(preferredPrimitive?: PrimitiveId): AutonomousExperiment | null {
     if (!this.observation || this.state.status !== 'EXPLORING') return null;
     if (this.state.attempts >= this.budget.maxExperiments) {
       this.state.status = 'EXHAUSTED';
@@ -217,6 +221,11 @@ export class AutonomousExperimentLoop {
       }
     }
     proposals.sort((a, b) => {
+      if (preferredPrimitive) {
+        const aPreferred = a.primitiveId === preferredPrimitive ? 1 : 0;
+        const bPreferred = b.primitiveId === preferredPrimitive ? 1 : 0;
+        if (aPreferred !== bPreferred) return bPreferred - aPreferred;
+      }
       const ua = a.expectedInformationGain - a.expectedRisk - a.expectedPrivacyRisk;
       const ub = b.expectedInformationGain - b.expectedRisk - b.expectedPrivacyRisk;
       return ub - ua || a.id.localeCompare(b.id);

@@ -1,8 +1,8 @@
 {
   "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-  "generatedAt": "2026-08-14T11:58:39.226Z",
-  "totalScriptletRules": 7630,
-  "unsupportedScriptletRules": 3161,
+  "generatedAt": "2026-08-15T07:11:14.959Z",
+  "totalScriptletRules": 7636,
+  "unsupportedScriptletRules": 3165,
   "entries": [
     {
       "name": "prevent-addEventListener",
@@ -42,12 +42,12 @@
     },
     {
       "name": "set-local-storage-item",
-      "total": 296,
+      "total": 297,
       "fullyExecutable": 0,
-      "unsupported": 296,
+      "unsupported": 297,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 296,
+        "unsupported-by-name": 297,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
@@ -66,11 +66,11 @@
     },
     {
       "name": "set-constant",
-      "total": 1343,
-      "fullyExecutable": 1177,
+      "total": 1344,
+      "fullyExecutable": 1178,
       "unsupported": 166,
       "statuses": {
-        "fully-executable": 1177,
+        "fully-executable": 1178,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
         "unsafe": 165
@@ -246,12 +246,12 @@
     },
     {
       "name": "href-sanitizer",
-      "total": 21,
+      "total": 22,
       "fullyExecutable": 0,
-      "unsupported": 21,
+      "unsupported": 22,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 21,
+        "unsupported-by-name": 22,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
@@ -569,6 +569,18 @@
       }
     },
     {
+      "name": "trusted-set-attr",
+      "total": 4,
+      "fullyExecutable": 0,
+      "unsupported": 4,
+      "statuses": {
+        "fully-executable": 0,
+        "unsupported-by-name": 4,
+        "unsupported-by-arguments": 0,
+        "unsafe": 0
+      }
+    },
+    {
       "name": "ubo-acs",
       "total": 4,
       "fullyExecutable": 0,
@@ -641,18 +653,6 @@
       }
     },
     {
-      "name": "trusted-set-attr",
-      "total": 3,
-      "fullyExecutable": 0,
-      "unsupported": 3,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 3,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
       "name": "ubo-aost",
       "total": 3,
       "fullyExecutable": 0,
@@ -673,6 +673,18 @@
         "fully-executable": 0,
         "unsupported-by-name": 3,
         "unsupported-by-arguments": 0,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "remove-node-text",
+      "total": 146,
+      "fullyExecutable": 144,
+      "unsupported": 2,
+      "statuses": {
+        "fully-executable": 144,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 2,
         "unsafe": 0
       }
     },
@@ -707,18 +719,6 @@
       "unsupported": 1,
       "statuses": {
         "fully-executable": 478,
-        "unsupported-by-name": 0,
-        "unsupported-by-arguments": 1,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "remove-node-text",
-      "total": 144,
-      "fullyExecutable": 143,
-      "unsupported": 1,
-      "statuses": {
-        "fully-executable": 143,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
         "unsafe": 0

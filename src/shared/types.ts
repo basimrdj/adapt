@@ -231,6 +231,7 @@ export interface UserIntentEnvelope {
   elementRef: `element:e${number}`;
   elementRole: ElementSemanticRole;
   declaredDestinationClass: DestinationClass;
+  declaredDestinationFingerprint?: string;
   button: number;
   modifiers: string[];
   interactionType: InteractionType;
@@ -246,10 +247,12 @@ export interface NavigationTargetObservation {
   ref: `navigation:n${number}`;
   sourceTabId: number;
   sourceFrameId: number;
+  sourceDocumentId?: string;
   targetTabId: number;
   capturedWallMs: number;
   sourceOriginHash: string;
   destinationOriginHash: string;
+  destinationFingerprint?: string;
   destinationClass: DestinationClass;
   redirectCount: number;
   foregroundState: 'foreground' | 'background' | 'unknown';
@@ -261,6 +264,9 @@ export interface NavigationTargetObservation {
   navigationReasonablyExpected?: boolean;
   targetCreationSequence?: number;
   destinationMatch?: boolean;
+  destinationFingerprintMatch?: 'MATCH' | 'MISMATCH' | 'UNKNOWN';
+  expectedNewContextCount?: number;
+  observedNewContextCount?: number;
   intendedNavigationSucceeded?: boolean;
   extraTarget?: boolean;
   expectedNewContext?: boolean;

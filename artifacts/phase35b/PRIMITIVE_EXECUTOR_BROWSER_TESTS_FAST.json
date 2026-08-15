@@ -1,0 +1,105 @@
+{
+  "schema": "adapt-phase35b-primitive-executor-browser-tests-v1",
+  "generatedAt": "2026-08-15T07:21:55.898Z",
+  "results": [
+    {
+      "primitiveId": "TOGGLE_COSMETIC_ACTION",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "overlay visibility toggled and restored"
+    },
+    {
+      "primitiveId": "PRESERVE_BAIT",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "bait visibility restored without losing the target"
+    },
+    {
+      "primitiveId": "RESTORE_LAYOUT",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "bait layout constraints restored"
+    },
+    {
+      "primitiveId": "RESTORE_POINTER_INTERACTION",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "pointer interaction restored"
+    },
+    {
+      "primitiveId": "RESTORE_SCROLL",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "scrolling restored"
+    },
+    {
+      "primitiveId": "PLAYER_HEALTH_RECOVERY",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "player interaction and scroll health restored"
+    },
+    {
+      "primitiveId": "REMOVE_REACTION_UI",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "reaction UI removed and full baseline restored"
+    },
+    {
+      "primitiveId": "TEMPORARY_NETWORK_BLOCK",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "request suppressed and restored after rollback"
+    },
+    {
+      "primitiveId": "TARGETED_SESSION_DNR",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "targeted session rule suppressed and restored"
+    },
+    {
+      "primitiveId": "TEMPORARY_NETWORK_ALLOW",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "first-party request allowed then returned to blocked baseline"
+    },
+    {
+      "primitiveId": "STOP_MATCHED_REDIRECT_CHAIN",
+      "stage": true,
+      "observableEffect": true,
+      "healthSafety": true,
+      "rollback": true,
+      "restoredBaseline": true,
+      "notes": "matched redirect chain stopped and restored"
+    }
+  ]
+}

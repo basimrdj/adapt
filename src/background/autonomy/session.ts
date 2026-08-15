@@ -17,6 +17,11 @@ export interface AutonomyPendingState {
   frameId: number;
   documentId: string;
   tabId: number;
+  recipeReplay?: {
+    recordId: string;
+    applicationKey: string;
+    fingerprint: PageFingerprint;
+  };
 }
 
 export interface AutonomySessionSnapshot {

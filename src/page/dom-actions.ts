@@ -102,10 +102,10 @@ export class DomActionExecutor {
           if (document.body) {
             record.mutatedElements.push({
               element: document.body,
-              originalStyles: {
-                overflow: document.body.style.overflow,
-                overflowY: document.body.style.overflowY,
-                position: document.body.style.position,
+                originalStyles: {
+                  overflow: document.body.style.overflow,
+                'overflow-y': document.body.style.overflowY,
+                  position: document.body.style.position,
               },
             });
             document.body.style.setProperty('overflow', 'auto', 'important');
@@ -117,10 +117,10 @@ export class DomActionExecutor {
           if (document.documentElement) {
             record.mutatedElements.push({
               element: document.documentElement,
-              originalStyles: {
-                overflow: document.documentElement.style.overflow,
-                overflowY: document.documentElement.style.overflowY,
-                position: document.documentElement.style.position,
+                originalStyles: {
+                  overflow: document.documentElement.style.overflow,
+                'overflow-y': document.documentElement.style.overflowY,
+                  position: document.documentElement.style.position,
               },
             });
             document.documentElement.style.setProperty('overflow', 'auto', 'important');
@@ -136,7 +136,7 @@ export class DomActionExecutor {
           if (document.body) {
             record.mutatedElements.push({
               element: document.body,
-              originalStyles: { pointerEvents: document.body.style.pointerEvents },
+              originalStyles: { 'pointer-events': document.body.style.pointerEvents },
             });
             document.body.style.setProperty('pointer-events', 'auto', 'important');
           }
@@ -157,7 +157,7 @@ export class DomActionExecutor {
               visibility: htmlEl.style.visibility,
             };
             if (action.type !== 'BAIT_PRESERVE_CHILD_STRUCTURE') {
-              originalStyles.contentVisibility = htmlEl.style.contentVisibility;
+              originalStyles['content-visibility'] = htmlEl.style.contentVisibility;
               originalStyles.contain = htmlEl.style.contain;
             }
             record.mutatedElements.push({ element: htmlEl, originalStyles });
@@ -219,10 +219,9 @@ export class DomActionExecutor {
     // Revert inline style mutations
     for (const mutated of record.mutatedElements) {
       for (const [prop, originalValue] of Object.entries(mutated.originalStyles)) {
+        mutated.element.style.removeProperty(prop);
         if (originalValue) {
           mutated.element.style.setProperty(prop, originalValue);
-        } else {
-          mutated.element.style.removeProperty(prop);
         }
       }
     }

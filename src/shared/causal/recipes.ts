@@ -46,6 +46,28 @@ export interface CausalRecipe {
  */
 export type CausalRecipeLifecycle = 'DRAFT' | 'CONFIRMED' | 'RECIPE_SAFE' | 'INVALIDATED';
 
+export type PrimitiveRecipeRemappingRule =
+  | 'CURRENT_ELEMENT_REF'
+  | 'CURRENT_REQUEST_REF'
+  | 'CURRENT_NAVIGATION_REF'
+  | 'NONE';
+
+export type PrimitiveRecipeRollbackClass =
+  | 'DOM_ACTION'
+  | 'SESSION_RULE'
+  | 'CLOSED_TAB_REOPEN'
+  | 'CAPABILITY_GAP';
+
+export interface PrimitiveRecipeStep {
+  primitiveId: string;
+  requiredEvidenceClasses: string[];
+  structuralPreconditions: string[];
+  behavioralPreconditions: string[];
+  opaqueRefRemappingRule: PrimitiveRecipeRemappingRule;
+  rollbackClass: PrimitiveRecipeRollbackClass;
+  fingerprintConstraints: Partial<PageFingerprint>;
+}
+
 export interface CausalRecipeRecord {
   recipe: CausalRecipe;
   lifecycle: CausalRecipeLifecycle;
@@ -55,11 +77,8 @@ export interface CausalRecipeRecord {
   evidence?: ExperimentRecord[];
   /** Deterministic reason for the latest invalidation decision. */
   invalidationReason?: FingerprintCheckKind | 'REPLAY_HEALTH_OR_ROLLBACK';
-  /** Autonomous primitive sequence, persisted only as opaque refs and IDs. */
-  primitiveSequence?: Array<{
-    primitiveId: string;
-    opaqueRefs: string[];
-  }>;
+  /** Autonomous primitive sequence; replay targets are remapped at runtime. */
+  primitiveSequence?: PrimitiveRecipeStep[];
 }
 
 export const CAUSAL_RECIPE_VERSION = 1 as const;

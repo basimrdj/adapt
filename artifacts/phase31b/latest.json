@@ -1,74 +1,74 @@
 {
   "schema": "adapt-phase31b-verification-v2",
-  "startedAt": "2026-08-14T11:57:35.204Z",
-  "completedAt": "2026-08-14T12:02:39.523Z",
+  "startedAt": "2026-08-15T07:10:02.372Z",
+  "completedAt": "2026-08-15T07:15:25.633Z",
   "verdict": "PASSED",
   "gates": [
     {
       "name": "TypeScript typecheck",
       "command": "npm run typecheck",
       "pass": true,
-      "durationMs": 1746
+      "durationMs": 2306
     },
     {
       "name": "Full reproducible build and indexed page compilation",
       "command": "npm run build:full",
       "pass": true,
-      "durationMs": 48445
+      "durationMs": 52024
     },
     {
       "name": "Indexed page-plane benchmark",
       "command": "npm run benchmark:page",
       "pass": true,
-      "durationMs": 401
+      "durationMs": 457
     },
     {
       "name": "Page filter compiler and index unit suite",
       "command": "npm run test:page",
       "pass": true,
-      "durationMs": 1475
+      "durationMs": 1692
     },
     {
       "name": "Filter compiler and package integrity",
       "command": "npm run verify:phase31b:integrity",
       "pass": true,
-      "durationMs": 498
+      "durationMs": 854
     },
     {
       "name": "All unit and Phase 3 regression tests",
       "command": "npm run test:unit",
       "pass": true,
-      "durationMs": 7323
+      "durationMs": 10393
     },
     {
       "name": "Passive detector-bait stealth corpus",
       "command": "npm run test:stealth",
       "pass": true,
-      "durationMs": 51908
+      "durationMs": 65102
     },
     {
       "name": "30-scenario executable adversarial corpus",
       "command": "npm run test:anti-adblock",
       "pass": true,
-      "durationMs": 32177
+      "durationMs": 32174
     },
     {
       "name": "Content runtime stability regression",
       "command": "npm run test:runtime",
       "pass": true,
-      "durationMs": 3701
+      "durationMs": 4329
     },
     {
       "name": "Chromium Phase 3 and Phase 3.1B E2E suites",
       "command": "npm run test:e2e",
       "pass": true,
-      "durationMs": 155041
+      "durationMs": 152091
     },
     {
       "name": "Bundle security and packaging checks",
       "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
       "pass": true,
-      "durationMs": 1601
+      "durationMs": 1836
     }
   ],
   "evidence": {
@@ -87,13 +87,13 @@
           "id": "network-ad-request",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1046
+          "durationMs": 1041
         },
         {
           "id": "generic-cosmetic-ad",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1398
+          "durationMs": 1411
         },
         {
           "id": "domain-specific-cosmetic",
@@ -117,7 +117,7 @@
           "id": "extended-css-target",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 0
+          "durationMs": 1
         },
         {
           "id": "procedural-has-text",
@@ -141,127 +141,127 @@
           "id": "main-world-detector",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 0
         },
         {
           "id": "offset-height-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1448
+          "durationMs": 1469
         },
         {
           "id": "bounding-rect-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1437
+          "durationMs": 1488
         },
         {
           "id": "computed-style-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1433
+          "durationMs": 1498
         },
         {
           "id": "element-removal-detector",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1396
+          "durationMs": 1101
         },
         {
           "id": "bait-reinsertion",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1756
+          "durationMs": 1450
         },
         {
           "id": "timer-detection",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1445
+          "durationMs": 1514
         },
         {
           "id": "scroll-lock-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1746
+          "durationMs": 1443
         },
         {
           "id": "pointer-events-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1749
+          "durationMs": 1455
         },
         {
           "id": "nested-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 318
+          "durationMs": 379
         },
         {
           "id": "cross-origin-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 276
+          "durationMs": 381
         },
         {
           "id": "open-shadow-dom",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1040
+          "durationMs": 1047
         },
         {
           "id": "csp-heavy-page",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1045
+          "durationMs": 1055
         },
         {
           "id": "spa-route-change",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 1437
+          "durationMs": 1551
         },
         {
           "id": "body-replacement",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 703
+          "durationMs": 748
         },
         {
           "id": "mutation-storm",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 3159
+          "durationMs": 3192
         },
         {
           "id": "worker-restart",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 2432
+          "durationMs": 2448
         },
         {
           "id": "consent-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1041
+          "durationMs": 1058
         },
         {
           "id": "login-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 945
+          "durationMs": 769
         },
         {
           "id": "paywall",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1041
+          "durationMs": 1056
         },
         {
           "id": "benign-advertisement-text",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1045
+          "durationMs": 1066
         }
       ]
     },
@@ -346,35 +346,35 @@
       ],
       "baselineIndexBytes": 15022819,
       "afterIndexBytes": 494,
-      "afterBundleBytes": 37130908,
-      "perFrameBytes": 1784162,
-      "perFrameParseMs": 9.030209,
+      "afterBundleBytes": 37145575,
+      "perFrameBytes": 1785905,
+      "perFrameParseMs": 14.186708,
       "genericBytes": 1833,
-      "relevantDomainShardBytes": 182506,
-      "indexedRules": 755,
+      "relevantDomainShardBytes": 183939,
+      "indexedRules": 765,
       "mutationChecks": 2000,
-      "mutationBenchmarkMs": 0.153291,
+      "mutationBenchmarkMs": 0.188583,
       "domainShardCount": 339,
       "earlyShardCount": 338,
       "noFullBundleParsePerFrame": true
     },
     "detectorSensitiveCosmeticRules": 2913,
     "scriptletCoverage": {
-      "parsed": 7630,
-      "fullyExecutable": 4469,
-      "fullyExecutableEarly": 2958,
-      "unsupportedByName": 2887,
-      "unsupportedByArguments": 49,
+      "parsed": 7636,
+      "fullyExecutable": 4471,
+      "fullyExecutableEarly": 2959,
+      "unsupportedByName": 2890,
+      "unsupportedByArguments": 50,
       "unsafe": 225,
       "exceptionSuppressed": 0
     },
-    "scriptletRules": 7630,
-    "supportedScriptletRules": 4469,
+    "scriptletRules": 7636,
+    "supportedScriptletRules": 4471,
     "unsupportedScriptletFrequency": {
       "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-      "generatedAt": "2026-08-14T11:58:39.226Z",
-      "totalScriptletRules": 7630,
-      "unsupportedScriptletRules": 3161,
+      "generatedAt": "2026-08-15T07:11:14.959Z",
+      "totalScriptletRules": 7636,
+      "unsupportedScriptletRules": 3165,
       "entries": [
         {
           "name": "prevent-addEventListener",
@@ -414,12 +414,12 @@
         },
         {
           "name": "set-local-storage-item",
-          "total": 296,
+          "total": 297,
           "fullyExecutable": 0,
-          "unsupported": 296,
+          "unsupported": 297,
           "statuses": {
             "fully-executable": 0,
-            "unsupported-by-name": 296,
+            "unsupported-by-name": 297,
             "unsupported-by-arguments": 0,
             "unsafe": 0
           }
@@ -438,11 +438,11 @@
         },
         {
           "name": "set-constant",
-          "total": 1343,
-          "fullyExecutable": 1177,
+          "total": 1344,
+          "fullyExecutable": 1178,
           "unsupported": 166,
           "statuses": {
-            "fully-executable": 1177,
+            "fully-executable": 1178,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 1,
             "unsafe": 165
@@ -618,12 +618,12 @@
         },
         {
           "name": "href-sanitizer",
-          "total": 21,
+          "total": 22,
           "fullyExecutable": 0,
-          "unsupported": 21,
+          "unsupported": 22,
           "statuses": {
             "fully-executable": 0,
-            "unsupported-by-name": 21,
+            "unsupported-by-name": 22,
             "unsupported-by-arguments": 0,
             "unsafe": 0
           }
@@ -941,6 +941,18 @@
           }
         },
         {
+          "name": "trusted-set-attr",
+          "total": 4,
+          "fullyExecutable": 0,
+          "unsupported": 4,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 4,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
           "name": "ubo-acs",
           "total": 4,
           "fullyExecutable": 0,
@@ -1013,18 +1025,6 @@
           }
         },
         {
-          "name": "trusted-set-attr",
-          "total": 3,
-          "fullyExecutable": 0,
-          "unsupported": 3,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 3,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
           "name": "ubo-aost",
           "total": 3,
           "fullyExecutable": 0,
@@ -1045,6 +1045,18 @@
             "fully-executable": 0,
             "unsupported-by-name": 3,
             "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "remove-node-text",
+          "total": 146,
+          "fullyExecutable": 144,
+          "unsupported": 2,
+          "statuses": {
+            "fully-executable": 144,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 2,
             "unsafe": 0
           }
         },
@@ -1079,18 +1091,6 @@
           "unsupported": 1,
           "statuses": {
             "fully-executable": 478,
-            "unsupported-by-name": 0,
-            "unsupported-by-arguments": 1,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "remove-node-text",
-          "total": 144,
-          "fullyExecutable": 143,
-          "unsupported": 1,
-          "statuses": {
-            "fully-executable": 143,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 1,
             "unsafe": 0

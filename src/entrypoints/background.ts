@@ -161,7 +161,11 @@ chrome.webNavigation.onCommitted.addListener(async (details) => {
   intentTracker.observeNavigationCommitted(details.tabId, details.frameId, details.url, details.timeStamp, committedSourceOrigin);
   const previous = navRegistry.getCausalKey(details.tabId, details.frameId);
   if (!previous || previous.documentId !== details.documentId) {
-    await causalEngine.onNavigation(details.tabId, previous);
+    await causalEngine.onNavigation(details.tabId, previous, {
+      preservePreviousGraph: causalOrchestrator.hasPendingNavigationClosure(details.tabId)
+        || details.frameId === 0
+        || intentTracker.hasRecentIntent(details.tabId, details.frameId, details.timeStamp),
+    });
   }
   const parentFrameId = 'parentFrameId' in details ? (details as { parentFrameId: number }).parentFrameId : undefined;
   const epoch = navRegistry.onNavigationCommitted(
@@ -218,6 +222,7 @@ chrome.webNavigation.onCreatedNavigationTarget.addListener((details) => {
     const target = intentTracker.correlate({
       sourceTabId: details.sourceTabId,
       sourceFrameId: details.sourceFrameId,
+      sourceDocumentId: sourceEpoch?.documentId,
       targetTabId: details.tabId,
       url: details.url,
       timeStamp: details.timeStamp,
@@ -239,6 +244,7 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
   await startupReady;
   navRegistry.onTabClosed(tabId);
   navigationTargets.clearTab(tabId);
+  await causalEngine.onTabClosed(tabId);
   const activeTxs = adaptEngine.getActiveTransactions().filter((tx) => tx.tabId === tabId);
   for (const tx of activeTxs) {
     if (tx.sessionRuleIds.length > 0) {

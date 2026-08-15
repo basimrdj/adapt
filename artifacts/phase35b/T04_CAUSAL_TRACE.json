@@ -1,13 +1,9 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "scenario": "T04 blocked resource probe reaction",
-  "capturedAt": "2026-08-14T18:12:05.113Z",
-  "run": {
-    "startedWallMs": 1786731121894,
-    "completedWallMs": 1786731125113,
-    "elapsedMs": 3219,
-    "independentChromium": true
-  },
+  "capturedAt": "2026-08-15T07:09:29.686Z",
+  "run": 20,
+  "independentChromium": true,
   "orderedEventNodes": [
     {
       "order": 1,
@@ -17,21 +13,21 @@
         "networkIntegrity": 0.5,
         "privacyPreservation": 1
       },
-      "id": "event:mst9ktsi_1_3lw1m6cd",
+      "id": "event:msu1cl0t_1_jvuqo9oq",
       "kind": "HEALTH_SNAPSHOT",
       "observationConfidence": 0.9,
       "provenance": "healthVector",
       "refs": [],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731122896
+        "value": 1786777767530
       }
     },
     {
@@ -40,7 +36,7 @@
         "benignModal": false,
         "coverage": 1
       },
-      "id": "event:mst9ktsi_2_puskqq8u",
+      "id": "event:msu1cl0t_2_mfdf2hq5",
       "kind": "OVERLAY_APPEARED",
       "observationConfidence": 0.9,
       "provenance": "mutationObserver",
@@ -48,35 +44,35 @@
         "element:e1"
       ],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731122896
+        "value": 1786777767530
       }
     },
     {
       "order": 3,
       "features": {},
-      "id": "event:mst9ktsi_3_cwk1n9bn",
+      "id": "event:msu1cl0t_3_m5sweh7i",
       "kind": "SCROLL_LOCK_ON",
       "observationConfidence": 0.9,
       "provenance": "mutationObserver",
       "refs": [],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731122896
+        "value": 1786777767530
       }
     },
     {
@@ -85,21 +81,21 @@
         "confidence": 1,
         "semanticCategory": "ANTI_BLOCK_INSTRUCTION"
       },
-      "id": "event:mst9ktsi_4_iiwyqs4a",
+      "id": "event:msu1cl0t_4_g3uizmv0",
       "kind": "ANTI_BLOCK_REACTION",
       "observationConfidence": 0.9,
       "provenance": "semanticObserver",
       "refs": [],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731122896
+        "value": 1786777767530
       }
     },
     {
@@ -107,21 +103,21 @@
       "features": {
         "category": "ANTI_BLOCK_INSTRUCTION"
       },
-      "id": "event:mst9ktsi_5_8ctib2hl",
+      "id": "event:msu1cl0t_5_qkaj7p6b",
       "kind": "SEMANTIC_GATE",
       "observationConfidence": 0.9,
       "provenance": "semanticObserver",
       "refs": [],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731122896
+        "value": 1786777767530
       }
     },
     {
@@ -132,21 +128,21 @@
         "networkIntegrity": 0.5,
         "privacyPreservation": 1
       },
-      "id": "event:mst9ku6s_6_6tnjimdv",
+      "id": "event:msu1clf4_6_poawmiit",
       "kind": "HEALTH_SNAPSHOT",
       "observationConfidence": 0.9,
       "provenance": "healthVector",
       "refs": [],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731122958
+        "value": 1786777767662
       }
     },
     {
@@ -157,46 +153,21 @@
         "networkIntegrity": 0.5,
         "privacyPreservation": 1
       },
-      "id": "event:mst9ku6u_7_04vr41yq",
+      "id": "event:msu1clf5_7_ugjj2l13",
       "kind": "HEALTH_SNAPSHOT",
       "observationConfidence": 0.9,
       "provenance": "healthVector",
       "refs": [],
       "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
+        "documentId": "039BF6B9829229EA9E5CE2D00B1F835B",
         "frameId": 0,
         "navigationEpoch": 1,
         "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
+        "tabId": 743637442
       },
       "timestamp": {
         "domain": "extension.wall_ms",
-        "value": 1786731123023
-      }
-    },
-    {
-      "order": 8,
-      "features": {
-        "antiBlockReaction": 0,
-        "delta": 0,
-        "networkIntegrity": 0.5,
-        "privacyPreservation": 1
-      },
-      "id": "event:mst9ku6v_8_m7p60h1g",
-      "kind": "HEALTH_SNAPSHOT",
-      "observationConfidence": 0.9,
-      "provenance": "healthVector",
-      "refs": [],
-      "scope": {
-        "documentId": "95C2F19270694607C6869FBD146E6350",
-        "frameId": 0,
-        "navigationEpoch": 1,
-        "originHash": "f07d805b534ea80743fd35994d2390828984815ab05be11f2d15d50cfef46214",
-        "tabId": 1499588247
-      },
-      "timestamp": {
-        "domain": "extension.wall_ms",
-        "value": 1786731123409
+        "value": 1786777768045
       }
     }
   ],
@@ -208,32 +179,54 @@
       "posterior": 0.12,
       "prior": 0.12,
       "causeRefs": [
-        "event:mst9ktsi_4_iiwyqs4a",
-        "event:mst9ktsi_5_8ctib2hl"
+        "event:msu1cl0t_2_mfdf2hq5",
+        "element:e1",
+        "event:msu1cl0t_3_m5sweh7i",
+        "event:msu1cl0t_4_g3uizmv0",
+        "event:msu1cl0t_5_qkaj7p6b"
       ],
       "createdFrom": [
-        "event:mst9ktsi_4_iiwyqs4a",
-        "event:mst9ktsi_5_8ctib2hl"
+        "event:msu1cl0t_2_mfdf2hq5",
+        "event:msu1cl0t_3_m5sweh7i",
+        "event:msu1cl0t_4_g3uizmv0",
+        "event:msu1cl0t_5_qkaj7p6b"
       ],
       "updatedByExperiments": []
     },
     {
       "id": "hypothesis:h2",
       "mechanismClass": "UNKNOWN_DOM_REACTION",
-      "status": "SUPPORTED",
-      "posterior": 0.32,
+      "status": "CANDIDATE",
+      "posterior": 0.6666666666666666,
       "prior": 0.12,
       "causeRefs": [
-        "event:mst9ktsi_4_iiwyqs4a",
-        "event:mst9ktsi_5_8ctib2hl"
+        "event:msu1cl0t_2_mfdf2hq5",
+        "element:e1",
+        "event:msu1cl0t_3_m5sweh7i",
+        "event:msu1cl0t_4_g3uizmv0",
+        "event:msu1cl0t_5_qkaj7p6b"
       ],
       "createdFrom": [
-        "event:mst9ktsi_4_iiwyqs4a",
-        "event:mst9ktsi_5_8ctib2hl"
+        "event:msu1cl0t_2_mfdf2hq5",
+        "event:msu1cl0t_3_m5sweh7i",
+        "event:msu1cl0t_4_g3uizmv0",
+        "event:msu1cl0t_5_qkaj7p6b"
       ],
       "updatedByExperiments": [
         "experiment:x1"
       ]
+    }
+  ],
+  "hypothesisPosterior": [
+    {
+      "mechanismClass": "UNKNOWN_SCRIPT_REACTION",
+      "status": "CANDIDATE",
+      "posterior": 0.12
+    },
+    {
+      "mechanismClass": "UNKNOWN_DOM_REACTION",
+      "status": "CANDIDATE",
+      "posterior": 0.6666666666666666
     }
   ],
   "deterministicCandidates": [
@@ -246,44 +239,77 @@
   ],
   "saeiCandidates": [
     {
-      "id": "experiment:x1",
-      "hypothesisId": "hypothesis:h2",
-      "primitiveId": "REMOVE_REACTION_UI",
+      "durationMs": 640,
       "expectedInformationGain": 0.1832,
-      "expectedRisk": 0.14,
       "expectedPrivacyRisk": 0.01,
+      "expectedRisk": 0.14,
+      "hypothesisId": "hypothesis:h2",
+      "id": "experiment:x1",
       "opaqueRefs": [
-        "event:mst9ktsi_4_iiwyqs4a",
-        "event:mst9ktsi_5_8ctib2hl",
-        "element:e1"
+        "event:msu1cl0t_2_mfdf2hq5",
+        "element:e1",
+        "event:msu1cl0t_3_m5sweh7i",
+        "event:msu1cl0t_4_g3uizmv0",
+        "event:msu1cl0t_5_qkaj7p6b"
       ],
-      "status": "SELECTED_AND_COMMITTED"
+      "primitiveId": "REMOVE_REACTION_UI"
     }
   ],
   "selectedExperiment": {
-    "durationMs": 640,
-    "expectedInformationGain": 0.1832,
-    "expectedPrivacyRisk": 0.01,
-    "expectedRisk": 0.14,
-    "hypothesisId": "hypothesis:h2",
+    "candidateHash": "924aa884549b4615807b18e0656e7120c697a7f3e4370c868d5ef241747ecdd1",
+    "completedWallMs": 1786777768047,
+    "epochStillFresh": true,
+    "fingerprintHash": "708f58441d172a0b0f7aff431f179fae370335d740eeaf72a2e788e0bc906bd8",
+    "healthDelta": 0.5874999999999999,
     "id": "experiment:x1",
-    "opaqueRefs": [
-      "event:mst9ktsi_4_iiwyqs4a",
-      "event:mst9ktsi_5_8ctib2hl",
-      "element:e1"
+    "observedRefs": [
+      "event:msu1cl0t_2_mfdf2hq5",
+      "element:e1",
+      "event:msu1cl0t_3_m5sweh7i",
+      "event:msu1cl0t_4_g3uizmv0",
+      "event:msu1cl0t_5_qkaj7p6b"
     ],
-    "primitiveId": "REMOVE_REACTION_UI"
+    "policyDecisionId": "policy:autonomy:REMOVE_REACTION_UI",
+    "postHealth": {
+      "confidence": 0.5,
+      "contentAccess": 1,
+      "interaction": 1,
+      "mutationStability": 1,
+      "networkIntegrity": 0.5,
+      "privacyPreservation": 1,
+      "scrollability": 1,
+      "visualObstruction": 0
+    },
+    "preHealth": {
+      "confidence": 1,
+      "contentAccess": 0.6,
+      "interaction": 1,
+      "mutationStability": 1,
+      "networkIntegrity": 0.5,
+      "privacyPreservation": 1,
+      "scrollability": 0.1,
+      "visualObstruction": 1
+    },
+    "primitiveId": "REMOVE_REACTION_UI",
+    "privacyScore": 1,
+    "rollbackVerified": true,
+    "startedWallMs": 1786777767535,
+    "status": "COMMITTED",
+    "transactionId": "autonomy_743637442_1_1786777767535",
+    "visitId": "039BF6B9829229EA9E5CE2D00B1F835B"
   },
   "selectedPrimitive": "REMOVE_REACTION_UI",
   "browserActionStaged": {
-    "transactionId": "autonomy_1499588247_1_1786731122900",
+    "transactionId": "autonomy_743637442_1_1786777767535",
     "primitiveId": "REMOVE_REACTION_UI",
     "observedRefs": [
-      "event:mst9ktsi_4_iiwyqs4a",
-      "event:mst9ktsi_5_8ctib2hl",
-      "element:e1"
+      "event:msu1cl0t_2_mfdf2hq5",
+      "element:e1",
+      "event:msu1cl0t_3_m5sweh7i",
+      "event:msu1cl0t_4_g3uizmv0",
+      "event:msu1cl0t_5_qkaj7p6b"
     ],
-    "startedWallMs": 1786731122901
+    "startedWallMs": 1786777767535
   },
   "healthBefore": {
     "confidence": 1,
@@ -316,10 +342,10 @@
     "reason": "Causal autonomy committed the primitive; legacy fallback was not invoked"
   },
   "elapsedTimestamps": {
-    "observationFirstWallMs": 1786731122898,
-    "experimentStartedWallMs": 1786731122901,
-    "experimentCompletedWallMs": 1786731123410,
-    "artifactCapturedWallMs": 1786731125113
+    "observationFirstWallMs": 1786777767530,
+    "experimentStartedWallMs": 1786777767535,
+    "experimentCompletedWallMs": 1786777768047,
+    "artifactCapturedWallMs": 1786777769551
   },
   "observedPage": {
     "gatePresent": true,
@@ -329,11 +355,189 @@
     "contentVisible": true
   },
   "diagnosis": {
-    "regression": "The old path admitted partial-evidence low-risk probes and allowed concurrent autonomous staging, exhausting the bounded loop before the gate-removal primitive.",
-    "fixes": [
-      "Primitive selection now honors declared required evidence",
-      "Complete evidence coverage ranks the direct reaction primitive",
-      "Concurrent autonomous stages for one graph are suppressed"
-    ]
-  }
+    "regression": "The formerly passing path regressed when the blocked-resource candidate could own the graph before the reaction-removal primitive was selected.",
+    "currentOrchestration": "Bounded SAEI selection now requires complete evidence, stages one primitive per graph, verifies mechanism-specific outcome, and preserves the causal trace."
+  },
+  "independentRuns": [
+    {
+      "run": 1,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1978
+    },
+    {
+      "run": 2,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2052
+    },
+    {
+      "run": 3,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2025
+    },
+    {
+      "run": 4,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2023
+    },
+    {
+      "run": 5,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2022
+    },
+    {
+      "run": 6,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2007
+    },
+    {
+      "run": 7,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1993
+    },
+    {
+      "run": 8,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1987
+    },
+    {
+      "run": 9,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2023
+    },
+    {
+      "run": 10,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1999
+    },
+    {
+      "run": 11,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2029
+    },
+    {
+      "run": 12,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2031
+    },
+    {
+      "run": 13,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1990
+    },
+    {
+      "run": 14,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1971
+    },
+    {
+      "run": 15,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1989
+    },
+    {
+      "run": 16,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 1975
+    },
+    {
+      "run": 17,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2040
+    },
+    {
+      "run": 18,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2026
+    },
+    {
+      "run": 19,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2016
+    },
+    {
+      "run": 20,
+      "selectedPrimitive": "REMOVE_REACTION_UI",
+      "selectedStatus": "COMMITTED",
+      "rollbackVerified": true,
+      "gateDisplay": "none",
+      "contentVisible": true,
+      "elapsedMs": 2021
+    }
+  ]
 }
