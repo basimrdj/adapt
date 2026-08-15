@@ -1,68 +1,9 @@
 {
   "schema": "adapt-phase31b-stealth-v1",
-  "total": 11,
-  "passed": 11,
+  "total": 0,
+  "passed": 0,
   "failed": 0,
-  "resultClasses": {
-    "BLOCKING_PASS": 9,
-    "NEGATIVE_CONTROL_PASS": 2
-  },
-  "results": [
-    {
-      "id": "passive-bait-height",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "passive-bait-offsetHeight",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "passive-bait-boundingRect",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "passive-bait-computedStyle",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "passive-bait-existence",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "timed-bait-recheck",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "bait-reinsertion",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "network-probe-detector",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "hybrid-detector",
-      "pass": true,
-      "resultClass": "BLOCKING_PASS"
-    },
-    {
-      "id": "negative-control-content",
-      "pass": true,
-      "resultClass": "NEGATIVE_CONTROL_PASS"
-    },
-    {
-      "id": "negative-control-static-bait-css",
-      "pass": true,
-      "resultClass": "NEGATIVE_CONTROL_PASS"
-    }
-  ],
+  "resultClasses": {},
+  "results": [],
   "liveCanYouBlockIt": "NOT_OBSERVED"
 }

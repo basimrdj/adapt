@@ -59,8 +59,8 @@ export interface AutonomyLoopState {
 const PRIMITIVES_BY_FAMILY: Partial<Record<CausalHypothesis['mechanismClass'], readonly PrimitiveId[]>> = {
   UNKNOWN_NETWORK_REACTION: ['TEMPORARY_NETWORK_ALLOW', 'TARGETED_SESSION_DNR', 'TEMPORARY_NETWORK_BLOCK'],
   UNKNOWN_SCRIPT_REACTION: ['DISABLE_PACKAGED_SCRIPTLET', 'ACTIVATE_PACKAGED_SCRIPTLET', 'REMOVE_REACTION_UI'],
-  UNKNOWN_DOM_REACTION: ['RESTORE_SCROLL', 'PRESERVE_BAIT', 'RESTORE_LAYOUT', 'REMOVE_REACTION_UI'],
-  UNKNOWN_NAVIGATION_REACTION: ['QUARANTINE_NAVIGATION_TARGET', 'STOP_MATCHED_REDIRECT_CHAIN', 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'],
+  UNKNOWN_DOM_REACTION: ['RESTORE_SCROLL', 'RESTORE_POINTER_INTERACTION', 'PRESERVE_BAIT', 'RESTORE_LAYOUT', 'REMOVE_REACTION_UI'],
+  UNKNOWN_NAVIGATION_REACTION: ['CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET', 'STOP_MATCHED_REDIRECT_CHAIN', 'QUARANTINE_NAVIGATION_TARGET'],
   UNKNOWN_PLAYER_REACTION: ['RESTORE_POINTER_INTERACTION', 'RESTORE_SCROLL', 'PLAYER_HEALTH_RECOVERY'],
   UNKNOWN_MIXED_REACTION: ['PRESERVE_BAIT', 'RESTORE_LAYOUT', 'RESTORE_POINTER_INTERACTION', 'REMOVE_REACTION_UI'],
 };
@@ -220,10 +220,14 @@ export class AutonomousExperimentLoop {
         });
       }
     }
+    const defaultPreferredPrimitive = !preferredPrimitive
+      && (eventKinds.has('UNEXPECTED_NAV_TARGET') || eventKinds.has('POPUP_OR_POPUNDER'))
+      ? 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' as PrimitiveId
+      : preferredPrimitive;
     proposals.sort((a, b) => {
-      if (preferredPrimitive) {
-        const aPreferred = a.primitiveId === preferredPrimitive ? 1 : 0;
-        const bPreferred = b.primitiveId === preferredPrimitive ? 1 : 0;
+      if (defaultPreferredPrimitive) {
+        const aPreferred = a.primitiveId === defaultPreferredPrimitive ? 1 : 0;
+        const bPreferred = b.primitiveId === defaultPreferredPrimitive ? 1 : 0;
         if (aPreferred !== bPreferred) return bPreferred - aPreferred;
       }
       const ua = a.expectedInformationGain - a.expectedRisk - a.expectedPrivacyRisk;

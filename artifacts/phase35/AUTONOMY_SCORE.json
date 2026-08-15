@@ -9,7 +9,7 @@
   "autonomous_resolution_rate": 1,
   "false_positive_rate": 0,
   "median_experiments": 1,
-  "p95_experiments": 3,
+  "p95_experiments": 4,
   "median_time_to_resolution_ms": 660,
   "recipe_replay_success_rate": 1,
   "second_visit_ai_calls": 0,

@@ -1,74 +1,74 @@
 {
   "schema": "adapt-phase31b-verification-v2",
-  "startedAt": "2026-08-15T07:10:02.372Z",
-  "completedAt": "2026-08-15T07:15:25.633Z",
+  "startedAt": "2026-08-15T11:55:50.201Z",
+  "completedAt": "2026-08-15T12:00:51.784Z",
   "verdict": "PASSED",
   "gates": [
     {
       "name": "TypeScript typecheck",
       "command": "npm run typecheck",
       "pass": true,
-      "durationMs": 2306
+      "durationMs": 2006
     },
     {
       "name": "Full reproducible build and indexed page compilation",
       "command": "npm run build:full",
       "pass": true,
-      "durationMs": 52024
+      "durationMs": 46830
     },
     {
       "name": "Indexed page-plane benchmark",
       "command": "npm run benchmark:page",
       "pass": true,
-      "durationMs": 457
+      "durationMs": 427
     },
     {
       "name": "Page filter compiler and index unit suite",
       "command": "npm run test:page",
       "pass": true,
-      "durationMs": 1692
+      "durationMs": 1521
     },
     {
       "name": "Filter compiler and package integrity",
       "command": "npm run verify:phase31b:integrity",
       "pass": true,
-      "durationMs": 854
+      "durationMs": 507
     },
     {
       "name": "All unit and Phase 3 regression tests",
       "command": "npm run test:unit",
       "pass": true,
-      "durationMs": 10393
+      "durationMs": 9176
     },
     {
       "name": "Passive detector-bait stealth corpus",
       "command": "npm run test:stealth",
       "pass": true,
-      "durationMs": 65102
+      "durationMs": 49197
     },
     {
       "name": "30-scenario executable adversarial corpus",
       "command": "npm run test:anti-adblock",
       "pass": true,
-      "durationMs": 32174
+      "durationMs": 30762
     },
     {
       "name": "Content runtime stability regression",
       "command": "npm run test:runtime",
       "pass": true,
-      "durationMs": 4329
+      "durationMs": 3655
     },
     {
       "name": "Chromium Phase 3 and Phase 3.1B E2E suites",
       "command": "npm run test:e2e",
       "pass": true,
-      "durationMs": 152091
+      "durationMs": 155859
     },
     {
       "name": "Bundle security and packaging checks",
       "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
       "pass": true,
-      "durationMs": 1836
+      "durationMs": 1640
     }
   ],
   "evidence": {
@@ -87,19 +87,19 @@
           "id": "network-ad-request",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1041
+          "durationMs": 1036
         },
         {
           "id": "generic-cosmetic-ad",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1411
+          "durationMs": 1394
         },
         {
           "id": "domain-specific-cosmetic",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 2
         },
         {
           "id": "cosmetic-exception",
@@ -129,13 +129,13 @@
           "id": "scriptlet-target",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 0
         },
         {
           "id": "scriptlet-exception",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 0
+          "durationMs": 1
         },
         {
           "id": "main-world-detector",
@@ -147,121 +147,121 @@
           "id": "offset-height-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1469
+          "durationMs": 1423
         },
         {
           "id": "bounding-rect-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1488
+          "durationMs": 1427
         },
         {
           "id": "computed-style-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1498
+          "durationMs": 1435
         },
         {
           "id": "element-removal-detector",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1101
+          "durationMs": 1064
         },
         {
           "id": "bait-reinsertion",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1450
+          "durationMs": 1398
         },
         {
           "id": "timer-detection",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1514
+          "durationMs": 1425
         },
         {
           "id": "scroll-lock-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1443
+          "durationMs": 1414
         },
         {
           "id": "pointer-events-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1455
+          "durationMs": 1412
         },
         {
           "id": "nested-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 379
+          "durationMs": 306
         },
         {
           "id": "cross-origin-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 381
+          "durationMs": 279
         },
         {
           "id": "open-shadow-dom",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1047
+          "durationMs": 1039
         },
         {
           "id": "csp-heavy-page",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1055
+          "durationMs": 1044
         },
         {
           "id": "spa-route-change",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 1551
+          "durationMs": 1437
         },
         {
           "id": "body-replacement",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 748
+          "durationMs": 707
         },
         {
           "id": "mutation-storm",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 3192
+          "durationMs": 3141
         },
         {
           "id": "worker-restart",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 2448
+          "durationMs": 2429
         },
         {
           "id": "consent-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1058
+          "durationMs": 1038
         },
         {
           "id": "login-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 769
+          "durationMs": 1043
         },
         {
           "id": "paywall",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1056
+          "durationMs": 1042
         },
         {
           "id": "benign-advertisement-text",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1066
+          "durationMs": 1043
         }
       ]
     },
@@ -348,12 +348,12 @@
       "afterIndexBytes": 494,
       "afterBundleBytes": 37145575,
       "perFrameBytes": 1785905,
-      "perFrameParseMs": 14.186708,
+      "perFrameParseMs": 8.794418,
       "genericBytes": 1833,
       "relevantDomainShardBytes": 183939,
       "indexedRules": 765,
       "mutationChecks": 2000,
-      "mutationBenchmarkMs": 0.188583,
+      "mutationBenchmarkMs": 0.158584,
       "domainShardCount": 339,
       "earlyShardCount": 338,
       "noFullBundleParsePerFrame": true
@@ -372,7 +372,7 @@
     "supportedScriptletRules": 4471,
     "unsupportedScriptletFrequency": {
       "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-      "generatedAt": "2026-08-15T07:11:14.959Z",
+      "generatedAt": "2026-08-15T11:56:54.985Z",
       "totalScriptletRules": 7636,
       "unsupportedScriptletRules": 3165,
       "entries": [

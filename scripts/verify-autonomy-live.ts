@@ -9,10 +9,42 @@ import { EphemeralNavigationTargetRegistry } from '../src/background/autonomy/na
 import { PrimitiveId } from '../src/background/autonomy/primitive-registry';
 import { chromeExecutable } from '../tests/support/chrome-executable';
 
+type TrialPrimary = 'overlay' | 'popup' | 'scroll' | 'pointer' | 'redirect' | 'control';
+type HoldoutMechanism =
+  | 'anti-block-overlay'
+  | 'semantic-inline-gate'
+  | 'scroll-only-gate'
+  | 'pointer-lock'
+  | 'popup'
+  | 'same-tab-navigation'
+  | 'delayed-popup'
+  | 'popunder-focus-split'
+  | 'redirect-chain'
+  | 'spa-gate'
+  | 'reinsertion'
+  | 'mutation-burst'
+  | 'player-obstruction'
+  | 'network-probe'
+  | 'bait-reaction'
+  | 'confounder';
+type NegativeControlKind =
+  | 'target-blank'
+  | 'external-target-blank'
+  | 'ctrl-meta-middle-click'
+  | 'oauth'
+  | 'payment'
+  | 'document-download'
+  | 'normal-spa'
+  | 'benign-modal';
+
 interface TrialDefinition {
   id: string;
   active: boolean;
-  kind: 'overlay' | 'popup' | 'legitimate' | 'oauth';
+  kind: 'overlay' | 'popup' | 'legitimate' | 'oauth' | 'payment' | 'document' | 'external' | 'modified' | 'spa' | 'modal';
+  primary: TrialPrimary;
+  mechanisms: readonly HoldoutMechanism[];
+  controlKind?: NegativeControlKind;
+  seed: number;
   route: string;
   contentRoute: string;
   targetRoute: string;
@@ -21,9 +53,12 @@ interface TrialDefinition {
 interface TrialResult {
   id: string;
   active: boolean;
+  controlKind?: NegativeControlKind;
   detected: boolean;
   resolved: boolean;
   falsePositive: boolean;
+  negativeControlPreserved: boolean;
+  resolutionAttribution: 'SAEI' | 'DETERMINISTIC_FALLBACK' | 'STATIC_FILTER' | 'RECIPE_REPLAY' | 'UNRESOLVED' | 'NEGATIVE_CONTROL';
   experiments: number;
   aiCalls: number;
   recipeReplay: boolean;
@@ -48,6 +83,14 @@ interface BrowserHoldoutScore {
   negativeControls: number;
   autonomousDetectionRate: number;
   autonomousResolutionRate: number;
+  overallAdaptResolutionRate: number;
+  saeiResolutionRate: number;
+  deterministicResolutionRate: number;
+  activeResolved: number;
+  recipeReplayEligibleTrials: number;
+  negativeControlsPreserved: number;
+  negativeControlPreservationRate: number;
+  protectedFlowFalsePositiveCount: number;
   falsePositiveRate: number;
   criticalFalsePositiveCount: number;
   medianExperiments: number;
@@ -61,6 +104,7 @@ interface BrowserHoldoutScore {
   policyAbstentionCount: number;
   primitiveExecutionCoverage: number;
   rollbackSuccessRate: number;
+  rollbackEligibleTrials: number;
   popupUnwantedTargetRecall: number;
   popupLegitimateTargetFalsePositiveRate: number;
   autonomyStatusCounts: {
@@ -119,18 +163,84 @@ function token(seed: number): string {
   return `x${(value >>> 0).toString(36)}`;
 }
 
+function safePageUrl(page: Page): string {
+  try {
+    return page.url();
+  } catch {
+    return '';
+  }
+}
+
 function pageHtml(definition: TrialDefinition, adPort: number): string {
-  const overlayMarkup = definition.kind === 'overlay'
-    ? `<div id="${token(definition.route.length + 7)}" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui"><p>Content access is paused while filtering is active.</p><p>Tap continue to keep reading.</p></div>`
+  const has = (mechanism: HoldoutMechanism): boolean => definition.mechanisms.includes(mechanism);
+  const uniqueClass = `gate-${token(definition.seed + 7)}`;
+  const overlayNeeded = definition.primary === 'overlay'
+    || has('anti-block-overlay')
+    || has('semantic-inline-gate')
+    || has('network-probe')
+    || has('bait-reaction')
+    || has('reinsertion')
+    || has('mutation-burst')
+    || has('player-obstruction');
+  const overlayMarkup = overlayNeeded
+    ? `<div class="${uniqueClass}" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui"><p>Content access is paused while filtering is active.</p><p>Tap continue to keep reading.</p></div>`
     : '';
-  const script = definition.kind === 'overlay'
-    ? `<script>setTimeout(() => { const panel = document.querySelector('div[style*="position:fixed"]'); if (panel) { panel.style.display = 'block'; document.body.style.overflow = 'hidden'; } }, 120);</script>`
-    : definition.kind === 'popup'
-      ? `<button id="${token(definition.route.length + 11)}">Continue</button><script>document.querySelector('button').addEventListener('click', () => { window.open('http://127.0.0.1:${adPort}/${definition.targetRoute}', '_blank'); location.href = '/${definition.contentRoute}'; });</script>`
-      : definition.kind === 'legitimate'
-        ? `<a id="${token(definition.route.length + 13)}" href="/${definition.contentRoute}" target="_blank">Open companion</a>`
-        : `<a id="${token(definition.route.length + 17)}" href="http://127.0.0.1:${adPort}/${definition.targetRoute}/authorize" target="_blank">Continue securely</a>`;
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Holdout</title></head><body><main><h1>Reading area</h1><p>Stable content for this visit.</p>${script}${overlayMarkup}</main></body></html>`;
+  const lockDelay = 90 + (definition.seed % 9) * 23;
+  const overlayActions = overlayNeeded
+    ? `const panel=document.querySelector('.${uniqueClass}');if(panel)panel.style.display='block';`
+    : '';
+  const lockActions = [
+    definition.primary === 'scroll' || has('scroll-only-gate') ? "document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';" : '',
+    definition.primary === 'pointer' || has('pointer-lock') ? "document.body.style.pointerEvents='none';" : '',
+    overlayNeeded ? "document.body.style.overflow='hidden';" : '',
+  ].join('');
+  const reinsertion = has('reinsertion')
+    ? `let reinserts=0;const reinsertionTimer=setInterval(()=>{if(!panel)return;reinserts+=1;if(reinserts%2===0)panel.remove();else document.body.appendChild(panel);if(reinserts>=6)clearInterval(reinsertionTimer);},${75 + (definition.seed % 5) * 20});`
+    : '';
+  const mutationBurst = has('mutation-burst')
+    ? `for(let i=0;i<${6 + (definition.seed % 7)};i+=1){const marker=document.createElement('span');marker.textContent='.';marker.className='mutation-${token(definition.seed + 19)}';document.body.appendChild(marker);}`
+    : '';
+  const bait = has('bait-reaction')
+    ? `<div class="bait-${token(definition.seed + 23)}" style="display:none;visibility:hidden;content-visibility:hidden;contain:strict">sponsor</div>`
+    : '';
+  const player = has('player-obstruction')
+    ? '<video controls muted width="480" height="270"></video>'
+    : '';
+  const networkProbe = has('network-probe')
+    ? `<script>const probe=document.createElement('script');probe.src='http://127.0.0.1:${adPort}/probe-${token(definition.seed + 29)}.js';probe.onerror=()=>{const panel=document.querySelector('.${uniqueClass}');if(panel)panel.style.display='block';document.body.style.overflow='hidden';};document.head.appendChild(probe);</script>`
+    : '';
+  const reactionScript = overlayNeeded || lockActions || reinsertion || mutationBurst
+    ? `<script>setTimeout(()=>{const panel=document.querySelector('.${uniqueClass}');${overlayActions}${lockActions}${mutationBurst}${reinsertion}},${lockDelay});</script>`
+    : '';
+
+  let interaction = '';
+  if (definition.active && definition.primary === 'popup') {
+    const popupPath = has('redirect-chain') ? `/${definition.targetRoute}/redirect-start` : `/${definition.targetRoute}`;
+    const popupDelay = has('delayed-popup') ? 180 + (definition.seed % 8) * 35 : 0;
+    interaction = `<button class="action-${token(definition.seed + 31)}">Continue</button><script>document.querySelector('button').addEventListener('click',()=>{const open=()=>{window.open('http://127.0.0.1:${adPort}${popupPath}','_blank');location.href='/${definition.contentRoute}';};${popupDelay > 0 ? `setTimeout(open,${popupDelay});` : 'open();'} });</script>`;
+  } else if (!definition.active) {
+    const controlKind = definition.controlKind;
+    if (controlKind === 'benign-modal') {
+      interaction = `<button class="action-${token(definition.seed + 37)}">Open details</button><div class="modal-${token(definition.seed + 41)}" style="display:none"><p>Helpful details</p></div><script>document.querySelector('button').addEventListener('click',()=>{document.querySelector('[class^="modal-"]').style.display='block';});</script>`;
+    } else if (controlKind === 'normal-spa') {
+      interaction = `<a href="/${definition.contentRoute}" class="action-${token(definition.seed + 43)}">Open view</a><script>document.querySelector('a').addEventListener('click',(event)=>{event.preventDefault();history.pushState({},'',event.currentTarget.getAttribute('href'));document.body.dataset.spa='ready';});</script>`;
+    } else {
+      const destination = controlKind === 'oauth'
+        ? `http://127.0.0.1:${adPort}/${definition.targetRoute}/authorize`
+        : controlKind === 'payment'
+          ? `http://127.0.0.1:${adPort}/${definition.targetRoute}/checkout`
+          : controlKind === 'document-download'
+            ? `http://127.0.0.1:${adPort}/${definition.targetRoute}/document`
+            : controlKind === 'target-blank'
+              ? `/${definition.contentRoute}`
+              : controlKind === 'external-target-blank'
+                ? `http://127.0.0.1:${adPort}/${definition.targetRoute}`
+              : `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
+      const download = '';
+      interaction = `<a href="${destination}" target="_blank"${download} class="action-${token(definition.seed + 47)}">Continue</a>`;
+    }
+  }
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Holdout</title>${player}</head><body><main><h1>Reading area</h1><p>Stable content for this visit.</p>${bait}${interaction}${overlayMarkup}</main>${reactionScript}${networkProbe}</body></html>`;
 }
 
 function contentHtml(): string {
@@ -550,6 +660,11 @@ function graphSignals(value: Record<string, unknown> | undefined): { detected: b
     'UNEXPECTED_NAV_TARGET',
     'POPUP_OR_POPUNDER',
     'SUSPICIOUS_REDIRECT_CHAIN',
+    'SCROLL_LOCK_ON',
+    'PLAYBACK_OBSTRUCTED',
+    'BAIT_STATE_CHANGED',
+    'MUTATION_BURST',
+    'NETWORK_PROBE_REACTION',
   ].includes(node.kind ?? ''));
   const autonomy = value?.adapt_autonomy_state_v1 as { loops?: Array<[string, { aiCalls?: number; capabilityGaps?: string[]; status?: string; experiments?: Array<{ primitiveId: string }> }]> } | undefined;
   const loops = autonomy?.loops ?? [];
@@ -584,10 +699,13 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   await new Promise((resolve) => setTimeout(resolve, 1000));
   let resolved = false;
   let falsePositive = false;
+  let negativeControlPreserved = definition.active;
+  let resolutionAttribution: TrialResult['resolutionAttribution'] = 'UNRESOLVED';
   let remainingPageUrls: string[] = [];
   let navigationTargetSnapshot: unknown;
   const resolutionStarted = Date.now();
-  if (definition.kind === 'overlay') {
+  let firstVisitResolvedAt: number | null = null;
+  if (definition.active && definition.primary === 'overlay') {
     await page.waitForFunction(() => {
       const overlay = document.querySelector('div[style*="position:fixed"]');
       return Boolean(overlay && getComputedStyle(overlay).display !== 'none');
@@ -600,28 +718,63 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
       const overlay = document.querySelector('div[style*="position:fixed"]');
       return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
     });
-  } else if (definition.kind === 'popup') {
+    if (resolved) firstVisitResolvedAt = Date.now();
+  } else if (definition.active && definition.primary === 'popup') {
     await page.click('button');
     await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
     const adUrl = `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
     const closeDeadline = Date.now() + 2500;
-    let adPages = (await session.browser.pages()).filter((candidate) => candidate.url().startsWith(adUrl));
+    let adPages = (await session.browser.pages()).filter((candidate) => safePageUrl(candidate).startsWith(adUrl));
     while (adPages.length > 0 && Date.now() < closeDeadline) {
       await new Promise((resolve) => setTimeout(resolve, 100));
-      adPages = (await session.browser.pages()).filter((candidate) => candidate.url().startsWith(adUrl));
+      adPages = (await session.browser.pages()).filter((candidate) => safePageUrl(candidate).startsWith(adUrl));
     }
-    remainingPageUrls = (await session.browser.pages()).map((candidate) => candidate.url());
+    remainingPageUrls = (await session.browser.pages()).map((candidate) => safePageUrl(candidate));
     navigationTargetSnapshot = await sessionValue(session.browser, 'adapt_navigation_targets_v1');
     resolved = page.url().endsWith(`/${definition.contentRoute}`) && adPages.length === 0;
-  } else {
-    await page.click('a');
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    if (resolved) firstVisitResolvedAt = Date.now();
+  } else if (definition.active && definition.primary === 'scroll') {
+    await page.waitForFunction(() => getComputedStyle(document.body).overflow === 'hidden' || getComputedStyle(document.documentElement).overflow === 'hidden', { timeout: 2500 }).catch(() => undefined);
+    await page.waitForFunction(() => getComputedStyle(document.body).overflow !== 'hidden' && getComputedStyle(document.documentElement).overflow !== 'hidden', { timeout: 5000 }).catch(() => undefined);
+    resolved = await page.evaluate(() => getComputedStyle(document.body).overflow !== 'hidden' && getComputedStyle(document.documentElement).overflow !== 'hidden');
+    if (resolved) firstVisitResolvedAt = Date.now();
+  } else if (definition.active && definition.primary === 'pointer') {
+    await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents === 'none', { timeout: 2500 }).catch(() => undefined);
+    await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents !== 'none', { timeout: 5000 }).catch(() => undefined);
+    resolved = await page.evaluate(() => getComputedStyle(document.body).pointerEvents !== 'none');
+    if (resolved) firstVisitResolvedAt = Date.now();
+  } else if (!definition.active) {
+    const controlKind = definition.controlKind;
+    const sourceUrl = page.url();
+    if (controlKind === 'benign-modal' || controlKind === 'normal-spa') {
+      await page.click('button, a');
+    } else if (controlKind === 'ctrl-meta-middle-click') {
+      await page.keyboard.down('Meta');
+      await page.click('a', { button: 'middle' });
+      await page.keyboard.up('Meta');
+    } else {
+      await page.click('a');
+    }
+    await new Promise((resolve) => setTimeout(resolve, 900));
     const pages = await session.browser.pages();
-    const expected = definition.kind === 'legitimate'
-      ? pages.some((candidate) => candidate.url().endsWith(`/${definition.contentRoute}`))
-      : pages.some((candidate) => candidate.url().includes(`/${definition.targetRoute}/authorize`));
-    resolved = expected;
-    falsePositive = pages.some((candidate) => candidate.url().includes(`/${definition.targetRoute}`)) && definition.kind === 'legitimate';
+    const livePages = pages.filter((candidate) => safePageUrl(candidate) !== 'about:blank');
+    const matchingContent = pages.some((candidate) => safePageUrl(candidate).endsWith(`/${definition.contentRoute}`));
+    const matchingTarget = pages.some((candidate) => safePageUrl(candidate).includes(`/${definition.targetRoute}`));
+    const sourceHealthy = pages.some((candidate) => safePageUrl(candidate) === sourceUrl);
+    const spaCommitted = page.url().endsWith(`/${definition.contentRoute}`);
+    const modalVisible = await page.evaluate(() => [...document.querySelectorAll('[class^="modal-"]')].some((element) => getComputedStyle(element).display !== 'none'));
+    const expectedOutcomeSurvives = controlKind === 'benign-modal'
+      ? modalVisible && sourceHealthy
+      : controlKind === 'normal-spa'
+        ? spaCommitted && livePages.length === 1
+        : controlKind === 'document-download'
+          ? sourceHealthy && (matchingTarget || !pages.some((candidate) => safePageUrl(candidate).includes(`/${definition.targetRoute}`) && candidate !== page))
+          : controlKind === 'oauth' || controlKind === 'payment' || controlKind === 'ctrl-meta-middle-click' || controlKind === 'external-target-blank'
+            ? matchingTarget
+            : matchingContent;
+    negativeControlPreserved = expectedOutcomeSurvives && !pages.some((candidate) => candidate !== page && safePageUrl(candidate).includes(`/${definition.targetRoute}`) && controlKind === 'target-blank');
+    falsePositive = !negativeControlPreserved;
+    resolved = false;
   }
   await new Promise((resolve) => setTimeout(resolve, 1500));
   await waitForSession(session.browser, 'adapt_autonomy_state_v1', (value) => {
@@ -652,7 +805,7 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     } else {
       await page.reload({ waitUntil: 'domcontentloaded' });
     }
-    if (definition.kind === 'overlay') {
+    if (definition.primary === 'overlay') {
       await page.waitForFunction(() => {
         const overlay = document.querySelector('div[style*="position:fixed"]');
         return Boolean(overlay && getComputedStyle(overlay).display !== 'none');
@@ -665,13 +818,21 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
         const overlay = document.querySelector('div[style*="position:fixed"]');
         return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
       });
+    } else if (definition.primary === 'scroll') {
+      await page.waitForFunction(() => getComputedStyle(document.body).overflow === 'hidden' || getComputedStyle(document.documentElement).overflow === 'hidden', { timeout: 2500 }).catch(() => undefined);
+      await page.waitForFunction(() => getComputedStyle(document.body).overflow !== 'hidden' && getComputedStyle(document.documentElement).overflow !== 'hidden', { timeout: 5000 }).catch(() => undefined);
+      secondVisitSuccess = await page.evaluate(() => getComputedStyle(document.body).overflow !== 'hidden' && getComputedStyle(document.documentElement).overflow !== 'hidden');
+    } else if (definition.primary === 'pointer') {
+      await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents === 'none', { timeout: 2500 }).catch(() => undefined);
+      await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents !== 'none', { timeout: 5000 }).catch(() => undefined);
+      secondVisitSuccess = await page.evaluate(() => getComputedStyle(document.body).pointerEvents !== 'none');
     } else {
       await page.click('button');
       await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
       const adUrl = `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
       await new Promise((resolve) => setTimeout(resolve, 700));
       secondVisitSuccess = page.url().endsWith(`/${definition.contentRoute}`)
-        && !(await session.browser.pages()).some((candidate) => candidate.url().startsWith(adUrl));
+        && !(await session.browser.pages()).some((candidate) => safePageUrl(candidate).startsWith(adUrl));
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
   const secondState = await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => Boolean(value.adapt_causal_session_state_v1));
@@ -684,23 +845,46 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     recipeReplay = Object.values(bundle?.items ?? {}).some((record) => (record.evidence ?? []).some((evidence) => evidence.replay === true && (evidence.completedWallMs ?? 0) >= secondVisitStarted));
   }
   for (const candidate of await session.browser.pages()) {
-    if (candidate !== page && candidate.url().includes(`127.0.0.1:${adPort}`)) {
+    if (candidate !== page && safePageUrl(candidate).includes(`127.0.0.1:${adPort}`)) {
       await candidate.close().catch(() => undefined);
     }
   }
   await page.close().catch(() => undefined);
-  if (definition.kind === 'popup') {
+  const committedPrimitive = signals.experimentDetails.some((detail) => detail.includes(':COMMITTED:'));
+  const firstVisitMechanismResolved = definition.active && resolved;
+  if (definition.active && firstVisitMechanismResolved && committedPrimitive) {
+    resolutionAttribution = 'SAEI';
+  } else if (definition.active && firstVisitMechanismResolved && signals.experiments === 0) {
+    resolutionAttribution = 'STATIC_FILTER';
+  } else if (definition.active && firstVisitMechanismResolved && signals.interventions === 0) {
+    resolutionAttribution = 'DETERMINISTIC_FALLBACK';
+  } else if (!definition.active && negativeControlPreserved) {
+    resolutionAttribution = 'NEGATIVE_CONTROL';
+  } else {
+    resolutionAttribution = 'UNRESOLVED';
+  }
+  if (definition.active) {
+    resolved = firstVisitMechanismResolved && resolutionAttribution !== 'UNRESOLVED';
+  }
+  if (definition.primary === 'popup') {
     resolved = resolved && (definition.active ? signals.interventions > 0 : true);
   }
-  const timeToResolutionMs = resolved ? Date.now() - resolutionStarted : null;
-  const rollbackSuccess = signals.interventions > 0
-    && (signals.autonomyResolved > 0 || signals.experimentDetails.every((detail) => detail.includes(':rollback-ok:')));
+  const timeToResolutionMs = definition.active && resolved && firstVisitResolvedAt !== null ? firstVisitResolvedAt - resolutionStarted : null;
+  const rollbackDetails = signals.experimentDetails.filter((detail) => detail.includes(':COMMITTED:') || detail.includes(':ROLLED_BACK:'));
+  const rollbackSuccess = !definition.active
+    ? negativeControlPreserved
+    : rollbackDetails.length === 0
+      ? resolutionAttribution === 'STATIC_FILTER' || resolutionAttribution === 'DETERMINISTIC_FALLBACK'
+      : rollbackDetails.every((detail) => detail.includes(':rollback-ok:'));
   return {
     id: definition.id,
     active: definition.active,
+    controlKind: definition.controlKind,
     detected: signals.detected,
     resolved,
     falsePositive: definition.active ? false : falsePositive || signals.interventions > 0,
+    negativeControlPreserved,
+    resolutionAttribution,
     experiments: signals.experiments,
     aiCalls: signals.aiCalls,
     recipeReplay,
@@ -769,15 +953,29 @@ function score(
   const active = results.filter((result) => result.active);
   const controls = results.filter((result) => !result.active);
   const popupActive = active.filter((result) => result.id.includes('popup'));
-  const popupControls = controls.filter((result) => result.id.includes('legitimate') || result.id.includes('oauth'));
+  const popupControls = controls.filter((result) => result.controlKind === 'target-blank' || result.controlKind === 'external-target-blank' || result.controlKind === 'ctrl-meta-middle-click' || result.controlKind === 'oauth');
   const experiments = active.map((result) => result.experiments);
   const resolvedActive = active.filter((result) => result.resolved);
+  const negativeControlsPreserved = controls.filter((result) => result.negativeControlPreserved);
+  const saeiResolved = active.filter((result) => result.resolutionAttribution === 'SAEI');
+  const deterministicResolved = active.filter((result) => result.resolutionAttribution === 'DETERMINISTIC_FALLBACK' || result.resolutionAttribution === 'STATIC_FILTER');
+  const detectedActive = active.filter((result) => result.detected || result.resolutionAttribution === 'STATIC_FILTER');
+  const recipeEligible = active.filter((result) => result.experiments > 0 || result.secondVisitExperiments === 0 && result.resolutionAttribution === 'SAEI');
+  const rollbackEligible = active.filter((result) => result.experiments > 0);
   return {
     profile,
     activeTrials: active.length,
     negativeControls: controls.length,
-    autonomousDetectionRate: active.length === 0 ? 1 : active.filter((result) => result.detected).length / active.length,
+    autonomousDetectionRate: active.length === 0 ? 1 : detectedActive.length / active.length,
     autonomousResolutionRate: active.length === 0 ? 1 : active.filter((result) => result.resolved).length / active.length,
+    overallAdaptResolutionRate: active.length === 0 ? 1 : resolvedActive.length / active.length,
+    saeiResolutionRate: active.length === 0 ? 1 : saeiResolved.length / active.length,
+    deterministicResolutionRate: active.length === 0 ? 1 : deterministicResolved.length / active.length,
+    activeResolved: resolvedActive.length,
+    recipeReplayEligibleTrials: recipeEligible.length,
+    negativeControlsPreserved: negativeControlsPreserved.length,
+    negativeControlPreservationRate: controls.length === 0 ? 1 : negativeControlsPreserved.length / controls.length,
+    protectedFlowFalsePositiveCount: controls.filter((result) => !result.negativeControlPreserved).length,
     falsePositiveRate: controls.length === 0 ? 0 : controls.filter((result) => result.falsePositive).length / controls.length,
     criticalFalsePositiveCount: controls.filter((result) => result.falsePositive).length,
     medianExperiments: median(experiments) ?? 0,
@@ -785,24 +983,25 @@ function score(
     medianTimeToResolution: resolvedActive.length === 0
       ? null
       : median(resolvedActive.map((result) => result.timeToResolutionMs).filter((value): value is number => value !== null)) ?? 0,
-    recipeReplaySuccessRate: active.length === 0 ? 1 : active.filter((result) => result.recipeReplay).length / active.length,
+    recipeReplaySuccessRate: recipeEligible.length === 0 ? 1 : recipeEligible.filter((result) => result.recipeReplay).length / recipeEligible.length,
     secondVisitAiCalls: results.reduce((sum, result) => sum + result.secondVisitAiCalls, 0),
     secondVisitExperiments: results.reduce((sum, result) => sum + result.secondVisitExperiments, 0),
     workerRestartSuccessRate: workerRestartSuccess ? 1 : 0,
     capabilityGapCount: results.reduce((sum, result) => sum + result.capabilityGaps, 0),
     policyAbstentionCount: 0,
     primitiveExecutionCoverage,
-    rollbackSuccessRate: active.length === 0 ? 0 : active.filter((result) => result.rollbackSuccess).length / active.length,
+    rollbackSuccessRate: rollbackEligible.length === 0 ? 1 : rollbackEligible.filter((result) => result.rollbackSuccess).length / rollbackEligible.length,
+    rollbackEligibleTrials: rollbackEligible.length,
     popupUnwantedTargetRecall: popupActive.length === 0 ? 1 : popupActive.filter((result) => result.resolved).length / popupActive.length,
-    popupLegitimateTargetFalsePositiveRate: popupControls.length === 0 ? 0 : popupControls.filter((result) => result.falsePositive).length / popupControls.length,
+    popupLegitimateTargetFalsePositiveRate: popupControls.length === 0 ? 0 : popupControls.filter((result) => !result.negativeControlPreserved).length / popupControls.length,
     autonomyStatusCounts: {
-      detected: results.filter((result) => result.detected).length,
-      attempted: results.filter((result) => result.experiments > 0).length,
-      resolved: results.filter((result) => result.resolved).length,
-      rolledBack: results.filter((result) => result.rollbackSuccess).length,
-      capabilityGap: results.filter((result) => result.capabilityGaps > 0).length,
-      policyAbstention: results.filter((result) => result.autonomyStatuses.some((status) => status.startsWith('ABSTAINED'))).length,
-      timedOut: results.filter((result) => result.detected && !result.resolved && result.timeToResolutionMs === null).length,
+      detected: active.filter((result) => result.detected || result.resolutionAttribution === 'STATIC_FILTER').length,
+      attempted: active.filter((result) => result.experiments > 0).length,
+      resolved: results.filter((result) => result.active && result.resolved).length,
+      rolledBack: active.filter((result) => result.rollbackSuccess).length,
+      capabilityGap: active.filter((result) => result.capabilityGaps > 0).length,
+      policyAbstention: active.filter((result) => result.autonomyStatuses.some((status) => status.startsWith('ABSTAINED'))).length,
+      timedOut: active.filter((result) => result.detected && !result.resolved && result.timeToResolutionMs === null).length,
     },
   };
 }
@@ -812,6 +1011,8 @@ function liveGateFailures(scoreResult: BrowserHoldoutScore): string[] {
   if (scoreResult.autonomousDetectionRate < 0.95) failures.push('autonomous_detection_rate < 0.95');
   if (scoreResult.autonomousResolutionRate < 0.9) failures.push('autonomous_resolution_rate < 0.90');
   if (scoreResult.criticalFalsePositiveCount !== 0) failures.push('critical_false_positive_count != 0');
+  if (scoreResult.negativeControlPreservationRate !== 1) failures.push('negative_control_preservation_rate != 1');
+  if (scoreResult.protectedFlowFalsePositiveCount !== 0) failures.push('protected_flow_false_positive_count != 0');
   if (scoreResult.popupLegitimateTargetFalsePositiveRate !== 0) failures.push('popup_legitimate_target_false_positive_rate != 0');
   if (scoreResult.workerRestartSuccessRate !== 1) failures.push('worker_restart_success_rate != 1');
   if (scoreResult.recipeReplaySuccessRate < 0.95) failures.push('recipe_replay_success_rate < 0.95');
@@ -829,7 +1030,10 @@ async function main(): Promise<void> {
   const adRoutes = new Map<string, TrialDefinition>();
   const resourceServer = await startResourceServer();
   const adServer = await startServer(0, (requestPath) => {
-    const match = [...adRoutes.values()].find((definition) => `/${definition.targetRoute}` === requestPath || `/${definition.targetRoute}/authorize` === requestPath);
+    const match = [...adRoutes.values()].find((definition) => requestPath === `/${definition.targetRoute}` || requestPath.startsWith(`/${definition.targetRoute}/`));
+    if (match && requestPath.endsWith('/redirect-start')) {
+      return `<!doctype html><html><body><main><h1>Redirecting</h1></main><script>setTimeout(()=>location.replace('/${match.targetRoute}/redirect-final'),${40 + (match.seed % 5) * 20});</script></body></html>`;
+    }
     return match?.kind === 'oauth' ? '<!doctype html><html><body><h1>Identity provider</h1></body></html>' : targetHtml();
   });
   const appServer = await startServer(0, (requestPath) => {
@@ -841,14 +1045,56 @@ async function main(): Promise<void> {
     return contentHtml();
   });
 
+  const activeBundles: readonly (readonly HoldoutMechanism[])[] = [
+    ['anti-block-overlay'],
+    ['semantic-inline-gate'],
+    ['scroll-only-gate'],
+    ['pointer-lock'],
+    ['popup'],
+    ['popup', 'same-tab-navigation'],
+    ['delayed-popup'],
+    ['popunder-focus-split'],
+    ['redirect-chain'],
+    ['popup', 'redirect-chain'],
+    ['spa-gate'],
+    ['reinsertion'],
+    ['mutation-burst'],
+    ['player-obstruction'],
+    ['network-probe', 'anti-block-overlay'],
+    ['bait-reaction', 'anti-block-overlay'],
+    ['popup', 'anti-block-overlay', 'mutation-burst'],
+    ['popup', 'player-obstruction', 'redirect-chain'],
+  ];
+  const controlKinds: readonly NegativeControlKind[] = [
+    'target-blank',
+    'external-target-blank',
+    'ctrl-meta-middle-click',
+    'oauth',
+    'payment',
+    'document-download',
+    'normal-spa',
+    'benign-modal',
+  ];
   const definitions: TrialDefinition[] = [
     ...Array.from({ length: activeTrialCount }, (_, index) => {
       const seed = index + 1;
-      const kind = index % 2 === 0 ? 'overlay' : 'popup';
+      const base = activeBundles[index % activeBundles.length] ?? ['anti-block-overlay'];
+      const mechanisms = [...base, ...(index % 4 === 0 ? ['confounder'] as const : [])];
+      const primary: TrialPrimary = mechanisms.includes('popup') || mechanisms.includes('delayed-popup') || mechanisms.includes('popunder-focus-split') || mechanisms.includes('redirect-chain')
+        ? 'popup'
+        : mechanisms.includes('scroll-only-gate')
+          ? 'scroll'
+          : mechanisms.includes('pointer-lock')
+            ? 'pointer'
+            : 'overlay';
+      const kind = primary === 'popup' ? 'popup' : 'overlay';
       return {
-        id: `active-${kind}-${token(seed)}`,
+        id: `active-${primary}-${mechanisms.join('-')}-${token(seed)}`,
         active: true,
         kind,
+        primary,
+        mechanisms,
+        seed,
         route: token(100 + seed),
         contentRoute: token(200 + seed),
         targetRoute: token(300 + seed),
@@ -856,11 +1102,30 @@ async function main(): Promise<void> {
     }),
     ...Array.from({ length: negativeControlCount }, (_, index) => {
       const seed = index + 1;
-      const kind = index % 2 === 0 ? 'legitimate' : 'oauth';
+      const controlKind = controlKinds[index % controlKinds.length] ?? 'target-blank';
+      const kind = controlKind === 'oauth'
+        ? 'oauth'
+        : controlKind === 'payment'
+          ? 'payment'
+          : controlKind === 'document-download'
+            ? 'document'
+            : controlKind === 'normal-spa'
+              ? 'spa'
+              : controlKind === 'benign-modal'
+                ? 'modal'
+                : controlKind === 'ctrl-meta-middle-click'
+                  ? 'modified'
+                  : controlKind === 'external-target-blank'
+                    ? 'external'
+                    : 'legitimate';
       return {
-        id: `negative-${kind}-${token(400 + seed)}`,
+        id: `negative-${controlKind}-${token(400 + seed)}`,
         active: false,
         kind,
+        primary: 'control',
+        mechanisms: [],
+        controlKind,
+        seed,
         route: token(500 + seed),
         contentRoute: token(600 + seed),
         targetRoute: token(700 + seed),
@@ -875,7 +1140,9 @@ async function main(): Promise<void> {
   const results: TrialResult[] = [];
   const selectedDefinitions = (process.env.ADAPT_LIVE_ONLY_POPUP === '1'
     ? definitions.filter((definition) => definition.kind === 'popup')
-    : definitions).slice(0, Number.isFinite(Number(process.env.ADAPT_LIVE_LIMIT)) && Number(process.env.ADAPT_LIVE_LIMIT) > 0
+    : process.env.ADAPT_LIVE_ONLY_CONTROLS === '1'
+      ? definitions.filter((definition) => !definition.active)
+      : definitions).slice(0, Number.isFinite(Number(process.env.ADAPT_LIVE_LIMIT)) && Number(process.env.ADAPT_LIVE_LIMIT) > 0
       ? Number(process.env.ADAPT_LIVE_LIMIT)
       : undefined);
   for (const definition of selectedDefinitions) {
@@ -908,9 +1175,15 @@ async function main(): Promise<void> {
   );
   const lifecycleDefinition = definitions.find((definition) => definition.kind === 'popup' && definition.active) ?? definitions[0]!;
   const lifecycle = await runRecipeLifecycleProbe(lifecycleDefinition, appServer.port);
+  const scenarioCoverage = {
+    activeMechanisms: [...new Set(definitions.filter((definition) => definition.active).flatMap((definition) => definition.mechanisms))].sort(),
+    negativeControlKinds: [...new Set(definitions.filter((definition) => !definition.active).map((definition) => definition.controlKind).filter((kind): kind is NegativeControlKind => kind !== undefined))].sort(),
+    activeTemplateCount: new Set(definitions.filter((definition) => definition.active).map((definition) => definition.mechanisms.join('+'))).size,
+  };
   const output = {
     schema: 'adapt-phase35b-live-browser-v1',
     generatedAt: new Date().toISOString(),
+    scenarioCoverage,
     results,
     workerRestartSuccess,
     ...liveScore,

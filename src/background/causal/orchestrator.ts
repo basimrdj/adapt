@@ -634,9 +634,7 @@ export class CausalOrchestrator {
     const selected = eventKinds.has('OVERLAY_APPEARED') && !reactionEvidenceReady
       ? undefined
       : this.selector.select(candidates, key, budget);
-    const preferReactionUi = eventKinds.has('OVERLAY_APPEARED')
-      && (eventKinds.has('ANTI_BLOCK_REACTION') || eventKinds.has('SEMANTIC_GATE'));
-    const autonomousSelection = forceAutonomous || !selected || preferReactionUi
+    const autonomousSelection = forceAutonomous || !selected
       ? this.autonomousSelection(graph, baselineHealth)
       : null;
     if (autonomousSelection && this.deps.primitiveExecutors) {
@@ -703,27 +701,35 @@ export class CausalOrchestrator {
       loop.start(observation);
       this.autonomyLoops.set(graph.graphId, loop);
     } else if (loop.snapshot().status === 'EXPLORING') {
-      loop.restore(observation, loop.snapshot());
+      const snapshot = loop.snapshot();
+      loop.restore(observation, {
+        ...snapshot,
+        hypotheses: generateHypothesisLattice(observation.events, snapshot.hypotheses),
+      });
     }
     const eventKinds = new Set(graph.nodes.map((node) => node.kind));
     const hasReactionOverlay = eventKinds.has('OVERLAY_APPEARED')
       && (eventKinds.has('ANTI_BLOCK_REACTION') || eventKinds.has('SEMANTIC_GATE'));
-    const preferredPrimitive = hasReactionOverlay
+    const navigationTargetReaction = eventKinds.has('UNEXPECTED_NAV_TARGET') || eventKinds.has('POPUP_OR_POPUNDER');
+    const redirectReaction = eventKinds.has('SUSPICIOUS_REDIRECT_CHAIN') || eventKinds.has('NAVIGATION_BOUNCE');
+    const preferredPrimitive: PrimitiveId | undefined = hasReactionOverlay
       ? 'REMOVE_REACTION_UI'
-      : graph.nodes
-        .slice()
-        .reverse()
-        .map((node) => node.features.classificationDisposition)
-        .find((value): value is string => typeof value === 'string');
-    const experiment = loop.nextExperiment(
-      preferredPrimitive === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
+      : navigationTargetReaction
         ? 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
-        : preferredPrimitive === 'STOP_MATCHED_REDIRECT_CHAIN'
+        : redirectReaction
           ? 'STOP_MATCHED_REDIRECT_CHAIN'
-          : preferredPrimitive === 'REMOVE_REACTION_UI'
-            ? 'REMOVE_REACTION_UI'
-            : undefined
-    );
+          : eventKinds.has('SCROLL_LOCK_ON')
+            ? 'RESTORE_SCROLL'
+            : eventKinds.has('INTERACTION_DENIED')
+              ? 'RESTORE_POINTER_INTERACTION'
+              : eventKinds.has('PLAYBACK_OBSTRUCTED')
+                ? 'PLAYER_HEALTH_RECOVERY'
+                : graph.nodes
+                  .slice()
+                  .reverse()
+                  .map((node) => node.features.classificationDisposition)
+                  .find((value): value is PrimitiveId => typeof value === 'string');
+    const experiment = loop.nextExperiment(preferredPrimitive);
     if (!experiment) return null;
     const currentOpaqueRefs = graph.nodes.flatMap((node) => node.refs)
       .filter((ref) => ref.startsWith('element:') || ref.startsWith('request:') || ref.startsWith('navigation:'));
@@ -1314,10 +1320,8 @@ export class CausalOrchestrator {
     );
     const hasBait = batch.elements.some((element) => element.role === 'bait-candidate');
     if (primitiveId === 'RESTORE_SCROLL') {
-      return hasVisibleOverlay && (
-        batch.pageSignals.geometry.bodyScrollLocked
-        || batch.pageSignals.geometry.htmlScrollLocked
-      );
+      return batch.pageSignals.geometry.bodyScrollLocked
+        || batch.pageSignals.geometry.htmlScrollLocked;
     }
     if (primitiveId === 'RESTORE_POINTER_INTERACTION') {
       return batch.pageSignals.interaction.pointerEventsSuppressed || hasVisibleOverlay;

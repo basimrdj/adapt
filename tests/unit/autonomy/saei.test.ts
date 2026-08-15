@@ -42,4 +42,24 @@ describe('SAEI autonomous control loop', () => {
     }).status).toBe('CAPABILITY_GAP');
     expect(loop.nextExperiment()).toBeNull();
   });
+
+  it('closes a high-confidence popup before considering unsupported quarantine', () => {
+    const loop = new AutonomousExperimentLoop();
+    loop.start({
+      events: [node('popup', 'POPUP_OR_POPUNDER'), node('unexpected', 'UNEXPECTED_NAV_TARGET')],
+      health: { pageHealth: 0.5, contentHealth: 1, interactionHealth: 1, privacyHealth: 1, reactionResolved: false },
+      fingerprintHash: 'popup-fingerprint', knownRecipe: false, developerHint: false,
+    });
+    expect(loop.nextExperiment()?.primitiveId).toBe('CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET');
+  });
+
+  it('offers pointer restoration for interaction-denied DOM reactions', () => {
+    const loop = new AutonomousExperimentLoop();
+    loop.start({
+      events: [node('deny', 'INTERACTION_DENIED')],
+      health: { pageHealth: 0.5, contentHealth: 1, interactionHealth: 0.1, privacyHealth: 1, reactionResolved: false },
+      fingerprintHash: 'pointer-fingerprint', knownRecipe: false, developerHint: false,
+    });
+    expect(loop.nextExperiment('RESTORE_POINTER_INTERACTION')?.primitiveId).toBe('RESTORE_POINTER_INTERACTION');
+  });
 });
