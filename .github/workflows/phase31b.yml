@@ -45,12 +45,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Prepare validated Phase 3.1 filter cache
-        run: npm run phase31:sync
-      - run: npm run build:full
-      - run: npm run benchmark:page
-      - run: npm run verify:phase31b:integrity
-      - run: npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts
+      - name: Run canonical Phase 3.1B evidence gates
+        run: npm run phase31:sync && ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b
 
   autonomy-fast:
     runs-on: ubuntu-latest
