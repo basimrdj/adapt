@@ -363,7 +363,11 @@ export function primitiveRecipeActions(primitiveId: PrimitiveId, opaqueRefs: rea
     case 'RESTORE_POINTER_INTERACTION':
       return [{ id, type: 'DOM_RESTORE_POINTER_EVENTS' }];
     case 'PLAYER_HEALTH_RECOVERY':
-      return [{ id: `${id}_scroll`, type: 'DOM_RESTORE_SCROLL' }, { id: `${id}_pointer`, type: 'DOM_RESTORE_POINTER_EVENTS' }];
+      return [
+        { id: `${id}_scroll`, type: 'DOM_RESTORE_SCROLL' },
+        { id: `${id}_pointer`, type: 'DOM_RESTORE_POINTER_EVENTS' },
+        { id: `${id}_player`, type: 'DOM_RESTORE_PLAYER' },
+      ];
     default:
       return [];
   }

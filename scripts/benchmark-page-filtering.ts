@@ -1,9 +1,11 @@
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { verificationMetadata } from './verification-metadata';
 
 const root = resolve(process.cwd());
 const pageDir = join(root, 'dist', 'page-filtering');
 const artifactDir = join(root, 'artifacts', 'phase31b');
+const metadata = verificationMetadata(root);
 
 function bytes(file: string): number {
   return statSync(file).size;
@@ -55,6 +57,7 @@ const mutationMs = Number(process.hrtime.bigint() - mutationStartedAt) / 1_000_0
 
 const report = {
   schema: 'adapt-phase31b-page-filter-benchmark-v1',
+  ...metadata,
   hostname,
   candidates,
   shardFiles,

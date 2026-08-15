@@ -631,7 +631,9 @@ export class CausalOrchestrator {
     };
     const eventKinds = new Set(graph.nodes.map((node) => node.kind));
     const reactionEvidenceReady = eventKinds.has('ANTI_BLOCK_REACTION') || eventKinds.has('SEMANTIC_GATE');
-    const selected = eventKinds.has('OVERLAY_APPEARED') && !reactionEvidenceReady
+    const selected = eventKinds.has('PLAYBACK_OBSTRUCTED')
+      ? undefined
+      : eventKinds.has('OVERLAY_APPEARED') && !reactionEvidenceReady
       ? undefined
       : this.selector.select(candidates, key, budget);
     const autonomousSelection = forceAutonomous || !selected
@@ -718,12 +720,12 @@ export class CausalOrchestrator {
         ? 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
         : redirectReaction
           ? 'STOP_MATCHED_REDIRECT_CHAIN'
-          : eventKinds.has('SCROLL_LOCK_ON')
-            ? 'RESTORE_SCROLL'
-            : eventKinds.has('INTERACTION_DENIED')
-              ? 'RESTORE_POINTER_INTERACTION'
-              : eventKinds.has('PLAYBACK_OBSTRUCTED')
-                ? 'PLAYER_HEALTH_RECOVERY'
+          : eventKinds.has('PLAYBACK_OBSTRUCTED')
+            ? 'PLAYER_HEALTH_RECOVERY'
+            : eventKinds.has('SCROLL_LOCK_ON')
+              ? 'RESTORE_SCROLL'
+              : eventKinds.has('INTERACTION_DENIED')
+                ? 'RESTORE_POINTER_INTERACTION'
                 : graph.nodes
                   .slice()
                   .reverse()
@@ -1240,15 +1242,21 @@ export class CausalOrchestrator {
     if (!draft) return;
     const evaluated = this.deps.promotion.evaluate(input);
     const recipe = evaluated.pass ? evaluated.recipe : draft;
-    await this.deps.recipeStore.save({
-      recipe,
-      lifecycle: evaluated.pass ? 'RECIPE_SAFE' : existing?.lifecycle ?? 'DRAFT',
-      updatedWallMs: Date.now(),
-      actions: input.actions,
-      evidence,
-      primitiveSequence,
-    });
-    this.completedRecipeApplications.add(`${recipe.id}:${graph.scope.documentId}`);
+    const applicationKey = `${recipe.id}:${graph.scope.documentId}`;
+    this.completedRecipeApplications.add(applicationKey);
+    try {
+      await this.deps.recipeStore.save({
+        recipe,
+        lifecycle: evaluated.pass ? 'RECIPE_SAFE' : existing?.lifecycle ?? 'DRAFT',
+        updatedWallMs: Date.now(),
+        actions: input.actions,
+        evidence,
+        primitiveSequence,
+      });
+    } catch (error) {
+      this.completedRecipeApplications.delete(applicationKey);
+      throw error;
+    }
   }
 
   private fingerprint(graph: ReturnType<EventGraphStore['getOrCreate']>, batch: CausalPageObservationBatch, url: string): PageFingerprint {
@@ -1325,6 +1333,10 @@ export class CausalOrchestrator {
     }
     if (primitiveId === 'RESTORE_POINTER_INTERACTION') {
       return batch.pageSignals.interaction.pointerEventsSuppressed || hasVisibleOverlay;
+    }
+    if (primitiveId === 'PLAYER_HEALTH_RECOVERY') {
+      return batch.pageSignals.interaction.pointerEventsSuppressed
+        || batch.pageSignals.semantic.categories?.includes('PLAYBACK_GATE') === true;
     }
     if (primitiveId === 'REMOVE_REACTION_UI' || primitiveId === 'RESTORE_LAYOUT') {
       return hasVisibleOverlay || batch.pageSignals.semantic.categories?.includes('ANTI_BLOCK_INSTRUCTION') === true;

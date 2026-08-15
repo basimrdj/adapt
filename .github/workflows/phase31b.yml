@@ -80,4 +80,4 @@ jobs:
       - run: npm run typecheck
       - name: Prepare validated Phase 3.1 filter cache
         run: npm run phase31:sync
-      - run: ADAPT_PHASE31_OFFLINE=1 npm run verify:autonomy:live
+      - run: ADAPT_PHASE31_OFFLINE=1 ADAPT_LIVE_PROFILE=full npm run verify:autonomy:live

@@ -143,6 +143,18 @@ export class DomActionExecutor {
           break;
         }
 
+        case 'DOM_RESTORE_PLAYER': {
+          document.querySelectorAll<HTMLMediaElement>('video, audio').forEach((media) => {
+            record.mutatedElements.push({
+              element: media as unknown as HTMLElement,
+              originalStyles: { 'pointer-events': (media as HTMLElement).style.pointerEvents },
+            });
+            (media as HTMLElement).style.setProperty('pointer-events', 'auto', 'important');
+            void media.play().catch(() => undefined);
+          });
+          break;
+        }
+
         case 'DOM_PRESERVE_BAIT_CANDIDATE':
         case 'BAIT_PRESERVE_LAYOUT':
         case 'BAIT_RESTORE_VISIBILITY':

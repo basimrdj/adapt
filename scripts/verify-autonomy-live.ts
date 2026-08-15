@@ -8,8 +8,9 @@ import { PrimitiveExecutorRegistry } from '../src/background/autonomy/executor-r
 import { EphemeralNavigationTargetRegistry } from '../src/background/autonomy/navigation-targets';
 import { PrimitiveId } from '../src/background/autonomy/primitive-registry';
 import { chromeExecutable } from '../tests/support/chrome-executable';
+import { verificationMetadata } from './verification-metadata';
 
-type TrialPrimary = 'overlay' | 'popup' | 'scroll' | 'pointer' | 'redirect' | 'control';
+type TrialPrimary = 'overlay' | 'popup' | 'scroll' | 'pointer' | 'spa' | 'control';
 type HoldoutMechanism =
   | 'anti-block-overlay'
   | 'semantic-inline-gate'
@@ -58,6 +59,12 @@ interface TrialResult {
   resolved: boolean;
   falsePositive: boolean;
   negativeControlPreserved: boolean;
+  mechanism_manifested: boolean;
+  manifestation_evidence: string[];
+  sensorDetected: boolean;
+  causalDetected: boolean;
+  preemptedByStaticFilter: boolean;
+  mechanismOutcomeVerified: boolean;
   resolutionAttribution: 'SAEI' | 'DETERMINISTIC_FALLBACK' | 'STATIC_FILTER' | 'RECIPE_REPLAY' | 'UNRESOLVED' | 'NEGATIVE_CONTROL';
   experiments: number;
   aiCalls: number;
@@ -82,15 +89,21 @@ interface BrowserHoldoutScore {
   activeTrials: number;
   negativeControls: number;
   autonomousDetectionRate: number;
+  sensorDetectionRate: number;
+  causalDetectionRate: number;
+  preemptedByStaticFilterRate: number;
   autonomousResolutionRate: number;
   overallAdaptResolutionRate: number;
   saeiResolutionRate: number;
   deterministicResolutionRate: number;
   activeResolved: number;
+  unmanifestedActiveCount: number;
   recipeReplayEligibleTrials: number;
   negativeControlsPreserved: number;
   negativeControlPreservationRate: number;
   protectedFlowFalsePositiveCount: number;
+  realDocumentDownloadPreservationRate: number;
+  solvedPopupCapabilityGapCount: number;
   falsePositiveRate: number;
   criticalFalsePositiveCount: number;
   medianExperiments: number;
@@ -121,12 +134,29 @@ interface BrowserHoldoutScore {
 interface TestServer {
   server: http.Server;
   port: number;
+  hits: Map<string, number>;
   close: () => Promise<void>;
 }
 
 interface ExtensionSession {
   browser: Browser;
   worker: Target;
+}
+
+interface WorkerRestartEvidence {
+  oldTargetId: string;
+  workerStopped: boolean;
+  newTargetId: string;
+  workerRecreated: boolean;
+  stateRestored: boolean;
+  pendingReconciled: boolean;
+  success: boolean;
+}
+
+interface ServerResponse {
+  body: string;
+  status?: number;
+  headers?: Record<string, string>;
 }
 
 interface ResourceServer extends TestServer {
@@ -171,53 +201,103 @@ function safePageUrl(page: Page): string {
   }
 }
 
+function isNavigationRace(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /detached frame|execution context was destroyed|cannot find context/i.test(message);
+}
+
+async function triggerReplayAction(page: Page, selector: string): Promise<void> {
+  try {
+    await page.evaluate((targetSelector) => {
+      const element = document.querySelector(targetSelector);
+      if (!(element instanceof HTMLElement)) throw new Error(`Replay action not found: ${targetSelector}`);
+      element.click();
+    }, selector);
+  } catch (error) {
+    if (page.isClosed() || !isNavigationRace(error)) throw error;
+  }
+}
+
 function pageHtml(definition: TrialDefinition, adPort: number): string {
   const has = (mechanism: HoldoutMechanism): boolean => definition.mechanisms.includes(mechanism);
   const uniqueClass = `gate-${token(definition.seed + 7)}`;
-  const overlayNeeded = definition.primary === 'overlay'
-    || has('anti-block-overlay')
-    || has('semantic-inline-gate')
+  const inlineClass = `inline-${token(definition.seed + 11)}`;
+  const nonFullscreenOrPlayerMechanism = has('semantic-inline-gate')
+    || has('player-obstruction')
     || has('network-probe')
-    || has('bait-reaction')
+    || has('bait-reaction');
+  const fullOverlayNeeded = (definition.primary === 'overlay' && !nonFullscreenOrPlayerMechanism)
+    || has('anti-block-overlay')
     || has('reinsertion')
-    || has('mutation-burst')
-    || has('player-obstruction');
-  const overlayMarkup = overlayNeeded
-    ? `<div class="${uniqueClass}" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui"><p>Content access is paused while filtering is active.</p><p>Tap continue to keep reading.</p></div>`
+    || has('mutation-burst');
+  const spaGateNeeded = has('spa-gate');
+  const overlayCopy = has('reinsertion') ? 'Content gate fixture.' : 'Please disable your ad blocker to continue.';
+  const overlayMarkup = fullOverlayNeeded || spaGateNeeded
+    ? `<div class="${uniqueClass}" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui"><p data-gate-copy>${overlayCopy}</p><p>Tap continue to keep reading.</p></div>`
+    : '';
+  const inlineMarkup = has('semantic-inline-gate')
+    ? `<div class="${inlineClass}" style="display:none;position:absolute;width:900px;height:450px;margin:28px auto;padding:24px;border:3px solid #9b59b6;background:#f5eaff;color:#24102f;font:600 18px system-ui"><p>Please disable your ad blocker to continue reading.</p><button type="button">Continue reading</button></div>`
     : '';
   const lockDelay = 90 + (definition.seed % 9) * 23;
-  const overlayActions = overlayNeeded
-    ? `const panel=document.querySelector('.${uniqueClass}');if(panel)panel.style.display='block';`
+  const evidenceInit = `<script>window.__holdoutEvidence={mechanisms:{},events:[],focusTrace:[]};window.__recordHoldout=(kind,evidence)=>{window.__holdoutEvidence.mechanisms[kind]=true;window.__holdoutEvidence.events.push(kind+':'+evidence)};</script>`;
+  const showOverlay = `const panel=document.querySelector('.${uniqueClass}');if(panel){const copy=panel.querySelector('[data-gate-copy]');if(copy)copy.textContent='Please disable your ad blocker to continue.';panel.style.display='block';window.__recordHoldout('anti-block-overlay','fullscreen-visible');}document.body.style.overflow='hidden';`;
+  const fullReaction = fullOverlayNeeded && !has('mutation-burst') && !has('network-probe') && !has('bait-reaction') && !has('reinsertion')
+    ? showOverlay
     : '';
-  const lockActions = [
-    definition.primary === 'scroll' || has('scroll-only-gate') ? "document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';" : '',
-    definition.primary === 'pointer' || has('pointer-lock') ? "document.body.style.pointerEvents='none';" : '',
-    overlayNeeded ? "document.body.style.overflow='hidden';" : '',
-  ].join('');
-  const reinsertion = has('reinsertion')
-    ? `let reinserts=0;const reinsertionTimer=setInterval(()=>{if(!panel)return;reinserts+=1;if(reinserts%2===0)panel.remove();else document.body.appendChild(panel);if(reinserts>=6)clearInterval(reinsertionTimer);},${75 + (definition.seed % 5) * 20});`
+  const scrollReaction = definition.primary === 'scroll' || has('scroll-only-gate')
+    ? `document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';window.__recordHoldout('scroll-only-gate','both-overflow-locked');`
+    : '';
+  const pointerReaction = definition.primary === 'pointer' || has('pointer-lock')
+    ? `document.body.style.pointerEvents='none';window.__recordHoldout('pointer-lock','body-pointer-events-disabled');`
+    : '';
+  const inlineReaction = has('semantic-inline-gate')
+    ? `const inlineGate=document.querySelector('.${inlineClass}');if(inlineGate){inlineGate.style.display='block';const rect=inlineGate.getBoundingClientRect();if(rect.width<window.innerWidth*.75&&getComputedStyle(inlineGate).position!=='fixed')window.__recordHoldout('semantic-inline-gate','inline-nonfullscreen-visible');}`
     : '';
   const mutationBurst = has('mutation-burst')
-    ? `for(let i=0;i<${6 + (definition.seed % 7)};i+=1){const marker=document.createElement('span');marker.textContent='.';marker.className='mutation-${token(definition.seed + 19)}';document.body.appendChild(marker);}`
+    ? `for(let i=0;i<${6 + (definition.seed % 7)};i+=1){const marker=document.createElement('span');marker.textContent='.';marker.className='mutation-${token(definition.seed + 19)}';document.body.appendChild(marker);}window.__recordHoldout('mutation-burst','independent-dom-burst');${showOverlay}`
+    : '';
+  const reinsertion = has('reinsertion')
+    ? `let reinsertionPanel=document.querySelector('.${uniqueClass}');let reinserts=0;const reinsert=()=>{if(!reinsertionPanel)return;const replacement=reinsertionPanel.cloneNode(true);replacement.style.display='none';reinsertionPanel.replaceWith(replacement);reinsertionPanel=replacement;reinserts+=1;if(reinserts>=6){${showOverlay}window.__recordHoldout('reinsertion','six-observed-reinsertions');}else{setTimeout(reinsert,${75 + (definition.seed % 5) * 20});}};setTimeout(reinsert,20);`
+    : '';
+  const player = has('player-obstruction')
+    ? `<p data-player-status>Media player fixture.</p><video id="player-${token(definition.seed + 17)}" controls muted autoplay loop playsinline width="480" height="270" src="data:video/mp4;base64,AAAA"></video>`
+    : '';
+  const playerReaction = has('player-obstruction')
+    ? `const player=document.querySelector('video');if(player){const canvas=document.createElement('canvas');canvas.width=64;canvas.height=36;player.srcObject=canvas.captureStream(1);player.dataset.playbackAttempted='true';void player.play().catch(()=>undefined);setTimeout(()=>{player.pause();player.style.pointerEvents='none';player.dataset.playbackBlocked='true';document.body.dataset.playerObstruction='active';document.body.style.pointerEvents='none';document.body.style.overflow='hidden';const status=document.querySelector('[data-player-status]');if(status)status.textContent='Video playback is unavailable until playback is enabled.';window.__recordHoldout('player-obstruction','playback-paused-and-player-interaction-locked');},40);}`
+    : '';
+  const playerImmediate = has('player-obstruction')
+    ? `const player=document.querySelector('video');if(player){const canvas=document.createElement('canvas');canvas.width=64;canvas.height=36;player.srcObject=canvas.captureStream(1);player.dataset.playbackAttempted='true';player.pause();player.style.pointerEvents='none';document.body.style.pointerEvents='none';document.body.style.overflow='hidden';player.dataset.playbackBlocked='true';document.body.dataset.playerObstruction='active';const status=document.querySelector('[data-player-status]');if(status)status.textContent='Video playback is unavailable until playback is enabled.';window.__recordHoldout('player-obstruction','playback-paused-and-player-interaction-locked');}`
     : '';
   const bait = has('bait-reaction')
     ? `<div class="bait-${token(definition.seed + 23)}" style="display:none;visibility:hidden;content-visibility:hidden;contain:strict">sponsor</div>`
     : '';
-  const player = has('player-obstruction')
-    ? '<video controls muted width="480" height="270"></video>'
+  const baitReaction = has('bait-reaction')
+    ? `const bait=document.querySelector('[class^="bait-"]');if(bait){const style=getComputedStyle(bait);const rect=bait.getBoundingClientRect();const hidden=style.display==='none'||style.visibility==='hidden'||rect.width===0||rect.height===0;window.__recordHoldout('bait-reaction',hidden?'hidden-geometry-observed':'visible-geometry-observed');if(hidden){${showOverlay}}}`
     : '';
   const networkProbe = has('network-probe')
-    ? `<script>const probe=document.createElement('script');probe.src='http://127.0.0.1:${adPort}/probe-${token(definition.seed + 29)}.js';probe.onerror=()=>{const panel=document.querySelector('.${uniqueClass}');if(panel)panel.style.display='block';document.body.style.overflow='hidden';};document.head.appendChild(probe);</script>`
+    ? `<script>fetch('http://127.0.0.1:${adPort}/probe-${token(definition.seed + 29)}.js',{cache:'no-store'}).then((response)=>{window.__recordHoldout('network-probe','status-'+response.status);if(!response.ok){${showOverlay}}}).catch(()=>{window.__recordHoldout('network-probe','fetch-error');${showOverlay}});</script>`
     : '';
-  const reactionScript = overlayNeeded || lockActions || reinsertion || mutationBurst
-    ? `<script>setTimeout(()=>{const panel=document.querySelector('.${uniqueClass}');${overlayActions}${lockActions}${mutationBurst}${reinsertion}},${lockDelay});</script>`
+  const confounder = has('confounder')
+    ? `<script>setTimeout(()=>{document.body.dataset.confounderPulse='${token(definition.seed + 31)}';window.__holdoutEvidence.mechanisms.confounder=true;window.__holdoutEvidence.events.push('confounder:independent-pulse');},${50 + (definition.seed % 5) * 15});</script>`
+    : '';
+  const reactionScript = fullReaction || scrollReaction || pointerReaction || inlineReaction || mutationBurst || reinsertion || playerReaction || baitReaction
+    ? `<script>setTimeout(()=>{${definition.active && definition.primary === 'popup' ? '' : `${fullReaction}${scrollReaction}${pointerReaction}${inlineReaction}${mutationBurst}${reinsertion}${playerReaction}${baitReaction}`}},${lockDelay});</script>`
+    : '';
+  const popupCompanionReaction = definition.active && definition.primary === 'popup'
+    ? `${fullReaction}${mutationBurst}${playerImmediate}`
     : '';
 
   let interaction = '';
   if (definition.active && definition.primary === 'popup') {
     const popupPath = has('redirect-chain') ? `/${definition.targetRoute}/redirect-start` : `/${definition.targetRoute}`;
     const popupDelay = has('delayed-popup') ? 180 + (definition.seed % 8) * 35 : 0;
-    interaction = `<button class="action-${token(definition.seed + 31)}">Continue</button><script>document.querySelector('button').addEventListener('click',()=>{const open=()=>{window.open('http://127.0.0.1:${adPort}${popupPath}','_blank');location.href='/${definition.contentRoute}';};${popupDelay > 0 ? `setTimeout(open,${popupDelay});` : 'open();'} });</script>`;
+    if (has('same-tab-navigation')) {
+      interaction = `<a href="/${definition.contentRoute}" class="action-${token(definition.seed + 31)}">Continue</a><script>document.querySelector('a').addEventListener('click',()=>{const target=window.open('http://127.0.0.1:${adPort}/${definition.targetRoute}','_blank');window.__recordHoldout('same-tab-navigation',target?'same-tab-intended-navigation-plus-unwanted-target':'same-tab-target-missing');window.__recordHoldout('popup',target?'unwanted-target-opened':'popup-blocked');sessionStorage.setItem('__adaptHoldoutEvidence',JSON.stringify(window.__holdoutEvidence));});</script>`;
+    } else {
+      interaction = `<button class="action-${token(definition.seed + 31)}">Continue</button><script>document.querySelector('button').addEventListener('click',()=>{const open=()=>{${popupDelay > 0 ? "window.__recordHoldout('delayed-popup','delay-elapsed');" : ''}const target=window.open('http://127.0.0.1:${adPort}${popupPath}','_blank');window.__recordHoldout('popup',target?'unwanted-target-opened':'popup-blocked');${has('popunder-focus-split') ? "window.__recordHoldout('popunder-focus-split','target-opened');window.__holdoutEvidence.focusTrace.push('target-focused');target?.blur();window.focus();window.__holdoutEvidence.focusTrace.push(document.hasFocus()?'source-focused':'source-not-focused');" : ''}${popupCompanionReaction}sessionStorage.setItem('__adaptHoldoutEvidence',JSON.stringify(window.__holdoutEvidence));location.href='/${definition.contentRoute}?popupOpened='+(target?'1':'0')+'&focusSplit='+(target?'1':'0');};${popupDelay > 0 ? `setTimeout(open,${popupDelay});` : 'open();'} });</script>`;
+    }
+  } else if (definition.active && definition.primary === 'spa') {
+    interaction = `<button class="action-${token(definition.seed + 33)}">Open view</button><script>document.querySelector('button').addEventListener('click',()=>{history.pushState({route:'${definition.contentRoute}'},'', '/${definition.contentRoute}');document.body.dataset.spa='ready';window.__recordHoldout('spa-gate','route-transition-committed');setTimeout(()=>{const panel=document.querySelector('.${uniqueClass}');if(panel){panel.style.display='block';document.body.style.overflow='hidden';window.__recordHoldout('spa-gate','gate-added-after-route');}},${lockDelay});});</script>`;
   } else if (!definition.active) {
     const controlKind = definition.controlKind;
     if (controlKind === 'benign-modal') {
@@ -235,16 +315,18 @@ function pageHtml(definition: TrialDefinition, adPort: number): string {
               ? `/${definition.contentRoute}`
               : controlKind === 'external-target-blank'
                 ? `http://127.0.0.1:${adPort}/${definition.targetRoute}`
-              : `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
-      const download = '';
-      interaction = `<a href="${destination}" target="_blank"${download} class="action-${token(definition.seed + 47)}">Continue</a>`;
+                : `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
+      const target = controlKind === 'document-download' ? '' : ' target="_blank"';
+      const download = controlKind === 'document-download' ? ` download="${token(definition.seed + 53)}.pdf"` : '';
+      interaction = `<a href="${destination}"${target}${download} class="action-${token(definition.seed + 47)}">Continue</a>`;
     }
   }
-  return `<!doctype html><html><head><meta charset="utf-8"><title>Holdout</title>${player}</head><body><main><h1>Reading area</h1><p>Stable content for this visit.</p>${bait}${interaction}${overlayMarkup}</main>${reactionScript}${networkProbe}</body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Holdout</title>${player}</head><body><main><h1>Reading area</h1><p>Stable content for this visit.</p>${bait}${interaction}${inlineMarkup}${overlayMarkup}</main>${evidenceInit}${reactionScript}${networkProbe}${confounder}</body></html>`;
 }
 
 function contentHtml(): string {
-  return '<!doctype html><html><body><main><h1>Intended content</h1><p>Navigation completed.</p></main></body></html>';
+  const popupEvidence = `<script>let priorEvidence={mechanisms:{},events:[],focusTrace:[]};try{priorEvidence=JSON.parse(sessionStorage.getItem('__adaptHoldoutEvidence')||'{}');sessionStorage.removeItem('__adaptHoldoutEvidence');}catch{}window.__holdoutEvidence={mechanisms:priorEvidence.mechanisms||{},events:priorEvidence.events||[],focusTrace:priorEvidence.focusTrace||[]};window.__recordHoldout=(kind,evidence)=>{window.__holdoutEvidence.mechanisms[kind]=true;window.__holdoutEvidence.events.push(kind+':'+evidence)};const params=new URLSearchParams(location.search);if(params.get('popupOpened')==='1')window.__recordHoldout('popup','unwanted-target-opened');if(params.get('focusSplit')==='1'){window.__recordHoldout('popunder-focus-split','target-opened');window.__holdoutEvidence.focusTrace.push('target-focused','source-focused');}</script>`;
+  return `<!doctype html><html><body><main><h1>Intended content</h1><p>Navigation completed.</p></main>${popupEvidence}</body></html>`;
 }
 
 function targetHtml(): string {
@@ -255,11 +337,26 @@ function primitiveFixtureHtml(resourcePort: number): string {
   return `<!doctype html><html><head><meta charset="utf-8"><title>Primitive fixture</title><style>html,body{min-height:140vh}#primitive-bait{width:180px;height:40px}</style></head><body><main><h1>Executor fixture</h1><p>Stable content for this executor test.</p><div id="primitive-bait" class="ad" style="display:none;visibility:hidden;content-visibility:hidden;contain:strict">bait</div><div id="primitive-overlay" style="display:block;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui">Continue to view content.</div></main><script>window.__triggerPrimitiveResource=(path)=>new Promise((resolve)=>{const script=document.createElement('script');script.src='http://127.0.0.1:${resourcePort}/'+path+'?nonce='+Date.now()+Math.random();script.onload=()=>resolve('loaded');script.onerror=()=>resolve('error');document.head.appendChild(script)});window.__primitiveLoaded=0;</script></body></html>`;
 }
 
-async function startServer(port: number, render: (requestPath: string) => string): Promise<TestServer> {
+async function startServer(
+  port: number,
+  render: (requestPath: string) => string | ServerResponse,
+  responseFor?: (requestPath: string) => Pick<ServerResponse, 'status' | 'headers'> | undefined,
+): Promise<TestServer> {
+  const hits = new Map<string, number>();
   const server = http.createServer((request, response) => {
     const requestPath = new URL(request.url ?? '/', `http://127.0.0.1:${port || 80}`).pathname;
-    response.writeHead(200, { 'Content-Type': 'text/html' });
-    response.end(render(requestPath));
+    hits.set(requestPath, (hits.get(requestPath) ?? 0) + 1);
+    const rendered = render(requestPath);
+    const body = typeof rendered === 'string' ? rendered : rendered.body;
+    const routeResponse = responseFor?.(requestPath);
+    const status = typeof rendered === 'string' ? routeResponse?.status ?? 200 : rendered.status ?? routeResponse?.status ?? 200;
+    const headers = {
+      'Content-Type': 'text/html',
+      ...(typeof rendered === 'string' ? {} : rendered.headers),
+      ...routeResponse?.headers,
+    };
+    response.writeHead(status, headers);
+    response.end(body);
   });
   await new Promise<void>((resolve) => server.listen(port, '127.0.0.1', resolve));
   const address = server.address();
@@ -267,6 +364,7 @@ async function startServer(port: number, render: (requestPath: string) => string
   return {
     server,
     port: address.port,
+    hits,
     close: async () => new Promise<void>((resolve) => server.close(() => resolve())),
   };
 }
@@ -613,7 +711,7 @@ async function runRecipeLifecycleProbe(definition: TrialDefinition, appPort: num
       await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
       await new Promise((resolve) => setTimeout(resolve, 2200));
       if (definition.kind === 'popup') {
-        await page.click('button');
+        await page.click('button, a[class^="action-"]');
         await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
         await new Promise((resolve) => setTimeout(resolve, 900));
       }
@@ -646,7 +744,7 @@ async function runRecipeLifecycleProbe(definition: TrialDefinition, appPort: num
   };
 }
 
-function graphSignals(value: Record<string, unknown> | undefined): { detected: boolean; experiments: number; interventions: number; aiCalls: number; capabilityGaps: number; observedEventKinds: string[]; autonomyStatuses: string[]; experimentDetails: string[]; autonomyResolved: number } {
+function graphSignals(value: Record<string, unknown> | undefined): { detected: boolean; causalDetected: boolean; experiments: number; interventions: number; aiCalls: number; capabilityGaps: number; observedEventKinds: string[]; autonomyStatuses: string[]; experimentDetails: string[]; autonomyResolved: number } {
   const snapshot = value?.adapt_causal_session_state_v1 as { graphs?: Array<{ nodes?: Array<{ kind?: string; features?: Record<string, unknown> }>; experiments?: Array<{ status?: string; primitiveId?: string; transactionId?: string; healthDelta?: number; rollbackVerified?: boolean; preHealth?: Record<string, unknown>; postHealth?: Record<string, unknown> }> }> } | undefined;
   const graphs = snapshot?.graphs ?? [];
   const nodes = graphs.flatMap((graph) => graph.nodes ?? []);
@@ -666,6 +764,19 @@ function graphSignals(value: Record<string, unknown> | undefined): { detected: b
     'MUTATION_BURST',
     'NETWORK_PROBE_REACTION',
   ].includes(node.kind ?? ''));
+  const causalDetected = nodes.some((node) => [
+    'ANTI_BLOCK_REACTION',
+    'SEMANTIC_GATE',
+    'UNEXPECTED_NAV_TARGET',
+    'POPUP_OR_POPUNDER',
+    'SUSPICIOUS_REDIRECT_CHAIN',
+    'SCROLL_LOCK_ON',
+    'INTERACTION_DENIED',
+    'PLAYBACK_OBSTRUCTED',
+    'BAIT_STATE_CHANGED',
+    'NETWORK_PROBE_REACTION',
+    'MUTATION_BURST',
+  ].includes(node.kind ?? ''));
   const autonomy = value?.adapt_autonomy_state_v1 as { loops?: Array<[string, { aiCalls?: number; capabilityGaps?: string[]; status?: string; experiments?: Array<{ primitiveId: string }> }]> } | undefined;
   const loops = autonomy?.loops ?? [];
   const loopExperiments = loops.flatMap(([, loop]) => loop.experiments ?? []);
@@ -673,6 +784,7 @@ function graphSignals(value: Record<string, unknown> | undefined): { detected: b
   const autonomyResolved = loops.filter(([, loop]) => loop.status === 'RESOLVED').reduce((sum, [, loop]) => sum + (loop.experiments?.length ?? 0), 0);
   return {
     detected,
+    causalDetected,
     experiments: experiments > 0 ? experiments : loopExperiments.length,
     interventions: graphInterventions + autonomyResolved,
     aiCalls: loops.reduce((sum, [, loop]) => sum + (loop.aiCalls ?? 0), 0),
@@ -688,9 +800,36 @@ function graphSignals(value: Record<string, unknown> | undefined): { detected: b
   };
 }
 
-async function exerciseTrial(session: ExtensionSession, definition: TrialDefinition, appPort: number, adPort: number): Promise<TrialResult> {
+async function readHoldoutEvidence(page: Page): Promise<{ mechanisms: Record<string, boolean>; events: string[]; focusTrace: string[] }> {
+  return page.evaluate(() => {
+    const evidence = (window as unknown as {
+      __holdoutEvidence?: { mechanisms?: Record<string, boolean>; events?: string[]; focusTrace?: string[] };
+    }).__holdoutEvidence;
+    return {
+      mechanisms: evidence?.mechanisms ?? {},
+      events: evidence?.events ?? [],
+      focusTrace: evidence?.focusTrace ?? [],
+    };
+  }).catch(() => ({ mechanisms: {}, events: [], focusTrace: [] }));
+}
+
+function behavioralTemplateKey(definition: TrialDefinition): string {
+  return [
+    definition.primary,
+    ...definition.mechanisms,
+    definition.controlKind ?? 'active',
+  ].join('|');
+}
+
+async function exerciseTrial(session: ExtensionSession, definition: TrialDefinition, appPort: number, adPort: number, adHits: Map<string, number>): Promise<TrialResult> {
   const page = await session.browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
+  const documentResponses: Array<{ headers: Record<string, string>; url: string }> = [];
+  page.on('response', (response) => {
+    if (response.url().includes(`/${definition.targetRoute}/document`)) {
+      documentResponses.push({ headers: response.headers(), url: response.url() });
+    }
+  });
   await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
   await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => {
     const snapshot = value.adapt_causal_session_state_v1 as { graphs?: Array<{ nodes?: Array<{ kind?: string }> }> } | undefined;
@@ -699,7 +838,11 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   await new Promise((resolve) => setTimeout(resolve, 1000));
   let resolved = false;
   let falsePositive = false;
-  let negativeControlPreserved = definition.active;
+  let negativeControlPreserved = false;
+  let mechanismManifested = definition.active ? false : true;
+  let manifestationEvidence: string[] = [];
+  let mechanismOutcomeVerified = false;
+  let intendedControlOutcome = definition.active;
   let resolutionAttribution: TrialResult['resolutionAttribution'] = 'UNRESOLVED';
   let remainingPageUrls: string[] = [];
   let navigationTargetSnapshot: unknown;
@@ -707,20 +850,30 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   let firstVisitResolvedAt: number | null = null;
   if (definition.active && definition.primary === 'overlay') {
     await page.waitForFunction(() => {
-      const overlay = document.querySelector('div[style*="position:fixed"]');
-      return Boolean(overlay && getComputedStyle(overlay).display !== 'none');
+      const evidence = (window as unknown as { __holdoutEvidence?: { mechanisms?: Record<string, boolean> } }).__holdoutEvidence;
+      return Object.keys(evidence?.mechanisms ?? {}).length > 0;
     }, { timeout: 2000 }).catch(() => undefined);
     await page.waitForFunction(() => {
-      const overlay = document.querySelector('div[style*="position:fixed"]');
-      return !overlay || getComputedStyle(overlay).display === 'none' || getComputedStyle(document.body).overflow !== 'hidden';
+      const overlay = document.querySelector('[class^="gate-"]');
+      const inline = document.querySelector('[class^="inline-"]');
+      const player = document.querySelector('video');
+      return (!overlay || getComputedStyle(overlay).display === 'none')
+        && (!inline || getComputedStyle(inline).display === 'none')
+        && (!player || (getComputedStyle(player).pointerEvents !== 'none' && !player.paused))
+        && getComputedStyle(document.body).overflow !== 'hidden';
     }, { timeout: 5000 }).catch(() => undefined);
     resolved = await page.evaluate(() => {
-      const overlay = document.querySelector('div[style*="position:fixed"]');
-      return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
+      const overlay = document.querySelector('[class^="gate-"]');
+      const inline = document.querySelector('[class^="inline-"]');
+      const player = document.querySelector('video');
+      return (!overlay || getComputedStyle(overlay).display === 'none')
+        && (!inline || getComputedStyle(inline).display === 'none')
+        && (!player || (getComputedStyle(player).pointerEvents !== 'none' && !player.paused))
+        && getComputedStyle(document.body).overflow !== 'hidden';
     });
     if (resolved) firstVisitResolvedAt = Date.now();
   } else if (definition.active && definition.primary === 'popup') {
-    await page.click('button');
+    await page.click('button, a');
     await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
     const adUrl = `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
     const closeDeadline = Date.now() + 2500;
@@ -731,7 +884,7 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     }
     remainingPageUrls = (await session.browser.pages()).map((candidate) => safePageUrl(candidate));
     navigationTargetSnapshot = await sessionValue(session.browser, 'adapt_navigation_targets_v1');
-    resolved = page.url().endsWith(`/${definition.contentRoute}`) && adPages.length === 0;
+    resolved = new URL(page.url()).pathname === `/${definition.contentRoute}` && adPages.length === 0;
     if (resolved) firstVisitResolvedAt = Date.now();
   } else if (definition.active && definition.primary === 'scroll') {
     await page.waitForFunction(() => getComputedStyle(document.body).overflow === 'hidden' || getComputedStyle(document.documentElement).overflow === 'hidden', { timeout: 2500 }).catch(() => undefined);
@@ -742,6 +895,19 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents === 'none', { timeout: 2500 }).catch(() => undefined);
     await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents !== 'none', { timeout: 5000 }).catch(() => undefined);
     resolved = await page.evaluate(() => getComputedStyle(document.body).pointerEvents !== 'none');
+    if (resolved) firstVisitResolvedAt = Date.now();
+  } else if (definition.active && definition.primary === 'spa') {
+    await page.click('button');
+    await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 3000 }, definition.contentRoute).catch(() => undefined);
+    await page.waitForFunction(() => Boolean(document.querySelector('[class^="gate-"]') && getComputedStyle(document.querySelector('[class^="gate-"]')!).display !== 'none'), { timeout: 2500 }).catch(() => undefined);
+    await page.waitForFunction(() => {
+      const overlay = document.querySelector('[class^="gate-"]');
+      return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
+    }, { timeout: 5000 }).catch(() => undefined);
+    resolved = new URL(page.url()).pathname === `/${definition.contentRoute}` && await page.evaluate(() => {
+      const overlay = document.querySelector('[class^="gate-"]');
+      return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
+    });
     if (resolved) firstVisitResolvedAt = Date.now();
   } else if (!definition.active) {
     const controlKind = definition.controlKind;
@@ -761,19 +927,19 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     const matchingContent = pages.some((candidate) => safePageUrl(candidate).endsWith(`/${definition.contentRoute}`));
     const matchingTarget = pages.some((candidate) => safePageUrl(candidate).includes(`/${definition.targetRoute}`));
     const sourceHealthy = pages.some((candidate) => safePageUrl(candidate) === sourceUrl);
-    const spaCommitted = page.url().endsWith(`/${definition.contentRoute}`);
+    const spaCommitted = new URL(page.url()).pathname === `/${definition.contentRoute}`;
     const modalVisible = await page.evaluate(() => [...document.querySelectorAll('[class^="modal-"]')].some((element) => getComputedStyle(element).display !== 'none'));
+    const documentDownloadStarted = documentResponses.some((response) => response.headers['content-disposition']?.toLowerCase().includes('attachment'));
     const expectedOutcomeSurvives = controlKind === 'benign-modal'
       ? modalVisible && sourceHealthy
       : controlKind === 'normal-spa'
         ? spaCommitted && livePages.length === 1
         : controlKind === 'document-download'
-          ? sourceHealthy && (matchingTarget || !pages.some((candidate) => safePageUrl(candidate).includes(`/${definition.targetRoute}`) && candidate !== page))
+          ? sourceHealthy && documentDownloadStarted
           : controlKind === 'oauth' || controlKind === 'payment' || controlKind === 'ctrl-meta-middle-click' || controlKind === 'external-target-blank'
             ? matchingTarget
             : matchingContent;
-    negativeControlPreserved = expectedOutcomeSurvives && !pages.some((candidate) => candidate !== page && safePageUrl(candidate).includes(`/${definition.targetRoute}`) && controlKind === 'target-blank');
-    falsePositive = !negativeControlPreserved;
+    intendedControlOutcome = expectedOutcomeSurvives;
     resolved = false;
   }
   await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -784,6 +950,40 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   const state = await waitForSession(session.browser, 'adapt_causal_session_state_v1', (value) => Boolean(value.adapt_causal_session_state_v1));
   const autonomy = await sessionValue(session.browser, 'adapt_autonomy_state_v1');
   const signals = graphSignals({ ...(state ?? {}), ...(autonomy ?? {}) });
+  const evidenceByPage = await Promise.all((await session.browser.pages()).map((candidate) => readHoldoutEvidence(candidate)));
+  const mergedEvidence = evidenceByPage.reduce(
+    (merged, evidence) => ({
+      mechanisms: { ...merged.mechanisms, ...evidence.mechanisms },
+      events: [...merged.events, ...evidence.events],
+      focusTrace: [...merged.focusTrace, ...evidence.focusTrace],
+    }),
+    { mechanisms: {}, events: [], focusTrace: [] } as { mechanisms: Record<string, boolean>; events: string[]; focusTrace: string[] },
+  );
+  const requiredMechanisms = new Set(definition.mechanisms);
+  if (definition.active && definition.primary === 'popup' && !requiredMechanisms.has('same-tab-navigation')) {
+    requiredMechanisms.add('popup');
+  }
+  manifestationEvidence = [...requiredMechanisms].map((mechanism) => `${mechanism}:${mergedEvidence.mechanisms[mechanism] === true ? 'observed' : 'missing'}`);
+  if (definition.active && definition.mechanisms.includes('redirect-chain')) {
+    const redirectObserved = (adHits.get(`/${definition.targetRoute}/redirect-start`) ?? 0) > 0
+      && (adHits.get(`/${definition.targetRoute}/redirect-final`) ?? 0) > 0;
+    if (redirectObserved) {
+      mergedEvidence.mechanisms['redirect-chain'] = true;
+      manifestationEvidence = manifestationEvidence.map((item) => item.startsWith('redirect-chain:') ? 'redirect-chain:server-redirect-observed' : item);
+    }
+  }
+  mechanismManifested = definition.active && [...requiredMechanisms].every((mechanism) => mergedEvidence.mechanisms[mechanism] === true);
+  if (definition.active && definition.mechanisms.includes('popunder-focus-split')) {
+    mechanismManifested = mechanismManifested && mergedEvidence.focusTrace.includes('target-focused') && mergedEvidence.focusTrace.includes('source-focused');
+    manifestationEvidence.push(`popunder-focus:${mergedEvidence.focusTrace.join('>') || 'missing'}`);
+  }
+  if (!definition.active) {
+    const noAutonomyTarget = !signals.experimentDetails.some((detail) => detail.includes('CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET') || detail.includes('STOP_MATCHED_REDIRECT_CHAIN'));
+    negativeControlPreserved = intendedControlOutcome && signals.interventions === 0 && noAutonomyTarget;
+    falsePositive = !negativeControlPreserved;
+  }
+  mechanismOutcomeVerified = definition.active && resolved;
+  if (definition.active && !mechanismManifested) resolved = false;
   const causalSnapshot = state?.adapt_causal_session_state_v1 as { graphs?: Array<{ experiments?: unknown[] }> } | undefined;
   const autonomySnapshot = autonomy?.adapt_autonomy_state_v1 as { pending?: unknown[] } | undefined;
   const completedGraphExperiments = (causalSnapshot?.graphs ?? []).reduce((sum, graph) => sum + (graph.experiments?.length ?? 0), 0);
@@ -802,20 +1002,22 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
         return Boolean(snapshot?.graphs?.some((graph) => graph.nodes?.some((node) => node.kind === 'HEALTH_SNAPSHOT')));
       }, 1500);
       await new Promise((resolve) => setTimeout(resolve, 1000));
+    } else if (definition.primary === 'spa') {
+      await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
     } else {
       await page.reload({ waitUntil: 'domcontentloaded' });
     }
     if (definition.primary === 'overlay') {
       await page.waitForFunction(() => {
-        const overlay = document.querySelector('div[style*="position:fixed"]');
+        const overlay = document.querySelector('[class^="gate-"]');
         return Boolean(overlay && getComputedStyle(overlay).display !== 'none');
       }, { timeout: 2000 }).catch(() => undefined);
       await page.waitForFunction(() => {
-        const overlay = document.querySelector('div[style*="position:fixed"]');
+        const overlay = document.querySelector('[class^="gate-"]');
         return !overlay || getComputedStyle(overlay).display === 'none' || getComputedStyle(document.body).overflow !== 'hidden';
       }, { timeout: 5000 }).catch(() => undefined);
       secondVisitSuccess = await page.evaluate(() => {
-        const overlay = document.querySelector('div[style*="position:fixed"]');
+        const overlay = document.querySelector('[class^="gate-"]');
         return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
       });
     } else if (definition.primary === 'scroll') {
@@ -826,12 +1028,24 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
       await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents === 'none', { timeout: 2500 }).catch(() => undefined);
       await page.waitForFunction(() => getComputedStyle(document.body).pointerEvents !== 'none', { timeout: 5000 }).catch(() => undefined);
       secondVisitSuccess = await page.evaluate(() => getComputedStyle(document.body).pointerEvents !== 'none');
+    } else if (definition.primary === 'spa') {
+      await triggerReplayAction(page, 'button');
+      await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 3000 }, definition.contentRoute).catch(() => undefined);
+      await page.waitForFunction(() => Boolean(document.querySelector('[class^="gate-"]') && getComputedStyle(document.querySelector('[class^="gate-"]')!).display !== 'none'), { timeout: 2500 }).catch(() => undefined);
+      await page.waitForFunction(() => {
+        const overlay = document.querySelector('[class^="gate-"]');
+        return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
+      }, { timeout: 5000 }).catch(() => undefined);
+      secondVisitSuccess = new URL(page.url()).pathname === `/${definition.contentRoute}` && await page.evaluate(() => {
+        const overlay = document.querySelector('[class^="gate-"]');
+        return (!overlay || getComputedStyle(overlay).display === 'none') && getComputedStyle(document.body).overflow !== 'hidden';
+      });
     } else {
-      await page.click('button');
+      await triggerReplayAction(page, 'button, a[class^="action-"]');
       await page.waitForFunction((contentRoute) => location.pathname === `/${contentRoute}`, { timeout: 5000 }, definition.contentRoute).catch(() => undefined);
       const adUrl = `http://127.0.0.1:${adPort}/${definition.targetRoute}`;
       await new Promise((resolve) => setTimeout(resolve, 700));
-      secondVisitSuccess = page.url().endsWith(`/${definition.contentRoute}`)
+      secondVisitSuccess = new URL(page.url()).pathname === `/${definition.contentRoute}`
         && !(await session.browser.pages()).some((candidate) => safePageUrl(candidate).startsWith(adUrl));
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -852,11 +1066,11 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   await page.close().catch(() => undefined);
   const committedPrimitive = signals.experimentDetails.some((detail) => detail.includes(':COMMITTED:'));
   const firstVisitMechanismResolved = definition.active && resolved;
-  if (definition.active && firstVisitMechanismResolved && committedPrimitive) {
+  if (definition.active && mechanismManifested && firstVisitMechanismResolved && committedPrimitive && mechanismOutcomeVerified) {
     resolutionAttribution = 'SAEI';
-  } else if (definition.active && firstVisitMechanismResolved && signals.experiments === 0) {
+  } else if (definition.active && mechanismManifested && firstVisitMechanismResolved && signals.experiments === 0) {
     resolutionAttribution = 'STATIC_FILTER';
-  } else if (definition.active && firstVisitMechanismResolved && signals.interventions === 0) {
+  } else if (definition.active && mechanismManifested && firstVisitMechanismResolved && signals.interventions === 0) {
     resolutionAttribution = 'DETERMINISTIC_FALLBACK';
   } else if (!definition.active && negativeControlPreserved) {
     resolutionAttribution = 'NEGATIVE_CONTROL';
@@ -864,7 +1078,7 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     resolutionAttribution = 'UNRESOLVED';
   }
   if (definition.active) {
-    resolved = firstVisitMechanismResolved && resolutionAttribution !== 'UNRESOLVED';
+    resolved = mechanismManifested && mechanismOutcomeVerified && firstVisitMechanismResolved && resolutionAttribution !== 'UNRESOLVED';
   }
   if (definition.primary === 'popup') {
     resolved = resolved && (definition.active ? signals.interventions > 0 : true);
@@ -880,10 +1094,16 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
     id: definition.id,
     active: definition.active,
     controlKind: definition.controlKind,
-    detected: signals.detected,
+    detected: definition.active ? mechanismManifested && signals.detected : false,
     resolved,
     falsePositive: definition.active ? false : falsePositive || signals.interventions > 0,
     negativeControlPreserved,
+    mechanism_manifested: mechanismManifested,
+    manifestation_evidence: manifestationEvidence,
+    sensorDetected: definition.active ? mechanismManifested && signals.detected : false,
+    causalDetected: definition.active ? mechanismManifested && signals.causalDetected : false,
+    preemptedByStaticFilter: definition.active && resolutionAttribution === 'STATIC_FILTER',
+    mechanismOutcomeVerified,
     resolutionAttribution,
     experiments: signals.experiments,
     aiCalls: signals.aiCalls,
@@ -904,8 +1124,23 @@ async function exerciseTrial(session: ExtensionSession, definition: TrialDefinit
   };
 }
 
-async function runWorkerRestartProbe(definition: TrialDefinition, appPort: number): Promise<boolean> {
+function targetId(target: Target): string {
+  const candidate = target as Target & { _targetId?: string };
+  return candidate._targetId ?? `${target.type()}:${target.url()}`;
+}
+
+async function runWorkerRestartProbe(definition: TrialDefinition, appPort: number): Promise<WorkerRestartEvidence> {
   const session = await launchSession(`http://127.0.0.1:${appPort}/warmup`);
+  const oldTargetId = targetId(session.worker);
+  const evidence: WorkerRestartEvidence = {
+    oldTargetId,
+    workerStopped: false,
+    newTargetId: '',
+    workerRecreated: false,
+    stateRestored: false,
+    pendingReconciled: false,
+    success: false,
+  };
   try {
     const page = await session.browser.newPage();
     await page.goto(`http://127.0.0.1:${appPort}/${definition.route}`, { waitUntil: 'domcontentloaded' });
@@ -914,18 +1149,48 @@ async function runWorkerRestartProbe(definition: TrialDefinition, appPort: numbe
       const state = value.adapt_autonomy_state_v1 as { pending?: unknown[] } | undefined;
       return Boolean(state?.pending?.length);
     }, 2500);
-    if (!pending) return false;
+    if (!pending) return evidence;
     const worker = session.browser.targets().find((target) => target.type() === 'service_worker' && target.url().startsWith('chrome-extension://'));
-    if (!worker) return false;
+    if (!worker) return evidence;
     const client = await worker.createCDPSession();
-    await client.send('Runtime.terminateExecution');
+    const browserClient = await session.browser.target().createCDPSession();
+    let versionId: string | undefined;
+    const onVersionUpdate = (payload: { versions?: Array<{ id?: string; versionId?: string; targetId?: string }> }) => {
+      const version = payload.versions?.find((candidate) => candidate.targetId === oldTargetId || candidate.id === oldTargetId);
+      versionId = version?.versionId ?? version?.id;
+    };
+    client.on('ServiceWorker.workerVersionUpdated', onVersionUpdate);
+    await client.send('ServiceWorker.enable').catch(() => undefined);
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    if (versionId) {
+      await client.send('ServiceWorker.stopWorker', { versionId });
+    } else {
+      await browserClient.send('Target.closeTarget', { targetId: oldTargetId });
+    }
     await client.detach();
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    await page.close().catch(() => undefined);
-    return Boolean(await waitForSession(session.browser, 'adapt_autonomy_state_v1', (value) => {
+    await browserClient.detach().catch(() => undefined);
+    const stoppedDeadline = Date.now() + 2500;
+    while (session.browser.targets().some((target) => targetId(target) === oldTargetId) && Date.now() < stoppedDeadline) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    evidence.workerStopped = !session.browser.targets().some((target) => targetId(target) === oldTargetId);
+    if (!evidence.workerStopped) return evidence;
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    const newWorker = await session.browser.waitForTarget(
+      (target) => target.type() === 'service_worker' && target.url().startsWith('chrome-extension://') && targetId(target) !== oldTargetId,
+      { timeout: 5000 },
+    ).catch(() => undefined);
+    evidence.newTargetId = newWorker ? targetId(newWorker) : '';
+    evidence.workerRecreated = Boolean(newWorker && evidence.newTargetId !== oldTargetId);
+    const restored = await waitForSession(session.browser, 'adapt_autonomy_state_v1', (value) => {
       const state = value.adapt_autonomy_state_v1 as { pending?: unknown[] } | undefined;
       return Boolean(state && Array.isArray(state.pending) && state.pending.length === 0);
-    }, 3000));
+    }, 5000);
+    evidence.stateRestored = Boolean(newWorker) && Boolean(restored);
+    evidence.pendingReconciled = Boolean(restored);
+    evidence.success = evidence.workerStopped && evidence.workerRecreated && evidence.stateRestored && evidence.pendingReconciled;
+    await page.close().catch(() => undefined);
+    return evidence;
   } finally {
     await session.browser.close().catch(() => undefined);
   }
@@ -946,7 +1211,7 @@ function percentile(values: readonly number[], fraction: number): number {
 
 function score(
   results: readonly TrialResult[],
-  workerRestartSuccess: boolean,
+  workerRestart: WorkerRestartEvidence,
   primitiveExecutionCoverage: number,
   profile: 'fast' | 'full',
 ): BrowserHoldoutScore {
@@ -959,23 +1224,38 @@ function score(
   const negativeControlsPreserved = controls.filter((result) => result.negativeControlPreserved);
   const saeiResolved = active.filter((result) => result.resolutionAttribution === 'SAEI');
   const deterministicResolved = active.filter((result) => result.resolutionAttribution === 'DETERMINISTIC_FALLBACK' || result.resolutionAttribution === 'STATIC_FILTER');
-  const detectedActive = active.filter((result) => result.detected || result.resolutionAttribution === 'STATIC_FILTER');
-  const recipeEligible = active.filter((result) => result.experiments > 0 || result.secondVisitExperiments === 0 && result.resolutionAttribution === 'SAEI');
+  const nonStaticActive = active.filter((result) => !result.preemptedByStaticFilter);
+  const detectedActive = nonStaticActive.filter((result) => result.sensorDetected);
+  const causalActive = nonStaticActive.filter((result) => result.causalDetected);
+  const recipeEligible = active.filter((result) => result.experiments > 0
+    && !result.experimentDetails.some((detail) =>
+      detail.startsWith('CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET:')
+      || detail.startsWith('STOP_MATCHED_REDIRECT_CHAIN:')));
   const rollbackEligible = active.filter((result) => result.experiments > 0);
+  const documentControls = controls.filter((result) => result.controlKind === 'document-download');
+  const solvedPopupCapabilityGapCount = popupActive.filter((result) => result.resolved && result.capabilityGaps > 0).length;
+  const sensorDetectionRate = nonStaticActive.length === 0 ? 1 : detectedActive.length / nonStaticActive.length;
+  const causalDetectionRate = nonStaticActive.length === 0 ? 1 : causalActive.length / nonStaticActive.length;
   return {
     profile,
     activeTrials: active.length,
     negativeControls: controls.length,
-    autonomousDetectionRate: active.length === 0 ? 1 : detectedActive.length / active.length,
+    autonomousDetectionRate: causalDetectionRate,
+    sensorDetectionRate,
+    causalDetectionRate,
+    preemptedByStaticFilterRate: active.length === 0 ? 0 : active.filter((result) => result.preemptedByStaticFilter).length / active.length,
     autonomousResolutionRate: active.length === 0 ? 1 : active.filter((result) => result.resolved).length / active.length,
     overallAdaptResolutionRate: active.length === 0 ? 1 : resolvedActive.length / active.length,
     saeiResolutionRate: active.length === 0 ? 1 : saeiResolved.length / active.length,
     deterministicResolutionRate: active.length === 0 ? 1 : deterministicResolved.length / active.length,
     activeResolved: resolvedActive.length,
+    unmanifestedActiveCount: active.filter((result) => !result.mechanism_manifested).length,
     recipeReplayEligibleTrials: recipeEligible.length,
     negativeControlsPreserved: negativeControlsPreserved.length,
     negativeControlPreservationRate: controls.length === 0 ? 1 : negativeControlsPreserved.length / controls.length,
     protectedFlowFalsePositiveCount: controls.filter((result) => !result.negativeControlPreserved).length,
+    realDocumentDownloadPreservationRate: documentControls.length === 0 ? 1 : documentControls.filter((result) => result.negativeControlPreserved).length / documentControls.length,
+    solvedPopupCapabilityGapCount,
     falsePositiveRate: controls.length === 0 ? 0 : controls.filter((result) => result.falsePositive).length / controls.length,
     criticalFalsePositiveCount: controls.filter((result) => result.falsePositive).length,
     medianExperiments: median(experiments) ?? 0,
@@ -986,7 +1266,7 @@ function score(
     recipeReplaySuccessRate: recipeEligible.length === 0 ? 1 : recipeEligible.filter((result) => result.recipeReplay).length / recipeEligible.length,
     secondVisitAiCalls: results.reduce((sum, result) => sum + result.secondVisitAiCalls, 0),
     secondVisitExperiments: results.reduce((sum, result) => sum + result.secondVisitExperiments, 0),
-    workerRestartSuccessRate: workerRestartSuccess ? 1 : 0,
+    workerRestartSuccessRate: workerRestart.success ? 1 : 0,
     capabilityGapCount: results.reduce((sum, result) => sum + result.capabilityGaps, 0),
     policyAbstentionCount: 0,
     primitiveExecutionCoverage,
@@ -995,10 +1275,10 @@ function score(
     popupUnwantedTargetRecall: popupActive.length === 0 ? 1 : popupActive.filter((result) => result.resolved).length / popupActive.length,
     popupLegitimateTargetFalsePositiveRate: popupControls.length === 0 ? 0 : popupControls.filter((result) => !result.negativeControlPreserved).length / popupControls.length,
     autonomyStatusCounts: {
-      detected: active.filter((result) => result.detected || result.resolutionAttribution === 'STATIC_FILTER').length,
+      detected: active.filter((result) => result.detected).length,
       attempted: active.filter((result) => result.experiments > 0).length,
       resolved: results.filter((result) => result.active && result.resolved).length,
-      rolledBack: active.filter((result) => result.rollbackSuccess).length,
+      rolledBack: active.filter((result) => result.experimentDetails.some((detail) => detail.includes(':ROLLED_BACK:'))).length,
       capabilityGap: active.filter((result) => result.capabilityGaps > 0).length,
       policyAbstention: active.filter((result) => result.autonomyStatuses.some((status) => status.startsWith('ABSTAINED'))).length,
       timedOut: active.filter((result) => result.detected && !result.resolved && result.timeToResolutionMs === null).length,
@@ -1009,20 +1289,27 @@ function score(
 function liveGateFailures(scoreResult: BrowserHoldoutScore): string[] {
   const failures: string[] = [];
   if (scoreResult.autonomousDetectionRate < 0.95) failures.push('autonomous_detection_rate < 0.95');
+  if (scoreResult.sensorDetectionRate < 0.95) failures.push('sensor_detection_rate < 0.95');
+  if (scoreResult.causalDetectionRate < 0.95) failures.push('causal_detection_rate < 0.95');
+  if (scoreResult.unmanifestedActiveCount !== 0) failures.push('active_mechanism_manifestation_incomplete');
   if (scoreResult.autonomousResolutionRate < 0.9) failures.push('autonomous_resolution_rate < 0.90');
   if (scoreResult.criticalFalsePositiveCount !== 0) failures.push('critical_false_positive_count != 0');
   if (scoreResult.negativeControlPreservationRate !== 1) failures.push('negative_control_preservation_rate != 1');
   if (scoreResult.protectedFlowFalsePositiveCount !== 0) failures.push('protected_flow_false_positive_count != 0');
+  if (scoreResult.realDocumentDownloadPreservationRate !== 1) failures.push('real_document_download_preservation_rate != 1');
+  if (scoreResult.solvedPopupCapabilityGapCount !== 0) failures.push('solved_popup_capability_gap_count != 0');
   if (scoreResult.popupLegitimateTargetFalsePositiveRate !== 0) failures.push('popup_legitimate_target_false_positive_rate != 0');
   if (scoreResult.workerRestartSuccessRate !== 1) failures.push('worker_restart_success_rate != 1');
   if (scoreResult.recipeReplaySuccessRate < 0.95) failures.push('recipe_replay_success_rate < 0.95');
   if (scoreResult.rollbackSuccessRate < 0.95) failures.push('rollback_success_rate < 0.95');
   if (scoreResult.primitiveExecutionCoverage < 1) failures.push('primitive_execution_coverage < 1');
+  if (scoreResult.profile === 'full' && (scoreResult.activeTrials < 96 || scoreResult.negativeControls < 48)) failures.push('full_profile_trial_counts_below_gate');
   return failures;
 }
 
 async function main(): Promise<void> {
   mkdirSync(path.resolve(projectRoot, 'artifacts/phase35b'), { recursive: true });
+  const metadata = verificationMetadata(projectRoot);
   const profile: 'fast' | 'full' = process.env.ADAPT_LIVE_PROFILE === 'full' ? 'full' : 'fast';
   const activeTrialCount = profile === 'full' ? 96 : 24;
   const negativeControlCount = profile === 'full' ? 48 : 16;
@@ -1032,16 +1319,27 @@ async function main(): Promise<void> {
   const adServer = await startServer(0, (requestPath) => {
     const match = [...adRoutes.values()].find((definition) => requestPath === `/${definition.targetRoute}` || requestPath.startsWith(`/${definition.targetRoute}/`));
     if (match && requestPath.endsWith('/redirect-start')) {
-      return `<!doctype html><html><body><main><h1>Redirecting</h1></main><script>setTimeout(()=>location.replace('/${match.targetRoute}/redirect-final'),${40 + (match.seed % 5) * 20});</script></body></html>`;
+      return `<!doctype html><html><body><main><h1>Redirecting</h1></main><script>location.replace('/${match.targetRoute}/redirect-final');</script></body></html>`;
     }
+    if (requestPath.endsWith('/document')) return '%PDF-1.4\nADAPT protected download fixture\n';
     return match?.kind === 'oauth' ? '<!doctype html><html><body><h1>Identity provider</h1></body></html>' : targetHtml();
+  }, (requestPath): Pick<ServerResponse, 'status' | 'headers'> | undefined => {
+    if (requestPath.startsWith('/probe-')) return { status: 404, headers: { 'Content-Type': 'application/javascript' } };
+    if (requestPath.endsWith('/document')) return {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="protected-document.pdf"',
+      },
+    };
+    return undefined;
   });
   const appServer = await startServer(0, (requestPath) => {
     if (requestPath === '/warmup') return contentHtml();
     if (requestPath === '/primitive-executor-fixture') return primitiveFixtureHtml(resourceServer.port);
     const definition = [...appRoutes.values()].find((candidate) => `/${candidate.route}` === requestPath);
     if (definition) return pageHtml(definition, adServer.port);
-    if ([...appRoutes.values()].some((candidate) => `/${candidate.contentRoute}` === requestPath)) return contentHtml();
+    const contentDefinition = [...appRoutes.values()].find((candidate) => `/${candidate.contentRoute}` === requestPath);
+    if (contentDefinition) return contentHtml();
     return contentHtml();
   });
 
@@ -1078,16 +1376,18 @@ async function main(): Promise<void> {
   const definitions: TrialDefinition[] = [
     ...Array.from({ length: activeTrialCount }, (_, index) => {
       const seed = index + 1;
-      const base = activeBundles[index % activeBundles.length] ?? ['anti-block-overlay'];
+      const base = activeBundles[(seed * 7 + seed % 11) % activeBundles.length] ?? ['anti-block-overlay'];
       const mechanisms = [...base, ...(index % 4 === 0 ? ['confounder'] as const : [])];
-      const primary: TrialPrimary = mechanisms.includes('popup') || mechanisms.includes('delayed-popup') || mechanisms.includes('popunder-focus-split') || mechanisms.includes('redirect-chain')
+      const primary: TrialPrimary = mechanisms.includes('popup') || mechanisms.includes('same-tab-navigation') || mechanisms.includes('delayed-popup') || mechanisms.includes('popunder-focus-split') || mechanisms.includes('redirect-chain')
         ? 'popup'
         : mechanisms.includes('scroll-only-gate')
           ? 'scroll'
-          : mechanisms.includes('pointer-lock')
-            ? 'pointer'
-            : 'overlay';
-      const kind = primary === 'popup' ? 'popup' : 'overlay';
+            : mechanisms.includes('pointer-lock')
+              ? 'pointer'
+              : mechanisms.includes('spa-gate')
+                ? 'spa'
+              : 'overlay';
+      const kind = primary === 'popup' ? 'popup' : primary === 'spa' ? 'spa' : 'overlay';
       return {
         id: `active-${primary}-${mechanisms.join('-')}-${token(seed)}`,
         active: true,
@@ -1148,7 +1448,7 @@ async function main(): Promise<void> {
   for (const definition of selectedDefinitions) {
     const session = await launchSession(`http://127.0.0.1:${appServer.port}/warmup`);
     try {
-      results.push(await exerciseTrial(session, definition, appServer.port, adServer.port));
+      results.push(await exerciseTrial(session, definition, appServer.port, adServer.port, adServer.hits));
     } finally {
       await session.browser.close().catch(() => undefined);
     }
@@ -1159,15 +1459,23 @@ async function main(): Promise<void> {
     primitiveProbes.browserTested.add('CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET');
   }
   const restartDefinition = definitions.find((definition) => definition.kind === 'popup' && definition.active);
-  const workerRestartSuccess = restartDefinition
+  const workerRestart = restartDefinition
     ? await runWorkerRestartProbe(restartDefinition, appServer.port)
-    : false;
+    : {
+      oldTargetId: '',
+      workerStopped: false,
+      newTargetId: '',
+      workerRecreated: false,
+      stateRestored: false,
+      pendingReconciled: false,
+      success: false,
+    } satisfies WorkerRestartEvidence;
   const executionRegistry = primitiveProbes.registry;
   const primitiveMatrix = executionRegistry.matrix();
   const browserTestableEntries = primitiveMatrix.filter((entry) => entry.executorRegistered);
   const liveScore = score(
     results,
-    workerRestartSuccess,
+    workerRestart,
     browserTestableEntries.length === 0
       ? 0
       : browserTestableEntries.filter((entry) => entry.status === 'EXECUTABLE_AND_BROWSER_TESTED').length / browserTestableEntries.length,
@@ -1178,23 +1486,26 @@ async function main(): Promise<void> {
   const scenarioCoverage = {
     activeMechanisms: [...new Set(definitions.filter((definition) => definition.active).flatMap((definition) => definition.mechanisms))].sort(),
     negativeControlKinds: [...new Set(definitions.filter((definition) => !definition.active).map((definition) => definition.controlKind).filter((kind): kind is NegativeControlKind => kind !== undefined))].sort(),
-    activeTemplateCount: new Set(definitions.filter((definition) => definition.active).map((definition) => definition.mechanisms.join('+'))).size,
+    activeTemplateCount: new Set(definitions.filter((definition) => definition.active).map(behavioralTemplateKey)).size,
+    distinctBehavioralTemplates: [...new Set(definitions.filter((definition) => definition.active).map(behavioralTemplateKey))].sort(),
   };
   const output = {
     schema: 'adapt-phase35b-live-browser-v1',
-    generatedAt: new Date().toISOString(),
+    ...metadata,
     scenarioCoverage,
     results,
-    workerRestartSuccess,
+    workerRestart,
+    executable_primitive_test_coverage: liveScore.primitiveExecutionCoverage,
+    primitive_vocabulary_coverage: `${browserTestableEntries.filter((entry) => entry.status === 'EXECUTABLE_AND_BROWSER_TESTED').length}/${primitiveMatrix.length}`,
     ...liveScore,
   };
   writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/LIVE_HOLDOUT_RESULTS.json'), `${JSON.stringify(output, null, 2)}\n`);
-  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/AUTONOMY_LIVE_SCORE.json'), `${JSON.stringify(liveScore, null, 2)}\n`);
-  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/PRIMITIVE_EXECUTION_MATRIX.json'), `${JSON.stringify({ schema: 'adapt-phase35b-primitive-execution-matrix-v1', generatedAt: output.generatedAt, entries: primitiveMatrix }, null, 2)}\n`);
-  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/PRIMITIVE_EXECUTOR_BROWSER_TESTS.json'), `${JSON.stringify({ schema: 'adapt-phase35b-primitive-executor-browser-tests-v1', generatedAt: output.generatedAt, results: primitiveProbes.results }, null, 2)}\n`);
-  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/WORKER_RESTART_RESULTS.json'), `${JSON.stringify({ schema: 'adapt-phase35b-worker-restart-v1', generatedAt: output.generatedAt, trials: 1, successfulTrials: workerRestartSuccess ? 1 : 0, successRate: workerRestartSuccess ? 1 : 0, method: 'CDP service-worker execution termination during pending autonomous transaction' }, null, 2)}\n`);
-  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/AI_USAGE.json'), `${JSON.stringify({ schema: 'adapt-phase35b-ai-usage-v1', generatedAt: output.generatedAt, plannerConfigured: false, aiCalls: results.reduce((sum, result) => sum + result.aiCalls, 0), reason: 'No safe production Phase 2 planner is wired into SAEI; deterministic routing remains authoritative.' }, null, 2)}\n`);
-  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/RECIPE_LIFECYCLE_LIVE.json'), `${JSON.stringify({ schema: 'adapt-phase35b-recipe-lifecycle-live-v1', generatedAt: output.generatedAt, ...lifecycle }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/AUTONOMY_LIVE_SCORE.json'), `${JSON.stringify({ ...metadata, ...liveScore }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/PRIMITIVE_EXECUTION_MATRIX.json'), `${JSON.stringify({ schema: 'adapt-phase35b-primitive-execution-matrix-v1', ...metadata, entries: primitiveMatrix }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/PRIMITIVE_EXECUTOR_BROWSER_TESTS.json'), `${JSON.stringify({ schema: 'adapt-phase35b-primitive-executor-browser-tests-v1', ...metadata, results: primitiveProbes.results }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/WORKER_RESTART_RESULTS.json'), `${JSON.stringify({ schema: 'adapt-phase35b-worker-restart-v1', ...metadata, trials: 1, successfulTrials: workerRestart.success ? 1 : 0, successRate: workerRestart.success ? 1 : 0, method: 'CDP ServiceWorker.stopWorker or verified Target.closeTarget lifecycle control', ...workerRestart }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/AI_USAGE.json'), `${JSON.stringify({ schema: 'adapt-phase35b-ai-usage-v1', ...metadata, plannerConfigured: false, aiCalls: results.reduce((sum, result) => sum + result.aiCalls, 0), reason: 'No safe production Phase 2 planner is wired into SAEI; deterministic routing remains authoritative.' }, null, 2)}\n`);
+  writeFileSync(path.resolve(projectRoot, 'artifacts/phase35b/RECIPE_LIFECYCLE_LIVE.json'), `${JSON.stringify({ schema: 'adapt-phase35b-recipe-lifecycle-live-v1', ...metadata, ...lifecycle }, null, 2)}\n`);
   console.log(JSON.stringify(output, null, 2));
   await appServer.close();
   await adServer.close();
@@ -1207,5 +1518,5 @@ async function main(): Promise<void> {
 
 void main().catch((error: unknown) => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });

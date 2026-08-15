@@ -1,9 +1,72 @@
 {
   "schema": "adapt-phase31b-stealth-v1",
-  "total": 0,
-  "passed": 0,
+  "total": 11,
+  "passed": 11,
   "failed": 0,
-  "resultClasses": {},
-  "results": [],
-  "liveCanYouBlockIt": "NOT_OBSERVED"
+  "resultClasses": {
+    "BLOCKING_PASS": 9,
+    "NEGATIVE_CONTROL_PASS": 2
+  },
+  "results": [
+    {
+      "id": "passive-bait-height",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "passive-bait-offsetHeight",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "passive-bait-boundingRect",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "passive-bait-computedStyle",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "passive-bait-existence",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "timed-bait-recheck",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "bait-reinsertion",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "network-probe-detector",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "hybrid-detector",
+      "pass": true,
+      "resultClass": "BLOCKING_PASS"
+    },
+    {
+      "id": "negative-control-content",
+      "pass": true,
+      "resultClass": "NEGATIVE_CONTROL_PASS"
+    },
+    {
+      "id": "negative-control-static-bait-css",
+      "pass": true,
+      "resultClass": "NEGATIVE_CONTROL_PASS"
+    }
+  ],
+  "liveCanYouBlockIt": "NOT_OBSERVED",
+  "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
+  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
+  "generatedAt": "2026-08-15T17:15:18.801Z",
+  "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f"
 }

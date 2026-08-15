@@ -50,7 +50,7 @@ function autonomyDomActions(
     case 'RESTORE_POINTER_INTERACTION':
       return [action('DOM_RESTORE_POINTER_EVENTS', 0)];
     case 'PLAYER_HEALTH_RECOVERY':
-      return [action('DOM_RESTORE_SCROLL', 0), action('DOM_RESTORE_POINTER_EVENTS', 1)];
+      return [action('DOM_RESTORE_SCROLL', 0), action('DOM_RESTORE_POINTER_EVENTS', 1), action('DOM_RESTORE_PLAYER', 2)];
     default:
       return null;
   }

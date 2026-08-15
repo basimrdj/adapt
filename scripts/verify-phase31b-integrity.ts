@@ -8,6 +8,7 @@ const pageDir = join(dist, 'page-filtering');
 const manifestPath = join(dist, 'manifest.json');
 const buildManifestPath = join(dist, 'phase31', 'BUILD-MANIFEST.json');
 const frequencyReportPath = join(dist, 'phase31', 'UNSUPPORTED-SCRIPTLET-FREQUENCY.json');
+const phaseArtifactDir = join(root, 'artifacts', 'phase31b');
 
 function fail(message: string): never {
   throw new Error(message);
@@ -55,6 +56,60 @@ function detectorBaitSelectorsInCss(source: string): string[] {
     }
   }
   return [...selectors];
+}
+
+interface EvidenceMetadata {
+  verificationRunId?: string;
+  sourceCommitSha?: string;
+  generatedAt?: string;
+  buildFingerprint?: string;
+}
+
+function readJson<T>(file: string): T {
+  if (!existsSync(file)) fail(`canonical evidence artifact is missing: ${file}`);
+  return JSON.parse(readFileSync(file, 'utf8')) as T;
+}
+
+function assertSameMetadata(name: string, artifact: EvidenceMetadata, expected: Required<EvidenceMetadata>): void {
+  for (const key of ['verificationRunId', 'sourceCommitSha', 'generatedAt', 'buildFingerprint'] as const) {
+    if (artifact[key] !== expected[key]) fail(`${name} metadata ${key} does not match canonical run`);
+  }
+}
+
+function verifyCanonicalEvidence(): void {
+  const latest = readJson<{
+    verificationRunId?: string;
+    sourceCommitSha?: string;
+    generatedAt?: string;
+    buildFingerprint?: string;
+    verdict?: string;
+    evidence?: {
+      adversarial?: { total?: number; passed?: number; failed?: number; results?: unknown[] };
+      stealth?: { total?: number; passed?: number; failed?: number; results?: unknown[] };
+      benchmark?: { afterIndexBytes?: number; noFullBundleParsePerFrame?: boolean };
+    };
+  }>(join(phaseArtifactDir, 'latest.json'));
+  const adversarial = readJson<EvidenceMetadata & { total?: number; passed?: number; failed?: number; results?: Array<{ pass?: boolean }> }>(join(phaseArtifactDir, 'adversarial-results.json'));
+  const stealth = readJson<EvidenceMetadata & { total?: number; passed?: number; failed?: number; results?: Array<{ pass?: boolean }> }>(join(phaseArtifactDir, 'stealth-results.json'));
+  const benchmark = readJson<EvidenceMetadata & { afterIndexBytes?: number; noFullBundleParsePerFrame?: boolean }>(join(phaseArtifactDir, 'page-filter-benchmark.json'));
+  const frequency = readJson<EvidenceMetadata & { totalScriptletRules?: number; entries?: unknown[] }>(join(phaseArtifactDir, 'unsupported-scriptlet-frequency.json'));
+  const metadata: Required<EvidenceMetadata> = {
+    verificationRunId: latest.verificationRunId ?? '',
+    sourceCommitSha: latest.sourceCommitSha ?? '',
+    generatedAt: latest.generatedAt ?? '',
+    buildFingerprint: latest.buildFingerprint ?? '',
+  };
+  if (Object.values(metadata).some((value) => value.length === 0)) fail('latest.json is missing canonical verification metadata');
+  assertSameMetadata('adversarial-results.json', adversarial, metadata);
+  assertSameMetadata('stealth-results.json', stealth, metadata);
+  assertSameMetadata('page-filter-benchmark.json', benchmark, metadata);
+  assertSameMetadata('unsupported-scriptlet-frequency.json', frequency, metadata);
+  if (latest.verdict !== 'PENDING' && latest.verdict !== 'PASSED') fail(`latest.json has unsupported verdict: ${latest.verdict}`);
+  if (adversarial.total !== 30 || adversarial.passed !== 30 || adversarial.failed !== 0 || adversarial.results?.length !== 30 || adversarial.results.some((result) => result.pass !== true)) fail('adversarial standalone evidence is incomplete or failed');
+  if (stealth.total !== 11 || stealth.passed !== 11 || stealth.failed !== 0 || stealth.results?.length !== 11 || stealth.results.some((result) => result.pass !== true)) fail('stealth standalone evidence is incomplete or failed');
+  if (latest.evidence?.adversarial?.total !== adversarial.total || latest.evidence?.adversarial?.passed !== adversarial.passed || latest.evidence?.adversarial?.failed !== adversarial.failed || latest.evidence?.adversarial?.results?.length !== adversarial.results.length) fail('latest.json disagrees with adversarial standalone evidence');
+  if (latest.evidence?.stealth?.total !== stealth.total || latest.evidence?.stealth?.passed !== stealth.passed || latest.evidence?.stealth?.failed !== stealth.failed || latest.evidence?.stealth?.results?.length !== stealth.results.length) fail('latest.json disagrees with stealth standalone evidence');
+  if (latest.evidence?.benchmark?.afterIndexBytes !== benchmark.afterIndexBytes || latest.evidence?.benchmark?.noFullBundleParsePerFrame !== benchmark.noFullBundleParsePerFrame) fail('latest.json disagrees with page-filter benchmark evidence');
 }
 
 if (!existsSync(manifestPath)) fail('dist/manifest.json is missing');
@@ -147,6 +202,7 @@ const coverage = buildManifest.pagePlane?.scriptletCoverage;
 if (!coverage || (coverage.parsed || 0) < (coverage.fullyExecutable || 0) || (coverage.fullyExecutable || 0) + (coverage.unsupportedByName || 0) + (coverage.unsupportedByArguments || 0) + (coverage.unsafe || 0) !== (buildManifest.pagePlane?.scriptletRules || 0)) fail('scriptlet coverage accounting is incomplete');
 if (!buildManifest.sources?.length || buildManifest.sources.some((source) => !/^[a-f0-9]{64}$/.test(source.sha256 || '') || !String(source.inputPath || '').startsWith('.phase31/'))) fail('filter provenance manifest is incomplete or non-reproducible');
 if (filesUnder(dist).some((file) => file.endsWith('.map'))) fail('source maps are present in production dist');
+verifyCanonicalEvidence();
 
 console.log(JSON.stringify({
   cosmeticOwners: buildManifest.pagePlane?.cosmeticOwners,

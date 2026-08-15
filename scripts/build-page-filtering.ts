@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync
 import { join, relative, resolve } from 'node:path';
 import { classifyDetectorBaitSelector, parseFilterLists, renderGenericCosmeticCss } from '../src/page/filtering/compiler';
 import { PageFilterRule, ScriptletSupportStatus } from '../src/page/filtering/types';
+import { verificationMetadata } from './verification-metadata';
 
 interface SourceManifest {
   id: number;
@@ -20,6 +21,7 @@ const pageDir = join(distDir, 'page-filtering');
 const phaseDir = join(distDir, 'phase31');
 const manifestPath = join(distDir, 'manifest.json');
 const earlyRuntimeSource = join(root, 'src', 'page', 'filtering', 'early-runtime.js');
+const metadata = verificationMetadata(root);
 
 function titleOf(text: string): string {
   return text.match(/^!\s*(?:Title|Name):\s*(.+)$/im)?.[1]?.trim() || 'Unknown filter';
@@ -164,7 +166,8 @@ for (const scriptlet of bundle.scriptlets) {
 }
 const frequencyReport = {
   schema: 'adapt-phase31b-unsupported-scriptlet-frequency-v1',
-  generatedAt,
+  ...metadata,
+  generatedAt: metadata.generatedAt,
   totalScriptletRules: bundle.counts.scriptlets,
   unsupportedScriptletRules: bundle.counts.scriptlets - bundle.counts.fullyExecutable,
   entries: [...scriptletFrequency.entries()]
@@ -259,7 +262,8 @@ const sourceManifest: SourceManifest[] = sources.map((source) => {
 
 const buildManifest = {
   schemaVersion: 1,
-  generatedAt,
+  ...metadata,
+  generatedAt: metadata.generatedAt,
   compiler: 'ADAPT-authored page filtering compiler',
   sources: sourceManifest,
   pagePlane: {
@@ -303,7 +307,8 @@ const buildManifest = {
 writeFileSync(join(phaseDir, 'BUILD-MANIFEST.json'), `${JSON.stringify(buildManifest, null, 2)}\n`);
 writeFileSync(join(phaseDir, 'DETECTOR-BAIT-AUDIT.json'), `${JSON.stringify({
   schema: 'adapt-phase31b-detector-bait-audit-v1',
-  generatedAt,
+  ...metadata,
+  generatedAt: metadata.generatedAt,
   expectedArtifactDecision: 'NOT_EMITTED_TO_UNCONDITIONAL_COSMETIC_CSS',
   rules: detectorSensitiveCosmeticProvenance,
 }, null, 2)}\n`);

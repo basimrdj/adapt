@@ -5,6 +5,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { startTestServers, TestServerInstances } from '../pages/server';
 import { chromeExecutable } from '../support/chrome-executable';
+import { verificationMetadata } from '../../scripts/verification-metadata';
 
 type ResultClass = 'BLOCKING_PASS' | 'NEGATIVE_CONTROL_PASS' | 'LIFECYCLE_PASS' | 'PRESENCE_ONLY';
 interface StealthResult { id: string; pass: boolean; resultClass: ResultClass; detail?: string }
@@ -60,9 +61,10 @@ describe('Phase 3.1B passive detector-bait stealth gate', () => {
       resultClasses: results.reduce<Record<string, number>>((counts, result) => {
         counts[result.resultClass] = (counts[result.resultClass] || 0) + 1;
         return counts;
-      }, {}),
+    }, {}),
       results,
       liveCanYouBlockIt: 'NOT_OBSERVED',
+      ...verificationMetadata(path.resolve(__dirname, '../..')),
     }, null, 2)}\n`);
     await browser?.close();
     await servers?.close();

@@ -1,11 +1,23 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { buildFingerprint, verificationMetadata } from './verification-metadata';
 
 const root = resolve(process.cwd());
 const results: Array<{ name: string; command: string; pass: boolean; durationMs: number }> = [];
 const startedAt = new Date().toISOString();
 const artifactDir = join(root, 'artifacts', 'phase31b');
+const metadata = verificationMetadata(root);
+
+Object.assign(process.env, {
+  ADAPT_VERIFICATION_RUN_ID: metadata.verificationRunId,
+  ADAPT_SOURCE_COMMIT_SHA: metadata.sourceCommitSha,
+  ADAPT_VERIFICATION_GENERATED_AT: metadata.generatedAt,
+});
+
+for (const artifact of ['latest.json', 'adversarial-results.json', 'stealth-results.json', 'page-filter-benchmark.json']) {
+  rmSync(join(artifactDir, artifact), { force: true });
+}
 
 function run(name: string, command: string, args: string[], env?: NodeJS.ProcessEnv): void {
   const started = Date.now();
@@ -63,9 +75,10 @@ let evidence: Record<string, unknown> | undefined;
 try {
   run('TypeScript typecheck', 'npm', ['run', 'typecheck']);
   run('Full reproducible build and indexed page compilation', 'npm', ['run', 'build:full']);
+  metadata.buildFingerprint = buildFingerprint(root);
+  process.env.ADAPT_VERIFICATION_BUILD_FINGERPRINT = metadata.buildFingerprint;
   run('Indexed page-plane benchmark', 'npm', ['run', 'benchmark:page']);
   run('Page filter compiler and index unit suite', 'npm', ['run', 'test:page']);
-  run('Filter compiler and package integrity', 'npm', ['run', 'verify:phase31b:integrity']);
   run('All unit and Phase 3 regression tests', 'npm', ['run', 'test:unit']);
   run('Passive detector-bait stealth corpus', 'npm', ['run', 'test:stealth']);
   run('30-scenario executable adversarial corpus', 'npm', ['run', 'test:anti-adblock']);
@@ -73,8 +86,22 @@ try {
   run('Content runtime stability regression', 'npm', ['run', 'test:runtime']);
   run('Chromium Phase 3 and Phase 3.1B E2E suites', 'npm', ['run', 'test:e2e']);
   run('Bundle security and packaging checks', 'npx', ['vitest', 'run', 'tests/unit/production-bundle-clean.test.ts', 'tests/unit/ai-oracle-security-redteam.test.ts', 'tests/unit/ai-prompt-injection-adv.test.ts']);
+  const pendingReport = {
+    schema: 'adapt-phase31b-verification-v3',
+    ...metadata,
+    startedAt,
+    completedAt: new Date().toISOString(),
+    verdict: 'PENDING',
+    gates: results,
+    evidence,
+  };
+  mkdirSync(artifactDir, { recursive: true });
+  writeFileSync(join(artifactDir, 'latest.json'), `${JSON.stringify(pendingReport, null, 2)}\n`);
+  run('Canonical evidence integrity', 'npm', ['run', 'verify:phase31b:integrity']);
+  const report = { ...pendingReport, completedAt: new Date().toISOString(), verdict: 'PASSED', gates: results };
+  writeFileSync(join(artifactDir, 'latest.json'), `${JSON.stringify(report, null, 2)}\n`);
 } catch (error) {
-  const report = { schema: 'adapt-phase31b-verification-v2', startedAt, completedAt: new Date().toISOString(), verdict: 'FAILED', gates: results, evidence, error: error instanceof Error ? error.message : String(error) };
+  const report = { schema: 'adapt-phase31b-verification-v3', ...metadata, startedAt, completedAt: new Date().toISOString(), verdict: 'FAILED', gates: results, evidence, error: error instanceof Error ? error.message : String(error) };
   mkdirSync(artifactDir, { recursive: true });
   writeFileSync(join(artifactDir, 'latest.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.error(`\nPHASE 3.1B VERIFICATION FAILED: ${report.error}`);
@@ -82,8 +109,5 @@ try {
 }
 
 if (process.exitCode !== 1) {
-  const report = { schema: 'adapt-phase31b-verification-v2', startedAt, completedAt: new Date().toISOString(), verdict: 'PASSED', gates: results, evidence };
-  mkdirSync(artifactDir, { recursive: true });
-  writeFileSync(join(artifactDir, 'latest.json'), `${JSON.stringify(report, null, 2)}\n`);
   console.log('\nPHASE 3.1B VERIFICATION PASSED');
 }

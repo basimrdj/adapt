@@ -1,8 +1,18 @@
 {
   "schema": "adapt-phase35b-worker-restart-v1",
-  "generatedAt": "2026-08-15T12:34:49.182Z",
+  "verificationRunId": "phase31b-1786813022686-e88a0fa3ffbd",
+  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
+  "generatedAt": "2026-08-15T16:57:02.685Z",
+  "buildFingerprint": "55a9d76d8c47f5e745f478014ad454d2d0994475dec65bdb80444460ab7a5dc7",
   "trials": 1,
   "successfulTrials": 1,
   "successRate": 1,
-  "method": "CDP service-worker execution termination during pending autonomous transaction"
+  "method": "CDP ServiceWorker.stopWorker or verified Target.closeTarget lifecycle control",
+  "oldTargetId": "3203099C1B8EF4A16382AD5FAB943F68",
+  "workerStopped": true,
+  "newTargetId": "80F5612D7364096F4161EA4B05BA9117",
+  "workerRecreated": true,
+  "stateRestored": true,
+  "pendingReconciled": true,
+  "success": true
 }

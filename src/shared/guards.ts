@@ -107,6 +107,7 @@ export function isDomAction(val: unknown): val is DomAction {
     'DOM_REMOVE_OVERLAY',
     'DOM_RESTORE_SCROLL',
     'DOM_RESTORE_POINTER_EVENTS',
+    'DOM_RESTORE_PLAYER',
     'DOM_PRESERVE_BAIT_CANDIDATE',
     'BAIT_PRESERVE_LAYOUT',
     'BAIT_RESTORE_VISIBILITY',

@@ -8,6 +8,7 @@ import { exceptionMatches, matchesDomain, scriptletExceptionMatches } from '../.
 import { runMainScriptlet } from '../../src/shared/main-scriptlet';
 import { startTestServers, TestServerInstances } from '../pages/server';
 import { chromeExecutable } from '../support/chrome-executable';
+import { verificationMetadata } from '../../scripts/verification-metadata';
 
 type ScenarioClass = 'BLOCKING_PASS' | 'NEGATIVE_CONTROL_PASS' | 'LIFECYCLE_PASS' | 'PRESENCE_ONLY';
 
@@ -50,7 +51,7 @@ describe('Phase 3.1B deterministic adversarial corpus', () => {
       counts[result.resultClass] = (counts[result.resultClass] || 0) + 1;
       return counts;
     }, {});
-    writeFileSync(path.join(artifactDir, 'adversarial-results.json'), `${JSON.stringify({ schema: 'adapt-phase31b-adversarial-v3', total: corpus.length, passed, failed: corpus.length - passed, classCounts, results }, null, 2)}\n`);
+    writeFileSync(path.join(artifactDir, 'adversarial-results.json'), `${JSON.stringify({ schema: 'adapt-phase31b-adversarial-v3', ...verificationMetadata(path.resolve(__dirname, '../..')), total: corpus.length, passed, failed: corpus.length - passed, classCounts, results }, null, 2)}\n`);
     await browser?.close();
     await servers?.close();
   });

@@ -1,6 +1,9 @@
 {
   "schema": "adapt-phase35b-primitive-execution-matrix-v1",
-  "generatedAt": "2026-08-15T12:34:49.182Z",
+  "verificationRunId": "phase31b-1786813022686-e88a0fa3ffbd",
+  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
+  "generatedAt": "2026-08-15T16:57:02.685Z",
+  "buildFingerprint": "55a9d76d8c47f5e745f478014ad454d2d0994475dec65bdb80444460ab7a5dc7",
   "entries": [
     {
       "primitiveId": "TEMPORARY_NETWORK_ALLOW",

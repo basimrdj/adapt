@@ -1,5 +1,9 @@
 {
   "schema": "adapt-phase31b-page-filter-benchmark-v1",
+  "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
+  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
+  "generatedAt": "2026-08-15T17:15:18.801Z",
+  "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
   "hostname": "www.youtube.com",
   "candidates": [
     "www.youtube.com",
@@ -13,12 +17,12 @@
   "afterIndexBytes": 494,
   "afterBundleBytes": 37145575,
   "perFrameBytes": 1785905,
-  "perFrameParseMs": 8.794418,
+  "perFrameParseMs": 8.587333,
   "genericBytes": 1833,
   "relevantDomainShardBytes": 183939,
   "indexedRules": 765,
   "mutationChecks": 2000,
-  "mutationBenchmarkMs": 0.158584,
+  "mutationBenchmarkMs": 0.149125,
   "domainShardCount": 339,
   "earlyShardCount": 338,
   "noFullBundleParsePerFrame": true

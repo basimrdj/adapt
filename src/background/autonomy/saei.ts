@@ -59,9 +59,9 @@ export interface AutonomyLoopState {
 const PRIMITIVES_BY_FAMILY: Partial<Record<CausalHypothesis['mechanismClass'], readonly PrimitiveId[]>> = {
   UNKNOWN_NETWORK_REACTION: ['TEMPORARY_NETWORK_ALLOW', 'TARGETED_SESSION_DNR', 'TEMPORARY_NETWORK_BLOCK'],
   UNKNOWN_SCRIPT_REACTION: ['DISABLE_PACKAGED_SCRIPTLET', 'ACTIVATE_PACKAGED_SCRIPTLET', 'REMOVE_REACTION_UI'],
-  UNKNOWN_DOM_REACTION: ['RESTORE_SCROLL', 'RESTORE_POINTER_INTERACTION', 'PRESERVE_BAIT', 'RESTORE_LAYOUT', 'REMOVE_REACTION_UI'],
+  UNKNOWN_DOM_REACTION: ['REMOVE_REACTION_UI', 'RESTORE_LAYOUT', 'RESTORE_POINTER_INTERACTION', 'RESTORE_SCROLL', 'PRESERVE_BAIT'],
   UNKNOWN_NAVIGATION_REACTION: ['CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET', 'STOP_MATCHED_REDIRECT_CHAIN', 'QUARANTINE_NAVIGATION_TARGET'],
-  UNKNOWN_PLAYER_REACTION: ['RESTORE_POINTER_INTERACTION', 'RESTORE_SCROLL', 'PLAYER_HEALTH_RECOVERY'],
+  UNKNOWN_PLAYER_REACTION: ['PLAYER_HEALTH_RECOVERY', 'RESTORE_POINTER_INTERACTION', 'RESTORE_SCROLL'],
   UNKNOWN_MIXED_REACTION: ['PRESERVE_BAIT', 'RESTORE_LAYOUT', 'RESTORE_POINTER_INTERACTION', 'REMOVE_REACTION_UI'],
 };
 
@@ -100,6 +100,9 @@ function evidenceSatisfied(
   syntheticObservation: boolean
 ): boolean {
   if (syntheticObservation) return requiredEvidence.some((kind) => eventKinds.has(kind));
+  if (primitiveId === 'REMOVE_REACTION_UI' || primitiveId === 'PLAYER_HEALTH_RECOVERY') {
+    return requiredEvidence.some((kind) => eventKinds.has(kind));
+  }
   return ANY_EVIDENCE_PRIMITIVES.has(primitiveId)
     ? requiredEvidence.some((kind) => eventKinds.has(kind))
     : requiredEvidence.every((kind) => eventKinds.has(kind));
@@ -220,10 +223,14 @@ export class AutonomousExperimentLoop {
         });
       }
     }
-    const defaultPreferredPrimitive = !preferredPrimitive
-      && (eventKinds.has('UNEXPECTED_NAV_TARGET') || eventKinds.has('POPUP_OR_POPUNDER'))
-      ? 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' as PrimitiveId
-      : preferredPrimitive;
+    const defaultPreferredPrimitive = preferredPrimitive
+      ?? ((eventKinds.has('UNEXPECTED_NAV_TARGET') || eventKinds.has('POPUP_OR_POPUNDER'))
+        ? 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET' as PrimitiveId
+        : eventKinds.has('PLAYBACK_OBSTRUCTED')
+          ? 'PLAYER_HEALTH_RECOVERY' as PrimitiveId
+          : eventKinds.has('OVERLAY_APPEARED') || eventKinds.has('SEMANTIC_GATE') || eventKinds.has('ANTI_BLOCK_REACTION')
+            ? 'REMOVE_REACTION_UI' as PrimitiveId
+            : undefined);
     proposals.sort((a, b) => {
       if (defaultPreferredPrimitive) {
         const aPreferred = a.primitiveId === defaultPreferredPrimitive ? 1 : 0;
