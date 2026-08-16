@@ -1,9 +1,9 @@
 {
   "schema": "adapt-phase35b-live-browser-v1",
-  "verificationRunId": "phase31b-1786813022686-e88a0fa3ffbd",
-  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-  "generatedAt": "2026-08-15T16:57:02.685Z",
-  "buildFingerprint": "55a9d76d8c47f5e745f478014ad454d2d0994475dec65bdb80444460ab7a5dc7",
+  "verificationRunId": "phase31b-1786816440535-f45ca67a3aad",
+  "sourceCommitSha": "f45ca67a3aad9d19ad8543f57a7725576b8d3617",
+  "generatedAt": "2026-08-15T17:54:00.534Z",
+  "buildFingerprint": "b1dc88b717d367945b79ab10acb1629474523ad5ed9fe83ecf3b197b1867578e",
   "scenarioCoverage": {
     "activeMechanisms": [
       "anti-block-overlay",
@@ -98,14 +98,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 231,
+      "timeToResolutionMs": 155,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -119,7 +119,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xtmb4ho?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xtmb4ho?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -154,14 +154,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 217,
+      "timeToResolutionMs": 141,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -175,7 +175,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x6v3ee7?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x6v3ee7?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -209,14 +209,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 444,
+      "timeToResolutionMs": 418,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -230,7 +230,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1vnq4bd?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1vnq4bd?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -264,14 +264,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 8,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_ERROR",
         "NETWORK_PROBE_REACTION",
         "OVERLAY_APPEARED",
@@ -314,13 +314,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 212,
+      "timeToResolutionMs": 171,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -335,7 +335,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x18lgff7?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x18lgff7?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -373,8 +373,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -415,7 +415,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2508,
+      "timeToResolutionMs": 2507,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -458,7 +458,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 432,
+      "timeToResolutionMs": 428,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -555,7 +555,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 155,
+      "timeToResolutionMs": 210,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -576,7 +576,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1rwx2e6?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1rwx2e6?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -610,13 +610,13 @@
       "secondVisitExperiments": 1,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 356,
+      "timeToResolutionMs": 364,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -633,7 +633,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x13dhu3f"
+        "http://127.0.0.1:59189/x13dhu3f"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -712,7 +712,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2504,
+      "timeToResolutionMs": 2505,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -755,10 +755,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 11,
+      "timeToResolutionMs": 143,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -767,10 +770,11 @@
         "INTERACTION_DENIED"
       ],
       "autonomyStatuses": [
+        "EXPLORING:",
         "RESOLVED:"
       ],
       "experimentDetails": [
-        "REMOVE_REACTION_UI:COMMITTED:0.4875:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":0.5,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":0.5,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
+        "REMOVE_REACTION_UI:COMMITTED:0.4875:rollback-ok:{\"pre\":{\"confidence\":1,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":0.1,\"visualObstruction\":1},\"post\":{\"confidence\":0.5,\"contentAccess\":1,\"interaction\":1,\"mutationStability\":1,\"networkIntegrity\":1,\"privacyPreservation\":1,\"scrollability\":1,\"visualObstruction\":0}}"
       ],
       "remainingPageUrls": [],
       "pendingAutonomyCount": 0,
@@ -803,8 +807,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "ANTI_BLOCK_REACTION",
@@ -844,14 +848,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 164,
+      "timeToResolutionMs": 149,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -865,7 +869,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1fdqh9y?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1fdqh9y?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -901,14 +905,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 188,
+      "timeToResolutionMs": 173,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -922,7 +926,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1svj7ar?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1svj7ar?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -957,14 +961,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 146,
+      "timeToResolutionMs": 232,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -978,7 +982,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x17k4urg?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x17k4urg?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1016,10 +1020,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -1060,14 +1064,14 @@
       "secondVisitExperiments": 1,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 346,
+      "timeToResolutionMs": 361,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -1083,7 +1087,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1pn2gon"
+        "http://127.0.0.1:59189/x1pn2gon"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1117,14 +1121,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "SCROLL_LOCK_ON",
         "PLAYBACK_OBSTRUCTED",
         "INTERACTION_DENIED"
@@ -1162,7 +1166,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 329,
+      "timeToResolutionMs": 339,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -1210,13 +1214,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -1258,13 +1262,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 175,
+      "timeToResolutionMs": 173,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -1279,7 +1283,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1p1oklk?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1p1oklk?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1315,14 +1319,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 129,
+      "timeToResolutionMs": 212,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -1336,7 +1340,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xz0k2jg?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xz0k2jg?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1370,7 +1374,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 388,
+      "timeToResolutionMs": 383,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -1391,7 +1395,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1kg8sr3?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1kg8sr3?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1425,7 +1429,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -1474,13 +1478,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 148,
+      "timeToResolutionMs": 216,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -1495,7 +1499,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xglo8py?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xglo8py?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1534,8 +1538,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -1576,14 +1580,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2504,
+      "timeToResolutionMs": 2503,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "SCROLL_LOCK_ON"
       ],
       "autonomyStatuses": [
@@ -1619,7 +1623,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 344,
+      "timeToResolutionMs": 331,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -1667,14 +1671,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -1716,7 +1720,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -1764,12 +1768,12 @@
       "secondVisitExperiments": 1,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 359,
+      "timeToResolutionMs": 326,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "REQUEST_START",
         "NAV_COMMIT",
+        "REQUEST_START",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
@@ -1787,7 +1791,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x177amlq"
+        "http://127.0.0.1:59189/x177amlq"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -1825,8 +1829,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "SCROLL_LOCK_ON",
         "PLAYBACK_OBSTRUCTED",
@@ -1909,7 +1913,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 6,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -1956,14 +1960,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 6,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "OVERLAY_APPEARED",
         "ANTI_BLOCK_REACTION",
         "SEMANTIC_GATE"
@@ -2002,14 +2006,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 154,
+      "timeToResolutionMs": 166,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -2023,7 +2027,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1qnksj6?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1qnksj6?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2058,14 +2062,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 195,
+      "timeToResolutionMs": 164,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -2079,7 +2083,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x10ybqhi?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x10ybqhi?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2115,7 +2119,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 172,
+      "timeToResolutionMs": 146,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -2136,7 +2140,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x8ruyzn?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x8ruyzn?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2218,13 +2222,13 @@
       "secondVisitExperiments": 1,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 353,
+      "timeToResolutionMs": 330,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -2241,7 +2245,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xp8n0fs"
+        "http://127.0.0.1:59189/xp8n0fs"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2274,7 +2278,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2504,
+      "timeToResolutionMs": 2505,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -2323,8 +2327,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -2366,14 +2370,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -2414,14 +2418,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 182,
+      "timeToResolutionMs": 165,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -2435,7 +2439,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1braarv?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1braarv?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2470,13 +2474,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 164,
+      "timeToResolutionMs": 217,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -2491,7 +2495,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1jvgoyw?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1jvgoyw?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2526,13 +2530,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 374,
+      "timeToResolutionMs": 333,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -2547,7 +2551,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1n39wgs?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1n39wgs?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2581,14 +2585,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 12,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
         "REQUEST_ERROR",
         "NETWORK_PROBE_REACTION",
         "OVERLAY_APPEARED",
@@ -2630,14 +2634,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 158,
+      "timeToResolutionMs": 235,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -2651,7 +2655,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1ddtttm?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1ddtttm?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2684,14 +2688,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 6,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -2732,14 +2736,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2509,
+      "timeToResolutionMs": 2503,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "SCROLL_LOCK_ON"
       ],
       "autonomyStatuses": [
@@ -2775,14 +2779,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 250,
+      "timeToResolutionMs": 248,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -2825,14 +2829,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 192,
+      "timeToResolutionMs": 147,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -2846,7 +2850,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xu2o89s?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xu2o89s?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2880,14 +2884,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -2929,14 +2933,14 @@
       "secondVisitExperiments": 1,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 419,
+      "timeToResolutionMs": 341,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -2952,7 +2956,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1k050de"
+        "http://127.0.0.1:59189/x1k050de"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -2985,7 +2989,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -3036,8 +3040,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "INTERACTION_DENIED"
       ],
       "autonomyStatuses": [
@@ -3073,14 +3077,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -3121,7 +3125,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -3167,7 +3171,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 208,
+      "timeToResolutionMs": 159,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -3188,7 +3192,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x115rubr?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x115rubr?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3223,14 +3227,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 223,
+      "timeToResolutionMs": 157,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -3244,7 +3248,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xqv37ki?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xqv37ki?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3279,14 +3283,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 182,
+      "timeToResolutionMs": 204,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -3300,7 +3304,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1hpy8zl?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1hpy8zl?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3335,7 +3339,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -3382,14 +3386,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 6,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -3472,7 +3476,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 369,
+      "timeToResolutionMs": 364,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -3521,13 +3525,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 11,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -3569,7 +3573,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 212,
+      "timeToResolutionMs": 161,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -3590,7 +3594,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xm3ck7p?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xm3ck7p?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3625,12 +3629,12 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 303,
+      "timeToResolutionMs": 208,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "REQUEST_START",
         "NAV_COMMIT",
+        "REQUEST_START",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
@@ -3646,7 +3650,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xvb8b8r?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xvb8b8r?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3680,13 +3684,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 338,
+      "timeToResolutionMs": 302,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -3701,7 +3705,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xtsx7oo?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xtsx7oo?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3736,13 +3740,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "REQUEST_ERROR",
         "NETWORK_PROBE_REACTION",
@@ -3785,14 +3789,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 167,
+      "timeToResolutionMs": 214,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -3806,7 +3810,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1n2tz9r?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1n2tz9r?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3886,13 +3890,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2504,
+      "timeToResolutionMs": 2505,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "SCROLL_LOCK_ON"
       ],
@@ -3932,12 +3936,12 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 244,
+      "timeToResolutionMs": 165,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
@@ -3953,7 +3957,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xdbfn9f?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xdbfn9f?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -3988,13 +3992,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 178,
+      "timeToResolutionMs": 229,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -4009,7 +4013,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1v56jv0?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1v56jv0?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4043,7 +4047,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 7,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4091,14 +4095,14 @@
       "secondVisitExperiments": 1,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 444,
+      "timeToResolutionMs": 361,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -4114,7 +4118,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1nkvsqn"
+        "http://127.0.0.1:59189/x1nkvsqn"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4148,12 +4152,12 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "REQUEST_START",
         "NAV_COMMIT",
+        "REQUEST_START",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "SCROLL_LOCK_ON",
@@ -4193,7 +4197,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2505,
+      "timeToResolutionMs": 2504,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4236,7 +4240,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 8,
+      "timeToResolutionMs": 5,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4283,7 +4287,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4330,7 +4334,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 182,
+      "timeToResolutionMs": 149,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4351,7 +4355,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1hpkbnl?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1hpkbnl?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4386,13 +4390,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 214,
+      "timeToResolutionMs": 177,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -4407,7 +4411,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x16ctbc7?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x16ctbc7?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4442,14 +4446,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 167,
+      "timeToResolutionMs": 222,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
         "INTENT_OUTCOME_FANOUT"
@@ -4463,7 +4467,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xvs2udu?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xvs2udu?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4496,7 +4500,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 181,
+      "timeToResolutionMs": 210,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4517,7 +4521,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x16kgeld?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x16kgeld?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4551,13 +4555,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
@@ -4598,14 +4602,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 2503,
+      "timeToResolutionMs": 2504,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "SCROLL_LOCK_ON"
       ],
       "autonomyStatuses": [
@@ -4641,7 +4645,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 274,
+      "timeToResolutionMs": 269,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4689,14 +4693,14 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 7,
+      "timeToResolutionMs": 6,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "OVERLAY_APPEARED",
         "SCROLL_LOCK_ON",
         "ANTI_BLOCK_REACTION",
@@ -4738,7 +4742,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 231,
+      "timeToResolutionMs": 163,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4759,7 +4763,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x13p6ine?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x13p6ine?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4794,7 +4798,7 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 177,
+      "timeToResolutionMs": 164,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
@@ -4815,7 +4819,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/x1nk7kbp?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/x1nk7kbp?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4849,13 +4853,13 @@
       "secondVisitExperiments": 0,
       "secondVisitAiCalls": 0,
       "secondVisitSuccess": true,
-      "timeToResolutionMs": 602,
+      "timeToResolutionMs": 560,
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT",
         "UNEXPECTED_NAV_TARGET",
@@ -4870,7 +4874,7 @@
       ],
       "remainingPageUrls": [
         "about:blank",
-        "http://127.0.0.1:56139/xqi20uj?popupOpened=1&focusSplit=1"
+        "http://127.0.0.1:59189/xqi20uj?popupOpened=1&focusSplit=1"
       ],
       "navigationTargetSnapshot": {
         "adapt_navigation_targets_v1": {
@@ -4909,8 +4913,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "REQUEST_ERROR",
         "NETWORK_PROBE_REACTION",
@@ -4958,8 +4962,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -4994,8 +4998,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
@@ -5030,10 +5034,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "UNEXPECTED_NAV_TARGET"
       ],
       "autonomyStatuses": [],
@@ -5067,10 +5071,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5105,9 +5109,9 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5214,10 +5218,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "REQUEST_START",
-        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5251,10 +5255,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5399,10 +5403,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5437,9 +5441,9 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5473,10 +5477,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
-        "REQUEST_COMPLETE"
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT"
       ],
       "autonomyStatuses": [],
       "experimentDetails": [],
@@ -5509,6 +5513,9 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "REQUEST_START",
+        "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
@@ -5543,10 +5550,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5580,10 +5587,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5619,8 +5626,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "UNEXPECTED_NAV_TARGET"
       ],
       "autonomyStatuses": [],
@@ -5654,10 +5661,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5692,9 +5699,9 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5730,8 +5737,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5801,10 +5808,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
+        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5877,8 +5884,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT",
         "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -5914,8 +5921,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "UNEXPECTED_NAV_TARGET"
       ],
       "autonomyStatuses": [],
@@ -5951,8 +5958,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -6170,10 +6177,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -6207,9 +6214,9 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "UNEXPECTED_NAV_TARGET"
       ],
@@ -6245,8 +6252,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "REQUEST_COMPLETE",
         "NAV_COMMIT",
+        "REQUEST_COMPLETE",
         "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
@@ -6281,10 +6288,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
-        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -6428,10 +6435,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "HEALTH_SNAPSHOT",
-        "NAV_COMMIT",
         "REQUEST_START",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
+        "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -6467,8 +6474,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -6540,8 +6547,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
@@ -6577,8 +6584,8 @@
       "capabilityGaps": 0,
       "observedEventKinds": [
         "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
+        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
         "USER_INTENT"
       ],
@@ -6650,10 +6657,10 @@
       "rollbackSuccess": true,
       "capabilityGaps": 0,
       "observedEventKinds": [
-        "REQUEST_START",
-        "NAV_COMMIT",
         "REQUEST_COMPLETE",
-        "HEALTH_SNAPSHOT"
+        "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
+        "REQUEST_START"
       ],
       "autonomyStatuses": [],
       "experimentDetails": [],
@@ -6688,8 +6695,8 @@
       "observedEventKinds": [
         "REQUEST_START",
         "REQUEST_COMPLETE",
-        "NAV_COMMIT",
         "HEALTH_SNAPSHOT",
+        "NAV_COMMIT",
         "USER_INTENT"
       ],
       "autonomyStatuses": [],
@@ -6700,9 +6707,9 @@
     }
   ],
   "workerRestart": {
-    "oldTargetId": "3203099C1B8EF4A16382AD5FAB943F68",
+    "oldTargetId": "75178A1FE4B6BCFADD71CB2B9EF5E1D3",
     "workerStopped": true,
-    "newTargetId": "80F5612D7364096F4161EA4B05BA9117",
+    "newTargetId": "57C864121953C11CD7DF40985A12BFE6",
     "workerRecreated": true,
     "stateRestored": true,
     "pendingReconciled": true,
@@ -6733,7 +6740,7 @@
   "criticalFalsePositiveCount": 0,
   "medianExperiments": 1,
   "p95Experiments": 1,
-  "medianTimeToResolution": 176,
+  "medianTimeToResolution": 164.5,
   "recipeReplaySuccessRate": 1,
   "secondVisitAiCalls": 0,
   "secondVisitExperiments": 6,

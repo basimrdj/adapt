@@ -1,0 +1,10 @@
+{
+  "attempts": 40,
+  "preventedBeforeTargetCreation": 40,
+  "unexpectedTargetsCreated": 0,
+  "fallbackClosures": 0,
+  "legitimateTargetsAllowed": 20,
+  "protectedFlowsPreserved": 20,
+  "firstEncounterTrials": 20,
+  "zeroUnwantedTargetCreation": true
+}

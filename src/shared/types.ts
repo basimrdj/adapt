@@ -300,8 +300,60 @@ export interface PageSignalBatch {
 
 export interface OpaqueElementObservation {
   ref: `element:e${number}`;
-  role: 'fullscreen-overlay' | 'bait-candidate';
+  role: 'fullscreen-overlay' | 'semantic-reaction-ui' | 'bait-candidate';
   viewportCoverage: number;
+  visible: boolean;
+  resourceIdentityHash?: string;
+  resourceType?: string;
+  thirdPartyResource?: boolean;
+}
+
+export type SurvivorClass =
+  | 'VISIBLE_AD_SURFACE'
+  | 'THIRD_PARTY_AD_FRAME'
+  | 'PROMOTIONAL_SURFACE'
+  | 'ANTI_BLOCK_REACTION'
+  | 'UNWANTED_NAVIGATION'
+  | 'POPUP_ATTEMPT'
+  | 'SUSPICIOUS_REDIRECT'
+  | 'TRACKING_BEACON_CANDIDATE'
+  | 'SUSPICIOUS_UNBLOCKED_NETWORK_RESOURCE'
+  | 'REINSERTED_SURFACE'
+  | 'PLAYER_OBSTRUCTION';
+
+export interface OpaqueSurvivorObservation {
+  ref: `survivor:s${number}`;
+  class: SurvivorClass;
+  documentScope: string;
+  observedAt: number;
+  confidence: number;
+  evidenceClasses: string[];
+  elementRef?: `element:e${number}`;
+  resourceIdentityHash?: string;
+  resourceType?: string;
+  protectedContext: {
+    authOrPayment: boolean;
+    media: boolean;
+    downloadOrDocument: boolean;
+    userIntentRelated: boolean;
+  };
+  features: {
+    visible: boolean;
+    thirdPartyResource: boolean;
+    fixedOrAbsolute: boolean;
+    isolatedSurface: boolean;
+    semanticAdLabel: boolean;
+    recentInsertion: boolean;
+    mutationAssociation: number;
+    viewportCoverage: number;
+  };
+}
+
+export interface ResourceAssociationObservation {
+  elementRef: `element:e${number}`;
+  resourceIdentityHash: string;
+  resourceType: string;
+  thirdPartyResource: boolean;
   visible: boolean;
 }
 
@@ -309,6 +361,8 @@ export interface CausalPageObservationBatch {
   timestamp: number;
   pageSignals: PageSignalBatch;
   elements: OpaqueElementObservation[];
+  survivors?: OpaqueSurvivorObservation[];
+  resourceAssociations?: ResourceAssociationObservation[];
   intents?: UserIntentEnvelope[];
 }
 

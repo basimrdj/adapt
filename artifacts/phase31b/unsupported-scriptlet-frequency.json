@@ -1,9 +1,9 @@
 {
   "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-  "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-  "generatedAt": "2026-08-15T17:15:18.801Z",
-  "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
+  "verificationRunId": "phase31b-1786875855446-f45ca67a3aad",
+  "sourceCommitSha": "f45ca67a3aad9d19ad8543f57a7725576b8d3617",
+  "generatedAt": "2026-08-16T10:24:15.445Z",
+  "buildFingerprint": "24c342c2cdfce26a120cb008df2eecbc94e0c71b65cadce06d5de1a3249560db",
   "totalScriptletRules": 7636,
   "unsupportedScriptletRules": 3165,
   "entries": [

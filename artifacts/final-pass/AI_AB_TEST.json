@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-16T07:10:38.300Z",
+  "sourceCommitSha": "f45ca67a3aad9d19ad8543f57a7725576b8d3617",
+  "status": "NOT_RUN_PROVIDER_UNAVAILABLE",
+  "providerConfigured": false,
+  "providerChecks": {
+    "azureOpenAiKey": false,
+    "azureOpenAiBaseUrl": false,
+    "azureOpenAiModel": false,
+    "adaptAiEndpoint": false,
+    "usableAzureCliConfiguration": false
+  },
+  "routingContract": {
+    "trigger": "no deterministic candidate and at least two independent ambiguity signals",
+    "maxCallsPerNovelNavigation": 1,
+    "timeoutMs": 2800,
+    "easyCaseAiCalls": 0,
+    "recipeReplayAiCalls": 0
+  },
+  "modeA": {
+    "name": "deterministic SAEI only",
+    "status": "not-run",
+    "resolutionRate": null,
+    "falsePositiveRate": null,
+    "criticalFalsePositives": null,
+    "medianExperiments": null,
+    "p95Experiments": null,
+    "medianResolutionTimeMs": null,
+    "aiCalls": 0,
+    "aiLatencyMs": null,
+    "aiTimeoutRate": null,
+    "aiSchemaFailureRate": null,
+    "breakage": null
+  },
+  "modeB": {
+    "name": "AI-ranked SAEI",
+    "status": "blocked-before-run",
+    "resolutionRate": null,
+    "falsePositiveRate": null,
+    "criticalFalsePositives": null,
+    "medianExperiments": null,
+    "p95Experiments": null,
+    "medianResolutionTimeMs": null,
+    "aiCalls": 0,
+    "aiLatencyMs": null,
+    "aiTimeoutRate": null,
+    "aiSchemaFailureRate": null,
+    "breakage": null
+  },
+  "cohorts": {
+    "known": { "aiCalls": 0, "status": "not-run-provider-unavailable" },
+    "easyDeterministic": { "aiCalls": 0, "status": "not-run-provider-unavailable" },
+    "staticFilter": { "aiCalls": 0, "status": "not-run-provider-unavailable" },
+    "recipeReplay": { "aiCalls": 0, "status": "not-run-provider-unavailable" },
+    "ambiguousNovel": { "aiCalls": 0, "status": "blocked-before-run" }
+  },
+  "telemetry": {
+    "callCount": 0,
+    "triggerReason": null,
+    "latencyMs": null,
+    "outcome": "provider-unavailable",
+    "numberOfCandidates": null,
+    "selectedSuppliedRef": null,
+    "selectedFirstExperimentSucceeded": null,
+    "reducedExperimentCount": null
+  },
+  "estimatedCallsPer1000OrdinaryPageLoads": null,
+  "decision": "AI DID NOT EARN DEFAULT ROUTING",
+  "decisionQualification": "No provider was configured, so no actual AI call or A/B comparison was observed. The integration remains advisory and off by default until a real provider-backed ambiguous holdout is run."
+}

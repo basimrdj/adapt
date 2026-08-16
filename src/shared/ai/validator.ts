@@ -70,6 +70,12 @@ export class PolicyValidator {
           }
           if (act.parameter) reasons.push(`Action [${i}] bait preservation does not accept parameters`);
         }
+        if (act.actionType === 'TARGETED_SESSION_DNR') {
+          if (!act.targetRef || !validRequestRefs.has(act.targetRef)) {
+            reasons.push(`Action [${i}] targeted session DNR requires a valid opaque request ref`);
+          }
+          if (act.parameter) reasons.push(`Action [${i}] targeted session DNR does not accept parameters`);
+        }
       }
     }
 
@@ -140,6 +146,8 @@ export class PolicyValidator {
                 urlFilter: act.parameter,
               });
             }
+            break;
+          case 'TARGETED_SESSION_DNR':
             break;
         }
       }

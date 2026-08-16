@@ -261,7 +261,11 @@ export class PrimitiveExecutorRegistry {
       const action = context.primitiveId === 'TEMPORARY_NETWORK_ALLOW'
         ? { id: actionId(context.txId, context.primitiveId), type: 'NET_ALLOW_EXCEPTION' as const, urlFilter: target.urlFilter, resourceTypes: target.resourceTypes }
         : { id: actionId(context.txId, context.primitiveId), type: 'NET_BLOCK' as const, urlFilter: target.urlFilter, resourceTypes: target.resourceTypes };
-      const result = await this.deps.dnrController.addSessionExperimentRules(context.tabId, context.txId, [action]);
+      const result = await this.deps.dnrController.addSessionExperimentRules(
+        context.primitiveId === 'TARGETED_SESSION_DNR' ? undefined : context.tabId,
+        context.txId,
+        [action]
+      );
       record.sessionRuleIds = result.ruleIds;
       this.staged.set(context.txId, record);
       return { ok: true, record: this.get(context.txId)! };

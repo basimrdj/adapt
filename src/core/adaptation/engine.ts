@@ -73,6 +73,10 @@ export class AdaptationTransactionEngine {
     }
   }
 
+  public setAdaptivePlanner(planner: AdaptivePlanner | undefined): void {
+    this.adaptivePlanner = planner;
+  }
+
   private async persistActiveTransactions(): Promise<void> {
     try {
       const obj: Record<string, AdaptationTransaction> = {};
@@ -121,8 +125,9 @@ export class AdaptationTransactionEngine {
       const candidates = this.candidateGenerator.generateCandidates(batch);
       let selectedCandidate: StrategyCandidate | null = (candidates.length > 0 && candidates[0]) ? candidates[0] : null;
 
-      // Level 2: If deterministic generator has no candidate, query Adaptive AI Planner if configured
-      if (!selectedCandidate && this.adaptivePlanner) {
+      // Level 2: Ask the planner only when several independent signals make the
+      // deterministic next action genuinely ambiguous.
+      if (!selectedCandidate && this.adaptivePlanner && this.isAmbiguousNovelCase(batch)) {
         try {
           const evidence = createEvidencePacket(tabId, navigationId, siteKey, batch, health);
           const rawPlan = await this.adaptivePlanner.plan(evidence);
@@ -309,5 +314,24 @@ export class AdaptationTransactionEngine {
 
   private navigationIsCurrent(tabId: number, navigationId: string): boolean {
     return this.isNavigationCurrent?.(tabId, navigationId) ?? true;
+  }
+
+  private isAmbiguousNovelCase(batch: PageSignalBatch): boolean {
+    const nonBenignSemanticSignals = (batch.semantic.categories ?? []).filter((category) =>
+      category !== 'BENIGN_CONSENT' &&
+      category !== 'BENIGN_NEWSLETTER' &&
+      category !== 'BENIGN_LOGIN' &&
+      category !== 'BENIGN_PAYWALL'
+    );
+    const independentSignals = [
+      batch.geometry.hasFixedOverlay,
+      batch.geometry.bodyScrollLocked || batch.geometry.htmlScrollLocked,
+      batch.interaction.pointerEventsSuppressed,
+      batch.mutation.rapidReinsertionDetected,
+      nonBenignSemanticSignals.length > 0 || batch.semantic.detectedPhrases.length > 0,
+      batch.suspectedDetectorTypes.includes('NETWORK_FAILURE'),
+      batch.suspectedDetectorTypes.includes('POPUP_REACTION'),
+    ].filter(Boolean).length;
+    return independentSignals >= 2;
   }
 }

@@ -6,6 +6,15 @@ export interface RequestRecord {
   normalizedHostname: string;
   resourceType: string;
   initiator?: string;
+  frameId?: number;
+  parentFrameId?: number;
+  documentId?: string;
+  resourceIdentityHash?: string;
+  thirdParty?: boolean;
+  statusClass?: number;
+  fromCache?: boolean;
+  redirect?: boolean;
+  repeatCount: number;
   timestamp: number;
   status: 'pending' | 'completed' | 'blocked' | 'error';
   errorDetails?: string;
@@ -50,7 +59,8 @@ export class RequestGraphManager {
     requestId: string,
     url: string,
     resourceType: string,
-    initiator?: string
+    initiator?: string,
+    metadata: Partial<Pick<RequestRecord, 'frameId' | 'parentFrameId' | 'documentId' | 'resourceIdentityHash' | 'thirdParty' | 'statusClass' | 'fromCache' | 'redirect'>> = {}
   ): void {
     const graph = this.getOrCreateGraph(navigationId, tabId);
     const norm = normalizeUrlForTelemetry(url);
@@ -65,6 +75,8 @@ export class RequestGraphManager {
       normalizedHostname: norm.hostname,
       resourceType,
       initiator,
+      ...metadata,
+      repeatCount: graph.recentRequests.filter((item) => item.resourceIdentityHash === metadata.resourceIdentityHash).length + 1,
       timestamp: Date.now(),
       status: 'pending',
     };
@@ -92,10 +104,17 @@ export class RequestGraphManager {
     }
   }
 
-  public recordCompleted(navigationId: string, requestId: string): void {
+  public recordCompleted(
+    navigationId: string,
+    requestId: string,
+    metadata: Partial<Pick<RequestRecord, 'statusClass' | 'fromCache' | 'redirect'>> = {}
+  ): void {
     const graph = this.graphs.get(navigationId);
     const record = graph?.recentRequests.find((item) => item.requestId === requestId);
-    if (record) record.status = 'completed';
+    if (record) {
+      record.status = 'completed';
+      Object.assign(record, metadata);
+    }
   }
 
   public cleanupGraph(navigationId: string): void {

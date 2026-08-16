@@ -1,12 +1,66 @@
 import { CausalDocumentKey } from '../../shared/causal/events';
 import { NavigationEpoch } from '../../shared/types';
-import { createNavigationEpoch } from './epoch';
+import { createNavigationEpoch, isSyntheticDocumentId } from './epoch';
 
 export class NavigationRegistry {
   // Key: tabId -> Map<frameId, NavigationEpoch>
   private activeEpochs = new Map<number, Map<number, NavigationEpoch>>();
   /** Per-tab monotonic navigationEpoch counter. Starts at 1. Never uses processId. */
   private epochCounters = new Map<number, number>();
+  private documentAliases = new Map<string, string>();
+
+  private documentAliasKey(tabId: number, frameId: number, documentId: string): string {
+    return `${tabId}\u0000${frameId}\u0000${documentId}`;
+  }
+
+  private sameDocumentUrl(existingUrl: string, incomingUrl: string): boolean {
+    try {
+      const existing = new URL(existingUrl);
+      const incoming = new URL(incomingUrl);
+      return existing.origin === incoming.origin
+        && existing.pathname === incoming.pathname
+        && existing.search === incoming.search;
+    } catch {
+      return false;
+    }
+  }
+
+  public reconcileDocumentId(
+    tabId: number,
+    frameId: number,
+    url: string,
+    documentId?: string
+  ): boolean {
+    if (!documentId) return false;
+    const existing = this.getEpoch(tabId, frameId);
+    if (!existing || !isSyntheticDocumentId(existing.documentId) || !this.sameDocumentUrl(existing.url, url)) {
+      return false;
+    }
+    this.documentAliases.set(this.documentAliasKey(tabId, frameId, documentId), existing.documentId);
+    existing.url = url;
+    return true;
+  }
+
+  public aliasDocumentId(
+    tabId: number,
+    frameId: number,
+    url: string,
+    documentId?: string
+  ): boolean {
+    if (!documentId) return false;
+    const existing = this.getEpoch(tabId, frameId);
+    if (!existing || !this.sameDocumentUrl(existing.url, url)) return false;
+    this.documentAliases.set(this.documentAliasKey(tabId, frameId, documentId), existing.documentId);
+    return true;
+  }
+
+  public matchesDocumentId(tabId: number, frameId: number, documentId?: string): boolean {
+    if (!documentId) return true;
+    const existing = this.getEpoch(tabId, frameId);
+    if (!existing) return false;
+    return existing.documentId === documentId
+      || this.documentAliases.get(this.documentAliasKey(tabId, frameId, documentId)) === existing.documentId;
+  }
 
   private nextNavigationEpoch(tabId: number): number {
     const next = (this.epochCounters.get(tabId) ?? 0) + 1;
@@ -33,9 +87,19 @@ export class NavigationRegistry {
       existing.url = url;
       return existing;
     }
+    if (existing && !documentId && this.sameDocumentUrl(existing.url, url)) {
+      existing.url = url;
+      return existing;
+    }
+    if (this.reconcileDocumentId(tabId, frameId, url, documentId)) {
+      return frameMap.get(frameId)!;
+    }
     // If main frame navigates, clear all subframe epochs for this tab
     if (frameId === 0) {
       frameMap.clear();
+      for (const key of this.documentAliases.keys()) {
+        if (key.startsWith(`${tabId}\u0000`)) this.documentAliases.delete(key);
+      }
     }
 
     const epoch = createNavigationEpoch(
@@ -104,6 +168,9 @@ export class NavigationRegistry {
   public onTabClosed(tabId: number): void {
     this.activeEpochs.delete(tabId);
     this.epochCounters.delete(tabId);
+    for (const key of this.documentAliases.keys()) {
+      if (key.startsWith(`${tabId}\u0000`)) this.documentAliases.delete(key);
+    }
   }
 
   public getActiveTabIds(): number[] {

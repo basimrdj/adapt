@@ -14,7 +14,11 @@ const UNKNOWN_FAMILIES: readonly HypothesisFamily[] = [
 function familiesFor(nodes: readonly EventNode[]): HypothesisFamily[] {
   const kinds = new Set(nodes.map((node) => node.kind));
   const result = new Set<HypothesisFamily>();
-  if (kinds.has('REQUEST_ERROR') || kinds.has('NETWORK_PROBE_REACTION')) result.add('UNKNOWN_NETWORK_REACTION');
+  if (
+    kinds.has('REQUEST_ERROR')
+    || kinds.has('NETWORK_PROBE_REACTION')
+    || (kinds.has('REQUEST_COMPLETE') && kinds.has('VISIBLE_AD_CANDIDATE'))
+  ) result.add('UNKNOWN_NETWORK_REACTION');
   if (
     kinds.has('ANTI_BLOCK_REACTION')
     || kinds.has('SEMANTIC_GATE')
@@ -36,7 +40,9 @@ function familiesFor(nodes: readonly EventNode[]): HypothesisFamily[] {
 function refsFor(nodes: readonly EventNode[], families: readonly HypothesisFamily[]): OpaqueRef[] {
   const relevant = nodes.filter((node) => {
     if (families.includes('UNKNOWN_NAVIGATION_REACTION')) return ['UNEXPECTED_NAV_TARGET', 'POPUP_OR_POPUNDER', 'WINDOW_OPEN_REACTION', 'SUSPICIOUS_REDIRECT_CHAIN', 'INTENT_OUTCOME_FANOUT'].includes(node.kind);
-    if (families.includes('UNKNOWN_NETWORK_REACTION')) return ['REQUEST_ERROR', 'NETWORK_PROBE_REACTION'].includes(node.kind);
+    if (families.includes('UNKNOWN_NETWORK_REACTION')) {
+      return ['REQUEST_ERROR', 'NETWORK_PROBE_REACTION', 'REQUEST_COMPLETE', 'VISIBLE_AD_CANDIDATE'].includes(node.kind);
+    }
     return [
       'ANTI_BLOCK_REACTION',
       'SEMANTIC_GATE',

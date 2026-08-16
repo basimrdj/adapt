@@ -1,5 +1,6 @@
 import { NavigationRegistry } from '../navigation/registry';
 import { RequestGraphManager } from './request-graph';
+import { isThirdPartyResource, resourceIdentity } from '../../shared/resource-identity';
 
 type DocumentScopedRequest = { documentId?: string };
 
@@ -25,7 +26,14 @@ export class RequestObserver {
       details.requestId,
       details.url,
       details.type,
-      details.initiator
+      details.initiator,
+      {
+        frameId: details.frameId,
+        parentFrameId: (details as chrome.webRequest.WebRequestBodyDetails & { parentFrameId?: number }).parentFrameId,
+        documentId,
+        resourceIdentityHash: resourceIdentity(details.url, epoch.origin)?.hash,
+        thirdParty: isThirdPartyResource(details.url, epoch.origin),
+      }
     );
   }
 
@@ -51,6 +59,9 @@ export class RequestObserver {
     if (!epoch) return;
     const documentId = (details as chrome.webRequest.WebResponseCacheDetails & DocumentScopedRequest).documentId;
     if (documentId && documentId !== epoch.documentId) return;
-    this.graphManager.recordCompleted(epoch.navigationId, details.requestId);
+    this.graphManager.recordCompleted(epoch.navigationId, details.requestId, {
+      statusClass: Number.isFinite(details.statusCode) ? Math.floor(details.statusCode / 100) : undefined,
+      fromCache: details.fromCache,
+    });
   }
 }

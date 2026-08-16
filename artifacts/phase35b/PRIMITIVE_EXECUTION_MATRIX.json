@@ -1,9 +1,9 @@
 {
   "schema": "adapt-phase35b-primitive-execution-matrix-v1",
-  "verificationRunId": "phase31b-1786813022686-e88a0fa3ffbd",
-  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-  "generatedAt": "2026-08-15T16:57:02.685Z",
-  "buildFingerprint": "55a9d76d8c47f5e745f478014ad454d2d0994475dec65bdb80444460ab7a5dc7",
+  "verificationRunId": "phase31b-1786816440535-f45ca67a3aad",
+  "sourceCommitSha": "f45ca67a3aad9d19ad8543f57a7725576b8d3617",
+  "generatedAt": "2026-08-15T17:54:00.534Z",
+  "buildFingerprint": "b1dc88b717d367945b79ab10acb1629474523ad5ed9fe83ecf3b197b1867578e",
   "entries": [
     {
       "primitiveId": "TEMPORARY_NETWORK_ALLOW",

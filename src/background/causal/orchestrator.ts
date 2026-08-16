@@ -12,8 +12,9 @@ import {
   HealthVectorCompact,
   OpaqueRef,
 } from '../../shared/causal/events';
+import { addEdge } from '../../shared/causal/graph';
 import { ExperimentSelectionBudget } from '../../shared/causal/experiments';
-import { CausalPageObservationBatch, HealthVector, NavigationTargetObservation, StrategyAction, UserIntentEnvelope } from '../../shared/types';
+import { CausalPageObservationBatch, HealthVector, NavigationEpoch, NavigationTargetObservation, OpaqueSurvivorObservation, StrategyAction, UserIntentEnvelope } from '../../shared/types';
 import {
   checkFingerprint,
   CausalRecipeLifecycle,
@@ -41,6 +42,10 @@ import { AutonomousExperiment, AutonomousExperimentLoop, requiredEvidenceForPrim
 import { AutonomyPendingState, AutonomySessionRepository, AutonomySessionSnapshot } from '../autonomy/session';
 import { PrimitiveExecutorRegistry, primitiveRecipeActions } from '../autonomy/executor-registry';
 import { PrimitiveId } from '../autonomy/primitive-registry';
+import { isThirdPartyResource, registrableDomain, resourceIdentity } from '../../shared/resource-identity';
+import { AdaptivePlanner } from '../../shared/ai/planner-interface';
+import { EvidencePacket, OpaqueCandidateElement, OpaqueCandidateRequest } from '../../shared/ai/types';
+import { PolicyValidator } from '../../shared/ai/validator';
 
 const TRACKER_LIKE = /(^|[.-])(ads?|analytics|beacon|pixel|track(er|ing)?)([.-]|$)/i;
 
@@ -68,6 +73,10 @@ function nowNode(scope: CausalDocumentKey, originHash: string, kind: EventNode['
   };
 }
 
+function scopeKey(scope: CausalDocumentKey): string {
+  return `${scope.tabId}:${scope.navigationEpoch}:${scope.documentId}:${scope.frameId}`;
+}
+
 export class CausalResourceRegistry implements StrategyResolutionContext {
   private readonly requests = new Map<`request:r${number}`, ResolvedNetworkTarget>();
 
@@ -82,7 +91,7 @@ export class CausalResourceRegistry implements StrategyResolutionContext {
       this.requests.set(ref, {
       urlFilter: `|${target.protocol}//${target.host}${normalized.coarsePath}*`,
         resourceTypes: [type],
-        firstParty: target.hostname === page.hostname,
+      firstParty: !isThirdPartyResource(raw.url, page.origin),
         trackerLike: TRACKER_LIKE.test(target.hostname),
       });
     } catch {
@@ -127,6 +136,36 @@ interface PendingReplay {
 interface PendingAutonomy extends AutonomyPendingState {
   execution: NonNullable<AutonomyPendingState['execution']>;
   fingerprint?: PageFingerprint;
+}
+
+interface SurvivorAiTraceRecord {
+  survivorRef?: string;
+  survivorClass?: string;
+  triggerReason: 'NOVEL_NETWORK_DISCOVERY' | 'SURVIVOR_ATTRIBUTION';
+  candidateRefs: string[];
+  candidateFeatureSummaries: Array<Record<string, string | number | boolean | null>>;
+  aiInvoked: boolean;
+  privacyMode: 'STRICT' | 'DOMAIN_HINTS';
+  aiCandidateRanking?: string[];
+  selectedExperiment?: { actionType: string; targetRef?: string };
+  policyValidator?: { valid: boolean; reasons: string[] };
+  executorResult?: string;
+  postHealth?: HealthVector;
+  survivorResolved?: boolean;
+  sessionProtectionInstalled: boolean;
+  persistentPromotionState: string;
+  rollback: boolean;
+  timing: { startedAt: number; latencyMs?: number };
+}
+
+interface PendingSurvivorAi {
+  txId: string;
+  traceIndex: number;
+  baseline: HealthVector;
+  tabId: number;
+  frameId: number;
+  documentId: string;
+  primitiveId: PrimitiveId;
 }
 
 const PROMOTABLE_MECHANISMS: ReadonlySet<CausalHypothesis['mechanismClass']> = new Set([
@@ -192,15 +231,40 @@ export class CausalOrchestrator {
   private readonly lastFingerprints = new Map<string, PageFingerprint>();
   private readonly lastBatches = new Map<string, CausalPageObservationBatch['pageSignals']>();
   private readonly lastElements = new Map<string, CausalPageObservationBatch['elements']>();
+  private readonly lastSurvivors = new Map<string, OpaqueSurvivorObservation[]>();
+  private readonly lastObservationBatches = new Map<string, CausalPageObservationBatch>();
   private readonly autonomyLoops = new Map<string, AutonomousExperimentLoop>();
   private readonly pendingAutonomy = new Map<string, PendingAutonomy>();
   private readonly finalizingAutonomy = new Set<string>();
   private readonly pendingNavigationEvidence = new Map<number, { ref: OpaqueRef; kind: EventNode['kind']; features: EventNode['features'] }>();
   private readonly handledNavigationRefs = new Set<string>();
   private readonly outcomeVerifiers = new PrimitiveOutcomeVerifierRegistry();
+  private readonly policyValidator = new PolicyValidator();
+  private readonly survivorAiCalls = new Map<string, number>();
+  private readonly auditedOrigins = new Set<string>();
+  private readonly pendingSurvivorAi = new Map<string, PendingSurvivorAi>();
+  private readonly survivorAiTrace: SurvivorAiTraceRecord[] = [];
+  private adaptivePlanner?: AdaptivePlanner;
+  private aiPrivacyMode: 'STRICT' | 'DOMAIN_HINTS' = 'STRICT';
 
   constructor(private readonly deps: CausalOrchestratorDeps) {
     this.normalizer = new EventNormalizer(deps.registry);
+  }
+
+  setAdaptivePlanner(planner: AdaptivePlanner | undefined): void {
+    this.adaptivePlanner = planner;
+  }
+
+  setAiPrivacyMode(mode: 'STRICT' | 'DOMAIN_HINTS'): void {
+    this.aiPrivacyMode = mode;
+  }
+
+  getSurvivorAiTrace(): readonly SurvivorAiTraceRecord[] {
+    return this.survivorAiTrace.map((item) => ({
+      ...item,
+      candidateRefs: [...item.candidateRefs],
+      candidateFeatureSummaries: item.candidateFeatureSummaries.map((summary) => ({ ...summary })),
+    }));
   }
 
   hasPendingNavigationClosure(tabId: number): boolean {
@@ -320,14 +384,23 @@ export class CausalOrchestrator {
     await this.deps.session.persist();
   }
 
-  async onRequest(raw: RawRequestEvent, resources: CausalResourceRegistry): Promise<void> {
-    const epoch = this.deps.registry.getEpoch(raw.tabId, raw.frameId);
+  async onRequest(raw: RawRequestEvent, resources: CausalResourceRegistry, epochOverride?: NavigationEpoch): Promise<void> {
+    const epoch = epochOverride ?? this.deps.registry.getEpoch(raw.tabId, raw.frameId);
     if (!epoch) return;
     resources.observe(raw, epoch.origin);
-    const node = this.normalizer.normalizeRequest(raw);
+    const enrichedRaw: RawRequestEvent = {
+      ...raw,
+      resourceIdentityHash: raw.resourceIdentityHash ?? resourceIdentity(raw.url, epoch.origin)?.hash,
+      thirdParty: raw.thirdParty ?? isThirdPartyResource(raw.url, epoch.origin),
+    };
+    const node = this.normalizer.normalizeRequest(enrichedRaw, epoch);
     if (!node) return;
-    const key = this.deps.registry.getCausalKey(raw.tabId, raw.frameId);
-    if (!key) return;
+    const key: CausalDocumentKey = {
+      tabId: epoch.tabId,
+      navigationEpoch: epoch.navigationEpoch,
+      documentId: epoch.documentId,
+      frameId: epoch.frameId,
+    };
     const graph = this.deps.graphs.getOrCreate(key, node.scope.originHash);
     this.deps.graphs.append(node);
     if (raw.type === 'error') {
@@ -337,6 +410,21 @@ export class CausalOrchestrator {
       }, 'webRequest', raw.timeStamp ?? Date.now()));
     }
     this.candidates.update(graph);
+    graph.hypotheses = generateHypothesisLattice(graph.nodes, graph.hypotheses);
+    if (raw.type === 'complete') {
+      const latestObservation = this.lastObservationBatches.get(scopeKey(key));
+      if (latestObservation) {
+        await this.maybeRunSurvivorAi(
+          raw.tabId,
+          raw.frameId,
+          epoch,
+          key,
+          graph,
+          latestObservation,
+          this.enrichHealth(calculateHealthVector(latestObservation.pageSignals), epoch.navigationId)
+        );
+      }
+    }
     await this.deps.session.persist();
   }
 
@@ -409,15 +497,31 @@ export class CausalOrchestrator {
     await this.deps.session.persist();
   }
 
-  async onPageObservation(tabId: number, frameId: number, batch: CausalPageObservationBatch): Promise<boolean> {
-    const epoch = this.deps.registry.getEpoch(tabId, frameId);
-    const scope = this.deps.registry.getCausalKey(tabId, frameId);
+  async onPageObservation(tabId: number, frameId: number, batch: CausalPageObservationBatch, epochOverride?: NavigationEpoch): Promise<boolean> {
+    const epoch = epochOverride ?? this.deps.registry.getEpoch(tabId, frameId);
+    const scope = epochOverride
+      ? {
+          tabId: epochOverride.tabId,
+          navigationEpoch: epochOverride.navigationEpoch,
+          documentId: epochOverride.documentId,
+          frameId: epochOverride.frameId,
+        }
+      : this.deps.registry.getCausalKey(tabId, frameId);
     // The content script cannot know the background navigationId. Identity was
     // already authenticated from MessageSender.documentId before this call.
     if (!epoch || !scope) return false;
     const graph = this.deps.graphs.getOrCreate(scope, hashOrigin(epoch.origin));
-    this.lastBatches.set(`${tabId}:${frameId}:${scope.documentId}`, batch.pageSignals);
-    this.lastElements.set(`${tabId}:${frameId}:${scope.documentId}`, batch.elements);
+    const documentScopeKey = scopeKey(scope);
+    this.lastBatches.set(documentScopeKey, batch.pageSignals);
+    this.lastElements.set(documentScopeKey, batch.elements);
+    this.lastSurvivors.set(documentScopeKey, [...(batch.survivors ?? [])]);
+    this.lastObservationBatches.set(documentScopeKey, {
+      ...batch,
+      elements: [...batch.elements],
+      survivors: [...(batch.survivors ?? [])],
+      resourceAssociations: [...(batch.resourceAssociations ?? [])],
+      intents: [...(batch.intents ?? [])],
+    });
     this.lastFingerprints.set(graph.graphId, this.fingerprint(graph, batch, epoch.url));
     const health = this.enrichHealth(calculateHealthVector(batch.pageSignals), epoch.navigationId);
     const key = `${tabId}:${frameId}:${scope.navigationEpoch}:${scope.documentId}`;
@@ -441,10 +545,11 @@ export class CausalOrchestrator {
     }, 'healthVector', batch.timestamp));
 
     for (const element of batch.elements) {
-      if (element.role === 'fullscreen-overlay' && element.visible) {
+      if ((element.role === 'fullscreen-overlay' || element.role === 'semantic-reaction-ui') && element.visible) {
         this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'OVERLAY_APPEARED', [element.ref], {
           coverage: element.viewportCoverage,
           benignModal: false,
+          semanticReaction: element.role === 'semantic-reaction-ui',
         }, 'mutationObserver', batch.timestamp));
       } else if (element.role === 'bait-candidate') {
         this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'BAIT_STATE_CHANGED', [element.ref], {
@@ -457,6 +562,7 @@ export class CausalOrchestrator {
         }
       }
     }
+    this.appendSurvivorEvidence(graph, scope, batch);
     if (batch.pageSignals.geometry.bodyScrollLocked || batch.pageSignals.geometry.htmlScrollLocked) {
       this.deps.graphs.append(nowNode(scope, graph.scope.originHash, 'SCROLL_LOCK_ON', [], {}, 'mutationObserver', batch.timestamp));
     }
@@ -514,6 +620,7 @@ export class CausalOrchestrator {
     const replaying = await this.maybeReplay(graph, batch, health, epoch.url, scope);
     if (replaying) return true;
     if (!hasDeterministicCausalExperiment) {
+      await this.maybeRunSurvivorAi(tabId, frameId, epoch, scope, graph, batch, health);
       const autonomousResult = await this.maybeRun(graph, epoch.siteKey, epoch.navigationId, health);
       if (autonomousResult) return true;
       const fallbackResult = await this.deps.runFallback(tabId, epoch.navigationId, epoch.siteKey, batch.pageSignals);
@@ -531,6 +638,11 @@ export class CausalOrchestrator {
     const autonomous = this.pendingAutonomy.get(txId);
     if (autonomous) {
       await this.finishAutonomous(autonomous, this.enrichHealth(health, autonomous.navigationId));
+      return true;
+    }
+    const survivorAi = this.pendingSurvivorAi.get(txId);
+    if (survivorAi) {
+      await this.finishSurvivorAi(survivorAi, this.enrichHealth(health, this.deps.registry.getEpoch(tabId, frameId)?.navigationId ?? ''));
       return true;
     }
     const state = this.deps.engine.getRecords().find((entry) => entry.txId === txId);
@@ -553,7 +665,12 @@ export class CausalOrchestrator {
       state.candidate.actions,
       state.baselineFingerprint
     );
-    const batch = this.lastBatches.get(`${tabId}:${frameId}:${state.documentId}`);
+    const batch = this.lastBatches.get(scopeKey({
+      tabId,
+      navigationEpoch: state.navigationEpoch,
+      documentId: state.documentId,
+      frameId,
+    }));
     const hasAnotherSafeExperiment = Boolean(
       graph && result.record.status === 'ROLLED_BACK' && this.experiments.generate(graph).some((candidate) => {
         const hypothesis = graph.hypotheses.find((item) => item.id === candidate.hypothesisRef);
@@ -572,6 +689,349 @@ export class CausalOrchestrator {
     }
     await this.deps.session.persist();
     return true;
+  }
+
+  private async maybeRunSurvivorAi(
+    tabId: number,
+    frameId: number,
+    epoch: NonNullable<ReturnType<NavigationRegistry['getEpoch']>>,
+    scope: CausalDocumentKey,
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    batch: CausalPageObservationBatch,
+    health: HealthVector
+  ): Promise<void> {
+    if (!this.adaptivePlanner) return;
+    const calls = this.survivorAiCalls.get(graph.graphId) ?? 0;
+    if (calls >= 2) return;
+
+    const survivors = (batch.survivors ?? []).filter((item) => !item.protectedContext.authOrPayment
+      && !item.protectedContext.media
+      && !item.protectedContext.downloadOrDocument);
+    const candidateNodes = this.survivorRequestNodes(scope, survivors[0]);
+    const originHash = hashOrigin(epoch.origin);
+    const novelNetworkAudit = survivors.length === 0
+      && candidateNodes.length >= 2
+      && !this.auditedOrigins.has(originHash);
+    const ambiguousSurvivor = survivors.length > 0 && candidateNodes.length > 0;
+    if (!novelNetworkAudit && !ambiguousSurvivor) return;
+    if (novelNetworkAudit) this.auditedOrigins.add(originHash);
+
+    const startedAt = Date.now();
+    const candidateRequests = this.toAiRequestCandidates(candidateNodes, survivors[0]);
+    const candidateElements = this.toAiElementCandidates(survivors);
+    if (candidateRequests.length === 0 && candidateElements.length === 0) return;
+    const evidence = this.buildSurvivorEvidence(
+      epoch,
+      batch,
+      health,
+      candidateElements,
+      candidateRequests,
+      novelNetworkAudit ? 'NOVEL_NETWORK_DISCOVERY' : 'SURVIVOR_ATTRIBUTION'
+    );
+    const trace: SurvivorAiTraceRecord = {
+      survivorRef: survivors[0]?.ref,
+      survivorClass: survivors[0]?.class,
+      triggerReason: novelNetworkAudit ? 'NOVEL_NETWORK_DISCOVERY' : 'SURVIVOR_ATTRIBUTION',
+      candidateRefs: [...candidateRequests.map((item) => item.ref), ...candidateElements.map((item) => item.ref)],
+      candidateFeatureSummaries: candidateRequests.map((item) => ({
+        ref: item.ref,
+        resourceType: item.resourceType,
+        thirdParty: item.thirdParty ?? false,
+        lagToSurvivorMs: item.lagToSurvivorMs ?? null,
+        frameAssociation: item.frameAssociation ?? 'unknown',
+        mutationAssociation: item.mutationAssociation ?? 0,
+        repeatCount: item.repeatCount ?? 1,
+      })),
+      aiInvoked: true,
+      privacyMode: this.aiPrivacyMode,
+      sessionProtectionInstalled: false,
+      persistentPromotionState: 'NOT_PROMOTED_MODEL_OPINION',
+      rollback: false,
+      timing: { startedAt },
+    };
+    const traceIndex = this.survivorAiTrace.push(trace) - 1;
+    void this.persistSurvivorAiTrace();
+    this.survivorAiCalls.set(graph.graphId, calls + 1);
+
+    let rawPlan: unknown;
+    try {
+      rawPlan = await this.adaptivePlanner.plan(evidence);
+      trace.timing.latencyMs = Date.now() - startedAt;
+    } catch (error) {
+      trace.timing.latencyMs = Date.now() - startedAt;
+      trace.executorResult = `planner-failed:${error instanceof Error ? error.message : 'transport'}`;
+      return;
+    }
+
+    const validation = this.policyValidator.validate(evidence, rawPlan);
+    trace.policyValidator = { valid: validation.valid, reasons: [...validation.reasons] };
+    if (!validation.valid || !validation.sanitizedPlan || validation.sanitizedPlan.decision !== 'ADAPT') return;
+    const actions = validation.sanitizedPlan.actions;
+    trace.aiCandidateRanking = actions.map((action) => action.targetRef).filter((ref): ref is string => Boolean(ref));
+    const selected = actions.find((action) => action.actionType === 'TARGETED_SESSION_DNR' && action.targetRef?.startsWith('request:'))
+      ?? actions.find((action) => (action.actionType === 'DOM_REMOVE_OVERLAY' || action.actionType === 'DOM_HIDE_CANDIDATE')
+        && (action.targetRef?.startsWith('element:') || survivors[0]?.elementRef));
+    if (!selected) return;
+    trace.selectedExperiment = { actionType: selected.actionType, ...(selected.targetRef ? { targetRef: selected.targetRef } : {}) };
+
+    const executors = this.deps.primitiveExecutors;
+    if (!executors) {
+      trace.executorResult = 'executor-unavailable';
+      return;
+    }
+    const primitiveId: PrimitiveId = selected.actionType === 'TARGETED_SESSION_DNR'
+      ? 'TARGETED_SESSION_DNR'
+      : 'REMOVE_REACTION_UI';
+    const targetRef = selected.targetRef
+      ?? survivors[0]?.elementRef;
+    if (!targetRef) return;
+    const txId = `survivor_ai_${tabId}_${scope.navigationEpoch}_${Date.now()}`;
+    const staged = await executors.stage({
+      txId,
+      tabId,
+      frameId,
+      documentId: scope.documentId,
+      primitiveId,
+      opaqueRefs: [targetRef],
+      evidence: ['VISIBLE_AD_CANDIDATE', 'REQUEST_COMPLETE'],
+    }).catch((error: unknown) => ({
+      ok: false as const,
+      gap: { code: 'EXECUTOR_ERROR' as const, reason: error instanceof Error ? error.message : String(error) },
+    }));
+    if (!staged.ok) {
+      trace.executorResult = `rejected:${staged.gap.code}`;
+      return;
+    }
+    trace.executorResult = 'staged';
+    trace.sessionProtectionInstalled = primitiveId === 'TARGETED_SESSION_DNR';
+    this.pendingSurvivorAi.set(txId, {
+      txId,
+      traceIndex,
+      baseline: health,
+      tabId,
+      frameId,
+      documentId: scope.documentId,
+      primitiveId,
+    });
+
+    if (primitiveId === 'TARGETED_SESSION_DNR' && survivors[0]?.elementRef && !survivors[0].protectedContext.userIntentRelated) {
+      await executors.stage({
+        txId: `${txId}_repair`,
+        tabId,
+        frameId,
+        documentId: scope.documentId,
+        primitiveId: 'REMOVE_REACTION_UI',
+        opaqueRefs: [survivors[0].elementRef],
+        evidence: ['VISIBLE_AD_CANDIDATE'],
+      }).catch(() => undefined);
+    }
+    await new Promise<void>((resolve) => setTimeout(resolve, 250));
+    await this.deps.sendTabMessage(tabId, {
+      v: 1,
+      type: 'REQUEST_HEALTH_SNAPSHOT',
+      txId,
+      documentId: scope.documentId,
+    }).catch(() => undefined);
+  }
+
+  private async finishSurvivorAi(pending: PendingSurvivorAi, postHealth: HealthVector): Promise<void> {
+    const trace = this.survivorAiTrace[pending.traceIndex];
+    if (!trace) return;
+    trace.postHealth = postHealth;
+    const safe = compactScore(postHealth) >= compactScore(pending.baseline) - 0.05
+      && postHealth.contentAvailability >= pending.baseline.contentAvailability - 0.05
+      && postHealth.interaction >= 0.7;
+    trace.survivorResolved = safe && (
+      postHealth.visualObstruction <= pending.baseline.visualObstruction - 0.05
+      || postHealth.antiBlockReaction <= pending.baseline.antiBlockReaction - 0.05
+      || pending.primitiveId === 'TARGETED_SESSION_DNR'
+    );
+    if (!safe) {
+      await this.deps.primitiveExecutors?.rollback(pending.txId).catch(() => undefined);
+      trace.rollback = true;
+      trace.sessionProtectionInstalled = false;
+      trace.executorResult = 'rolled-back-health-regression';
+    } else if (pending.primitiveId === 'TARGETED_SESSION_DNR') {
+      trace.sessionProtectionInstalled = true;
+    }
+    this.pendingSurvivorAi.delete(pending.txId);
+    await this.persistSurvivorAiTrace();
+  }
+
+  private async persistSurvivorAiTrace(): Promise<void> {
+    try {
+      await chrome.storage.session.set({ adapt_survivor_ai_trace: this.survivorAiTrace });
+    } catch {
+      // Trace persistence is diagnostic and must not affect page protection.
+    }
+  }
+
+  private survivorRequestNodes(
+    scope: CausalDocumentKey,
+    survivor?: OpaqueSurvivorObservation
+  ): EventNode[] {
+    return this.deps.graphs.getAll()
+      .filter((candidateGraph) => candidateGraph.scope.tabId === scope.tabId
+        && candidateGraph.scope.navigationEpoch === scope.navigationEpoch
+        && candidateGraph.scope.documentId === scope.documentId)
+      .flatMap((candidateGraph) => candidateGraph.nodes)
+      .filter((node) => node.kind === 'REQUEST_COMPLETE'
+        && node.features.thirdParty === true
+        && node.refs.some((ref) => ref.startsWith('request:'))
+        && ['script', 'sub_frame', 'xmlhttprequest', 'fetch', 'beacon', 'image'].includes(String(node.features.resourceType ?? '')))
+      .sort((a, b) => {
+        const aMatch = survivor?.resourceIdentityHash && a.features.resourceIdentityHash === survivor.resourceIdentityHash ? 1 : 0;
+        const bMatch = survivor?.resourceIdentityHash && b.features.resourceIdentityHash === survivor.resourceIdentityHash ? 1 : 0;
+        return bMatch - aMatch || b.timestamp.value - a.timestamp.value;
+      })
+      .slice(0, 8);
+  }
+
+  private toAiRequestCandidates(nodes: readonly EventNode[], survivor?: OpaqueSurvivorObservation): OpaqueCandidateRequest[] {
+    const seen = new Set<string>();
+    return nodes.flatMap((node) => {
+      const ref = node.refs.find((item): item is `request:r${number}` => item.startsWith('request:'));
+      if (!ref || seen.has(ref)) return [];
+      seen.add(ref);
+      const hostname = String(node.features.hostname ?? 'unknown');
+      const lag = survivor ? Math.max(0, survivor.observedAt - node.timestamp.value) : undefined;
+      return [{
+        ref,
+        urlDomain: this.aiPrivacyMode === 'DOMAIN_HINTS' ? registrableDomain(hostname) : 'redacted',
+        resourceType: String(node.features.resourceType ?? 'unknown'),
+        isBlockedByBaseline: node.features.blocked === true || Boolean(node.features.error),
+        failureObserved: Boolean(node.features.error),
+        thirdParty: true,
+        resourceIdentityHash: typeof node.features.resourceIdentityHash === 'string' ? node.features.resourceIdentityHash : undefined,
+        lagToSurvivorMs: lag,
+        frameAssociation: survivor && node.scope.frameId === 0 ? 'same-document' : 'related-frame',
+        mutationAssociation: survivor?.resourceIdentityHash && node.features.resourceIdentityHash === survivor.resourceIdentityHash ? 1 : 0.35,
+        repeatCount: typeof node.features.repeatCount === 'number' ? node.features.repeatCount : 1,
+        filterEvidence: 'NONE',
+      }];
+    });
+  }
+
+  private toAiElementCandidates(survivors: readonly OpaqueSurvivorObservation[]): OpaqueCandidateElement[] {
+    return survivors.filter((survivor) => survivor.elementRef).slice(0, 4).map((survivor) => ({
+      ref: survivor.elementRef!,
+      role: survivor.class,
+      viewportCoverage: survivor.features.viewportCoverage,
+      isFixedOrAbsolute: survivor.features.fixedOrAbsolute,
+      hasHighZIndex: survivor.features.isolatedSurface,
+      textSignals: survivor.evidenceClasses.slice(0, 5),
+      interactionSuppressed: survivor.class === 'ANTI_BLOCK_REACTION',
+    }));
+  }
+
+  private buildSurvivorEvidence(
+    epoch: NonNullable<ReturnType<NavigationRegistry['getEpoch']>>,
+    batch: CausalPageObservationBatch,
+    health: HealthVector,
+    candidateElements: OpaqueCandidateElement[],
+    candidateRequests: OpaqueCandidateRequest[],
+    reason: string
+  ): EvidencePacket {
+    return {
+      schemaVersion: 1,
+      transactionId: `survivor_evidence_${Date.now()}`,
+      navigationEpoch: epoch.navigationId,
+      timestamp: Date.now(),
+      siteContext: { originClass: 'publisher', pageTypeEstimate: 'unknown' },
+      trigger: { reason, confidence: Math.max(...(batch.survivors ?? []).map((item) => item.confidence), 0.55) },
+      healthBefore: health,
+      currentHealth: health,
+      observedReaction: {
+        detectorTypes: batch.pageSignals.suspectedDetectorTypes.slice(0, 6),
+        antiBlockConfidence: health.antiBlockReaction,
+        mutationBurstDetected: batch.pageSignals.mutation.rapidReinsertionDetected,
+      },
+      candidateElements,
+      candidateRequests,
+      availableActions: [
+        ...(candidateRequests.length > 0 ? ['TARGETED_SESSION_DNR' as const] : []),
+        ...(candidateElements.length > 0 ? ['DOM_REMOVE_OVERLAY' as const, 'DOM_HIDE_CANDIDATE' as const] : []),
+        'ABSTAIN',
+      ],
+      knownConstraints: ['NO_ARBITRARY_CODE', 'OPAQUE_REFS_ONLY', 'NO_MAIN_FRAME_BLOCK', 'PROTECTED_CONTEXTS_ABSTAIN'],
+      previousAttempts: [],
+    };
+  }
+
+  private appendSurvivorEvidence(
+    graph: ReturnType<EventGraphStore['getOrCreate']>,
+    scope: CausalDocumentKey,
+    batch: CausalPageObservationBatch
+  ): void {
+    for (const survivor of batch.survivors ?? []) {
+      const kind = this.survivorEventKind(survivor);
+      const refs: OpaqueRef[] = [survivor.ref];
+      if (survivor.elementRef) refs.push(survivor.elementRef);
+      const node = nowNode(scope, graph.scope.originHash, kind, refs, {
+        survivorClass: survivor.class,
+        confidence: survivor.confidence,
+        resourceIdentityHash: survivor.resourceIdentityHash ?? null,
+        resourceType: survivor.resourceType ?? null,
+        thirdPartyResource: survivor.features.thirdPartyResource,
+        fixedOrAbsolute: survivor.features.fixedOrAbsolute,
+        isolatedSurface: survivor.features.isolatedSurface,
+        semanticAdLabel: survivor.features.semanticAdLabel,
+        recentInsertion: survivor.features.recentInsertion,
+        mutationAssociation: survivor.features.mutationAssociation,
+        viewportCoverage: survivor.features.viewportCoverage,
+        protectedAuthOrPayment: survivor.protectedContext.authOrPayment,
+        protectedMedia: survivor.protectedContext.media,
+        protectedDownloadOrDocument: survivor.protectedContext.downloadOrDocument,
+      }, 'mutationObserver', survivor.observedAt);
+      this.deps.graphs.append(node);
+
+      const requestNodes = this.deps.graphs.getAll()
+        .filter((candidateGraph) => candidateGraph.scope.tabId === scope.tabId
+          && candidateGraph.scope.navigationEpoch === scope.navigationEpoch
+          && candidateGraph.scope.documentId === scope.documentId)
+        .flatMap((candidateGraph) => candidateGraph.nodes)
+        .filter((candidate) => candidate.kind === 'REQUEST_COMPLETE' && candidate.refs.some((ref) => ref.startsWith('request:')))
+        .slice(-96);
+
+      for (const request of requestNodes) {
+        const requestRef = request.refs.find((ref): ref is `request:r${number}` => ref.startsWith('request:'));
+        if (!requestRef) continue;
+        const lag = survivor.observedAt - request.timestamp.value;
+        if (lag < 0 || lag > 5000) continue;
+        const identityMatch = Boolean(
+          survivor.resourceIdentityHash
+          && request.features.resourceIdentityHash === survivor.resourceIdentityHash
+        );
+        const frameAssociation = request.scope.frameId === scope.frameId ? 'same-frame' : 'related-document';
+        const plausible = identityMatch
+          || (survivor.features.thirdPartyResource && request.features.thirdParty === true)
+          || (frameAssociation === 'same-frame' && lag <= 1500);
+        if (!plausible) continue;
+        addEdge(graph, {
+          id: `edge:${requestRef}:${survivor.ref}`,
+          from: requestRef,
+          to: survivor.ref,
+          relation: 'POSSIBLY_CAUSES',
+          lagMs: { min: Math.max(0, lag - 150), max: lag + 150 },
+          status: identityMatch ? 'ASSOCIATED' : 'TEMPORAL_CANDIDATE',
+          support: { observationalN: 1, interventionN: 0, positiveN: 0, negativeN: 0 },
+          confounders: [],
+          lastUpdatedWallMs: Date.now(),
+        });
+      }
+    }
+  }
+
+  private survivorEventKind(survivor: OpaqueSurvivorObservation): EventNode['kind'] {
+    switch (survivor.class) {
+      case 'ANTI_BLOCK_REACTION': return 'ANTI_BLOCK_REACTION';
+      case 'UNWANTED_NAVIGATION': return 'UNEXPECTED_NAV_TARGET';
+      case 'POPUP_ATTEMPT': return 'POPUP_OR_POPUNDER';
+      case 'SUSPICIOUS_REDIRECT': return 'SUSPICIOUS_REDIRECT_CHAIN';
+      case 'PLAYER_OBSTRUCTION': return 'PLAYBACK_OBSTRUCTED';
+      case 'REINSERTED_SURFACE': return 'REPEATED_REINSERTION';
+      default: return 'VISIBLE_AD_CANDIDATE';
+    }
   }
 
   private enrichHealth(health: HealthVector, navigationId: string): HealthVector {
@@ -837,7 +1297,10 @@ export class CausalOrchestrator {
     const targetClosed = pending.experiment.primitiveId === 'CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET'
       ? await executors?.ensureNavigationTargetClosed(pending.txId) ?? false
       : undefined;
-    const postElements = this.lastElements.get(`${pending.tabId}:${pending.frameId}:${pending.documentId}`);
+    const pendingScope = this.deps.registry.getCausalKey(pending.tabId, pending.frameId);
+    const postElements = pendingScope && pendingScope.documentId === pending.documentId
+      ? this.lastElements.get(scopeKey(pendingScope))
+      : undefined;
     const verification = this.outcomeVerifiers.verify(
       pending.experiment.primitiveId,
       pending.baseline,
@@ -1031,7 +1494,7 @@ export class CausalOrchestrator {
     const eventKinds = new Set<string>(graph.nodes.map((node) => node.kind));
     if (primitiveId === 'REMOVE_REACTION_UI') {
       const overlayObserved = batch.pageSignals.geometry.hasFixedOverlay
-        || batch.elements.some((element) => element.role === 'fullscreen-overlay');
+        || batch.elements.some((element) => element.role === 'fullscreen-overlay' || element.role === 'semantic-reaction-ui');
       if (!overlayObserved) return null;
     } else if (requiredEvidence.some((kind) => !eventKinds.has(kind))) {
       return null;
@@ -1048,8 +1511,8 @@ export class CausalOrchestrator {
       return null;
     }
     const wantsBait = primitiveId === 'PRESERVE_BAIT' || primitiveId === 'RESTORE_LAYOUT';
-    const element = batch.elements.find((item) => item.visible && (wantsBait ? item.role === 'bait-candidate' : item.role === 'fullscreen-overlay'))
-      ?? batch.elements.find((item) => wantsBait ? item.role === 'bait-candidate' : item.role === 'fullscreen-overlay')
+    const element = batch.elements.find((item) => item.visible && (wantsBait ? item.role === 'bait-candidate' : item.role === 'fullscreen-overlay' || item.role === 'semantic-reaction-ui'))
+      ?? batch.elements.find((item) => wantsBait ? item.role === 'bait-candidate' : item.role === 'fullscreen-overlay' || item.role === 'semantic-reaction-ui')
       ?? [...graph.nodes].reverse().find((node) => node.kind === 'OVERLAY_APPEARED')?.refs
         .find((ref): ref is `element:e${number}` => ref.startsWith('element:'));
     const elementRef = typeof element === 'string' ? element : element?.ref;
@@ -1288,7 +1751,7 @@ export class CausalOrchestrator {
   }
 
   private remapActions(actions: StrategyAction[], batch: CausalPageObservationBatch): StrategyAction[] | null {
-    const overlay = batch.elements.find((element) => element.role === 'fullscreen-overlay' && element.visible)?.ref;
+    const overlay = batch.elements.find((element) => (element.role === 'fullscreen-overlay' || element.role === 'semantic-reaction-ui') && element.visible)?.ref;
     const bait = batch.elements.find((element) => element.role === 'bait-candidate')?.ref;
     const out: StrategyAction[] = [];
     for (const action of actions) {
@@ -1324,7 +1787,7 @@ export class CausalOrchestrator {
     batch: CausalPageObservationBatch
   ): boolean {
     const hasVisibleOverlay = batch.elements.some(
-      (element) => element.role === 'fullscreen-overlay' && element.visible
+      (element) => (element.role === 'fullscreen-overlay' || element.role === 'semantic-reaction-ui') && element.visible
     );
     const hasBait = batch.elements.some((element) => element.role === 'bait-candidate');
     if (primitiveId === 'RESTORE_SCROLL') {

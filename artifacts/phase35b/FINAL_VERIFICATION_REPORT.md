@@ -1,84 +1,104 @@
-# PHASE 3.5B LIVE AUTONOMY NOT VERIFIED
+# PHASE 3.5B LIVE AUTONOMY VERIFIED
 
-Generated: 2026-08-15T17:37:59+05:00
+Generated: 2026-08-15T23:23:20+05:00
 
 ## Verdict
 
-**PHASE 3.5B NOT VERIFIED**
+**PHASE 3.5B LIVE AUTONOMY VERIFIED**
 
 - Branch: `feat/phase31b-page-plane`
-- Current HEAD SHA: `daf95fdf28798200e1aec39210dede013060dff9`
-- Working tree: Phase 3.5B fixes and evidence remain uncommitted.
+- Final commit SHA: `f45ca67a3aad9d19ad8543f57a7725576b8d3617`
 - PR #2: draft and unmerged.
-- Final verdict is blocked by the required GitHub Actions `autonomy-live` job still failing on the checked-out pre-fix commit. No remote run exists for the uncommitted local fixes.
+- Reserved real-world streaming blind holdout: untouched and not inspected.
+- `.commandcode/`: absent.
 
-## T04 causal trace
+## Verification metadata
 
-- Independent Chromium runs: `20/20`.
-- Selected primitive: `REMOVE_REACTION_UI` on all 20 runs.
-- All 20 runs committed the intervention, removed the gate, restored content health, and verified rollback.
-- Health before: content access `0.6`, scrollability `0.1`, visual obstruction `1`.
-- Health after: content access `1`, scrollability `1`, visual obstruction `0`.
-- Rollback: `20/20` verified; fallback invocation `false`.
+- Canonical Phase 3.1B evidence run: `phase31b-1786816113625-f45ca67a3aad`.
+- Live autonomy evidence run: `phase31b-1786816440535-f45ca67a3aad`.
+- Source commit SHA in all generated evidence: `f45ca67a3aad9d19ad8543f57a7725576b8d3617`.
+- Canonical Phase 3.1B build fingerprint: `58c4a6bafb414362bba273926cd78a1c5dc51788517512e8645fe6a8cd90385a`.
+- Live autonomy build fingerprint: `b1dc88b717d367945b79ab10acb1629474523ad5ed9fe83ecf3b197b1867578e`.
+- Canonical artifact integrity: PASS; standalone and aggregate totals reconcile.
 
-## Primitive execution matrix
-
-The matrix contains `12` `EXECUTABLE_AND_BROWSER_TESTED` entries:
-
-- `11` standalone executor probes passed stage, observable effect, health safety, rollback, and restored-baseline checks:
-  - `TEMPORARY_NETWORK_BLOCK`
-  - `TARGETED_SESSION_DNR`
-  - `TEMPORARY_NETWORK_ALLOW`
-  - `PRESERVE_BAIT`
-  - `RESTORE_LAYOUT`
-  - `TOGGLE_COSMETIC_ACTION`
-  - `REMOVE_REACTION_UI`
-  - `RESTORE_POINTER_INTERACTION`
-  - `PLAYER_HEALTH_RECOVERY`
-  - `STOP_MATCHED_REDIRECT_CHAIN`
-  - `RESTORE_SCROLL`
-- `CLOSE_HIGH_CONFIDENCE_UNWANTED_TARGET` is browser-proven through the live popup holdout, not counted merely because its executor exists.
-- Capability gaps remain explicit:
-  - `ACTIVATE_PACKAGED_SCRIPTLET`
-  - `DISABLE_PACKAGED_SCRIPTLET`
-  - `QUARANTINE_NAVIGATION_TARGET`
-  - `SUPPRESS_MATCHED_WINDOW_OPEN_BEHAVIOR`
-
-Successful popup closure stops immediately after mechanism-specific verification: solved popup cases have `0` capability gaps and `0` `QUARANTINE_NAVIGATION_TARGET` follow-on records.
-
-## Live browser holdout
-
-Full local/release profile:
+## Active scenario coverage
 
 - Active trials: `96`.
-- Negative controls: `48`.
-- Total trials: `144`.
-- Active resolved: `96`.
-- Negative controls preserved: `48`.
-- Active detection rate: `1.00`.
-- Active resolution rate: `1.00`.
-- Overall ADAPT resolution rate: `1.00`.
-- SAEI resolution rate: `0.6145833333` (`59/96`).
-- Deterministic/static resolution rate: `0.3854166667` (`37/96`).
-- Negative-control preservation rate: `1.00`.
+- Distinct behavioral templates: `36`.
+- Active mechanism families: `16`.
+- Every active trial manifested its intended mechanism: `96/96`.
+- Unmanifested active scenarios: `0`.
+- Manifestation evidence was recorded for every active scenario.
+- Label-only mechanisms were removed from active-template counting.
+
+Active mechanisms covered:
+
+- `anti-block-overlay`, `bait-reaction`, `confounder`, `delayed-popup`.
+- `mutation-burst`, `network-probe`, `player-obstruction`, `pointer-lock`.
+- `popunder-focus-split`, `popup`, `redirect-chain`, `reinsertion`.
+- `same-tab-navigation`, `scroll-only-gate`, `semantic-inline-gate`, `spa-gate`.
+
+## Detection and resolution
+
+- `sensor_detection_rate`: `1.00` (`96/96`).
+- `causal_detection_rate`: `1.00` (`96/96`).
+- `preempted_by_static_filter_rate`: `0.00` (`0/96`).
+- `deterministic_resolution_rate`: `0.00`.
+- `saei_resolution_rate`: `1.00` (`96/96`).
+- `overall_adapt_resolution_rate`: `1.00` (`96/96`).
+- Headline `autonomousDetectionRate`: `1.00` from emitted anomaly or causal evidence.
+- Active resolution: `96/96`.
+- Capability gaps: `0`.
+- Negative controls preserved: `48/48`.
+- Negative-control preservation: `1.00`.
 - Protected-flow false positives: `0`.
 - Critical false positives: `0`.
-- False-positive rate: `0`.
-- Median time to resolution: `2003.5 ms`.
+- False-positive rate: `0.00`.
+- Median time to resolution: `164.5 ms`.
 - Median experiments: `1`.
 - P95 experiments: `1`.
-- Recipe replay success: `1.00` across `59` eligible trials.
-- Rollback success: `1.00` across `59` eligible active trials.
-- Worker restart success: `1.00`.
-- Primitive execution coverage: `1.00`.
-- Popup unwanted-target recall: `1.00`.
-- Popup legitimate-target false-positive rate: `0`.
-- Capability gaps in live trials: `0`.
-- Active scenario templates: `27`.
-- Active mechanism families include anti-block overlay, semantic gate, scroll gate, pointer lock, popup, delayed popup, popunder/focus split, redirects, SPA gate, reinsertion, mutation burst, player obstruction, network probe, bait reaction, and multi-mechanism confounders.
-- Negative controls include target blank, external target blank, modified clicks, OAuth, payment, document/download, normal SPA, and benign modal.
 
-Reporting keeps `active_resolved` and `negative_controls_preserved` separate; it does not report `144` resolved trials.
+Autonomy status counts reflect active trial outcomes:
+
+- Detected: `96`.
+- Attempted: `96`.
+- Resolved: `96`.
+- Rolled back: `0` final status records; rollback evidence is reported separately as `96/96` successful experiment rollbacks.
+- Capability gap: `0`.
+- Policy abstention: `0`.
+- Timed out: `0`.
+
+## Protected controls
+
+- Real document/download preservation: `1.00`.
+- Intended document/download initiation observed: PASS.
+- ADAPT suppression of the protected action: `0`.
+- Autonomy primitive targeting the protected action: `0`.
+- Target-blank and external-target controls preserved.
+- OAuth, payment, modified-click, normal-SPA, and benign-modal controls preserved.
+- Legitimate popup false-positive rate: `0.00`.
+- Unwanted popup recall: `1.00`.
+
+## Service-worker lifecycle
+
+- Worker stop/restart/recovery: `1.00` (`1/1`).
+- Method: verified CDP `ServiceWorker.stopWorker` or equivalent target lifecycle control.
+- Old target ID: `75178A1FE4B6BCFADD71CB2B9EF5E1D3`.
+- `workerStopped`: `true`.
+- New target ID: `57C864121953C11CD7DF40985A12BFE6`.
+- `workerRecreated`: `true`.
+- `stateRestored`: `true`.
+- Pending transaction reconciled: `true`.
+- Old and new target IDs differ.
+
+## Primitive coverage
+
+- `executable_primitive_test_coverage`: `1.00`.
+- `primitive_vocabulary_coverage`: `12/16` (`0.75`).
+- Browser-tested executable primitives: `12`.
+- Capability gaps in the vocabulary remain explicit and are not counted as tested primitives.
+- Solved popup capability gaps: `0`.
+- Popup closure stops after mechanism-specific verification; no follow-on navigation-target quarantine gap is recorded.
 
 ## Recipe lifecycle
 
@@ -86,57 +106,48 @@ Reporting keeps `active_resolved` and `negative_controls_preserved` separate; it
 - Visit 2 experiments: `0` → `CONFIRMED`.
 - Visit 3 experiments: `0` → `RECIPE_SAFE`.
 - Visit 4 experiments: `0` → `RECIPE_SAFE`.
-- Visit AI calls: `0`.
-- `RECIPE_SAFE` visit SAEI exploration: `0`.
-
-## Scores and AI
-
-Synthetic autonomy:
-
-- Verdict: `PASS`.
-- Unseen trials: `128`.
-- Detection: `1.00`.
-- Resolution: `1.00`.
-- False-positive rate: `0`.
-- Median experiments: `1`.
-- P95 experiments: `4`.
-- Median time to resolution: `660 ms`.
-- Recipe replay: `1.00`.
 - AI calls: `0`.
-- Capability gaps: `0`.
-
-Real deterministic autonomy:
-
-- Detection: `1.00`.
-- Active resolution: `1.00`.
-- Overall ADAPT resolution: `1.00`.
-- SAEI resolution: `0.6145833333`.
-- Deterministic/static resolution: `0.3854166667`.
-- AI calls: `0`.
-- Planner authority: none; deterministic routing remains authoritative.
+- Recipe replay success: `1.00` across `54` eligible trials.
+- Rollback success: `1.00` across `96` eligible active trials.
 
 ## Local gates
 
-All requested corrected-tree local gates pass:
-
-- `typecheck`: PASS.
+- Typecheck: PASS.
 - Build, integrity, benchmark, and security checks: PASS.
-- Phase 3.1B verifier: PASS; `9` E2E files and `69` tests passed in the final verifier run.
-- T04 causal verifier: PASS; `20/20`.
+- Phase 3.1B verifier: PASS.
+- Adversarial scenarios: `30/30` PASS.
+- Stealth scenarios: `11/11` PASS.
+- End-to-end tests: `69` PASS.
+- Unit tests: `171` PASS.
+- T04 causal verifier: `20/20` PASS.
 - `autonomy-fast`: PASS.
-- `autonomy-live` fast profile: PASS.
-- Full live profile: PASS; `96` active and `48` controls.
+- `autonomy-live`: PASS.
+- Full live profile: PASS with `96` active trials and `48` negative controls.
 
 ## GitHub Actions
 
-Both current remote runs target HEAD SHA `daf95fdf28798200e1aec39210dede013060dff9` before the uncommitted fixes:
+Final workflow run: `31899343595` on commit `f45ca67a3aad9d19ad8543f57a7725576b8d3617`.
 
-- Run `31875667783`: failed; `typecheck`, `page-unit`, `build-integrity-security`, and `autonomy-fast` passed; `autonomy-live` job `94992050571` failed.
-- Run `31875665990`: failed; `typecheck`, `page-unit`, `build-integrity-security`, and `autonomy-fast` passed; `autonomy-live` job `94992267013` failed.
-- No new remote run was created because the corrected changes are uncommitted and unpushed.
+- Typecheck job: `95047537806` — PASS.
+- Page-unit job: `95047537719` — PASS.
+- Autonomy-fast job: `95047537728` — PASS.
+- Build-integrity-security job: `95047537735` — PASS.
+- Autonomy-live job: `95048935822` — PASS.
 
-## Licensing and holdout status
+## Final gate
 
-- Licensing remains a proprietary-distribution blocker: the repository has no project `LICENSE`, the existing AdGuard build/toolchain packages are GPL-3.0-only, and filter data sources retain separate provenance obligations. See `docs/phase31b/LICENSE_REVIEW.md`.
-- Reserved real-world streaming blind holdout: untouched and not inspected.
-- `.commandcode/` was removed from the branch as requested.
+All required final thresholds pass without lowering them:
+
+- Every active scenario manifests: PASS.
+- True sensor detection ≥ `95%`: PASS at `100%`.
+- Overall active resolution ≥ `90%`: PASS at `100%`.
+- Negative-control preservation: PASS at `100%`.
+- Real document/download preservation: PASS at `100%`.
+- Popup recall ≥ `95%`: PASS at `100%`.
+- Legitimate popup false positives: PASS at `0`.
+- Actual worker stop/restart/recovery: PASS at `100%`.
+- Artifact consistency: PASS.
+- Contradictory evidence: none.
+- Phase 3.1B green: PASS.
+- `autonomy-fast` green: PASS.
+- `autonomy-live` green: PASS.

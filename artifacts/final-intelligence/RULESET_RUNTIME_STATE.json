@@ -1,0 +1,170 @@
+{
+  "schema": "adapt-ruleset-runtime-state-v1",
+  "status": "fail",
+  "provider": "fresh unpacked Chromium extension load and same-profile Chromium relaunch probe",
+  "observedAt": "2026-08-16T10:25:16.720Z",
+  "extension": {
+    "manifestDefaultRulesets": [
+      "ruleset_baseline",
+      "phase31_2_core"
+    ],
+    "catalogRulesets": [
+      "phase31_2_core",
+      "phase31_2_extra_1",
+      "phase31_2_extra_2",
+      "phase31_3_part_1",
+      "phase31_3_part_2",
+      "phase31_3_part_3",
+      "phase31_3_part_4",
+      "phase31_3_part_5",
+      "phase31_17_part_1",
+      "phase31_19_part_1",
+      "phase31_21_part_1",
+      "phase31_208_part_1"
+    ],
+    "expectedEnabledRuleCount": 29994
+  },
+  "freshLoad": {
+    "immediate": {
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 151740,
+      "runtimeState": {
+        "availableStaticRuleCount": 151740,
+        "capturedAt": "2026-08-16T10:25:12.636Z",
+        "catalogRulesets": [
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "expectedEnabledRuleCount": 178254,
+        "failedEnableAttempts": [],
+        "manifestDefaultRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core"
+        ],
+        "optionalEnabledRulesets": [
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "reason": "before:2/300000",
+        "reconciliationErrors": [],
+        "stage": "reconcile-complete"
+      }
+    }
+  },
+  "afterReload": {
+    "enabledRulesets": [
+      "ruleset_baseline",
+      "phase31_2_core"
+    ],
+    "availableStaticRuleCount": 448260,
+    "runtimeState": {
+      "availableStaticRuleCount": 448260,
+      "capturedAt": "2026-08-16T10:25:16.694Z",
+      "catalogRulesets": [
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core"
+      ],
+      "expectedEnabledRuleCount": 29994,
+      "failedEnableAttempts": [
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "manifestDefaultRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core"
+      ],
+      "optionalEnabledRulesets": [],
+      "reason": "before:2/448260",
+      "reconciliationErrors": [
+        "phase31_2_extra_1: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_2_extra_2: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_3_part_1: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_3_part_2: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_3_part_3: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_3_part_4: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_3_part_5,phase31_17_part_1,phase31_19_part_1,phase31_21_part_1: The set of enabled rulesets exceeds the rule count limit.",
+        "phase31_208_part_1: The set of enabled rulesets exceeds the rule count limit."
+      ],
+      "stage": "reconcile-failed"
+    }
+  },
+  "assertions": {
+    "baselinePresentAfterLoad": true,
+    "expectedDefaultRulesEnabled": true,
+    "reconciliationRecorded": true,
+    "reloadReconciliationRecorded": true,
+    "reloadPreservedExpectedState": false,
+    "optionalRulesReconciledAfterReload": false
+  }
+}

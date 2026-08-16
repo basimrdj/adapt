@@ -1,0 +1,4440 @@
+{
+  "schema": "adapt-final-survivor-intelligence-v1",
+  "provider": {
+    "liveProviderConfigured": true,
+    "mockPlanner": false,
+    "modelClass": "buzz-gpt-5-4-mini"
+  },
+  "inventory": [
+    "third-party-script-surface",
+    "third-party-iframe",
+    "successful-fetch-surface",
+    "two-scripts-one-causal",
+    "benign-cdn-plus-ad",
+    "network-only",
+    "repeated-request",
+    "reinserting-surface",
+    "popup-attempt",
+    "anti-block-confounder",
+    "two-visual-targets",
+    "delayed-survivor",
+    "interaction-survivor",
+    "spa-survivor",
+    "ad-named-benign",
+    "neutral-host-hostile"
+  ],
+  "executedFamilies": [
+    "third-party-script-surface",
+    "two-scripts-one-causal",
+    "network-only",
+    "neutral-host-hostile",
+    "third-party-iframe",
+    "ad-named-benign"
+  ],
+  "run1": {
+    "observed": [
+      {
+        "family": "third-party-script-surface",
+        "protected": false,
+        "visibleAdSurfaces": 1,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/nyzv52f04i"
+      },
+      {
+        "family": "two-scripts-one-causal",
+        "protected": false,
+        "visibleAdSurfaces": 1,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/gwzx7qp72j"
+      },
+      {
+        "family": "network-only",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/e0uol5yktl"
+      },
+      {
+        "family": "neutral-host-hostile",
+        "protected": false,
+        "visibleAdSurfaces": 1,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/6zh7vpa8lk"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/i75wobyjb1"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/n27zt6xusd"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/rmzvo7nv5k"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/8gq5t62ckn"
+      }
+    ],
+    "survivors": 3,
+    "protectedFlows": 4,
+    "protectedFlowFalsePositives": 0,
+    "aiCalls": 5,
+    "aiCallsNovelNetworkDiscovery": 1,
+    "aiCallsAmbiguousSurvivor": 4,
+    "successfulExperiments": 5,
+    "learnedSessionProtections": 5,
+    "causalSummary": {
+      "graphCount": 22,
+      "nodeCount": 83,
+      "requestStartCount": 20,
+      "requestCompleteCount": 20,
+      "thirdPartyRequestCompleteCount": 7,
+      "visibleSurvivorCount": 2,
+      "hypothesisCount": 3,
+      "graphSummaries": [
+        {
+          "graphId": "graph:391349835:1:72BD256938446897F134E6866A7D0081:0",
+          "navigationEpoch": 1,
+          "documentId": "72BD256938446897F134E6866A7D0081",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r873244444",
+            "request:r873244444"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349835:2:A138F12266B631A325F7858DC9DADFCF:0",
+          "navigationEpoch": 2,
+          "documentId": "A138F12266B631A325F7858DC9DADFCF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/nyzv52f04i",
+            "/favicon.ico"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r923577301",
+            "request:r923577301",
+            "request:r806133968",
+            "request:r806133968",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349837:1:82C0EC4C3938CA8457978220D28AFD1C:0",
+          "navigationEpoch": 1,
+          "documentId": "82C0EC4C3938CA8457978220D28AFD1C",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r839689206",
+            "request:r839689206"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349837:2:4038AD154724463E8D1A1632E12B5A0F:0",
+          "navigationEpoch": 2,
+          "documentId": "4038AD154724463E8D1A1632E12B5A0F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/gwzx7qp72j",
+            "/resource/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r1024243015",
+            "request:r1024243015",
+            "request:r485174231",
+            "request:r485174231",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349839:1:7E73DB9EE1FB9F3B80986A9372EEB945:0",
+          "navigationEpoch": 1,
+          "documentId": "7E73DB9EE1FB9F3B80986A9372EEB945",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r518729469",
+            "request:r518729469"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349839:2:4B0AC4ABC4261BFB9EBFFC38F0CC2ADF:0",
+          "navigationEpoch": 2,
+          "documentId": "4B0AC4ABC4261BFB9EBFFC38F0CC2ADF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r434841374",
+            "request:r434841374",
+            "request:r451618993",
+            "request:r334175660",
+            "request:r451618993",
+            "request:r334175660"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            },
+            {
+              "thirdParty": true,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349841:1:239EF0A648858A7D22219EEB6A48846C:0",
+          "navigationEpoch": 1,
+          "documentId": "239EF0A648858A7D22219EEB6A48846C",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364708844",
+            "request:r2364708844"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349841:2:4F79547903E5263AC00065086737F52E:0",
+          "navigationEpoch": 2,
+          "documentId": "4F79547903E5263AC00065086737F52E",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2415041701",
+            "request:r2415041701",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349843:1:6962758DD2E4CA8DB3E808568235C410:0",
+          "navigationEpoch": 1,
+          "documentId": "6962758DD2E4CA8DB3E808568235C410",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2347931225",
+            "request:r2347931225"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:2:D506694D0AA52083E31E1204DBDFE1A4:0",
+          "navigationEpoch": 2,
+          "documentId": "D506694D0AA52083E31E1204DBDFE1A4",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:3:8491CAAD61F576CAB239E08355845E4E:7",
+          "navigationEpoch": 3,
+          "documentId": "8491CAAD61F576CAB239E08355845E4E",
+          "frameId": 7,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:4:253EE70313B9F32CED680BB6D7B93C1D:8",
+          "navigationEpoch": 4,
+          "documentId": "253EE70313B9F32CED680BB6D7B93C1D",
+          "frameId": 8,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:1:1D52B30E57F5F0F568B1F211779A609F:0",
+          "navigationEpoch": 1,
+          "documentId": "1D52B30E57F5F0F568B1F211779A609F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364561749",
+            "request:r2364561749"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:2:03D66CD16C4DAA00625CA326123618EB:0",
+          "navigationEpoch": 2,
+          "documentId": "03D66CD16C4DAA00625CA326123618EB",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2314228892",
+            "request:r2314228892",
+            "request:r2313390249",
+            "request:r2313390249"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:3:D3F51E55A24449938E92BC6BAD34E2B1:10",
+          "navigationEpoch": 3,
+          "documentId": "D3F51E55A24449938E92BC6BAD34E2B1",
+          "frameId": 10,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:1:4FAB4D3B964FD6E6CB07AF97399D632A:0",
+          "navigationEpoch": 1,
+          "documentId": "4FAB4D3B964FD6E6CB07AF97399D632A",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2263057392",
+            "request:r2263057392"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:2:79C1F03761BCE452A565108B30BC6BE8:0",
+          "navigationEpoch": 2,
+          "documentId": "79C1F03761BCE452A565108B30BC6BE8",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:3:3228D8322FE6E72B5BFEC7BA66F0FF40:12",
+          "navigationEpoch": 3,
+          "documentId": "3228D8322FE6E72B5BFEC7BA66F0FF40",
+          "frameId": 12,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:4:4996E20272810CB1FAAD9F33DF14B063:13",
+          "navigationEpoch": 4,
+          "documentId": "4996E20272810CB1FAAD9F33DF14B063",
+          "frameId": 13,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:1:E6F3A1689F4EF66F86FEA507B34860AE:0",
+          "navigationEpoch": 1,
+          "documentId": "E6F3A1689F4EF66F86FEA507B34860AE",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2246132678",
+            "request:r2246132678"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:2:5043A0504A0B2688771EA4266A169073:0",
+          "navigationEpoch": 2,
+          "documentId": "5043A0504A0B2688771EA4266A169073",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2279687916",
+            "request:r2279687916",
+            "request:r2330020773",
+            "request:r2330020773"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:3:7688CE8AC44B4E63E606562DE12BFCD3:15",
+          "navigationEpoch": 3,
+          "documentId": "7688CE8AC44B4E63E606562DE12BFCD3",
+          "frameId": 15,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        }
+      ]
+    },
+    "trace": [
+      {
+        "aiCandidateRanking": [
+          "request:r923577301"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 130.3330078125,
+            "mutationAssociation": 0.35,
+            "ref": "request:r923577301",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r923577301",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r923577301"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "REINSERTED_SURFACE",
+        "survivorRef": "survivor:s1",
+        "timing": {
+          "latencyMs": 4822,
+          "startedAt": 1786873377153
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r1024243015"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 67.47509765625,
+            "mutationAssociation": 0.35,
+            "ref": "request:r1024243015",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r1024243015",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r1024243015"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "REINSERTED_SURFACE",
+        "survivorRef": "survivor:s1",
+        "timing": {
+          "latencyMs": 3354,
+          "startedAt": 1786873379760
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r434841374"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "related-frame",
+            "lagToSurvivorMs": null,
+            "mutationAssociation": 0.35,
+            "ref": "request:r334175660",
+            "repeatCount": 1,
+            "resourceType": "image",
+            "thirdParty": true
+          },
+          {
+            "frameAssociation": "related-frame",
+            "lagToSurvivorMs": null,
+            "mutationAssociation": 0.35,
+            "ref": "request:r434841374",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r334175660",
+          "request:r434841374"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r434841374"
+        },
+        "sessionProtectionInstalled": true,
+        "timing": {
+          "latencyMs": 2619,
+          "startedAt": 1786873382546
+        },
+        "triggerReason": "NOVEL_NETWORK_DISCOVERY"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r1024243015"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 170.47509765625,
+            "mutationAssociation": 0.35,
+            "ref": "request:r1024243015",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r1024243015",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r1024243015"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "PROMOTIONAL_SURFACE",
+        "survivorRef": "survivor:s1",
+        "timing": {
+          "latencyMs": 2446,
+          "startedAt": 1786873383374
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r2415041701"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 126.327880859375,
+            "mutationAssociation": 0.35,
+            "ref": "request:r2415041701",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r2415041701",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "postHealth": {
+          "antiBlockReaction": 0,
+          "confidence": 0.5,
+          "contentAvailability": 1,
+          "interaction": 1,
+          "mutationStability": 1,
+          "navigationHealth": 1,
+          "networkIntegrity": 1,
+          "privacyPreservation": 1,
+          "scrollability": 1,
+          "visualObstruction": 0
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r2415041701"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "REINSERTED_SURFACE",
+        "survivorRef": "survivor:s1",
+        "survivorResolved": true,
+        "timing": {
+          "latencyMs": 2080,
+          "startedAt": 1786873385260
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      }
+    ]
+  },
+  "run2": {
+    "observed": [
+      {
+        "family": "third-party-script-surface",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/nyzv52f04i"
+      },
+      {
+        "family": "two-scripts-one-causal",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/gwzx7qp72j"
+      },
+      {
+        "family": "network-only",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/e0uol5yktl"
+      },
+      {
+        "family": "neutral-host-hostile",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/6zh7vpa8lk"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/i75wobyjb1"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/n27zt6xusd"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/rmzvo7nv5k"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/8gq5t62ckn"
+      }
+    ],
+    "survivors": 0,
+    "protectedFlows": 4,
+    "protectedFlowFalsePositives": 0,
+    "aiCalls": 0,
+    "aiCallsNovelNetworkDiscovery": 0,
+    "aiCallsAmbiguousSurvivor": 0,
+    "successfulExperiments": 0,
+    "learnedSessionProtections": 0,
+    "causalSummary": {
+      "graphCount": 44,
+      "nodeCount": 161,
+      "requestStartCount": 36,
+      "requestCompleteCount": 32,
+      "thirdPartyRequestCompleteCount": 9,
+      "visibleSurvivorCount": 4,
+      "hypothesisCount": 7,
+      "graphSummaries": [
+        {
+          "graphId": "graph:391349835:1:72BD256938446897F134E6866A7D0081:0",
+          "navigationEpoch": 1,
+          "documentId": "72BD256938446897F134E6866A7D0081",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r873244444",
+            "request:r873244444"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349835:2:A138F12266B631A325F7858DC9DADFCF:0",
+          "navigationEpoch": 2,
+          "documentId": "A138F12266B631A325F7858DC9DADFCF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/nyzv52f04i",
+            "/favicon.ico"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r923577301",
+            "request:r923577301",
+            "request:r806133968",
+            "request:r806133968",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349837:1:82C0EC4C3938CA8457978220D28AFD1C:0",
+          "navigationEpoch": 1,
+          "documentId": "82C0EC4C3938CA8457978220D28AFD1C",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r839689206",
+            "request:r839689206"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349837:2:4038AD154724463E8D1A1632E12B5A0F:0",
+          "navigationEpoch": 2,
+          "documentId": "4038AD154724463E8D1A1632E12B5A0F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/gwzx7qp72j",
+            "/resource/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r1024243015",
+            "request:r1024243015",
+            "request:r485174231",
+            "request:r485174231",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349839:1:7E73DB9EE1FB9F3B80986A9372EEB945:0",
+          "navigationEpoch": 1,
+          "documentId": "7E73DB9EE1FB9F3B80986A9372EEB945",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r518729469",
+            "request:r518729469"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349839:2:4B0AC4ABC4261BFB9EBFFC38F0CC2ADF:0",
+          "navigationEpoch": 2,
+          "documentId": "4B0AC4ABC4261BFB9EBFFC38F0CC2ADF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r434841374",
+            "request:r434841374",
+            "request:r451618993",
+            "request:r334175660",
+            "request:r451618993",
+            "request:r334175660"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            },
+            {
+              "thirdParty": true,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349841:1:239EF0A648858A7D22219EEB6A48846C:0",
+          "navigationEpoch": 1,
+          "documentId": "239EF0A648858A7D22219EEB6A48846C",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364708844",
+            "request:r2364708844"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349841:2:4F79547903E5263AC00065086737F52E:0",
+          "navigationEpoch": 2,
+          "documentId": "4F79547903E5263AC00065086737F52E",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2415041701",
+            "request:r2415041701",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349843:1:6962758DD2E4CA8DB3E808568235C410:0",
+          "navigationEpoch": 1,
+          "documentId": "6962758DD2E4CA8DB3E808568235C410",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2347931225",
+            "request:r2347931225"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:2:D506694D0AA52083E31E1204DBDFE1A4:0",
+          "navigationEpoch": 2,
+          "documentId": "D506694D0AA52083E31E1204DBDFE1A4",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:3:8491CAAD61F576CAB239E08355845E4E:7",
+          "navigationEpoch": 3,
+          "documentId": "8491CAAD61F576CAB239E08355845E4E",
+          "frameId": 7,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:4:253EE70313B9F32CED680BB6D7B93C1D:8",
+          "navigationEpoch": 4,
+          "documentId": "253EE70313B9F32CED680BB6D7B93C1D",
+          "frameId": 8,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:1:1D52B30E57F5F0F568B1F211779A609F:0",
+          "navigationEpoch": 1,
+          "documentId": "1D52B30E57F5F0F568B1F211779A609F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364561749",
+            "request:r2364561749"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:2:03D66CD16C4DAA00625CA326123618EB:0",
+          "navigationEpoch": 2,
+          "documentId": "03D66CD16C4DAA00625CA326123618EB",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2314228892",
+            "request:r2314228892",
+            "request:r2313390249",
+            "request:r2313390249"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:3:D3F51E55A24449938E92BC6BAD34E2B1:10",
+          "navigationEpoch": 3,
+          "documentId": "D3F51E55A24449938E92BC6BAD34E2B1",
+          "frameId": 10,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:1:4FAB4D3B964FD6E6CB07AF97399D632A:0",
+          "navigationEpoch": 1,
+          "documentId": "4FAB4D3B964FD6E6CB07AF97399D632A",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2263057392",
+            "request:r2263057392"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:2:79C1F03761BCE452A565108B30BC6BE8:0",
+          "navigationEpoch": 2,
+          "documentId": "79C1F03761BCE452A565108B30BC6BE8",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:3:3228D8322FE6E72B5BFEC7BA66F0FF40:12",
+          "navigationEpoch": 3,
+          "documentId": "3228D8322FE6E72B5BFEC7BA66F0FF40",
+          "frameId": 12,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:4:4996E20272810CB1FAAD9F33DF14B063:13",
+          "navigationEpoch": 4,
+          "documentId": "4996E20272810CB1FAAD9F33DF14B063",
+          "frameId": 13,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:1:E6F3A1689F4EF66F86FEA507B34860AE:0",
+          "navigationEpoch": 1,
+          "documentId": "E6F3A1689F4EF66F86FEA507B34860AE",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2246132678",
+            "request:r2246132678"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:2:5043A0504A0B2688771EA4266A169073:0",
+          "navigationEpoch": 2,
+          "documentId": "5043A0504A0B2688771EA4266A169073",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2279687916",
+            "request:r2279687916",
+            "request:r2330020773",
+            "request:r2330020773"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:3:7688CE8AC44B4E63E606562DE12BFCD3:15",
+          "navigationEpoch": 3,
+          "documentId": "7688CE8AC44B4E63E606562DE12BFCD3",
+          "frameId": 15,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349851:1:0228294DCA02BD49CF5DD20DDDAEBD7A:0",
+          "navigationEpoch": 1,
+          "documentId": "0228294DCA02BD49CF5DD20DDDAEBD7A",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r367583803",
+            "request:r367583803"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349851:2:E210B97D8EE2F92E781C6C9A31489CDA:0",
+          "navigationEpoch": 2,
+          "documentId": "E210B97D8EE2F92E781C6C9A31489CDA",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r350806184",
+            "request:r350806184",
+            "request:r350806184"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349853:1:2A2FBD99B841045AEAFCF5A5E7DBEEAF:0",
+          "navigationEpoch": 1,
+          "documentId": "2A2FBD99B841045AEAFCF5A5E7DBEEAF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r434694279",
+            "request:r434694279"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349853:2:BC1EDB35F3DC39FFF5FF73520CDB0DBB:0",
+          "navigationEpoch": 2,
+          "documentId": "BC1EDB35F3DC39FFF5FF73520CDB0DBB",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r417916660",
+            "request:r417916660",
+            "request:r417916660"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349855:1:A0E2039D0EECAA748176C450D4EFBDF4:0",
+          "navigationEpoch": 1,
+          "documentId": "A0E2039D0EECAA748176C450D4EFBDF4",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r233362851",
+            "request:r233362851"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349855:2:51D974610883E660EA39463B13713891:0",
+          "navigationEpoch": 2,
+          "documentId": "51D974610883E660EA39463B13713891",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r216585232",
+            "request:r216585232",
+            "request:r216585232"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349857:1:2FF7915915FE01EF7FF77A86B26265C3:0",
+          "navigationEpoch": 1,
+          "documentId": "2FF7915915FE01EF7FF77A86B26265C3",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2380647820",
+            "request:r2380647820"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349857:2:D08040F94CF8335C0F75E58C557ABC8D:0",
+          "navigationEpoch": 2,
+          "documentId": "D08040F94CF8335C0F75E58C557ABC8D",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2397425439",
+            "request:r2397425439",
+            "request:r2397425439"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349859:1:E704A05C841DC4F541A02097DC7ADA46:0",
+          "navigationEpoch": 1,
+          "documentId": "E704A05C841DC4F541A02097DC7ADA46",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2313537344",
+            "request:r2313537344"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349859:2:0C16BC516FCB559F9659BF6C5DFF14E0:0",
+          "navigationEpoch": 2,
+          "documentId": "0C16BC516FCB559F9659BF6C5DFF14E0",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349859:3:7B7FD103A576771A6704C9E57FA698CC:21",
+          "navigationEpoch": 3,
+          "documentId": "7B7FD103A576771A6704C9E57FA698CC",
+          "frameId": 21,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349859:4:DA0E36CCF824C122A20BE94B3CE52A39:22",
+          "navigationEpoch": 4,
+          "documentId": "DA0E36CCF824C122A20BE94B3CE52A39",
+          "frameId": 22,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349861:1:946F0B349A111F940147D22EA88DB5D4:0",
+          "navigationEpoch": 1,
+          "documentId": "946F0B349A111F940147D22EA88DB5D4",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2365694582",
+            "request:r2365694582"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349861:2:14328F52FB0D7F1B4F68A7E6F79B0EBC:0",
+          "navigationEpoch": 2,
+          "documentId": "14328F52FB0D7F1B4F68A7E6F79B0EBC",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2567026010",
+            "request:r2567026010",
+            "request:r201234636",
+            "request:r201234636"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349861:3:0D6A105F6F830654C371D8EC80A73BDD:24",
+          "navigationEpoch": 3,
+          "documentId": "0D6A105F6F830654C371D8EC80A73BDD",
+          "frameId": 24,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:1:954081A74D51CCF74E61C1E113B00D0B:0",
+          "navigationEpoch": 1,
+          "documentId": "954081A74D51CCF74E61C1E113B00D0B",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r251567493",
+            "request:r251567493"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:2:13C7CD9B24E0919767B981B0F964BF21:0",
+          "navigationEpoch": 2,
+          "documentId": "13C7CD9B24E0919767B981B0F964BF21",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:3:B6F1632DA45CF549EF9350E685A9D750:26",
+          "navigationEpoch": 3,
+          "documentId": "B6F1632DA45CF549EF9350E685A9D750",
+          "frameId": 26,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:4:3D731E7FD78B414D4CA42D21F763E06E:27",
+          "navigationEpoch": 4,
+          "documentId": "3D731E7FD78B414D4CA42D21F763E06E",
+          "frameId": 27,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349865:1:453F07B5E0E9A5815A37014261B15096:0",
+          "navigationEpoch": 1,
+          "documentId": "453F07B5E0E9A5815A37014261B15096",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1765005250",
+            "request:r1765005250"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349865:2:09488368FDE33CD46C898BC79D3BCC38:0",
+          "navigationEpoch": 2,
+          "documentId": "09488368FDE33CD46C898BC79D3BCC38",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r1697894774",
+            "request:r1697894774",
+            "request:r1714672393",
+            "request:r1714672393"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349865:3:0937CD9C61DBE62DC1F3D723547B2F19:29",
+          "navigationEpoch": 3,
+          "documentId": "0937CD9C61DBE62DC1F3D723547B2F19",
+          "frameId": 29,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        }
+      ]
+    },
+    "trace": []
+  },
+  "run3": {
+    "observed": [
+      {
+        "family": "third-party-script-surface",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/nyzv52f04i"
+      },
+      {
+        "family": "two-scripts-one-causal",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/gwzx7qp72j"
+      },
+      {
+        "family": "network-only",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/e0uol5yktl"
+      },
+      {
+        "family": "neutral-host-hostile",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/6zh7vpa8lk"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/i75wobyjb1"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/n27zt6xusd"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/rmzvo7nv5k"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/8gq5t62ckn"
+      }
+    ],
+    "survivors": 0,
+    "protectedFlows": 4,
+    "protectedFlowFalsePositives": 0,
+    "aiCalls": 0,
+    "aiCallsNovelNetworkDiscovery": 0,
+    "aiCallsAmbiguousSurvivor": 0,
+    "successfulExperiments": 0,
+    "learnedSessionProtections": 0,
+    "causalSummary": {
+      "graphCount": 66,
+      "nodeCount": 239,
+      "requestStartCount": 52,
+      "requestCompleteCount": 44,
+      "thirdPartyRequestCompleteCount": 11,
+      "visibleSurvivorCount": 6,
+      "hypothesisCount": 11,
+      "graphSummaries": [
+        {
+          "graphId": "graph:391349835:1:72BD256938446897F134E6866A7D0081:0",
+          "navigationEpoch": 1,
+          "documentId": "72BD256938446897F134E6866A7D0081",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r873244444",
+            "request:r873244444"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349835:2:A138F12266B631A325F7858DC9DADFCF:0",
+          "navigationEpoch": 2,
+          "documentId": "A138F12266B631A325F7858DC9DADFCF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/nyzv52f04i",
+            "/favicon.ico"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r923577301",
+            "request:r923577301",
+            "request:r806133968",
+            "request:r806133968",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349837:1:82C0EC4C3938CA8457978220D28AFD1C:0",
+          "navigationEpoch": 1,
+          "documentId": "82C0EC4C3938CA8457978220D28AFD1C",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r839689206",
+            "request:r839689206"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349837:2:4038AD154724463E8D1A1632E12B5A0F:0",
+          "navigationEpoch": 2,
+          "documentId": "4038AD154724463E8D1A1632E12B5A0F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/gwzx7qp72j",
+            "/resource/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r1024243015",
+            "request:r1024243015",
+            "request:r485174231",
+            "request:r485174231",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349839:1:7E73DB9EE1FB9F3B80986A9372EEB945:0",
+          "navigationEpoch": 1,
+          "documentId": "7E73DB9EE1FB9F3B80986A9372EEB945",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r518729469",
+            "request:r518729469"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349839:2:4B0AC4ABC4261BFB9EBFFC38F0CC2ADF:0",
+          "navigationEpoch": 2,
+          "documentId": "4B0AC4ABC4261BFB9EBFFC38F0CC2ADF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r434841374",
+            "request:r434841374",
+            "request:r451618993",
+            "request:r334175660",
+            "request:r451618993",
+            "request:r334175660"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            },
+            {
+              "thirdParty": true,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349841:1:239EF0A648858A7D22219EEB6A48846C:0",
+          "navigationEpoch": 1,
+          "documentId": "239EF0A648858A7D22219EEB6A48846C",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364708844",
+            "request:r2364708844"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349841:2:4F79547903E5263AC00065086737F52E:0",
+          "navigationEpoch": 2,
+          "documentId": "4F79547903E5263AC00065086737F52E",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2415041701",
+            "request:r2415041701",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349843:1:6962758DD2E4CA8DB3E808568235C410:0",
+          "navigationEpoch": 1,
+          "documentId": "6962758DD2E4CA8DB3E808568235C410",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2347931225",
+            "request:r2347931225"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:2:D506694D0AA52083E31E1204DBDFE1A4:0",
+          "navigationEpoch": 2,
+          "documentId": "D506694D0AA52083E31E1204DBDFE1A4",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:3:8491CAAD61F576CAB239E08355845E4E:7",
+          "navigationEpoch": 3,
+          "documentId": "8491CAAD61F576CAB239E08355845E4E",
+          "frameId": 7,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349843:4:253EE70313B9F32CED680BB6D7B93C1D:8",
+          "navigationEpoch": 4,
+          "documentId": "253EE70313B9F32CED680BB6D7B93C1D",
+          "frameId": 8,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:1:1D52B30E57F5F0F568B1F211779A609F:0",
+          "navigationEpoch": 1,
+          "documentId": "1D52B30E57F5F0F568B1F211779A609F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364561749",
+            "request:r2364561749"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:2:03D66CD16C4DAA00625CA326123618EB:0",
+          "navigationEpoch": 2,
+          "documentId": "03D66CD16C4DAA00625CA326123618EB",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2314228892",
+            "request:r2314228892",
+            "request:r2313390249",
+            "request:r2313390249"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349845:3:D3F51E55A24449938E92BC6BAD34E2B1:10",
+          "navigationEpoch": 3,
+          "documentId": "D3F51E55A24449938E92BC6BAD34E2B1",
+          "frameId": 10,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:1:4FAB4D3B964FD6E6CB07AF97399D632A:0",
+          "navigationEpoch": 1,
+          "documentId": "4FAB4D3B964FD6E6CB07AF97399D632A",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2263057392",
+            "request:r2263057392"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:2:79C1F03761BCE452A565108B30BC6BE8:0",
+          "navigationEpoch": 2,
+          "documentId": "79C1F03761BCE452A565108B30BC6BE8",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:3:3228D8322FE6E72B5BFEC7BA66F0FF40:12",
+          "navigationEpoch": 3,
+          "documentId": "3228D8322FE6E72B5BFEC7BA66F0FF40",
+          "frameId": 12,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349847:4:4996E20272810CB1FAAD9F33DF14B063:13",
+          "navigationEpoch": 4,
+          "documentId": "4996E20272810CB1FAAD9F33DF14B063",
+          "frameId": 13,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:1:E6F3A1689F4EF66F86FEA507B34860AE:0",
+          "navigationEpoch": 1,
+          "documentId": "E6F3A1689F4EF66F86FEA507B34860AE",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2246132678",
+            "request:r2246132678"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:2:5043A0504A0B2688771EA4266A169073:0",
+          "navigationEpoch": 2,
+          "documentId": "5043A0504A0B2688771EA4266A169073",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2279687916",
+            "request:r2279687916",
+            "request:r2330020773",
+            "request:r2330020773"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349849:3:7688CE8AC44B4E63E606562DE12BFCD3:15",
+          "navigationEpoch": 3,
+          "documentId": "7688CE8AC44B4E63E606562DE12BFCD3",
+          "frameId": 15,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349851:1:0228294DCA02BD49CF5DD20DDDAEBD7A:0",
+          "navigationEpoch": 1,
+          "documentId": "0228294DCA02BD49CF5DD20DDDAEBD7A",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r367583803",
+            "request:r367583803"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349851:2:E210B97D8EE2F92E781C6C9A31489CDA:0",
+          "navigationEpoch": 2,
+          "documentId": "E210B97D8EE2F92E781C6C9A31489CDA",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r350806184",
+            "request:r350806184",
+            "request:r350806184"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349853:1:2A2FBD99B841045AEAFCF5A5E7DBEEAF:0",
+          "navigationEpoch": 1,
+          "documentId": "2A2FBD99B841045AEAFCF5A5E7DBEEAF",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r434694279",
+            "request:r434694279"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349853:2:BC1EDB35F3DC39FFF5FF73520CDB0DBB:0",
+          "navigationEpoch": 2,
+          "documentId": "BC1EDB35F3DC39FFF5FF73520CDB0DBB",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r417916660",
+            "request:r417916660",
+            "request:r417916660"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349855:1:A0E2039D0EECAA748176C450D4EFBDF4:0",
+          "navigationEpoch": 1,
+          "documentId": "A0E2039D0EECAA748176C450D4EFBDF4",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r233362851",
+            "request:r233362851"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349855:2:51D974610883E660EA39463B13713891:0",
+          "navigationEpoch": 2,
+          "documentId": "51D974610883E660EA39463B13713891",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r216585232",
+            "request:r216585232",
+            "request:r216585232"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349857:1:2FF7915915FE01EF7FF77A86B26265C3:0",
+          "navigationEpoch": 1,
+          "documentId": "2FF7915915FE01EF7FF77A86B26265C3",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2380647820",
+            "request:r2380647820"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349857:2:D08040F94CF8335C0F75E58C557ABC8D:0",
+          "navigationEpoch": 2,
+          "documentId": "D08040F94CF8335C0F75E58C557ABC8D",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2397425439",
+            "request:r2397425439",
+            "request:r2397425439"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349859:1:E704A05C841DC4F541A02097DC7ADA46:0",
+          "navigationEpoch": 1,
+          "documentId": "E704A05C841DC4F541A02097DC7ADA46",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2313537344",
+            "request:r2313537344"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349859:2:0C16BC516FCB559F9659BF6C5DFF14E0:0",
+          "navigationEpoch": 2,
+          "documentId": "0C16BC516FCB559F9659BF6C5DFF14E0",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349859:3:7B7FD103A576771A6704C9E57FA698CC:21",
+          "navigationEpoch": 3,
+          "documentId": "7B7FD103A576771A6704C9E57FA698CC",
+          "frameId": 21,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349859:4:DA0E36CCF824C122A20BE94B3CE52A39:22",
+          "navigationEpoch": 4,
+          "documentId": "DA0E36CCF824C122A20BE94B3CE52A39",
+          "frameId": 22,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349861:1:946F0B349A111F940147D22EA88DB5D4:0",
+          "navigationEpoch": 1,
+          "documentId": "946F0B349A111F940147D22EA88DB5D4",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2365694582",
+            "request:r2365694582"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349861:2:14328F52FB0D7F1B4F68A7E6F79B0EBC:0",
+          "navigationEpoch": 2,
+          "documentId": "14328F52FB0D7F1B4F68A7E6F79B0EBC",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2567026010",
+            "request:r2567026010",
+            "request:r201234636",
+            "request:r201234636"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349861:3:0D6A105F6F830654C371D8EC80A73BDD:24",
+          "navigationEpoch": 3,
+          "documentId": "0D6A105F6F830654C371D8EC80A73BDD",
+          "frameId": 24,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:1:954081A74D51CCF74E61C1E113B00D0B:0",
+          "navigationEpoch": 1,
+          "documentId": "954081A74D51CCF74E61C1E113B00D0B",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r251567493",
+            "request:r251567493"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:2:13C7CD9B24E0919767B981B0F964BF21:0",
+          "navigationEpoch": 2,
+          "documentId": "13C7CD9B24E0919767B981B0F964BF21",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:3:B6F1632DA45CF549EF9350E685A9D750:26",
+          "navigationEpoch": 3,
+          "documentId": "B6F1632DA45CF549EF9350E685A9D750",
+          "frameId": 26,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349863:4:3D731E7FD78B414D4CA42D21F763E06E:27",
+          "navigationEpoch": 4,
+          "documentId": "3D731E7FD78B414D4CA42D21F763E06E",
+          "frameId": 27,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349865:1:453F07B5E0E9A5815A37014261B15096:0",
+          "navigationEpoch": 1,
+          "documentId": "453F07B5E0E9A5815A37014261B15096",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1765005250",
+            "request:r1765005250"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349865:2:09488368FDE33CD46C898BC79D3BCC38:0",
+          "navigationEpoch": 2,
+          "documentId": "09488368FDE33CD46C898BC79D3BCC38",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r1697894774",
+            "request:r1697894774",
+            "request:r1714672393",
+            "request:r1714672393"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349865:3:0937CD9C61DBE62DC1F3D723547B2F19:29",
+          "navigationEpoch": 3,
+          "documentId": "0937CD9C61DBE62DC1F3D723547B2F19",
+          "frameId": 29,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349867:1:6ACE0361A7338423623628E361291B52:0",
+          "navigationEpoch": 1,
+          "documentId": "6ACE0361A7338423623628E361291B52",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1832262821",
+            "request:r1832262821"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349867:2:18029C5E2B5E03D3AF2C4DC31A0D0460:0",
+          "navigationEpoch": 2,
+          "documentId": "18029C5E2B5E03D3AF2C4DC31A0D0460",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r1781929964",
+            "request:r1781929964",
+            "request:r1781929964"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349869:1:BCCD042000B65EB35FBD90CE90D7DE5F:0",
+          "navigationEpoch": 1,
+          "documentId": "BCCD042000B65EB35FBD90CE90D7DE5F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1765152345",
+            "request:r1765152345"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349869:2:5E893DA4BE7F6722D82B7DD3369040D9:0",
+          "navigationEpoch": 2,
+          "documentId": "5E893DA4BE7F6722D82B7DD3369040D9",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r1714819488",
+            "request:r1714819488",
+            "request:r1714819488"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349871:1:2A03719D5455833ED83BF06B6EF6B775:0",
+          "navigationEpoch": 1,
+          "documentId": "2A03719D5455833ED83BF06B6EF6B775",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1966483773",
+            "request:r1966483773"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349871:2:03C364D4C36C07AF8ABAC7BB4D126376:0",
+          "navigationEpoch": 2,
+          "documentId": "03C364D4C36C07AF8ABAC7BB4D126376",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r1949706154",
+            "request:r1949706154",
+            "request:r1949706154"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349873:1:7FC138B80B64D5171F0B6A01E4809786:0",
+          "navigationEpoch": 1,
+          "documentId": "7FC138B80B64D5171F0B6A01E4809786",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1899520392",
+            "request:r1899520392"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349873:2:6ED2CBEFBDDC3EF79A707C89EF8B71C2:0",
+          "navigationEpoch": 2,
+          "documentId": "6ED2CBEFBDDC3EF79A707C89EF8B71C2",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_ERROR",
+            "NETWORK_PROBE_REACTION",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2016963725",
+            "request:r2016963725",
+            "request:r2016963725"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:391349875:1:52488B4DF92FBDE91A86D122E6DC5292:0",
+          "navigationEpoch": 1,
+          "documentId": "52488B4DF92FBDE91A86D122E6DC5292",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1966630868",
+            "request:r1966630868"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349875:2:C76154FC9B57DF2F2B03D53028E51ABD:0",
+          "navigationEpoch": 2,
+          "documentId": "C76154FC9B57DF2F2B03D53028E51ABD",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349875:3:E551F4E6832E3E21A03E13F132278CB2:35",
+          "navigationEpoch": 3,
+          "documentId": "E551F4E6832E3E21A03E13F132278CB2",
+          "frameId": 35,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349875:4:A87B563FCF25C6A00701BDEBAA62F69C:36",
+          "navigationEpoch": 4,
+          "documentId": "A87B563FCF25C6A00701BDEBAA62F69C",
+          "frameId": 36,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349877:1:1DBCEFCEA1A7F0EE3A0F85AA82D5484D:0",
+          "navigationEpoch": 1,
+          "documentId": "1DBCEFCEA1A7F0EE3A0F85AA82D5484D",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1950000344",
+            "request:r1950000344"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349877:2:515816F8D4C689A0A188B6BB23090735:0",
+          "navigationEpoch": 2,
+          "documentId": "515816F8D4C689A0A188B6BB23090735",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r1882889868",
+            "request:r1882889868",
+            "request:r1864979416",
+            "request:r1864979416"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349877:3:36C117154AB0D90F1DD93551B2A0AF53:38",
+          "navigationEpoch": 3,
+          "documentId": "36C117154AB0D90F1DD93551B2A0AF53",
+          "frameId": 38,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349879:1:F4C4F59734F248CC1EA5CEE4EFDF02BB:0",
+          "navigationEpoch": 1,
+          "documentId": "F4C4F59734F248CC1EA5CEE4EFDF02BB",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r1915312273",
+            "request:r1915312273"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349879:2:36EF798285B08EE10945CDAE11C27CBC:0",
+          "navigationEpoch": 2,
+          "documentId": "36EF798285B08EE10945CDAE11C27CBC",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349879:3:8FBEF2C64712C5523280EF0A15DA816D:40",
+          "navigationEpoch": 3,
+          "documentId": "8FBEF2C64712C5523280EF0A15DA816D",
+          "frameId": 40,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349879:4:7882E83FD24839226FB294B4DF8F32D7:41",
+          "navigationEpoch": 4,
+          "documentId": "7882E83FD24839226FB294B4DF8F32D7",
+          "frameId": 41,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349881:1:85264409ABE48CFE54AD9003FF5AFAE9:0",
+          "navigationEpoch": 1,
+          "documentId": "85264409ABE48CFE54AD9003FF5AFAE9",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r4079772219",
+            "request:r4079772219"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349881:2:C2B84A23EC611D314530CA01C44F524F:0",
+          "navigationEpoch": 2,
+          "documentId": "C2B84A23EC611D314530CA01C44F524F",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r4146882695",
+            "request:r4146882695",
+            "request:r4130105076",
+            "request:r4130105076"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:391349881:3:5CE88E69BAF6E2E16404B50B2E9E83E9:43",
+          "navigationEpoch": 3,
+          "documentId": "5CE88E69BAF6E2E16404B50B2E9E83E9",
+          "frameId": 43,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        }
+      ]
+    },
+    "trace": []
+  },
+  "freshProfileControl": {
+    "observed": [
+      {
+        "family": "third-party-script-surface",
+        "protected": false,
+        "visibleAdSurfaces": 1,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/nyzv52f04i"
+      },
+      {
+        "family": "two-scripts-one-causal",
+        "protected": false,
+        "visibleAdSurfaces": 1,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/gwzx7qp72j"
+      },
+      {
+        "family": "network-only",
+        "protected": false,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/e0uol5yktl"
+      },
+      {
+        "family": "neutral-host-hostile",
+        "protected": false,
+        "visibleAdSurfaces": 1,
+        "thirdPartyFrames": 0,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/6zh7vpa8lk"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/i75wobyjb1"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/n27zt6xusd"
+      },
+      {
+        "family": "third-party-iframe",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 2,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/rmzvo7nv5k"
+      },
+      {
+        "family": "ad-named-benign",
+        "protected": true,
+        "visibleAdSurfaces": 0,
+        "thirdPartyFrames": 1,
+        "contentPresent": true,
+        "url": "http://site.test:61605/case/8gq5t62ckn"
+      }
+    ],
+    "survivors": 3,
+    "protectedFlows": 4,
+    "protectedFlowFalsePositives": 0,
+    "aiCalls": 5,
+    "aiCallsNovelNetworkDiscovery": 1,
+    "aiCallsAmbiguousSurvivor": 4,
+    "successfulExperiments": 4,
+    "learnedSessionProtections": 4,
+    "causalSummary": {
+      "graphCount": 22,
+      "nodeCount": 84,
+      "requestStartCount": 20,
+      "requestCompleteCount": 20,
+      "thirdPartyRequestCompleteCount": 7,
+      "visibleSurvivorCount": 3,
+      "hypothesisCount": 4,
+      "graphSummaries": [
+        {
+          "graphId": "graph:95727001:1:A0673527AA3A610952FD55D4F9C4C1D4:0",
+          "navigationEpoch": 1,
+          "documentId": "A0673527AA3A610952FD55D4F9C4C1D4",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/nyzv52f04i"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r873244444",
+            "request:r873244444"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727001:2:E8C459F0AB798C0B3DF0C64D74ED0FA4:0",
+          "navigationEpoch": 2,
+          "documentId": "E8C459F0AB798C0B3DF0C64D74ED0FA4",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/nyzv52f04i",
+            "/favicon.ico"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r923577301",
+            "request:r923577301",
+            "request:r806133968",
+            "request:r806133968",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:95727003:1:3B4CD3EC00EF263CE7806742B6C588B1:0",
+          "navigationEpoch": 1,
+          "documentId": "3B4CD3EC00EF263CE7806742B6C588B1",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r839689206",
+            "request:r839689206"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727003:2:A929E75799BEE4CDEFCECAC713187AEB:0",
+          "navigationEpoch": 2,
+          "documentId": "A929E75799BEE4CDEFCECAC713187AEB",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/gwzx7qp72j",
+            "/resource/gwzx7qp72j"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "request:r1024243015",
+            "request:r1024243015",
+            "request:r485174231",
+            "request:r485174231",
+            "survivor:s1",
+            "element:e1",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            }
+          ],
+          "hypothesisCount": 2
+        },
+        {
+          "graphId": "graph:95727005:1:31DEF2A7A777B2E13940CF5C4B4D11FB:0",
+          "navigationEpoch": 1,
+          "documentId": "31DEF2A7A777B2E13940CF5C4B4D11FB",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r401286136",
+            "request:r401286136"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727005:2:96FAE04085C28CF6598F5BBA44E77D8D:0",
+          "navigationEpoch": 2,
+          "documentId": "96FAE04085C28CF6598F5BBA44E77D8D",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl",
+            "/resource/e0uol5yktl"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r418063755",
+            "request:r418063755",
+            "request:r334175660",
+            "request:r350953279",
+            "request:r334175660",
+            "request:r350953279"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "xmlhttprequest"
+            },
+            {
+              "thirdParty": true,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727007:1:96D5174FB317BC5B5C3D5D878D696657:0",
+          "navigationEpoch": 1,
+          "documentId": "96D5174FB317BC5B5C3D5D878D696657",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364708844",
+            "request:r2364708844"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727007:2:FF3E19CE6F2616038B217B6AE706F432:0",
+          "navigationEpoch": 2,
+          "documentId": "FF3E19CE6F2616038B217B6AE706F432",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/6zh7vpa8lk"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT",
+            "REPEATED_REINSERTION"
+          ],
+          "refs": [
+            "request:r2415041701",
+            "request:r2415041701",
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            }
+          ],
+          "hypothesisCount": 1
+        },
+        {
+          "graphId": "graph:95727009:1:9EDD81D1AF546AF29867803256280C12:0",
+          "navigationEpoch": 1,
+          "documentId": "9EDD81D1AF546AF29867803256280C12",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/i75wobyjb1"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2347931225",
+            "request:r2347931225"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727009:2:87E22B1E68C72292DBA97A6AEE6B2658:0",
+          "navigationEpoch": 2,
+          "documentId": "87E22B1E68C72292DBA97A6AEE6B2658",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727009:3:F3596BBADD4CF4BFEA60562941ABE9FA:7",
+          "navigationEpoch": 3,
+          "documentId": "F3596BBADD4CF4BFEA60562941ABE9FA",
+          "frameId": 7,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727009:4:3C9705ABD10ABF49BBECDADCBEAE7CE0:8",
+          "navigationEpoch": 4,
+          "documentId": "3C9705ABD10ABF49BBECDADCBEAE7CE0",
+          "frameId": 8,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727011:1:C81759EA528B04E083750AFB3A37DECC:0",
+          "navigationEpoch": 1,
+          "documentId": "C81759EA528B04E083750AFB3A37DECC",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2364561749",
+            "request:r2364561749"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727011:2:409B179BF8D02E93F998A8E4ACDA400D:0",
+          "navigationEpoch": 2,
+          "documentId": "409B179BF8D02E93F998A8E4ACDA400D",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/n27zt6xusd",
+            "/resource/n27zt6xusd"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2431672225",
+            "request:r2431672225",
+            "request:r2313390249",
+            "request:r2313390249"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727011:3:BEA6D70E1A9A8D7721D8493140A1C8B8:10",
+          "navigationEpoch": 3,
+          "documentId": "BEA6D70E1A9A8D7721D8493140A1C8B8",
+          "frameId": 10,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727013:1:59ADA8CB38207AFC1321759B8C13E561:0",
+          "navigationEpoch": 1,
+          "documentId": "59ADA8CB38207AFC1321759B8C13E561",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/rmzvo7nv5k"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2263057392",
+            "request:r2263057392"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727013:2:1282664860B92CAAADF1F0CA48F47046:0",
+          "navigationEpoch": 2,
+          "documentId": "1282664860B92CAAADF1F0CA48F47046",
+          "frameId": 0,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT",
+            "VISIBLE_AD_CANDIDATE"
+          ],
+          "refs": [
+            "survivor:s1",
+            "element:e1"
+          ],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727013:3:0006B46DA9540D63289B944F2D09EA5B:12",
+          "navigationEpoch": 3,
+          "documentId": "0006B46DA9540D63289B944F2D09EA5B",
+          "frameId": 12,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727013:4:A55CAFD5BD8E0A22D92072237A8626B5:13",
+          "navigationEpoch": 4,
+          "documentId": "A55CAFD5BD8E0A22D92072237A8626B5",
+          "frameId": 13,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727015:1:0D5F24100A1EE1D7607D13C0C17C35E3:0",
+          "navigationEpoch": 1,
+          "documentId": "0D5F24100A1EE1D7607D13C0C17C35E3",
+          "frameId": 0,
+          "coarsePaths": [
+            "/case/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE"
+          ],
+          "refs": [
+            "request:r2246132678",
+            "request:r2246132678"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": false,
+              "resourceType": "main_frame"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727015:2:F91D7437DC176C80C1CD397129B27476:0",
+          "navigationEpoch": 2,
+          "documentId": "F91D7437DC176C80C1CD397129B27476",
+          "frameId": 0,
+          "coarsePaths": [
+            "/resource/8gq5t62ckn",
+            "/resource/8gq5t62ckn"
+          ],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "REQUEST_START",
+            "REQUEST_COMPLETE",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [
+            "request:r2279687916",
+            "request:r2279687916",
+            "request:r2330020773",
+            "request:r2330020773"
+          ],
+          "requestFeatures": [
+            {
+              "thirdParty": true,
+              "resourceType": "script"
+            },
+            {
+              "thirdParty": false,
+              "resourceType": "image"
+            }
+          ],
+          "hypothesisCount": 0
+        },
+        {
+          "graphId": "graph:95727015:3:363EE09D734DBFA2E903483CA289B8B2:15",
+          "navigationEpoch": 3,
+          "documentId": "363EE09D734DBFA2E903483CA289B8B2",
+          "frameId": 15,
+          "coarsePaths": [],
+          "nodeKinds": [
+            "NAV_COMMIT",
+            "HEALTH_SNAPSHOT"
+          ],
+          "refs": [],
+          "requestFeatures": [],
+          "hypothesisCount": 0
+        }
+      ]
+    },
+    "trace": [
+      {
+        "aiCandidateRanking": [
+          "request:r923577301"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 124.43994140625,
+            "mutationAssociation": 0.35,
+            "ref": "request:r923577301",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r923577301",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r923577301"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "REINSERTED_SURFACE",
+        "survivorRef": "survivor:s1",
+        "timing": {
+          "latencyMs": 2336,
+          "startedAt": 1786873448605
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r1024243015"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 63.422119140625,
+            "mutationAssociation": 0.35,
+            "ref": "request:r1024243015",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r1024243015",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "postHealth": {
+          "antiBlockReaction": 0,
+          "confidence": 0.5,
+          "contentAvailability": 1,
+          "interaction": 1,
+          "mutationStability": 1,
+          "navigationHealth": 1,
+          "networkIntegrity": 1,
+          "privacyPreservation": 1,
+          "scrollability": 1,
+          "visualObstruction": 0
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r1024243015"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "REINSERTED_SURFACE",
+        "survivorRef": "survivor:s1",
+        "survivorResolved": true,
+        "timing": {
+          "latencyMs": 2094,
+          "startedAt": 1786873451184
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r1024243015"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 165.422119140625,
+            "mutationAssociation": 0.35,
+            "ref": "request:r1024243015",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r1024243015",
+          "element:e1"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r1024243015"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorClass": "PROMOTIONAL_SURFACE",
+        "survivorRef": "survivor:s1",
+        "timing": {
+          "latencyMs": 2298,
+          "startedAt": 1786873453543
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      },
+      {
+        "aiCandidateRanking": [
+          "request:r418063755"
+        ],
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "related-frame",
+            "lagToSurvivorMs": null,
+            "mutationAssociation": 0.35,
+            "ref": "request:r350953279",
+            "repeatCount": 1,
+            "resourceType": "image",
+            "thirdParty": true
+          },
+          {
+            "frameAssociation": "related-frame",
+            "lagToSurvivorMs": null,
+            "mutationAssociation": 0.35,
+            "ref": "request:r418063755",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r350953279",
+          "request:r418063755"
+        ],
+        "executorResult": "staged",
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "policyValidator": {
+          "reasons": [],
+          "valid": true
+        },
+        "postHealth": {
+          "antiBlockReaction": 0,
+          "confidence": 0.5,
+          "contentAvailability": 1,
+          "interaction": 1,
+          "mutationStability": 1,
+          "navigationHealth": 1,
+          "networkIntegrity": 1,
+          "privacyPreservation": 1,
+          "scrollability": 1,
+          "visualObstruction": 0
+        },
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "selectedExperiment": {
+          "actionType": "TARGETED_SESSION_DNR",
+          "targetRef": "request:r418063755"
+        },
+        "sessionProtectionInstalled": true,
+        "survivorResolved": true,
+        "timing": {
+          "latencyMs": 1954,
+          "startedAt": 1786873453870
+        },
+        "triggerReason": "NOVEL_NETWORK_DISCOVERY"
+      },
+      {
+        "aiInvoked": true,
+        "candidateFeatureSummaries": [
+          {
+            "frameAssociation": "same-document",
+            "lagToSurvivorMs": 126.076904296875,
+            "mutationAssociation": 0.35,
+            "ref": "request:r2415041701",
+            "repeatCount": 1,
+            "resourceType": "script",
+            "thirdParty": true
+          }
+        ],
+        "candidateRefs": [
+          "request:r2415041701",
+          "element:e1"
+        ],
+        "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+        "privacyMode": "STRICT",
+        "rollback": false,
+        "sessionProtectionInstalled": false,
+        "survivorClass": "REINSERTED_SURFACE",
+        "survivorRef": "survivor:s1",
+        "timing": {
+          "startedAt": 1786873456517
+        },
+        "triggerReason": "SURVIVOR_ATTRIBUTION"
+      }
+    ]
+  },
+  "note": "The executed corpus is intentionally generic and tokenized; evaluator truth remains outside the extension runtime."
+}

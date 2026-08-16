@@ -17,6 +17,7 @@ import { ContentToBackgroundMessage, BackgroundToContentMessage } from '../share
 import { calculateHealthVector } from '../core/health/scorer';
 import { OpaqueTargetRegistry } from './opaque-targets';
 import { createIntentEnvelope } from './intent-envelope';
+import { SurvivorDiscoveryEngine } from './survivor-discovery';
 
 function elementRefFromOpaqueRefs(refs: readonly string[]): `element:e${number}` | undefined {
   const ref = refs.find((value) => value.startsWith('element:e'));
@@ -62,12 +63,14 @@ export class PageSensor {
   private domExecutor: DomActionExecutor;
   private debounceTimer: number | null = null;
   private readonly targets = new OpaqueTargetRegistry();
+  private readonly survivorDiscovery: SurvivorDiscoveryEngine;
   private sensorFaults = 0;
 
   constructor(navigationId: string) {
     this.navigationId = navigationId;
     this.domExecutor = new DomActionExecutor(this.targets);
     this.mutationPipeline = new MutationPipeline(() => this.scheduleSignalBatch());
+    this.survivorDiscovery = new SurvivorDiscoveryEngine(navigationId, this.targets);
   }
 
   public init(): void {
@@ -230,8 +233,12 @@ export class PageSensor {
     };
 
     const elements = this.probe<OpaqueElementObservation[]>(
-      () => this.targets.observe(),
+      () => this.targets.observe(semantic),
       () => []
+    );
+    const survivorObservation = this.probe(
+      () => this.survivorDiscovery.observe(semantic, batch, elements),
+      () => ({ survivors: [], resourceAssociations: [] })
     );
 
     this.sendMessage({
@@ -242,6 +249,8 @@ export class PageSensor {
         timestamp: Date.now(),
         pageSignals: batch,
         elements,
+        survivors: survivorObservation.survivors,
+        resourceAssociations: survivorObservation.resourceAssociations,
       },
     });
 

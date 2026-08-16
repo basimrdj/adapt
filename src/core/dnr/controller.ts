@@ -37,10 +37,11 @@ export class DnrController {
   }
 
   /**
-   * Stages a temporary, tab-scoped session rule set for an active experiment.
+   * Stages a temporary session rule set. Passing a tab id keeps the rule
+   * tab-scoped; omitting it makes the bounded rule browser-session scoped.
    */
   public async addSessionExperimentRules(
-    tabId: number,
+    tabId: number | undefined,
     txId: string,
     actions: StrategyAction[],
     initiatorDomains?: string[]

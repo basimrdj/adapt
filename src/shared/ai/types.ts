@@ -9,6 +9,7 @@ export type AllowedAiActionType =
   | 'DOM_PRESERVE_BAIT'
   | 'DOM_HIDE_CANDIDATE'
   | 'NET_TEMP_BLOCK'
+  | 'TARGETED_SESSION_DNR'
   | 'NET_REDIRECT_LOCAL'
   | 'OBSERVE_MORE'
   | 'ABSTAIN';
@@ -29,6 +30,13 @@ export interface OpaqueCandidateRequest {
   resourceType: string; // "script", "xmlhttprequest", "image"
   isBlockedByBaseline: boolean;
   failureObserved: boolean;
+  thirdParty?: boolean;
+  resourceIdentityHash?: string;
+  lagToSurvivorMs?: number;
+  frameAssociation?: string;
+  mutationAssociation?: number;
+  repeatCount?: number;
+  filterEvidence?: string;
 }
 
 export interface EvidencePacket {

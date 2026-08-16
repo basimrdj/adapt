@@ -89,6 +89,36 @@ describe('NavigationRegistry', () => {
     expect(committed.url).toBe('https://news.com/a#ready');
   });
 
+  it('reconciles a synthetic runtime epoch with the later real document id', () => {
+    const registry = new NavigationRegistry();
+    const runtime = registry.onNavigationCommitted(9, 0, 'https://news.com/a');
+    const reconciled = registry.onNavigationCommitted(9, 0, 'https://news.com/a', undefined, 'uuid-real');
+
+    expect(reconciled.navigationId).toBe(runtime.navigationId);
+    expect(reconciled.navigationEpoch).toBe(runtime.navigationEpoch);
+    expect(registry.matchesDocumentId(9, 0, 'uuid-real')).toBe(true);
+    expect(registry.getCausalKey(9, 0)?.documentId).toBe(runtime.documentId);
+  });
+
+  it('deduplicates a same-URL commit when documentId is unavailable', () => {
+    const registry = new NavigationRegistry();
+    const runtime = registry.onNavigationCommitted(10, 0, 'https://news.com/a');
+    const committed = registry.onNavigationCommitted(10, 0, 'https://news.com/a');
+
+    expect(committed.navigationId).toBe(runtime.navigationId);
+    expect(committed.navigationEpoch).toBe(runtime.navigationEpoch);
+  });
+
+  it('aliases a runtime document id without creating a new epoch', () => {
+    const registry = new NavigationRegistry();
+    const epoch = registry.onNavigationCommitted(11, 0, 'https://news.com/a', undefined, 'commit-doc');
+
+    expect(registry.aliasDocumentId(11, 0, 'https://news.com/a', 'runtime-doc')).toBe(true);
+    expect(registry.matchesDocumentId(11, 0, 'runtime-doc')).toBe(true);
+    expect(registry.getEpoch(11, 0)?.navigationEpoch).toBe(epoch.navigationEpoch);
+    expect(registry.getEpoch(11, 0)?.documentId).toBe('commit-doc');
+  });
+
   it('returns null from history update when no epoch exists', () => {
     const registry = new NavigationRegistry();
     expect(registry.onHistoryStateUpdated(1, 0, 'https://spa.com/feed')).toBeNull();

@@ -158,6 +158,18 @@
     return true;
   };
 
+  const preventWindowOpen = (args) => {
+    const key = JSON.stringify(args);
+    const original = globalThis.open;
+    if (typeof original !== 'function' || wrappers.has(key)) return false;
+    globalThis.open = function (url, target, features) {
+      if (matches(url, args.filter(Boolean).join('|'))) return null;
+      return original.call(this, url, target, features);
+    };
+    wrappers.add(key);
+    return true;
+  };
+
   const prunePaths = (value, paths) => {
     if (!value || typeof value !== 'object') return;
     for (const path of paths.flatMap((entry) => entry.split('|')).filter(Boolean)) {
@@ -201,6 +213,7 @@
     if (name === 'abort-current-inline-script') return abortCurrentInlineScript(args);
     if (name === 'prevent-setTimeout') return preventSetTimeout(args);
     if (name === 'prevent-eval-if') return preventEvalIf(args);
+    if (name === 'prevent-window-open') return preventWindowOpen(args);
     if (name === 'json-prune') return jsonPrune(args);
     return false;
   };

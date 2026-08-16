@@ -1,0 +1,32 @@
+{
+  "schema": "adapt-final-survivor-ai-ab-v1",
+  "status": "INCOMPLETE",
+  "providerConfigured": true,
+  "mockPlanner": false,
+  "providerClass": "Azure OpenAI buzz-gpt-5-4-mini",
+  "modeA": {
+    "name": "deterministic SAEI only",
+    "status": "NOT_RERUN_IN_THIS_PASS",
+    "aiCalls": 0
+  },
+  "modeB": {
+    "name": "live AI strict privacy",
+    "status": "OBSERVED_IN_SURVIVOR_LAB",
+    "aiCallsRun1": 5,
+    "novelNetworkDiscoveryCalls": 1,
+    "ambiguousSurvivorCalls": 4,
+    "successfulExperimentsRun1": 5,
+    "protectedFlowFalsePositives": 0,
+    "medianLatencyMs": 2619,
+    "p95LatencyMs": 4822,
+    "timeouts": 0,
+    "schemaFailures": 0
+  },
+  "modeC": {
+    "name": "live AI domain hints",
+    "status": "NOT_RUN",
+    "aiCalls": 0
+  },
+  "decision": "INCOMPLETE_AB_COMPARISON",
+  "reason": "The live provider-backed strict survivor lab ran successfully, but the deterministic replay cohort and DOMAIN_HINTS cohort were not both executed as a seeded A/B in this pass."
+}

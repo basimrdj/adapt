@@ -23,6 +23,8 @@ import { classifyNavigationTarget } from '../background/autonomy/popup-classifie
 import { EphemeralNavigationTargetRegistry } from '../background/autonomy/navigation-targets';
 import { PrimitiveExecutorRegistry } from '../background/autonomy/executor-registry';
 import { AutonomySessionRepository } from '../background/autonomy/session';
+import { loadConfiguredPlanner } from '../background/ai/remote-planner';
+import { NavigationEpoch } from '../shared/types';
 
 const ALLOWED_MAIN_SCRIPTLETS = new Set([
   'set-constant',
@@ -36,6 +38,52 @@ const ALLOWED_MAIN_SCRIPTLETS = new Set([
   'prevent-window-open',
   'json-prune',
 ]);
+
+const requestEpochs = new Map<string, NavigationEpoch>();
+const contentEpochs = new Map<string, NavigationEpoch>();
+
+function sameDocumentUrl(existingUrl: string, incomingUrl: string): boolean {
+  try {
+    const existing = new URL(existingUrl);
+    const incoming = new URL(incomingUrl);
+    return existing.origin === incoming.origin
+      && existing.pathname === incoming.pathname
+      && existing.search === incoming.search;
+  } catch {
+    return false;
+  }
+}
+
+function contentEpochKey(tabId: number, frameId: number, navigationId: string): string {
+  return `${tabId}\u0000${frameId}\u0000${navigationId}`;
+}
+
+function captureContentEpoch(
+  tabId: number,
+  frameId: number,
+  navigationId: string,
+  url: string,
+  documentId?: string
+): NavigationEpoch | undefined {
+  const existingContext = contentEpochs.get(contentEpochKey(tabId, frameId, navigationId));
+  if (existingContext) return existingContext;
+
+  let epoch = navRegistry.getEpoch(tabId, frameId);
+  if (!epoch || (url.length > 0 && !sameDocumentUrl(epoch.url, url))) {
+    epoch = navRegistry.onNavigationCommitted(tabId, frameId, url, undefined, documentId);
+  } else {
+    navRegistry.reconcileDocumentId(tabId, frameId, url, documentId);
+    if (documentId && !navRegistry.matchesDocumentId(tabId, frameId, documentId)) {
+      navRegistry.aliasDocumentId(tabId, frameId, url, documentId);
+    }
+  }
+  if (documentId && !navRegistry.matchesDocumentId(tabId, frameId, documentId)) {
+    epoch = navRegistry.onNavigationCommitted(tabId, frameId, url, undefined, documentId);
+  }
+  contentEpochs.set(contentEpochKey(tabId, frameId, navigationId), epoch);
+  while (contentEpochs.size > 128) contentEpochs.delete(contentEpochs.keys().next().value as string);
+  return epoch;
+}
 
 // 1. Storage Backend Implementation for chrome.storage.local
 const chromeStorageBackend = new ChromeStorageBackend(chrome.storage.local);
@@ -146,21 +194,39 @@ const startupReady = (async () => {
   await navigationTargets.restore().catch(() => undefined);
   await causalOrchestrator.restoreAutonomy(await autonomySession.restoreSnapshot().catch(() => undefined));
   await adaptEngine.init();
+  await loadConfiguredPlanner(chromeStorageBackend).then((planner) => {
+    adaptEngine.setAdaptivePlanner(planner);
+    causalOrchestrator.setAdaptivePlanner(planner);
+  }).catch(() => undefined);
   await causalEngine.init();
-  await reconcilePhase31StaticRulesets();
+  void reconcilePhase31StaticRulesets();
 })();
 const causalQueues = new Map<number, Promise<boolean>>();
 const causalHandledBatches = new Map<number, Map<number, boolean>>();
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== 'local' || !changes.adapt_ai_config) return;
+  void startupReady.then(() => loadConfiguredPlanner(chromeStorageBackend)).then((planner) => {
+    adaptEngine.setAdaptivePlanner(planner);
+    causalOrchestrator.setAdaptivePlanner(planner);
+  }).catch(() => undefined);
+});
 
 // 5. Synchronous Top-Level Service Worker Listeners
 
 // WebNavigation Lifecycle
 chrome.webNavigation.onCommitted.addListener(async (details) => {
   await startupReady;
+  navRegistry.reconcileDocumentId(
+    details.tabId,
+    details.frameId,
+    details.url,
+    details.documentId
+  );
   const committedSourceOrigin = navRegistry.getEpoch(details.tabId, details.frameId)?.origin;
   intentTracker.observeNavigationCommitted(details.tabId, details.frameId, details.url, details.timeStamp, committedSourceOrigin);
   const previous = navRegistry.getCausalKey(details.tabId, details.frameId);
-  if (!previous || previous.documentId !== details.documentId) {
+  if (!previous || !navRegistry.matchesDocumentId(details.tabId, details.frameId, details.documentId)) {
     await causalEngine.onNavigation(details.tabId, previous, {
       preservePreviousGraph: causalOrchestrator.hasPendingNavigationClosure(details.tabId)
         || details.frameId === 0
@@ -257,6 +323,10 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
 // WebRequest Telemetry Listeners
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
+    const capturedEpoch = details.type === 'main_frame'
+      ? undefined
+      : navRegistry.getEpoch(details.tabId, details.frameId);
+    if (capturedEpoch) requestEpochs.set(details.requestId, capturedEpoch);
     void startupReady.then(async () => {
       requestObserver.handleBeforeRequest(details);
       const scoped = details as chrome.webRequest.WebRequestBodyDetails & { documentId?: string };
@@ -264,7 +334,8 @@ chrome.webRequest.onBeforeRequest.addListener(
         type: 'start', tabId: details.tabId, frameId: details.frameId,
         requestId: details.requestId, url: details.url, documentId: scoped.documentId,
         resourceType: details.type, timeStamp: details.timeStamp, initiator: details.initiator,
-      }, causalResources);
+        parentFrameId: (details as chrome.webRequest.WebRequestBodyDetails & { parentFrameId?: number }).parentFrameId,
+      }, causalResources, capturedEpoch);
     });
   },
   { urls: ['http://*/*', 'https://*/*'] }
@@ -272,6 +343,8 @@ chrome.webRequest.onBeforeRequest.addListener(
 
 chrome.webRequest.onErrorOccurred.addListener(
   (details) => {
+    const capturedEpoch = requestEpochs.get(details.requestId) ?? navRegistry.getEpoch(details.tabId, details.frameId);
+    requestEpochs.delete(details.requestId);
     void startupReady.then(async () => {
       requestObserver.handleErrorOccurred(details);
       const scoped = details as chrome.webRequest.WebResponseErrorDetails & { documentId?: string };
@@ -280,7 +353,8 @@ chrome.webRequest.onErrorOccurred.addListener(
         requestId: details.requestId, url: details.url, documentId: scoped.documentId,
         resourceType: details.type, timeStamp: details.timeStamp, error: details.error,
         initiator: details.initiator,
-      }, causalResources);
+        parentFrameId: (details as chrome.webRequest.WebResponseErrorDetails & { parentFrameId?: number }).parentFrameId,
+      }, causalResources, capturedEpoch);
     });
   },
   { urls: ['http://*/*', 'https://*/*'] }
@@ -288,6 +362,8 @@ chrome.webRequest.onErrorOccurred.addListener(
 
 chrome.webRequest.onCompleted.addListener(
   (details) => {
+    const capturedEpoch = requestEpochs.get(details.requestId) ?? navRegistry.getEpoch(details.tabId, details.frameId);
+    requestEpochs.delete(details.requestId);
     void startupReady.then(async () => {
       requestObserver.handleCompleted(details);
       const scoped = details as chrome.webRequest.WebResponseCacheDetails & { documentId?: string };
@@ -295,7 +371,10 @@ chrome.webRequest.onCompleted.addListener(
         type: 'complete', tabId: details.tabId, frameId: details.frameId,
         requestId: details.requestId, url: details.url, documentId: scoped.documentId,
         resourceType: details.type, timeStamp: details.timeStamp, initiator: details.initiator,
-      }, causalResources);
+        parentFrameId: (details as chrome.webRequest.WebResponseCacheDetails & { parentFrameId?: number }).parentFrameId,
+        statusCode: details.statusCode,
+        fromCache: details.fromCache,
+      }, causalResources, capturedEpoch);
     });
   },
   { urls: ['http://*/*', 'https://*/*'] }
@@ -322,19 +401,14 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
     }).then(() => sendResponse({ success: true })).catch(() => sendResponse({ success: false }));
     return true;
   }
+  const tabId = sender.tab.id;
+  const frameId = sender.frameId || 0;
+  const senderDocumentId = (sender as chrome.runtime.MessageSender & { documentId?: string }).documentId;
+  const messageUrl = message.type === 'PAGE_SENSOR_READY' ? message.url : sender.tab.url || '';
+  const epoch = captureContentEpoch(tabId, frameId, message.navigationId, messageUrl, senderDocumentId);
+  if (!epoch) return false;
+  const siteKey = extractSiteKey(epoch.url);
   void startupReady.then(async () => {
-    const tabId = sender.tab!.id!;
-    const frameId = sender.frameId || 0;
-    const url = sender.tab!.url || (message.type === 'PAGE_SENSOR_READY' ? message.url : '');
-    const siteKey = extractSiteKey(url);
-    const senderDocumentId = (sender as chrome.runtime.MessageSender & { documentId?: string }).documentId;
-    let epoch = navRegistry.getEpoch(tabId, frameId);
-    if (!epoch) epoch = navRegistry.onNavigationCommitted(tabId, frameId, url, undefined, senderDocumentId);
-    if (senderDocumentId && senderDocumentId !== epoch.documentId) {
-      sendResponse({ success: false, error: 'stale-document' });
-      return;
-    }
-
     switch (message.type) {
     case 'PAGE_SENSOR_READY': {
       // Replay confirmed recipe once sensor is confirmed ready in DOM
@@ -374,8 +448,7 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
 
     case 'USER_INTENT_ENVELOPE': {
       if (!isUserIntentEnvelope(message.payload)) break;
-      const documentId = (sender as chrome.runtime.MessageSender & { documentId?: string }).documentId;
-      if (!documentId) break;
+      const documentId = senderDocumentId ?? epoch.documentId;
       intentTracker.record(tabId, frameId, documentId, message.payload);
       await causalOrchestrator.onIntentEnvelope(tabId, frameId, message.payload);
       break;
@@ -386,7 +459,7 @@ chrome.runtime.onMessage.addListener((message: ContentToBackgroundMessage, sende
       const previous = causalQueues.get(tabId) ?? Promise.resolve(false);
       const queued = previous
         .catch(() => false)
-        .then(() => causalOrchestrator.onPageObservation(tabId, frameId, message.payload))
+        .then(() => causalOrchestrator.onPageObservation(tabId, frameId, message.payload, epoch))
         .then((handled) => {
           const batches = causalHandledBatches.get(tabId) ?? new Map<number, boolean>();
           batches.set(message.payload.pageSignals.timestamp, handled);

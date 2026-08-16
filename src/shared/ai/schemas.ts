@@ -51,6 +51,7 @@ export const ADAPTATION_PLAN_JSON_SCHEMA = {
               'DOM_PRESERVE_BAIT',
               'DOM_HIDE_CANDIDATE',
               'NET_TEMP_BLOCK',
+              'TARGETED_SESSION_DNR',
               'NET_REDIRECT_LOCAL',
               'OBSERVE_MORE',
               'ABSTAIN',

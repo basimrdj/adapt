@@ -1,6 +1,7 @@
 import { NavigationRegistry } from '../../core/navigation/registry';
 import { isSyntheticDocumentId } from '../../core/navigation/epoch';
 import { normalizeUrlForTelemetry } from '../../core/network/normalize-url';
+import { NavigationEpoch } from '../../shared/types';
 import {
   clampConfidence,
   createEventId,
@@ -32,6 +33,13 @@ export interface RawRequestEvent {
   timeStamp?: number;
   error?: string;
   initiator?: string;
+  parentFrameId?: number;
+  statusCode?: number;
+  fromCache?: boolean;
+  redirect?: boolean;
+  thirdParty?: boolean;
+  resourceIdentityHash?: string;
+  repeatCount?: number;
 }
 
 const CONFIDENCE_REAL_DOCUMENT = 1;
@@ -112,7 +120,7 @@ export class EventNormalizer {
     const epoch = this.registry.getEpoch(raw.tabId, raw.frameId);
     if (!epoch) return null;
     if (epoch.tabId !== raw.tabId || epoch.frameId !== raw.frameId) return null;
-    if (raw.documentId !== undefined && raw.documentId !== epoch.documentId) return null;
+    if (raw.documentId !== undefined && !this.registry.matchesDocumentId(raw.tabId, raw.frameId, raw.documentId)) return null;
 
     const features: Record<string, string | number | boolean | null> = {
       ...coarseUrlFeatures(raw.url),
@@ -144,14 +152,20 @@ export class EventNormalizer {
     };
   }
 
-  normalizeRequest(raw: RawRequestEvent): EventNode | null {
-    const epoch = this.registry.getEpoch(raw.tabId, raw.frameId);
+  normalizeRequest(raw: RawRequestEvent, epochOverride?: NavigationEpoch): EventNode | null {
+    const epoch = epochOverride ?? this.registry.getEpoch(raw.tabId, raw.frameId);
     if (!epoch) return null;
     if (epoch.tabId !== raw.tabId || epoch.frameId !== raw.frameId) return null;
-    if (raw.documentId !== undefined && raw.documentId !== epoch.documentId) return null;
+    if (raw.documentId !== undefined
+      && raw.documentId !== epoch.documentId
+      && !this.registry.matchesDocumentId(raw.tabId, raw.frameId, raw.documentId)) return null;
 
     const features: Record<string, string | number | boolean | null> = {
       ...coarseUrlFeatures(raw.url),
+      ...(raw.resourceIdentityHash ? { resourceIdentityHash: raw.resourceIdentityHash } : {}),
+      ...(raw.thirdParty !== undefined ? { thirdParty: raw.thirdParty } : {}),
+      ...(raw.parentFrameId !== undefined ? { parentFrameId: raw.parentFrameId } : {}),
+      ...(raw.repeatCount !== undefined ? { repeatCount: raw.repeatCount } : {}),
     };
     if (raw.resourceType !== undefined && raw.resourceType.length > 0) {
       features.resourceType = raw.resourceType;
@@ -159,6 +173,11 @@ export class EventNormalizer {
     if (raw.error !== undefined && raw.error.length > 0) {
       features.error = raw.error;
     }
+    if (raw.statusCode !== undefined && Number.isFinite(raw.statusCode)) {
+      features.statusClass = Math.floor(raw.statusCode / 100);
+    }
+    if (raw.fromCache !== undefined) features.fromCache = raw.fromCache;
+    if (raw.redirect !== undefined) features.redirect = raw.redirect;
 
     const refs: OpaqueRef[] = [];
     const opaqueRequest = requestRef(raw.requestId);

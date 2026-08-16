@@ -1,0 +1,458 @@
+{
+  "run1": [
+    {
+      "aiCandidateRanking": [
+        "request:r923577301"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 130.3330078125,
+          "mutationAssociation": 0.35,
+          "ref": "request:r923577301",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r923577301",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r923577301"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "REINSERTED_SURFACE",
+      "survivorRef": "survivor:s1",
+      "timing": {
+        "latencyMs": 4822,
+        "startedAt": 1786873377153
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r1024243015"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 67.47509765625,
+          "mutationAssociation": 0.35,
+          "ref": "request:r1024243015",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r1024243015",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r1024243015"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "REINSERTED_SURFACE",
+      "survivorRef": "survivor:s1",
+      "timing": {
+        "latencyMs": 3354,
+        "startedAt": 1786873379760
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r434841374"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "related-frame",
+          "lagToSurvivorMs": null,
+          "mutationAssociation": 0.35,
+          "ref": "request:r334175660",
+          "repeatCount": 1,
+          "resourceType": "image",
+          "thirdParty": true
+        },
+        {
+          "frameAssociation": "related-frame",
+          "lagToSurvivorMs": null,
+          "mutationAssociation": 0.35,
+          "ref": "request:r434841374",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r334175660",
+        "request:r434841374"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r434841374"
+      },
+      "sessionProtectionInstalled": true,
+      "timing": {
+        "latencyMs": 2619,
+        "startedAt": 1786873382546
+      },
+      "triggerReason": "NOVEL_NETWORK_DISCOVERY"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r1024243015"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 170.47509765625,
+          "mutationAssociation": 0.35,
+          "ref": "request:r1024243015",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r1024243015",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r1024243015"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "PROMOTIONAL_SURFACE",
+      "survivorRef": "survivor:s1",
+      "timing": {
+        "latencyMs": 2446,
+        "startedAt": 1786873383374
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r2415041701"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 126.327880859375,
+          "mutationAssociation": 0.35,
+          "ref": "request:r2415041701",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r2415041701",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "postHealth": {
+        "antiBlockReaction": 0,
+        "confidence": 0.5,
+        "contentAvailability": 1,
+        "interaction": 1,
+        "mutationStability": 1,
+        "navigationHealth": 1,
+        "networkIntegrity": 1,
+        "privacyPreservation": 1,
+        "scrollability": 1,
+        "visualObstruction": 0
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r2415041701"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "REINSERTED_SURFACE",
+      "survivorRef": "survivor:s1",
+      "survivorResolved": true,
+      "timing": {
+        "latencyMs": 2080,
+        "startedAt": 1786873385260
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    }
+  ],
+  "run2": [],
+  "run3": [],
+  "freshProfileControl": [
+    {
+      "aiCandidateRanking": [
+        "request:r923577301"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 124.43994140625,
+          "mutationAssociation": 0.35,
+          "ref": "request:r923577301",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r923577301",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r923577301"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "REINSERTED_SURFACE",
+      "survivorRef": "survivor:s1",
+      "timing": {
+        "latencyMs": 2336,
+        "startedAt": 1786873448605
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r1024243015"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 63.422119140625,
+          "mutationAssociation": 0.35,
+          "ref": "request:r1024243015",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r1024243015",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "postHealth": {
+        "antiBlockReaction": 0,
+        "confidence": 0.5,
+        "contentAvailability": 1,
+        "interaction": 1,
+        "mutationStability": 1,
+        "navigationHealth": 1,
+        "networkIntegrity": 1,
+        "privacyPreservation": 1,
+        "scrollability": 1,
+        "visualObstruction": 0
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r1024243015"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "REINSERTED_SURFACE",
+      "survivorRef": "survivor:s1",
+      "survivorResolved": true,
+      "timing": {
+        "latencyMs": 2094,
+        "startedAt": 1786873451184
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r1024243015"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 165.422119140625,
+          "mutationAssociation": 0.35,
+          "ref": "request:r1024243015",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r1024243015",
+        "element:e1"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r1024243015"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorClass": "PROMOTIONAL_SURFACE",
+      "survivorRef": "survivor:s1",
+      "timing": {
+        "latencyMs": 2298,
+        "startedAt": 1786873453543
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    },
+    {
+      "aiCandidateRanking": [
+        "request:r418063755"
+      ],
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "related-frame",
+          "lagToSurvivorMs": null,
+          "mutationAssociation": 0.35,
+          "ref": "request:r350953279",
+          "repeatCount": 1,
+          "resourceType": "image",
+          "thirdParty": true
+        },
+        {
+          "frameAssociation": "related-frame",
+          "lagToSurvivorMs": null,
+          "mutationAssociation": 0.35,
+          "ref": "request:r418063755",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r350953279",
+        "request:r418063755"
+      ],
+      "executorResult": "staged",
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "policyValidator": {
+        "reasons": [],
+        "valid": true
+      },
+      "postHealth": {
+        "antiBlockReaction": 0,
+        "confidence": 0.5,
+        "contentAvailability": 1,
+        "interaction": 1,
+        "mutationStability": 1,
+        "navigationHealth": 1,
+        "networkIntegrity": 1,
+        "privacyPreservation": 1,
+        "scrollability": 1,
+        "visualObstruction": 0
+      },
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "selectedExperiment": {
+        "actionType": "TARGETED_SESSION_DNR",
+        "targetRef": "request:r418063755"
+      },
+      "sessionProtectionInstalled": true,
+      "survivorResolved": true,
+      "timing": {
+        "latencyMs": 1954,
+        "startedAt": 1786873453870
+      },
+      "triggerReason": "NOVEL_NETWORK_DISCOVERY"
+    },
+    {
+      "aiInvoked": true,
+      "candidateFeatureSummaries": [
+        {
+          "frameAssociation": "same-document",
+          "lagToSurvivorMs": 126.076904296875,
+          "mutationAssociation": 0.35,
+          "ref": "request:r2415041701",
+          "repeatCount": 1,
+          "resourceType": "script",
+          "thirdParty": true
+        }
+      ],
+      "candidateRefs": [
+        "request:r2415041701",
+        "element:e1"
+      ],
+      "persistentPromotionState": "NOT_PROMOTED_MODEL_OPINION",
+      "privacyMode": "STRICT",
+      "rollback": false,
+      "sessionProtectionInstalled": false,
+      "survivorClass": "REINSERTED_SURFACE",
+      "survivorRef": "survivor:s1",
+      "timing": {
+        "startedAt": 1786873456517
+      },
+      "triggerReason": "SURVIVOR_ATTRIBUTION"
+    }
+  ]
+}

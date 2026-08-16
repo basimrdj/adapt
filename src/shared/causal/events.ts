@@ -32,6 +32,7 @@ export type CausalDocumentKey = {
 export type OpaqueRef =
   | `event:${string}`
   | `element:e${number}`
+  | `survivor:s${number}`
   | `request:r${number}`
   | `resource:res${number}`
   | `frame:f${number}`

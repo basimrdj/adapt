@@ -55,7 +55,28 @@ async function buildExtension() {
     },
   });
 
-  // 3. Build Popup HTML / CSS / TS
+  // 2. Build the document-start MAIN-world popup broker.
+  await build({
+    configFile: false,
+    build: {
+      outDir: distDir,
+      emptyOutDir: false,
+      minify: sourcemap ? false : 'esbuild',
+      lib: {
+        entry: resolve(__dirname, '../src/entrypoints/early-popup-broker.ts'),
+        name: 'popupBroker',
+        formats: ['iife'],
+        fileName: () => 'popup-broker.js',
+      },
+      rollupOptions: {
+        output: {
+          inlineDynamicImports: true,
+        },
+      },
+    },
+  });
+
+  // 4. Build Popup HTML / CSS / TS
   await build({
     configFile: false,
     root: resolve(__dirname, '../src/entrypoints/popup'),
@@ -69,7 +90,7 @@ async function buildExtension() {
     },
   });
 
-  // 4. Copy manifest.json & static rules
+  // 5. Copy manifest.json & static rules
   copyFileSync(
     resolve(__dirname, '../src/manifest.json'),
     resolve(distDir, 'manifest.json')
