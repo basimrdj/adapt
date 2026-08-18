@@ -10,7 +10,7 @@
     "test:e2e": "vitest run tests/e2e",
     "test:ai": "vitest run tests/unit/ai-*.test.ts",
     "test:ai:azure": "tsx scripts/azure-smoke-test.ts",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsx scripts/dev-defaults.ts --if-missing && tsc --noEmit",
     "verify:phase3": "tsx scripts/verify-phase3.ts",
     "phase31:apply": "node tools/phase31/apply.mjs",
     "phase31:verify": "node tools/phase31/verify.mjs",

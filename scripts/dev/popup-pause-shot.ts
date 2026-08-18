@@ -35,13 +35,14 @@ async function main(): Promise<void> {
     // Popup-as-tab artifact fix: report the real site tab as active.
     await page.evaluateOnNewDocument(() => {
       const original = chrome.tabs.query.bind(chrome.tabs);
-      chrome.tabs.query = (queryInfo: chrome.tabs.QueryInfo, callback?: (tabs: chrome.tabs.Tab[]) => void) => {
+      const override = (queryInfo: chrome.tabs.QueryInfo, callback?: (tabs: chrome.tabs.Tab[]) => void) => {
         if (queryInfo.active && callback) {
           callback([{ id: 1, url: 'https://example.com/', active: true } as chrome.tabs.Tab]);
-          return undefined as never;
+          return undefined;
         }
         return original(queryInfo, callback as (tabs: chrome.tabs.Tab[]) => void);
       };
+      chrome.tabs.query = override as typeof chrome.tabs.query;
     });
     await page.goto(`chrome-extension://${extensionId}/popup/index.html`, { waitUntil: 'networkidle0' });
     await new Promise((r) => setTimeout(r, 700));

@@ -17,7 +17,7 @@
  */
 
 import { execSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -69,6 +69,13 @@ export function ensureDevDefaults(): boolean {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {
-  const written = ensureDevDefaults();
-  console.log(`dev-defaults: ${written ? 'credential baked into gitignored dev-defaults.ts' : 'no credential — wrote undefined stub'}`);
+  // --if-missing: only write when the generated file is absent. Used by the
+  // typecheck step and CI so fresh checkouts typecheck without clobbering a
+  // developer's locally baked credential.
+  if (process.argv.includes('--if-missing') && existsSync(outPath)) {
+    console.log('dev-defaults: generated file present — leaving it untouched');
+  } else {
+    const written = ensureDevDefaults();
+    console.log(`dev-defaults: ${written ? 'credential baked into gitignored dev-defaults.ts' : 'no credential — wrote undefined stub'}`);
+  }
 }

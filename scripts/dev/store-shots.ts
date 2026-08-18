@@ -30,7 +30,7 @@ const ARTICLE = `<!doctype html><html><head><meta charset="utf-8"><style>
 <p>The approach, known locally as 'testing what you ship', has been linked to a 100% reduction in Friday-evening incidents.</p></article></body></html>`;
 
 function startArticleServer(): Promise<{ port: number; close: () => Promise<void> }> {
-  const server = http.createServer((req, res) => {
+  const server = http.createServer((_req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(ARTICLE);
   });

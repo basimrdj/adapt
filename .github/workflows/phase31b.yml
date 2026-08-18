@@ -19,6 +19,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # The gitignored generated dev-defaults module must exist before tsc runs.
+      - name: Generate dev-defaults stub if missing
+        run: npx tsx scripts/dev-defaults.ts --if-missing
       - run: npm run typecheck
 
   page-unit:
@@ -30,6 +33,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Generate dev-defaults stub if missing
+        run: npx tsx scripts/dev-defaults.ts --if-missing
       - name: Prepare validated Phase 3.1 filter cache
         run: npm run phase31:sync
       - run: npm run build:full
@@ -45,6 +50,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Generate dev-defaults stub if missing
+        run: npx tsx scripts/dev-defaults.ts --if-missing
       - name: Run canonical Phase 3.1B evidence gates
         run: npm run phase31:sync && ADAPT_PHASE31_OFFLINE=1 npm run verify:phase31b
 
@@ -57,6 +64,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Generate dev-defaults stub if missing
+        run: npx tsx scripts/dev-defaults.ts --if-missing
       - run: npm run typecheck
       - name: Prepare validated Phase 3.1 filter cache
         run: npm run phase31:sync
@@ -73,6 +82,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Generate dev-defaults stub if missing
+        run: npx tsx scripts/dev-defaults.ts --if-missing
       - run: npm run typecheck
       - name: Prepare validated Phase 3.1 filter cache
         run: npm run phase31:sync
@@ -87,5 +98,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Generate dev-defaults stub if missing
+        run: npx tsx scripts/dev-defaults.ts --if-missing
       - name: Pack release artifact (no baked AI) and verify it in a clean Chrome profile
         run: npm run pack && npm run verify:packaged
