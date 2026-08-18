@@ -161,28 +161,39 @@ describe('per-site pause control (real Chromium)', () => {
   }, 60_000);
 
   it('main-world popup broker disarms while paused and is restored on resume', async () => {
-    const openSource = async (): Promise<string> => {
+    // The stand-down reaches the MAIN-world broker via the content script's
+    // storage read + postMessage — an async path that can lose to a fast
+    // domcontentloaded on a slow machine. Poll for the expected state instead
+    // of racing it.
+    const openSource = async (expectNative: boolean): Promise<string> => {
       const page = await browser.newPage();
       try {
         await page.goto(fixtureUrl, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-        return await page.evaluate(() => window.open.toString());
+        const deadline = Date.now() + 8_000;
+        let source = '';
+        while (Date.now() < deadline) {
+          source = await page.evaluate(() => window.open.toString());
+          if (source.includes('[native code]') === expectNative) return source;
+          await new Promise((resolve) => setTimeout(resolve, 150));
+        }
+        return source;
       } finally {
         await page.close().catch(() => undefined);
       }
     };
     // Unpaused: the broker wraps window.open (a JS function, not the native one).
-    expect(await openSource()).not.toContain('[native code]');
+    expect(await openSource(false)).not.toContain('[native code]');
     await workerEval(browser, async () => {
       await chrome.storage.local.set({ adapt_paused_hosts: ['127.0.0.1'] });
     });
     await waitBandHosts(browser, ['127.0.0.1']);
     // Paused: the stand-down message disarmed the broker and restored native open.
-    expect(await openSource()).toContain('[native code]');
+    expect(await openSource(true)).toContain('[native code]');
     await workerEval(browser, async () => {
       await chrome.storage.local.set({ adapt_paused_hosts: [] });
     });
     await waitBandHosts(browser, []);
-    expect(await openSource()).not.toContain('[native code]');
+    expect(await openSource(false)).not.toContain('[native code]');
   }, 60_000);
 
   it('durable: a pause survives a full browser restart', async () => {
