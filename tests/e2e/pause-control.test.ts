@@ -59,7 +59,8 @@ async function extensionWorker(browser: Browser): Promise<Target> {
     { timeout: 15_000 }
   );
   // The extension API bindings must be live before evaluate touches chrome.storage.
-  const deadline = Date.now() + 10_000;
+  // 30s: profile-restore restarts on a loaded machine can take well past 10s.
+  const deadline = Date.now() + 30_000;
   for (;;) {
     const worker = await target.worker().catch(() => null);
     if (worker) {
