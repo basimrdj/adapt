@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T36: Hostile Intrinsics Freeze</title>
+  <style>
+    body { font-family: sans-serif; overflow: hidden; }
+    #blocker-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #000; color: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 999999;
+    }
+  </style>
+  <script>
+    // Hostile intrinsics: freeze the surfaces scriptlets and shims wrap, BEFORE
+    // any late-injected page-plane code could run. Extension MAIN-world
+    // document_start scripts have already executed; this must not break the
+    // isolated-world sensor, the worker pipeline, or crash the page.
+    window.__freeze_errors = [];
+    window.addEventListener('error', (event) => {
+      window.__freeze_errors.push(String(event.message || event.error || 'unknown'));
+    });
+    try {
+      const nonWritable = (obj, key) => {
+        try {
+          const value = obj[key];
+          Object.defineProperty(obj, key, { value, writable: false, configurable: false });
+        } catch (e) { window.__freeze_errors.push('freeze:' + key); }
+      };
+      nonWritable(window, 'setTimeout');
+      nonWritable(window, 'setInterval');
+      nonWritable(window, 'open');
+      nonWritable(window, 'eval');
+      try { Object.freeze(EventTarget.prototype); } catch (e) { window.__freeze_errors.push('freeze:EventTarget'); }
+      try { Object.freeze(JSON); } catch (e) { window.__freeze_errors.push('freeze:JSON'); }
+      window.__intrinsics_frozen = true;
+    } catch (e) {
+      window.__freeze_errors.push('freeze:top:' + e);
+      window.__intrinsics_frozen = true;
+    }
+  </script>
+</head>
+<body>
+  <main id="main-content">
+    <h1>T36 Hostile Intrinsics Content</h1>
+    <p id="article-body">This article must survive the detector war intact.</p>
+  </main>
+
+  <div id="blocker-modal">
+    <h1>Adblock Detected</h1>
+    <p>Please disable your ad blocker to continue viewing this website.</p>
+  </div>
+
+  <script src="http://localhost:4071/synthetic-ad.js"></script>
+</body>
+</html>

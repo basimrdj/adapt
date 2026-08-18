@@ -2,7 +2,7 @@
 
 **Document Version:** 1.0.0  
 **Target Milestone:** Phase 2.5 AI Release Gate  
-**Target Model / Engine:** Azure OpenAI `buzz-gpt-5-4-mini` (GPT-5.4 mini) / Structured Outputs  
+**Target Model / Engine:** Azure OpenAI `<your-model-deployment>` (GPT-5.4 mini) / Structured Outputs  
 **Deterministic Engine Baseline:** Phase 1.5 MV3 Transaction Engine  
 **Release Gate Verdict:** **GO (PASSED)**  
 **Overall Test Suite Status:** **77 / 77 Tests Passing across 22 Test Files**  
@@ -48,7 +48,7 @@ In accordance with Phase 2.5 audit rules, every performance metric claimed in `P
 
 | Metric Claimed in Phase 2 | Reported Value | Evaluator Used in Phase 2 | Phase 2.5 Empirical Re-Verification |
 | :--- | :--- | :--- | :--- |
-| **Strategy Selection Accuracy** | 100% | Unit MockPlanner (4 cases) | **96.0%** on Live Azure `buzz-gpt-5-4-mini`; **100%** on 250-case Mock benchmark. |
+| **Strategy Selection Accuracy** | 100% | Unit MockPlanner (4 cases) | **96.0%** on Live Azure `<your-model-deployment>`; **100%** on 250-case Mock benchmark. |
 | **Unauthorized Action Rate** | 0.0% | Unit MockPlanner & PolicyValidator | **0.0%** across 105 hostile injection vectors and live cloud tests. |
 | **False-Positive Adaptation Rate**| 0.0% | E2E Chromium & Unit Mock | **0.0%** across 120 benign controls (GDPR, login, newsletters, hybrids). |
 | **Prompt Injection Policy Escape**| 0.0% | Unit Mock (3 cases) | **0.0%** across 105 hostile adversarial attack vectors. |
@@ -141,15 +141,15 @@ We subjected the `PolicyValidator` to malformed, truncated, and maliciously craf
 
 ---
 
-## 6. Live Azure OpenAI Benchmark (`buzz-gpt-5-4-mini`)
+## 6. Live Azure OpenAI Benchmark (`<your-model-deployment>`)
 
-Using runtime credentials against the deployed `buzz-gpt-5-4-mini` model on Azure OpenAI East US 2, we conducted live benchmark evaluations with Structured Outputs enabled (`json_schema` strict mode).
+Using runtime credentials against the deployed `<your-model-deployment>` model on Azure OpenAI East US 2, we conducted live benchmark evaluations with Structured Outputs enabled (`json_schema` strict mode).
 
 ### Benchmark Results by Reasoning Effort
 
 ```
 ========================================================================================
-                 AZURE OPENAI LIVE BENCHMARK (buzz-gpt-5-4-mini)
+                 AZURE OPENAI LIVE BENCHMARK (<your-model-deployment>)
 ========================================================================================
  Metric                        Reasoning: "low"            Reasoning: "medium"
 ----------------------------------------------------------------------------------------
@@ -167,14 +167,14 @@ Using runtime credentials against the deployed `buzz-gpt-5-4-mini` model on Azur
 ```
 
 ### Critical Discovery: Reasoning Effort & Token Starvation
-- **Empirical Finding:** At `reasoning_effort: "medium"`, `buzz-gpt-5-4-mini` consumed an average of **487 reasoning tokens** out of the 600 `max_completion_tokens` cap. This left fewer than 80 tokens for the JSON response body, resulting in truncated JSON strings and schema validation errors (32% accuracy).
+- **Empirical Finding:** At `reasoning_effort: "medium"`, `<your-model-deployment>` consumed an average of **487 reasoning tokens** out of the 600 `max_completion_tokens` cap. This left fewer than 80 tokens for the JSON response body, resulting in truncated JSON strings and schema validation errors (32% accuracy).
 - **Architectural Resolution:** `reasoning_effort` must remain **`low`** for all real-time browser advisory transactions, with `max_completion_tokens` set to at least **800 tokens**. Under `reasoning_effort: "low"`, the model utilized only **60 reasoning tokens**, completed responses in **2.35s (P50)**, and achieved **96.0% accuracy** with **0% false positives**.
 
 ---
 
 ## 7. Multimodal / Vision Capability Evaluation
 
-We empirically tested vision processing with `buzz-gpt-5-4-mini` by submitting cropped base64 viewport segments:
+We empirically tested vision processing with `<your-model-deployment>` by submitting cropped base64 viewport segments:
 - **API Status:** Fully supported and operational via Azure OpenAI Chat Completions.
 - **Vision Usage:** 83 prompt tokens, 89 completion tokens.
 - **Visual Privacy Boundary:** Only low-resolution, element-cropped bounding boxes containing zero PII/form fields may be transmitted to the vision analyzer. Full page screenshots are prohibited.
@@ -266,9 +266,9 @@ The compiled production bundle in `dist/` was scanned for secret leakage, cloud 
 
 ```
 Scanning dist/ for forbidden strings...
-✓ dist/background.js: CLEAN (0 azure.com, 0 openai.azure.com, 0 buzz-gpt-5-4-mini, 0 keys, 0 localhost)
-✓ dist/content.js:    CLEAN (0 azure.com, 0 openai.azure.com, 0 buzz-gpt-5-4-mini, 0 keys, 0 localhost)
-✓ dist/manifest.json: CLEAN (0 azure.com, 0 openai.azure.com, 0 buzz-gpt-5-4-mini, 0 keys, 0 localhost)
+✓ dist/background.js: CLEAN (0 azure.com, 0 openai.azure.com, 0 <your-model-deployment>, 0 keys, 0 localhost)
+✓ dist/content.js:    CLEAN (0 azure.com, 0 openai.azure.com, 0 <your-model-deployment>, 0 keys, 0 localhost)
+✓ dist/manifest.json: CLEAN (0 azure.com, 0 openai.azure.com, 0 <your-model-deployment>, 0 keys, 0 localhost)
 ```
 
 ---

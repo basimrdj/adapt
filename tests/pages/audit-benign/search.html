@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Audit Benign — Search</title>
+</head>
+<body>
+  <main id="main-content">
+    <h1>Site Search</h1>
+    <form id="search-form">
+      <input id="search-box" type="search" placeholder="Search articles" autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+    <ul id="search-results"></ul>
+    <a href="/audit-benign/index.html">Back to gallery</a>
+  </main>
+  <script>
+    var ARTICLES = [
+      'Apple harvest sets records',
+      'Apricot festival draws crowds',
+      'Banana bread basics',
+      'Cherry blossom forecast',
+      'Apple cider guide',
+    ];
+    document.getElementById('search-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var query = document.getElementById('search-box').value.trim().toLowerCase();
+      var results = ARTICLES.filter(function (title) { return title.toLowerCase().includes(query); });
+      var list = document.getElementById('search-results');
+      list.innerHTML = '';
+      results.forEach(function (title) {
+        var item = document.createElement('li');
+        item.className = 'result';
+        item.textContent = title;
+        list.appendChild(item);
+      });
+      list.setAttribute('data-result-count', String(results.length));
+    });
+  </script>
+</body>
+</html>

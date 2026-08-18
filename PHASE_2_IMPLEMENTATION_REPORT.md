@@ -19,7 +19,7 @@ The model does not interact directly with Chromium, execute arbitrary scripts, o
                 EvidencePacket (Opaque References Only)
                                     │
                                     ▼
-                AdaptivePlanner (buzz-gpt-5-4-mini / Azure)
+                AdaptivePlanner (<your-model-deployment> / Azure)
                 [Structured Outputs with Strict JSON Schema]
                                     │
                                     ▼
@@ -58,14 +58,14 @@ The model does not interact directly with Chromium, execute arbitrary scripts, o
 ---
 
 ## 4. Azure Integration
-- **Endpoint**: `https://basim-agent3-openai-eastus2.openai.azure.com/openai/v1/`
-- **Deployment**: `buzz-gpt-5-4-mini` (GPT-5.4 mini)
-- **Credential Storage**: Dynamic subshell retrieval via authenticated `az` CLI (`az cognitiveservices account keys list`). Credentials never touch disk, git, or extension code.
+- **Endpoint**: `https://<your-account>.openai.azure.com/openai/v1/` (set via `AZURE_OPENAI_BASE_URL`)
+- **Deployment**: set via `AZURE_OPENAI_MODEL`
+- **Credential Storage**: `AZURE_OPENAI_API_KEY`, or dynamic retrieval via authenticated `az` CLI (`az cognitiveservices account keys list` with `AZURE_OPENAI_ACCOUNT`/`AZURE_OPENAI_RESOURCE_GROUP`). Credentials never touch disk, git, or extension code.
 
 ---
 
 ## 5. Exact Model Configuration
-- **Model / Deployment**: `buzz-gpt-5-4-mini`
+- **Model / Deployment**: `<your-model-deployment>`
 - **Reasoning Effort**: `low`
 - **Max Completion Tokens**: `600`
 - **Response Format**: `json_schema` (strict mode: `true`, `additionalProperties: false`)

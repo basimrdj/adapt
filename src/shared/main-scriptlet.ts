@@ -181,19 +181,183 @@ export function runMainScriptlet(name: string, args: string[]): boolean {
     return true;
   };
 
-  const preventSetTimeout = (values: string[]): boolean => {
-    const key = `timeout:${JSON.stringify(values)}`;
+  const preventTimer = (values: string[], interval: boolean): boolean => {
+    const name = interval ? 'setInterval' : 'setTimeout';
+    const key = `prevent-timer:${name}:${JSON.stringify(values)}`;
     const root = globalThis as PageObject;
-    const original = root.setTimeout;
+    const original = root[name];
     if (typeof original !== 'function' || wrappers.has(key)) return false;
     const wrapped = function (handler: TimerHandler, timeout?: number, ...rest: unknown[]): number {
       if (matches(typeof handler === 'function' ? handler.toString() : handler, values[0] || '')) return 0;
       return (original as (...args: unknown[]) => number)(handler, timeout, ...rest);
     };
-    Object.defineProperty(root, 'setTimeout', { configurable: true, writable: true, value: wrapped });
+    Object.defineProperty(root, name, { configurable: true, writable: true, value: wrapped });
     wrappers.add(key);
     return true;
   };
+
+  // AdGuard adjust-set{Timeout,Interval} semantics: matching timers are slowed by
+  // 1/boost (default boost 0.05 → 20x slower). Empty delay pattern matches any
+  // delay; the handler-source pattern is required (an empty one adjusts nothing,
+  // consistent with the prevent-setTimeout house default).
+  const adjustTimer = (values: string[], interval: boolean): boolean => {
+    if (values.length < 1 || values.length > 3) return false;
+    const funcPattern = values[0] ?? '';
+    const delayPattern = values[1] ?? '';
+    if (!funcPattern) return false;
+    const boost = values[2] ? Number(values[2]) : 0.05;
+    if (!Number.isFinite(boost) || boost <= 0 || boost > 1) return false;
+    const name = interval ? 'setInterval' : 'setTimeout';
+    const key = `adjust:${name}:${JSON.stringify(values)}`;
+    const root = globalThis as PageObject;
+    const original = root[name];
+    if (typeof original !== 'function' || wrappers.has(key)) return false;
+    const wrapped = function (handler: TimerHandler, timeout?: number, ...rest: unknown[]): number {
+      const sourceHit = matches(typeof handler === 'function' ? handler.toString() : handler, funcPattern);
+      const delayHit = !delayPattern || matches(String(timeout ?? ''), delayPattern);
+      const adjusted = sourceHit && delayHit ? (timeout ?? 0) * (1 / boost) : timeout;
+      return (original as (...args: unknown[]) => number)(handler, adjusted, ...rest);
+    };
+    try {
+      Object.defineProperty(root, name, { configurable: true, writable: true, value: wrapped });
+      wrappers.add(key);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // prevent-addEventListener: suppress listener registration when the event type
+  // matches AND (no handler pattern OR the handler source matches). Either
+  // pattern may be empty (that dimension then matches everything); both empty is
+  // refused by the validator and here.
+  const preventAddEventListener = (values: string[]): boolean => {
+    if (values.length < 1 || values.length > 2) return false;
+    const typePattern = values[0] ?? '';
+    const handlerPattern = values[1] ?? '';
+    if (!typePattern && !handlerPattern) return false;
+    const key = `ael:${typePattern}:${handlerPattern}`;
+    if (wrappers.has(key) || typeof EventTarget === 'undefined') return false;
+    const original = EventTarget.prototype.addEventListener;
+    if (typeof original !== 'function') return false;
+    const wrapped = function (this: unknown, type: string, listener: EventListenerOrEventListenerObject | null, ...rest: unknown[]): void {
+      const typeHit = !typePattern || matches(String(type), typePattern);
+      if (typeHit && listener) {
+        const source = typeof listener === 'function' ? listener.toString() : String(listener.handleEvent ?? '');
+        if (!handlerPattern || matches(source, handlerPattern)) return;
+      } else if (typeHit && !handlerPattern) {
+        return;
+      }
+      return (original as (this: unknown, ...args: unknown[]) => void).call(this, type, listener, ...rest);
+    };
+    try {
+      Object.defineProperty(EventTarget.prototype, 'addEventListener', { configurable: true, writable: true, value: wrapped });
+      wrappers.add(key);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // set-cookie: RFC-token cookie name, value limited to a printable charset with
+  // no separators. Assigned with path=/ so the whole host sees it.
+  const setCookie = (values: string[]): boolean => {
+    if (values.length !== 2 || typeof document === 'undefined') return false;
+    const cookieName = values[0] ?? '';
+    const cookieValue = values[1] ?? '';
+    if (!/^[A-Za-z0-9_!#$%&'*+.^`|~-]{1,64}$/.test(cookieName)) return false;
+    if (!/^[\w%+./=-]{0,100}$/.test(cookieValue)) return false;
+    try {
+      document.cookie = `${cookieName}=${cookieValue}; path=/`;
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // Storage items store canonical strings: scalar magic names as-is, the empty
+  // containers as JSON, numbers verbatim. Function-typed magic values are
+  // meaningless as strings and stay refused. '$remove$' deletes the key.
+  const storageString = (valueName: string): string | null => {
+    if (valueName === '') return '';
+    if (/^-?\d{1,6}(?:\.\d{1,3})?$/.test(valueName)) return valueName;
+    if (valueName === 'undefined' || valueName === 'null' || valueName === 'true' || valueName === 'false') return valueName;
+    if (valueName === 'emptyObj') return '{}';
+    if (valueName === 'emptyArray' || valueName === 'emptyArr') return '[]';
+    return null;
+  };
+
+  const safeStorage = (kind: 'localStorage' | 'sessionStorage'): Storage | undefined => {
+    try {
+      return globalThis[kind];
+    } catch {
+      return undefined;
+    }
+  };
+
+  const setStorageItem = (values: string[], storage: Storage | undefined): boolean => {
+    if (!storage || values.length !== 2) return false;
+    const keyName = values[0] ?? '';
+    if (!/^[\w$.-]{1,128}$/.test(keyName)) return false;
+    const valueName = values[1] ?? '';
+    try {
+      if (valueName === '$remove$') {
+        storage.removeItem(keyName);
+        return true;
+      }
+      const stored = storageString(valueName);
+      if (stored === null) return false;
+      storage.setItem(keyName, stored);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // prevent-element-src-loading: wrap the `src` setter on the element's own
+  // prototype holder; matching URLs never reach the native setter, so no request
+  // is ever initiated (stronger than DNR for inline-assigned loads).
+  const preventElementSrcLoading = (values: string[]): boolean => {
+    if (values.length !== 2 || typeof document === 'undefined') return false;
+    const tag = (values[0] ?? '').toLowerCase();
+    if (!/^(script|img|iframe|video|audio|source|embed)$/.test(tag)) return false;
+    const pattern = values[1] ?? '';
+    if (!pattern) return false;
+    const key = `elsrc:${tag}:${pattern}`;
+    if (wrappers.has(key)) return false;
+    let holder: object | null;
+    try {
+      holder = Object.getPrototypeOf(document.createElement(tag));
+    } catch {
+      return false;
+    }
+    let descriptor: PropertyDescriptor | undefined;
+    while (holder && !descriptor) {
+      descriptor = Object.getOwnPropertyDescriptor(holder, 'src');
+      if (!descriptor) holder = Object.getPrototypeOf(holder);
+    }
+    if (!descriptor || typeof descriptor.set !== 'function' || typeof descriptor.get !== 'function') return false;
+    const originalGet = descriptor.get;
+    const originalSet = descriptor.set;
+    try {
+      Object.defineProperty(holder, 'src', {
+        configurable: true,
+        enumerable: descriptor.enumerable,
+        get: function (this: unknown) {
+          return originalGet.call(this);
+        },
+        set: function (this: unknown, value: string) {
+          if (matches(String(value), pattern)) return;
+          return originalSet.call(this, value);
+        },
+      });
+      wrappers.add(key);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
 
   const preventEvalIf = (values: string[]): boolean => {
     const key = `eval:${JSON.stringify(values)}`;
@@ -264,7 +428,15 @@ export function runMainScriptlet(name: string, args: string[]): boolean {
   if (name === 'abort-current-inline-script') return abortCurrentInlineScript(args);
   if (name === 'prevent-fetch') return preventFetch(args);
   if (name === 'prevent-xhr') return preventXhr(args);
-  if (name === 'prevent-setTimeout') return preventSetTimeout(args);
+  if (name === 'prevent-setTimeout') return preventTimer(args, false);
+  if (name === 'prevent-setInterval') return preventTimer(args, true);
+  if (name === 'adjust-setInterval') return adjustTimer(args, true);
+  if (name === 'adjust-setTimeout') return adjustTimer(args, false);
+  if (name === 'prevent-addEventListener') return preventAddEventListener(args);
+  if (name === 'set-cookie') return setCookie(args);
+  if (name === 'set-local-storage-item') return setStorageItem(args, safeStorage('localStorage'));
+  if (name === 'set-session-storage-item') return setStorageItem(args, safeStorage('sessionStorage'));
+  if (name === 'prevent-element-src-loading') return preventElementSrcLoading(args);
   if (name === 'prevent-eval-if') return preventEvalIf(args);
   if (name === 'prevent-window-open') return preventWindowOpen(args);
   if (name === 'json-prune') return jsonPrune(args);

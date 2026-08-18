@@ -1,0 +1,91 @@
+{
+  "schema": "kimi-detector-warfare-proof-v1",
+  "ranAt": "2026-08-17T07:01:59.778Z",
+  "checks": [
+    {
+      "name": "warmup: packaged anti-adblock shard enabled (greedy startup reconciliation)",
+      "pass": true,
+      "detail": "enabled=true"
+    },
+    {
+      "name": "A0: static plane blocked the bait probe on an unlisted host (pre-request)",
+      "pass": true,
+      "detail": "probe=blocked"
+    },
+    {
+      "name": "A1: survivor AI staged a session rule against the detector host",
+      "pass": true,
+      "detail": "rules=[{\"id\":3000000,\"urlFilter\":\"|http://detector-kit.test:52967/detector.js*\",\"requestDomains\":null,\"initiatorDomains\":null},{\"id\":3000001,\"urlFilter\":null,\"requestDomains\":[\"detector-kit.test\"],\"initiatorDomains\":[\"warfare.test\"]}]"
+    },
+    {
+      "name": "A2: wall outcome — suppressed by the re-hide watch OR prevented outright (detector blocked pre-execution)",
+      "pass": true,
+      "detail": "wallShown=1 suppressed=true preExecutionBlock=false"
+    },
+    {
+      "name": "A3: silent telemetry beacon never reached the detector host",
+      "pass": true,
+      "detail": "detectorKitReceipts=[\"/detector.js\"]"
+    },
+    {
+      "name": "A0b: bait probe never reached ads-cdn (server-side blocked-before-network proof)",
+      "pass": true,
+      "detail": "adsCdnReceipts=[]"
+    },
+    {
+      "name": "A4: revisit — detector script never re-requested (learned rule blocks pre-request)",
+      "pass": true,
+      "detail": "detector.js receipts before=1 after=1"
+    },
+    {
+      "name": "A4: revisit — no wall, zero AI calls (learned behavior stands on its own)",
+      "pass": true,
+      "detail": "war={\"wallShown\":0,\"reShown\":0,\"reInserted\":0,\"beaconSent\":false,\"own\":\"loaded\"} aiDelta=0"
+    },
+    {
+      "name": "CTL: first-party control loaded on both mode-A pages",
+      "pass": true,
+      "detail": "visit1=loaded revisit=loaded"
+    },
+    {
+      "name": "B1: inline first-party detector fires (no DNR rule can prevent inline JS — the boundary under test)",
+      "pass": true,
+      "detail": "war={\"wallShown\":1,\"reShown\":1,\"reInserted\":0,\"beaconSent\":false,\"own\":\"loaded\"}"
+    },
+    {
+      "name": "B2: survivor AI hid the inline-built wall (DOM_HIDE_CANDIDATE → REMOVE_REACTION_UI)",
+      "pass": true,
+      "detail": "wallDisplay=none"
+    },
+    {
+      "name": "B3: content stays readable during the war (wall hidden in the majority of samples)",
+      "pass": true,
+      "detail": "hiddenSamples=10/12"
+    },
+    {
+      "name": "B4: re-hide war bounded and reported (settle event, count >= 1, cap 25 respected)",
+      "pass": true,
+      "detail": "settled=true maxReHideCount=25 counter=25"
+    },
+    {
+      "name": "B5: KNOWN_LIMIT recorded — first-party beacon arrived (honest boundary, not a failure)",
+      "pass": true,
+      "detail": "beaconArrived=true beaconSent=true"
+    },
+    {
+      "name": "CTL: bait class text-ad was never statically hidden (computed-style probe passed, no false detection)",
+      "pass": true,
+      "detail": "stateA2.wallShown=0 (revisit clean ⇒ bait probe passed)"
+    },
+    {
+      "name": "credential never appears in forensic artifact",
+      "pass": true,
+      "detail": "tokenPresent=false"
+    }
+  ],
+  "knownLimits": [
+    "first-party inline telemetry cannot be blocked by DNR (beacon arrived: true)",
+    "bounded re-hide window is 20s/25 re-hides; a persistent inline detector eventually stands again (final wall display: none)"
+  ],
+  "pass": true
+}

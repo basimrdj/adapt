@@ -1,31 +1,12 @@
 import { OpenAI } from 'openai';
-import { execSync } from 'child_process';
+import { requireAzureApiKey, requireAzureBaseURL, requireAzureModel } from './azure-env';
 
 async function runSmokeTest() {
   console.log('=== ADAPT Phase 2A: Azure OpenAI Extended Smoke Test ===');
 
-  let apiKey = process.env.AZURE_OPENAI_API_KEY;
-  if (!apiKey) {
-    try {
-      apiKey = execSync(
-        'az cognitiveservices account keys list --name basim-agent3-openai-eastus2 --resource-group rg-maheekodhan42-8571 --query key1 -o tsv',
-        { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
-      ).trim();
-    } catch {
-      console.error('Failed to obtain Azure key via CLI.');
-      process.exit(1);
-    }
-  }
-
-  if (!apiKey || apiKey.length === 0) {
-    console.error('Azure OpenAI key retrieval failed.');
-    process.exit(1);
-  }
-
-  const baseURL =
-    process.env.AZURE_OPENAI_BASE_URL ||
-    'https://basim-agent3-openai-eastus2.openai.azure.com/openai/v1/';
-  const model = process.env.AZURE_OPENAI_MODEL || 'buzz-gpt-5-4-mini';
+  const apiKey = requireAzureApiKey();
+  const baseURL = requireAzureBaseURL();
+  const model = requireAzureModel();
 
   const client = new OpenAI({ apiKey, baseURL });
 

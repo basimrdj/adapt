@@ -1,0 +1,125 @@
+{
+  "schema": "adapt-h4-hostile-stress-v1",
+  "verificationRunId": "phase31b-1787084598050-0f433a8352ea",
+  "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+  "generatedAt": "2026-08-18T20:23:18.050Z",
+  "buildFingerprint": "9f8265ae2d19f810770f48575db140ef174d21442abe4973517e6630a7c8aa43",
+  "total": 14,
+  "passed": 14,
+  "results": [
+    {
+      "id": "t36-hostile-intrinsics",
+      "pass": true,
+      "durationMs": 784,
+      "observations": {}
+    },
+    {
+      "id": "t37-mutation-drip",
+      "pass": true,
+      "durationMs": 5694,
+      "observations": {
+        "dripDelta": 3,
+        "frameDelta": 90
+      }
+    },
+    {
+      "id": "t41-rehide-war-endgame",
+      "pass": true,
+      "durationMs": 25445,
+      "observations": {
+        "reshowsAt22s": 36,
+        "reshowsAt24s": 36,
+        "wallVisibleAt24s": true,
+        "note": "The wall standing at the end is the honest bounded-watch endgame (TTL/cap), not a failure."
+      }
+    },
+    {
+      "id": "t38-closed-shadow",
+      "pass": true,
+      "durationMs": 3268,
+      "observations": {
+        "knownLimit": "closed shadow roots are opaque to the sensor — walls inside them stand"
+      }
+    },
+    {
+      "id": "t39-ready-flood",
+      "pass": true,
+      "durationMs": 4059,
+      "observations": {
+        "workerPingMs": 4
+      }
+    },
+    {
+      "id": "t40-click-flood",
+      "pass": true,
+      "durationMs": 1414,
+      "observations": {
+        "framesDelta": 42
+      }
+    },
+    {
+      "id": "bfcache-restore",
+      "pass": true,
+      "durationMs": 2709,
+      "observations": {
+        "persisted": true,
+        "harnessLimit": "headless Chrome flushes bfcache here (CacheFlushed); the fresh-restore path is what is pinned"
+      }
+    },
+    {
+      "id": "stale-document-apply",
+      "pass": true,
+      "durationMs": 3476,
+      "observations": {}
+    },
+    {
+      "id": "t43-longtask-recovery",
+      "pass": true,
+      "durationMs": 3756,
+      "observations": {
+        "gateHandledMs": 3659
+      }
+    },
+    {
+      "id": "t45-spa-pushstate-gate",
+      "pass": true,
+      "durationMs": 2262,
+      "observations": {
+        "mode": "spa",
+        "resolved": true
+      }
+    },
+    {
+      "id": "soak-spa-churn",
+      "pass": true,
+      "durationMs": 7657,
+      "observations": {
+        "pageHeapDeltaMB": 0.2,
+        "workerHeapDeltaMB": "unavailable"
+      }
+    },
+    {
+      "id": "flood-50-tabs",
+      "pass": true,
+      "durationMs": 11234,
+      "observations": {
+        "tabs": 50
+      }
+    },
+    {
+      "id": "worker-kill-storm",
+      "pass": true,
+      "durationMs": 23806,
+      "observations": {
+        "killCycles": 3,
+        "sessionRulesAfterEachCycle": 0
+      }
+    },
+    {
+      "id": "corrupted-storage-boot",
+      "pass": true,
+      "durationMs": 6170,
+      "observations": {}
+    }
+  ]
+}

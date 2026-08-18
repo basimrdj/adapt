@@ -29,7 +29,11 @@
     "benchmark:page": "tsx scripts/benchmark-page-filtering.ts",
     "verify:phase31b": "tsx scripts/verify-phase31b.ts",
     "verify:autonomy": "tsx scripts/verify-autonomy.ts",
-    "verify:autonomy:live": "npm run build && tsx scripts/verify-autonomy-live.ts"
+    "verify:autonomy:live": "npm run build && tsx scripts/verify-autonomy-live.ts",
+    "verify:privacy": "tsx scripts/verify-privacy-strict.ts",
+    "verify:realworld": "tsx scripts/audit/verify-realworld.ts",
+    "pack": "tsx scripts/pack.ts",
+    "verify:packaged": "tsx scripts/verify-packaged.ts"
   },
   "devDependencies": {
     "@adguard/dnr-rulesets": "^4.2.20260813130145",

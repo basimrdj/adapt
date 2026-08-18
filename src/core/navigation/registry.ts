@@ -2,12 +2,31 @@ import { CausalDocumentKey } from '../../shared/causal/events';
 import { NavigationEpoch } from '../../shared/types';
 import { createNavigationEpoch, isSyntheticDocumentId } from './epoch';
 
+/**
+ * Bound on the synthetic→canonical documentId alias map. Aliases accumulate per
+ * document the runtime reports; without a cap a long session of SPA churn grows
+ * the snapshot unboundedly. Overflow drops the oldest half (insertion order) —
+ * a dropped alias only makes matchesDocumentId fail closed for stale messages.
+ */
+const MAX_DOCUMENT_ALIASES = 2000;
+
 export class NavigationRegistry {
   // Key: tabId -> Map<frameId, NavigationEpoch>
   private activeEpochs = new Map<number, Map<number, NavigationEpoch>>();
   /** Per-tab monotonic navigationEpoch counter. Starts at 1. Never uses processId. */
   private epochCounters = new Map<number, number>();
   private documentAliases = new Map<string, string>();
+
+  private setDocumentAlias(aliasKey: string, canonicalDocumentId: string): void {
+    if (this.documentAliases.size >= MAX_DOCUMENT_ALIASES && !this.documentAliases.has(aliasKey)) {
+      let dropped = 0;
+      for (const key of this.documentAliases.keys()) {
+        this.documentAliases.delete(key);
+        if (++dropped >= MAX_DOCUMENT_ALIASES / 2) break;
+      }
+    }
+    this.documentAliases.set(aliasKey, canonicalDocumentId);
+  }
 
   private documentAliasKey(tabId: number, frameId: number, documentId: string): string {
     return `${tabId}\u0000${frameId}\u0000${documentId}`;
@@ -36,7 +55,7 @@ export class NavigationRegistry {
     if (!existing || !isSyntheticDocumentId(existing.documentId) || !this.sameDocumentUrl(existing.url, url)) {
       return false;
     }
-    this.documentAliases.set(this.documentAliasKey(tabId, frameId, documentId), existing.documentId);
+    this.setDocumentAlias(this.documentAliasKey(tabId, frameId, documentId), existing.documentId);
     existing.url = url;
     return true;
   }
@@ -50,7 +69,7 @@ export class NavigationRegistry {
     if (!documentId) return false;
     const existing = this.getEpoch(tabId, frameId);
     if (!existing || !this.sameDocumentUrl(existing.url, url)) return false;
-    this.documentAliases.set(this.documentAliasKey(tabId, frameId, documentId), existing.documentId);
+    this.setDocumentAlias(this.documentAliasKey(tabId, frameId, documentId), existing.documentId);
     return true;
   }
 

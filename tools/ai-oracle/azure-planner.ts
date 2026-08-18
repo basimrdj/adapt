@@ -1,8 +1,8 @@
 import { OpenAI } from 'openai';
-import { execSync } from 'child_process';
 import { AdaptivePlanner } from '../../src/shared/ai/planner-interface';
 import { EvidencePacket, AdaptationPlan } from '../../src/shared/ai/types';
 import { ADAPTATION_PLAN_JSON_SCHEMA } from '../../src/shared/ai/schemas';
+import { requireAzureApiKey, requireAzureBaseURL, requireAzureModel } from '../../scripts/azure-env';
 
 export class AzurePlanner implements AdaptivePlanner {
   private client: OpenAI;
@@ -10,26 +10,9 @@ export class AzurePlanner implements AdaptivePlanner {
   private reasoningEffort: 'low' | 'medium';
 
   constructor(reasoningEffort: 'low' | 'medium' = 'low') {
-    let apiKey = process.env.AZURE_OPENAI_API_KEY;
-    if (!apiKey) {
-      try {
-        apiKey = execSync(
-          'az cognitiveservices account keys list --name basim-agent3-openai-eastus2 --resource-group rg-maheekodhan42-8571 --query key1 -o tsv',
-          { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
-        ).trim();
-      } catch {
-        throw new Error('Azure OpenAI key not found in environment or Azure CLI');
-      }
-    }
-
-    if (!apiKey) {
-      throw new Error('Azure OpenAI API Key is empty');
-    }
-
-    const baseURL =
-      process.env.AZURE_OPENAI_BASE_URL ||
-      'https://basim-agent3-openai-eastus2.openai.azure.com/openai/v1/';
-    this.model = process.env.AZURE_OPENAI_MODEL || 'buzz-gpt-5-4-mini';
+    const apiKey = requireAzureApiKey();
+    const baseURL = requireAzureBaseURL();
+    this.model = requireAzureModel();
     this.reasoningEffort = reasoningEffort;
 
     this.client = new OpenAI({

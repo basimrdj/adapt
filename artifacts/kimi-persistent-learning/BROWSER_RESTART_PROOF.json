@@ -1,0 +1,16 @@
+{
+  "ranAt": "2026-08-17T06:48:39.675Z",
+  "pass": true,
+  "checks": [
+    {
+      "name": "T3: promoted rule + metadata survive full browser restart",
+      "pass": true,
+      "detail": "dynamic=1000000 durable=[{\"ruleId\":1000000,\"lifecycle\":\"PERSISTED_DYNAMIC\"}]"
+    },
+    {
+      "name": "T3: known family pre-blocked after browser restart with zero AI calls",
+      "pass": true,
+      "detail": "learnedFamily=b familyState={\"a\":\"loaded\",\"b\":\"blocked\",\"own\":\"loaded\"} aiCalls=0"
+    }
+  ]
+}

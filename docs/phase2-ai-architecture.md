@@ -36,7 +36,7 @@ Recipe
 ## 2. Model-Independent Abstraction
 The core architecture interacts solely with the `AdaptivePlanner` interface:
 - `MockPlanner`: Deterministic local mock used for offline CI and reproducible testing.
-- `AzurePlanner`: Connects via development oracle to Azure OpenAI `buzz-gpt-5-4-mini`.
+- `AzurePlanner`: Connects via development oracle to Azure OpenAI `<your-model-deployment>`.
 
 ## 3. Decision Cascade
 1. **Level 0 (Known Recipe)**: Deterministic recipe replay ($0\text{ ms}$ AI overhead).

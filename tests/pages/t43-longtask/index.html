@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T43: Long-Task Starvation</title>
+  <style>
+    body { font-family: sans-serif; overflow: hidden; }
+    #blocker-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #000; color: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 999999;
+    }
+  </style>
+</head>
+<body>
+  <main id="main-content">
+    <h1>T43 Long-Task Content</h1>
+    <p id="article-body">Content behind the gate.</p>
+  </main>
+
+  <div id="blocker-modal">
+    <h1>Adblock Detected</h1>
+    <p>Please disable your ad blocker to continue viewing this website.</p>
+  </div>
+
+  <script>
+    // A 3s main-thread busy block starting at DOMContentLoaded starves every
+    // observer, timer, and the content script's scheduler. The pipeline must
+    // recover afterwards — the gate must still be handled, with no crash.
+    window.__longtask_errors = [];
+    window.addEventListener('error', (e) => window.__longtask_errors.push(String(e.message)));
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const start = performance.now();
+      while (performance.now() - start < 3000) {
+        Math.sqrt(Math.random());
+      }
+      window.__longtask_done = true;
+    });
+  </script>
+</body>
+</html>

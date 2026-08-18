@@ -26,12 +26,26 @@
     for (const candidate of [window.__last_error__, window.__error__, window.__rejection__]) {
       if (candidate instanceof Error && /adapt/i.test(candidate.message || '')) brandedErrors.push(candidate.message);
     }
+    const dataAdaptAttributes = [];
+    const attrWalker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_ELEMENT);
+    let attrNode = attrWalker.currentNode;
+    let attrScanned = 0;
+    while (attrNode && attrScanned < 20000) {
+      attrScanned++;
+      if (attrNode.attributes) {
+        for (const attr of attrNode.attributes) {
+          if (/^data-adapt/i.test(attr.name)) dataAdaptAttributes.push(attr.name);
+        }
+      }
+      attrNode = attrWalker.nextNode();
+    }
     const results = {
       windowAdaptGlobal: typeof window.ADAPT !== 'undefined',
       windowCustomGlobals: markerKeysByObject.window,
       markerKeysByObject,
       brandedErrors,
-      domMarkersFound: document.querySelectorAll('[data-adapt-blocker], [data-adapt-hidden], [id*="adapt" i], [class*="adapt" i]').length > 0
+      domMarkersFound: document.querySelectorAll('[data-adapt-blocker], [data-adapt-hidden], [data-adapt-shimmed], [id*="adapt" i], [class*="adapt" i]').length > 0,
+      dataAdaptAttributes
     };
 
     window.__fingerprint_probe_results = results;

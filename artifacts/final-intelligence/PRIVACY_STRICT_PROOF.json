@@ -1,0 +1,34 @@
+{
+  "schema": "adapt-privacy-strict-proof-v1",
+  "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+  "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+  "generatedAt": "2026-08-18T18:47:36.173Z",
+  "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b",
+  "verdict": "PASS",
+  "packetsScanned": 363,
+  "productionBuilders": [],
+  "hardFailures": [],
+  "fixtureTransparency": [
+    {
+      "name": "eval-corpus-v2.json:summary",
+      "violations": [],
+      "slotContent": 0,
+      "domainValues": [
+        "non-redacted fixture domains: 30"
+      ]
+    },
+    {
+      "name": "injection-corpus.json:summary",
+      "violations": [],
+      "slotContent": 36,
+      "domainValues": [
+        "non-redacted fixture domains: 0"
+      ]
+    }
+  ],
+  "claims": [
+    "STRICT production builders emit only enum labels, opaque refs, hashes, numbers, and redacted domains — proven on the real RemotePlanner wire, generic and Azure shapes.",
+    "DOMAIN_HINTS mode emits registrable eTLD+1 domains in the urlDomain slot only, never full hosts, paths, or URLs.",
+    "Corpus fixtures are synthetic harness inputs; adversarial content is confined to the designated textSignals attack slot and counted, never produced by production builders."
+  ]
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T38: Closed Shadow Root Gate (Honesty Fixture)</title>
+  <style>
+    body { font-family: sans-serif; }
+  </style>
+</head>
+<body>
+  <main id="main-content">
+    <h1>T38 Closed Shadow Gate</h1>
+    <p id="article-body">Outer document content must remain fully intact.</p>
+  </main>
+  <div id="gate-host"></div>
+  <div id="open-host"></div>
+
+  <script>
+    // The wall lives inside a CLOSED shadow root: no querySelector, no
+    // MutationObserver, no composed-tree walk can see it from outside. This is
+    // the documented blindness boundary — the e2e pins that (a) the wall
+    // honestly stands, (b) the extension does not damage the outer document
+    // while trying, (c) benign open-shadow content is untouched.
+    window.__shadow_errors = [];
+    window.addEventListener('error', (e) => window.__shadow_errors.push(String(e.message)));
+
+    const host = document.getElementById('gate-host');
+    const closed = host.attachShadow({ mode: 'closed' });
+    closed.innerHTML =
+      '<style>.wall{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#111;color:#eee;' +
+      'display:flex;align-items:center;justify-content:center;z-index:999999;}</style>' +
+      '<div class="wall" id="closed-wall"><h1>Disable Your Ad Blocker</h1></div>';
+    window.__closed_root_attached = true;
+
+    const openHost = document.getElementById('open-host');
+    const open = openHost.attachShadow({ mode: 'open' });
+    open.innerHTML = '<p id="benign-shadow-copy">Benign open-shadow copy must survive.</p>';
+  </script>
+</body>
+</html>

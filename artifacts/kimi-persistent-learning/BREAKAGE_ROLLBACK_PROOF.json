@@ -1,0 +1,26 @@
+{
+  "ranAt": "2026-08-17T06:49:14.184Z",
+  "pass": true,
+  "checks": [
+    {
+      "name": "T8 setup: fragile family learned and promoted (host-wide durable)",
+      "pass": true,
+      "detail": "record={\"ruleId\":1000001,\"lifecycle\":\"PERSISTED_DYNAMIC\",\"hostWide\":true,\"family\":\"fragile\",\"revokedReason\":null}"
+    },
+    {
+      "name": "T8: retry-storm health regression automatically revoked the durable rule",
+      "pass": true,
+      "detail": "stormStates=[\"blocked\",\"blocked\",\"blocked\",\"blocked\",\"blocked\",\"blocked\",\"loaded\"] record={\"ruleId\":1000001,\"lifecycle\":\"REVOKED\",\"hostWide\":true,\"family\":\"fragile\",\"revokedReason\":\"retry-storm-health-regression\"} dynamic=1000000"
+    },
+    {
+      "name": "T8: rollback evidence preserved (counters + REVOKED record retained)",
+      "pass": true,
+      "detail": "rollbackOnRegression=1 rulesRevoked=1"
+    },
+    {
+      "name": "T8: page healed after revocation (family loads again, first-party intact)",
+      "pass": true,
+      "detail": "familyState={\"own\":\"loaded\",\"fragile\":\"loaded\"}"
+    }
+  ]
+}

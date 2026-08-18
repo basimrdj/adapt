@@ -83,7 +83,14 @@ function updateManifest(): void {
   }));
   const normalEntries = manifest.content_scripts.filter((entry) => {
     const js = Array.isArray(entry.js) ? entry.js : [];
-    return !js.includes('page-filtering/early-runtime.js');
+    // Strip every prior early-plane registration — the legacy bridge and all
+    // previously generated shard entries — so repeated regenerations (or a
+    // restored incremental-build cache) cannot accumulate stale shard
+    // registrations alongside the freshly generated earlyManifest.
+    return !js.some((value) => {
+      const name = String(value);
+      return name === 'page-filtering/early-runtime.js' || name.startsWith('page-filtering/early/');
+    });
   });
   manifest.content_scripts = [...earlyEntries, ...normalEntries];
   writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);

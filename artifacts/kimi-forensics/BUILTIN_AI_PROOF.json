@@ -1,0 +1,46 @@
+{
+  "schema": "kimi-builtin-ai-proof-v1",
+  "ranAt": "2026-08-16T13:03:50.651Z",
+  "zeroTouchConfigured": true,
+  "testConnection": {
+    "providerReached": true,
+    "schemaValid": true,
+    "latencyMs": 3325
+  },
+  "productionFixture": {
+    "chromeRuntimeAiCalls": 1,
+    "remoteEndpointCalls": 1,
+    "nodeDirectAiCalls": 0,
+    "mock": false,
+    "policyReached": true
+  },
+  "secretsLeakedToArtifacts": false,
+  "checks": [
+    {
+      "name": "1: fresh install is configured from the built-in default (no Options setup)",
+      "pass": true,
+      "detail": "AI_CONFIG={\"configured\":true,\"endpointClass\":\"https-remote\",\"plannerClass\":\"remote\",\"source\":\"built-in-default\"}"
+    },
+    {
+      "name": "2: connection test reached the real provider and passed production schema validation",
+      "pass": true,
+      "detail": "bootBadge=CONFIGURED badge=CONNECTION VERIFIED result=\"Connection verified — latency: 3325 ms (decision: ABSTAIN)\""
+    },
+    {
+      "name": "3: production runtime path made a real remote AI call from the service worker",
+      "pass": true,
+      "detail": "begin={\"candidateCount\":2,\"endpointClass\":\"https-remote\",\"mock\":false,\"plannerClass\":\"remote\",\"runtime\":\"chrome-extension-service-worker\",\"triggerReason\":\"NOVEL_NETWORK_DISCOVERY\"} end={\"latencyMs\":2522,\"ok\":true}"
+    },
+    {
+      "name": "3: PolicyValidator remained authoritative on the real provider plan",
+      "pass": true,
+      "detail": "policy={\"decision\":\"OBSERVE\",\"reasonCount\":0,\"valid\":true}"
+    },
+    {
+      "name": "4: credential never appears in the forensic artifact",
+      "pass": true,
+      "detail": "tokenPresent=false"
+    }
+  ],
+  "pass": true
+}

@@ -1,0 +1,21 @@
+{
+  "ranAt": "2026-08-17T06:48:39.675Z",
+  "pass": true,
+  "checks": [
+    {
+      "name": "T2a: production AI staged a session protection with ownership metadata",
+      "pass": true,
+      "detail": "staged=true sessionRules=3000000,3000001 ownershipRecords=2"
+    },
+    {
+      "name": "T2: recurring healthy family promoted to a REAL Chrome dynamic rule",
+      "pass": true,
+      "detail": "dynamicRules=1000000 durable=[{\"ruleId\":1000000,\"lifecycle\":\"PERSISTED_DYNAMIC\"}]"
+    },
+    {
+      "name": "T2: redundant session rule removed only after dynamic install verified",
+      "pass": true,
+      "detail": "sessionBefore=3000002 sessionAfter=3000002"
+    }
+  ]
+}

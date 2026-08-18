@@ -7,6 +7,7 @@ import {
   SemanticSignal,
 } from '../shared/types';
 import { hashOrigin, OpaqueRef } from '../shared/causal/events';
+import { isProtectedFlowHost } from '../shared/protected-flows';
 import { isThirdPartyResource, resourceIdentity } from '../shared/resource-identity';
 import { safeGetBoundingClientRect, safeGetComputedStyle } from './dom-safety';
 import { OpaqueTargetRegistry } from './opaque-targets';
@@ -75,7 +76,18 @@ function isVisible(element: HTMLElement, rect: DOMRect): boolean {
 function protectedContext(element: HTMLElement, resourceUrl: string | null): OpaqueSurvivorObservation['protectedContext'] {
   const feature = `${featureText(element)} ${resourceUrl || ''}`;
   const media = ['VIDEO', 'AUDIO', 'SOURCE'].includes(element.tagName) || /player|video|audio|media/i.test(feature);
-  const authOrPayment = /(login|sign[ -]?in|oauth|checkout|payment|purchase|captcha)/i.test(feature);
+  // Keyword features catch login/payment ELEMENTS; the host registry catches
+  // elements whose RESOURCE lives on a protected-flow host (sign-in JS CDN,
+  // captcha provider, payment SDK) even when the element text is innocuous.
+  let protectedResource = false;
+  if (resourceUrl) {
+    try {
+      protectedResource = isProtectedFlowHost(new URL(resourceUrl, window.location.href).hostname);
+    } catch {
+      protectedResource = false;
+    }
+  }
+  const authOrPayment = protectedResource || /(login|sign[ -]?in|oauth|checkout|payment|purchase|captcha)/i.test(feature);
   const downloadOrDocument = /(download|document|\.pdf\b|\.docx?\b)/i.test(feature);
   return { authOrPayment, media, downloadOrDocument, userIntentRelated: PROTECTED_CONTEXT.test(feature) };
 }
@@ -193,6 +205,38 @@ export class SurvivorDiscoveryEngine {
           viewportCoverage: element.viewportCoverage,
         },
       });
+    }
+
+    // Hard-detector bridge: the compact-notice heuristics that mint
+    // 'semantic-reaction-ui' deliberately exclude viewport-sized surfaces, so a
+    // detector that blocks with a FULLSCREEN wall (the aggressive end of the
+    // spectrum) would never reach the survivor-AI gate. When the page-level
+    // semantic scan has already classified the text as an anti-block
+    // instruction, a visible fullscreen overlay IS the reaction surface.
+    if ((semantic.categories ?? []).includes('ANTI_BLOCK_INSTRUCTION') && semantic.confidenceScore >= 0.5) {
+      for (const element of existingElements.filter((item) => item.role === 'fullscreen-overlay' && item.visible)) {
+        const survivorRef = `survivor:s${this.nextSurvivor++}` as const;
+        survivors.push({
+          ref: survivorRef,
+          class: 'ANTI_BLOCK_REACTION',
+          documentScope: this.navigationId,
+          observedAt: Date.now(),
+          confidence: Math.max(0.8, semantic.confidenceScore),
+          evidenceClasses: ['semantic-category', 'fullscreen-reaction-wall'],
+          elementRef: element.ref,
+          protectedContext: { authOrPayment: false, media: false, downloadOrDocument: false, userIntentRelated: false },
+          features: {
+            visible: true,
+            thirdPartyResource: false,
+            fixedOrAbsolute: true,
+            isolatedSurface: true,
+            semanticAdLabel: false,
+            recentInsertion: pageSignals.mutation.rapidReinsertionDetected,
+            mutationAssociation: pageSignals.mutation.rapidReinsertionDetected ? 0.9 : 0.5,
+            viewportCoverage: element.viewportCoverage,
+          },
+        });
+      }
     }
 
     for (const candidate of candidates

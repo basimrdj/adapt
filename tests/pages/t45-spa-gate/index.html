@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>T45 SPA pushState gate (regression fixture)</title>
+</head>
+<body>
+  <main id="main-content">
+    <h1>SPA gate regression fixture</h1>
+    <p>mode=direct shows the gate immediately; mode=spa routes via pushState first.</p>
+  </main>
+  <div class="gate-t45" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(12,12,18,.96);color:white;padding:20vh 12vw;font:700 28px system-ui">
+    <p data-gate-copy>Please disable your ad blocker to continue.</p>
+    <p>Tap continue to keep reading.</p>
+  </div>
+  <button id="open-view" type="button">Open view</button>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var mode = params.get('mode') || 'spa';
+      var gate = function () {
+        var panel = document.querySelector('.gate-t45');
+        if (panel) {
+          panel.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+        }
+        window.__t45_gate_visible = true;
+      };
+      if (mode === 'direct') {
+        window.setTimeout(gate, 120);
+        window.__t45_mode = 'direct';
+        return;
+      }
+      window.__t45_mode = 'spa';
+      document.getElementById('open-view').addEventListener('click', function () {
+        history.pushState({ route: 'content' }, '', '/t45-spa-gate/content.html');
+        window.__t45_routed = true;
+        window.setTimeout(gate, 120);
+      });
+    })();
+  </script>
+</body>
+</html>

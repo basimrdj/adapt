@@ -1,0 +1,57 @@
+{
+  "schema": "kimi-negative-memory-proof-v1",
+  "ranAt": "2026-08-17T10:28:33.710Z",
+  "checks": [
+    {
+      "name": "N1-N3: three policy-rejected failures recorded with escalating streak",
+      "pass": true,
+      "detail": "events=[{\"n\":1,\"cd\":0,\"r\":\"policy-rejected\"},{\"n\":2,\"cd\":0,\"r\":\"policy-rejected\"},{\"n\":3,\"cd\":60,\"r\":\"policy-rejected\"}]"
+    },
+    {
+      "name": "N3: third failure engaged a 1h cooldown (cooldownMinutes=60)",
+      "pass": true,
+      "detail": "cooldowns=[0,0,60]"
+    },
+    {
+      "name": "N3: cooldown durable in storage.local (fail-site.test entry, cooldownUntil in future)",
+      "pass": true,
+      "detail": "row={\"consecutiveFailures\":3,\"cooldownUntil\":1786966101162,\"lastFailureAt\":1786962501162,\"lastReason\":\"policy-rejected\",\"successes\":0}"
+    },
+    {
+      "name": "N4: cooling-down site spends ZERO planner calls (no AI_RUNTIME_CALL_BEGIN, relay not hit)",
+      "pass": true,
+      "detail": "skipSeen=true aiDelta=0 relayDelta=0"
+    },
+    {
+      "name": "N4: no NEW failure recorded while the gate is short-circuited",
+      "pass": true,
+      "detail": "failures=3"
+    },
+    {
+      "name": "N5: unaffected site still gets a planner call (per-site budget)",
+      "pass": true,
+      "detail": "relayDelta=1"
+    },
+    {
+      "name": "N5: unaffected site recorded its own FIRST failure, no cooldown yet",
+      "pass": true,
+      "detail": "row={\"consecutiveFailures\":1,\"cooldownUntil\":1786962506679,\"lastFailureAt\":1786962506679,\"lastReason\":\"policy-rejected\",\"successes\":0}"
+    },
+    {
+      "name": "N5: no AI_SITE_COOLDOWN skip was attributed to the control navigation window",
+      "pass": true,
+      "detail": "skips=1"
+    },
+    {
+      "name": "credential never appears in forensic artifact",
+      "pass": true,
+      "detail": "tokenPresent=false"
+    },
+    {
+      "name": "N6: cooldown survives a browser restart (same profile) — zero planner calls post-restart",
+      "pass": true,
+      "detail": "skipSeen=true aiCallsPostRestart=0 relayDelta=0"
+    }
+  ],
+  "pass": true
+}

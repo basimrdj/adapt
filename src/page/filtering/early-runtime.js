@@ -134,26 +134,173 @@
     }
   };
 
-  const preventSetTimeout = (args) => {
-    const key = JSON.stringify(args);
-    const original = globalThis.setTimeout;
+  const preventTimer = (args, interval) => {
+    const name = interval ? 'setInterval' : 'setTimeout';
+    const key = `prevent-timer:${name}:${JSON.stringify(args)}`;
+    const original = globalThis[name];
     if (typeof original !== 'function' || wrappers.has(key)) return false;
-    globalThis.setTimeout = function (handler, timeout, ...rest) {
+    const wrapped = function (handler, timeout, ...rest) {
       if (matches(typeof handler === 'function' ? handler.toString() : handler, args[0] || '')) return 0;
       return original(handler, timeout, ...rest);
     };
+    globalThis[name] = wrapped;
+    // Sloppy-mode assignment to a frozen intrinsic fails SILENTLY — verify the
+    // wrapper actually stuck; a miss is an environmental failure and is counted.
+    if (globalThis[name] !== wrapped) throw new Error('wrapper did not stick');
     wrappers.add(key);
     return true;
   };
+
+  const adjustTimer = (args, interval) => {
+    if (args.length < 1 || args.length > 3) return false;
+    const funcPattern = args[0] || '';
+    const delayPattern = args[1] || '';
+    if (!funcPattern) return false;
+    const boost = args[2] ? Number(args[2]) : 0.05;
+    if (!Number.isFinite(boost) || boost <= 0 || boost > 1) return false;
+    const name = interval ? 'setInterval' : 'setTimeout';
+    const key = `adjust:${name}:${JSON.stringify(args)}`;
+    const original = globalThis[name];
+    if (typeof original !== 'function' || wrappers.has(key)) return false;
+    const wrapped = function (handler, timeout, ...rest) {
+      const sourceHit = matches(typeof handler === 'function' ? handler.toString() : handler, funcPattern);
+      const delayHit = !delayPattern || matches(String(timeout ?? ''), delayPattern);
+      const adjusted = sourceHit && delayHit ? (timeout ?? 0) * (1 / boost) : timeout;
+      return original(handler, adjusted, ...rest);
+    };
+    globalThis[name] = wrapped;
+    if (globalThis[name] !== wrapped) throw new Error('wrapper did not stick');
+    wrappers.add(key);
+    return true;
+  };
+
+  const preventAddEventListener = (args) => {
+    if (args.length < 1 || args.length > 2) return false;
+    const typePattern = args[0] || '';
+    const handlerPattern = args[1] || '';
+    if (!typePattern && !handlerPattern) return false;
+    const key = `ael:${typePattern}:${handlerPattern}`;
+    if (wrappers.has(key) || typeof EventTarget === 'undefined') return false;
+    const original = EventTarget.prototype.addEventListener;
+    if (typeof original !== 'function') return false;
+    const wrapped = function (type, listener, ...rest) {
+      const typeHit = !typePattern || matches(String(type), typePattern);
+      if (typeHit && listener) {
+        const source = typeof listener === 'function' ? listener.toString() : String(listener.handleEvent ?? '');
+        if (!handlerPattern || matches(source, handlerPattern)) return;
+      } else if (typeHit && !handlerPattern) {
+        return;
+      }
+      return original.call(this, type, listener, ...rest);
+    };
+    EventTarget.prototype.addEventListener = wrapped;
+    if (EventTarget.prototype.addEventListener !== wrapped) throw new Error('wrapper did not stick');
+    wrappers.add(key);
+    return true;
+  };
+
+  const setCookie = (args) => {
+    if (args.length !== 2 || typeof document === 'undefined') return false;
+    const cookieName = args[0] || '';
+    const cookieValue = args[1] || '';
+    if (!/^[A-Za-z0-9_!#$%&'*+.^`|~-]{1,64}$/.test(cookieName)) return false;
+    if (!/^[\w%+./=-]{0,100}$/.test(cookieValue)) return false;
+    try {
+      document.cookie = `${cookieName}=${cookieValue}; path=/`;
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const storageString = (valueName) => {
+    if (valueName === '') return '';
+    if (/^-?\d{1,6}(?:\.\d{1,3})?$/.test(valueName)) return valueName;
+    if (valueName === 'undefined' || valueName === 'null' || valueName === 'true' || valueName === 'false') return valueName;
+    if (valueName === 'emptyObj') return '{}';
+    if (valueName === 'emptyArray' || valueName === 'emptyArr') return '[]';
+    return null;
+  };
+
+  const safeStorage = (kind) => {
+    try {
+      return globalThis[kind];
+    } catch {
+      return undefined;
+    }
+  };
+
+  const setStorageItem = (args, storage) => {
+    if (!storage || args.length !== 2) return false;
+    const keyName = args[0] || '';
+    if (!/^[\w$.-]{1,128}$/.test(keyName)) return false;
+    const valueName = args[1] || '';
+    try {
+      if (valueName === '$remove$') {
+        storage.removeItem(keyName);
+        return true;
+      }
+      const stored = storageString(valueName);
+      if (stored === null) return false;
+      storage.setItem(keyName, stored);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const preventElementSrcLoading = (args) => {
+    if (args.length !== 2 || typeof document === 'undefined') return false;
+    const tag = (args[0] || '').toLowerCase();
+    if (!/^(script|img|iframe|video|audio|source|embed)$/.test(tag)) return false;
+    const pattern = args[1] || '';
+    if (!pattern) return false;
+    const key = `elsrc:${tag}:${pattern}`;
+    if (wrappers.has(key)) return false;
+    let holder;
+    try {
+      holder = Object.getPrototypeOf(document.createElement(tag));
+    } catch {
+      return false;
+    }
+    let descriptor;
+    while (holder && !descriptor) {
+      descriptor = Object.getOwnPropertyDescriptor(holder, 'src');
+      if (!descriptor) holder = Object.getPrototypeOf(holder);
+    }
+    if (!descriptor || typeof descriptor.set !== 'function' || typeof descriptor.get !== 'function') return false;
+    const originalGet = descriptor.get;
+    const originalSet = descriptor.set;
+    try {
+      Object.defineProperty(holder, 'src', {
+        configurable: true,
+        enumerable: descriptor.enumerable,
+        get: function () {
+          return originalGet.call(this);
+        },
+        set: function (value) {
+          if (matches(String(value), pattern)) return;
+          return originalSet.call(this, value);
+        },
+      });
+      wrappers.add(key);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
 
   const preventEvalIf = (args) => {
     const key = JSON.stringify(args);
     const original = globalThis.eval;
     if (typeof original !== 'function' || wrappers.has(key)) return false;
-    globalThis.eval = function (source) {
+    const wrapped = function (source) {
       if (matches(source, args[0] || '')) return undefined;
       return original.call(this, source);
     };
+    globalThis.eval = wrapped;
+    if (globalThis.eval !== wrapped) throw new Error('wrapper did not stick');
     wrappers.add(key);
     return true;
   };
@@ -162,10 +309,12 @@
     const key = JSON.stringify(args);
     const original = globalThis.open;
     if (typeof original !== 'function' || wrappers.has(key)) return false;
-    globalThis.open = function (url, target, features) {
+    const wrapped = function (url, target, features) {
       if (matches(url, args.filter(Boolean).join('|'))) return null;
       return original.call(this, url, target, features);
     };
+    globalThis.open = wrapped;
+    if (globalThis.open !== wrapped) throw new Error('wrapper did not stick');
     wrappers.add(key);
     return true;
   };
@@ -197,11 +346,13 @@
     const key = JSON.stringify(args);
     if (wrappers.has(key)) return false;
     const original = JSON.parse;
-    JSON.parse = function (text, reviver) {
+    const wrapped = function (text, reviver) {
       const value = original.call(JSON, text, reviver);
       prunePaths(value, args);
       return value;
     };
+    JSON.parse = wrapped;
+    if (JSON.parse !== wrapped) throw new Error('wrapper did not stick');
     wrappers.add(key);
     return true;
   };
@@ -211,7 +362,15 @@
     if (name === 'abort-on-property-read') return abortOnRead(args, false);
     if (name === 'abort-on-property-write') return abortOnRead(args, true);
     if (name === 'abort-current-inline-script') return abortCurrentInlineScript(args);
-    if (name === 'prevent-setTimeout') return preventSetTimeout(args);
+    if (name === 'prevent-setTimeout') return preventTimer(args, false);
+    if (name === 'prevent-setInterval') return preventTimer(args, true);
+    if (name === 'adjust-setInterval') return adjustTimer(args, true);
+    if (name === 'adjust-setTimeout') return adjustTimer(args, false);
+    if (name === 'prevent-addEventListener') return preventAddEventListener(args);
+    if (name === 'set-cookie') return setCookie(args);
+    if (name === 'set-local-storage-item') return setStorageItem(args, safeStorage('localStorage'));
+    if (name === 'set-session-storage-item') return setStorageItem(args, safeStorage('sessionStorage'));
+    if (name === 'prevent-element-src-loading') return preventElementSrcLoading(args);
     if (name === 'prevent-eval-if') return preventEvalIf(args);
     if (name === 'prevent-window-open') return preventWindowOpen(args);
     if (name === 'json-prune') return jsonPrune(args);
@@ -219,9 +378,33 @@
   };
 
   const host = location.hostname.toLowerCase();
+  // Aggregate silent-failure telemetry: on a hostile page (frozen intrinsics,
+  // locked prototypes) a rule that cannot apply must never abort the remaining
+  // rules for the same domain, and the failure must be countable. The counter
+  // is a single non-enumerable neutral-named number — no attribute markers,
+  // no per-rule detail, nothing a detector can distinguish from page noise.
+  let shardFailures = 0;
   for (const [domain, rules] of Object.entries(groups)) {
     if (host === domain || host.endsWith(`.${domain}`)) {
-      for (const rule of rules) apply(rule.name, rule.args);
+      for (const rule of rules) {
+        try {
+          apply(rule && rule.name, rule && rule.args);
+        } catch {
+          shardFailures += 1;
+        }
+      }
+    }
+  }
+  if (shardFailures > 0) {
+    try {
+      Object.defineProperty(globalThis, '__eshf', {
+        configurable: true,
+        enumerable: false,
+        writable: false,
+        value: shardFailures,
+      });
+    } catch {
+      /* frozen global — the count simply stays unreadable */
     }
   }
 })();

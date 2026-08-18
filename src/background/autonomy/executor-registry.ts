@@ -292,7 +292,7 @@ export class PrimitiveExecutorRegistry {
     if (!record) return { ok: true, errors: [] };
     const errors: string[] = [];
     if (record.sessionRuleIds.length > 0) {
-      await this.deps.dnrController.removeSessionExperimentRules(record.sessionRuleIds).catch((error: unknown) => {
+      await this.deps.dnrController.removeSessionExperimentRules(record.sessionRuleIds, 'executor-rollback').catch((error: unknown) => {
         errors.push(error instanceof Error ? error.message : String(error));
       });
     }

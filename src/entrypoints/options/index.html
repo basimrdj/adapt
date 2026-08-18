@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADAPT — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="panel">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-word">ADAPT</span>
+      </div>
+      <span class="topbar-label">Settings</span>
+    </header>
+
+    <!-- ===================== AI PLANNER ===================== -->
+    <section class="card">
+      <div class="card-head">
+        <div class="card-titles">
+          <h2>AI Planner</h2>
+          <p>Bring your own key — any OpenAI-compatible or Anthropic provider, any model.</p>
+        </div>
+        <span id="status-badge" class="badge unconfigured">UNCONFIGURED</span>
+      </div>
+
+      <div class="field-row toggle-row">
+        <div class="field-copy">
+          <span class="field-label">AI planner enabled</span>
+          <span class="field-hint">Off keeps every deterministic protection fully active.</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="enabled">
+          <span class="slider" aria-hidden="true"></span>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <span class="field-label">Provider</span>
+        <div class="segments" role="tablist" aria-label="Provider protocol">
+          <button type="button" class="segment" data-provider="openai">OpenAI-compatible</button>
+          <button type="button" class="segment" data-provider="azure">Azure OpenAI</button>
+          <button type="button" class="segment" data-provider="anthropic">Anthropic</button>
+        </div>
+        <div class="chips" aria-label="Quick presets">
+          <button type="button" class="chip" data-preset="openai">OpenAI</button>
+          <button type="button" class="chip" data-preset="openrouter">OpenRouter</button>
+          <button type="button" class="chip" data-preset="groq">Groq</button>
+          <button type="button" class="chip" data-preset="xai">xAI</button>
+          <button type="button" class="chip" data-preset="lmstudio">LM Studio (local)</button>
+          <button type="button" class="chip" data-preset="azure">Azure v1</button>
+          <button type="button" class="chip" data-preset="anthropic">Anthropic</button>
+        </div>
+        <span class="field-hint" id="provider-note"></span>
+        <span class="field-hint warn" id="relay-notice" hidden>This stored endpoint uses the legacy relay protocol. Pick a provider above and save to migrate it.</span>
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="endpoint">Base URL</label>
+        <input type="url" id="endpoint" spellcheck="false" autocomplete="off">
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="model">Model</label>
+        <input type="text" id="model" spellcheck="false" autocomplete="off">
+      </div>
+
+      <div class="field-row">
+        <label class="field-label" for="token">API key</label>
+        <input type="password" id="token" spellcheck="false" autocomplete="off">
+        <span class="field-hint">credential: <b id="token-state">none saved</b> — stored only in this browser, sent only to your provider.</span>
+      </div>
+
+      <div class="field-split">
+        <div class="field-row">
+          <label class="field-label" for="timeout">Timeout (ms)</label>
+          <input type="number" id="timeout" min="1000" max="60000" step="500" placeholder="15000">
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="privacy">Privacy mode</label>
+          <select id="privacy">
+            <option value="STRICT">STRICT — opaque refs only</option>
+            <option value="DOMAIN_HINTS">DOMAIN_HINTS — adds domain hints</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btn-test" type="button" class="btn ghost">Test connection</button>
+        <button id="btn-save" type="button" class="btn primary">Save</button>
+        <button id="btn-clear" type="button" class="btn danger">Disable &amp; clear</button>
+      </div>
+
+      <div id="test-result"></div>
+      <div class="statusline">last provider success: <b id="last-success">never</b></div>
+      <div class="statusline">last provider failure: <b id="last-failure">never</b></div>
+
+      <div class="note">
+        The planner only ranks supplied opaque refs and safe actions; it cannot generate code,
+        selectors, URLs, or rules. Test connection sends one tiny synthetic packet through the
+        production transport and validates the response schema — it installs no rules, touches
+        no page, and learns nothing. Endpoints must be https (loopback 127.0.0.1/localhost
+        excepted, for local models).
+      </div>
+    </section>
+
+    <!-- ===================== LEARNING ===================== -->
+    <section class="card">
+      <div class="card-head">
+        <div class="card-titles">
+          <h2>Adaptive Memory</h2>
+          <p>Protections ADAPT learned from your browsing. Static filters are unaffected by clearing.</p>
+        </div>
+      </div>
+      <div class="statusline">learned protections: <b id="learned-count">0</b></div>
+      <div class="actions">
+        <button id="btn-clear-learned" type="button" class="btn danger">Clear learned rules</button>
+      </div>
+      <div id="learned-result" class="statusline"></div>
+    </section>
+
+    <!-- ===================== DIAGNOSTICS ===================== -->
+    <section class="card">
+      <div class="card-head">
+        <div class="card-titles">
+          <h2>Diagnostics</h2>
+          <p>User-initiated export. Never includes the credential; hosts are projected to first labels.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-export-diagnostics" type="button" class="btn ghost">Export diagnostics</button>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <span>ADAPT is running quietly in the background.</span>
+      <svg class="foot-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 12 6.5 12 9.5 4.5 14.5 19.5 17.5 12 21.5 12"/></svg>
+    </footer>
+  </div>
+  <script type="module" src="options.ts"></script>
+</body>
+</html>

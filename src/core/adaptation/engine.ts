@@ -15,14 +15,20 @@ import { AuditStore } from '../audit/store';
 import { calculateHealthVector } from '../health/scorer';
 import { STORAGE_KEYS } from '../../shared/constants';
 import { AdaptivePlanner } from '../../shared/ai/planner-interface';
+import { AiNegativeMemory } from '../../background/learning/ai-negative-memory';
 import { PolicyValidator } from '../../shared/ai/validator';
 import { createEvidencePacket } from '../../shared/ai/evidence-builder';
+import { forensics } from '../../background/forensics/runtime-trace';
 
 export type NavigationFreshnessGuard = (tabId: number, navigationId: string) => boolean;
 
 export class AdaptationTransactionEngine {
   private activeTransactions = new Map<string, AdaptationTransaction>();
   private stagingLocks = new Set<string>(); // Lock per tabId to prevent race conditions
+  /** navigation key → planner call in flight RIGHT NOW (stampede guard). */
+  private plannerInFlight = new Set<string>();
+  /** navigation key → planner calls spent (the ≤2/navigation budget on this path). */
+  private aiCallsByNavigation = new Map<string, number>();
   private candidateGenerator: StrategyCandidateGenerator;
   private verifier: AdaptationVerifier;
   private rollbackHandler: AdaptationRollbackHandler;
@@ -32,6 +38,7 @@ export class AdaptationTransactionEngine {
   private storageBackend: StorageBackend;
   private sendTabMessage: (tabId: number, msg: unknown) => Promise<void>;
   private adaptivePlanner?: AdaptivePlanner;
+  private aiNegativeMemory?: AiNegativeMemory;
   private isNavigationCurrent?: NavigationFreshnessGuard;
   private policyValidator = new PolicyValidator();
   private initialized = false;
@@ -77,6 +84,10 @@ export class AdaptationTransactionEngine {
     this.adaptivePlanner = planner;
   }
 
+  public setAiNegativeMemory(store: AiNegativeMemory | undefined): void {
+    this.aiNegativeMemory = store;
+  }
+
   private async persistActiveTransactions(): Promise<void> {
     try {
       const obj: Record<string, AdaptationTransaction> = {};
@@ -100,6 +111,10 @@ export class AdaptationTransactionEngine {
     await this.init();
     if (!this.navigationIsCurrent(tabId, navigationId)) return null;
     const health = calculateHealthVector(batch);
+    if (forensics.enabled) {
+      forensics.count('engineEvaluations');
+      if (health.antiBlockReaction < 0.50) forensics.count('engineAntiBlockGateLow');
+    }
 
     // If page has a high anti-block reaction (>= 0.50), initiate adaptation
     if (health.antiBlockReaction >= 0.50) {
@@ -127,30 +142,78 @@ export class AdaptationTransactionEngine {
 
       // Level 2: Ask the planner only when several independent signals make the
       // deterministic next action genuinely ambiguous.
-      if (!selectedCandidate && this.adaptivePlanner && this.isAmbiguousNovelCase(batch)) {
-        try {
-          const evidence = createEvidencePacket(tabId, navigationId, siteKey, batch, health);
-          const rawPlan = await this.adaptivePlanner.plan(evidence);
-          // A planner response belongs only to the document epoch that requested it.
-          // Navigation can occur while the await is pending, before any transaction exists.
-          if (!this.navigationIsCurrent(tabId, navigationId)) return null;
-          const validation = this.policyValidator.validate(evidence, rawPlan);
-
-          if (validation.valid && validation.sanitizedPlan?.decision === 'ADAPT' && validation.mappedStrategyActions) {
-            const tier = validation.sanitizedPlan.selectedStrategyTier === 'ABSTAIN' ? 'S3' : validation.sanitizedPlan.selectedStrategyTier;
-            selectedCandidate = {
-              id: `ai_cand_${Date.now()}`,
-              tier,
-              name: `AI: ${validation.sanitizedPlan.hypothesis.category}`,
-              rationale: validation.sanitizedPlan.hypothesis.explanation,
-              estimatedRisk: 'MEDIUM',
-              actions: validation.mappedStrategyActions,
-              isReversible: true,
-            };
+      const siteCoolingDown = this.aiNegativeMemory?.isCoolingDown(siteKey) === true;
+      if (forensics.enabled && !selectedCandidate && this.adaptivePlanner && siteCoolingDown && this.isAmbiguousNovelCase(batch)) {
+        forensics.aiSkip('AI_SITE_COOLDOWN', { path: 'adaptation-engine' });
+      }
+      if (forensics.enabled && !selectedCandidate && !this.adaptivePlanner && this.isAmbiguousNovelCase(batch)) {
+        forensics.aiSkip('AI_PROVIDER_UNCONFIGURED', { path: 'adaptation-engine' });
+      }
+      if (!selectedCandidate && this.adaptivePlanner && !siteCoolingDown && this.isAmbiguousNovelCase(batch)) {
+        // Stampede guard + budget: the staging lock below is taken only AFTER the
+        // planner await, and PAGE_SIGNAL_BATCH messages are not serialized — without
+        // an in-flight latch and a per-navigation counter, a burst of batches burns
+        // unbounded concurrent planner calls on one navigation.
+        const plannerKey = `${tabId}_${navigationId}`;
+        const priorCalls = this.aiCallsByNavigation.get(plannerKey) ?? 0;
+        if (this.plannerInFlight.has(plannerKey) || priorCalls >= 2) {
+          if (forensics.enabled) {
+            forensics.aiSkip(priorCalls >= 2 ? 'AI_BUDGET_EXHAUSTED' : 'AI_CALL_IN_FLIGHT', { path: 'adaptation-engine' });
           }
-        } catch {
-          // AI outage fallback to fail-closed
-          selectedCandidate = null;
+        } else {
+          this.plannerInFlight.add(plannerKey);
+          this.aiCallsByNavigation.set(plannerKey, priorCalls + 1);
+          // Bound the counter map: keys are per-navigation, so stale entries are
+          // harmless but must not accumulate for the worker's lifetime.
+          if (this.aiCallsByNavigation.size > 200) {
+            const oldest = this.aiCallsByNavigation.keys().next().value;
+            if (oldest !== undefined) this.aiCallsByNavigation.delete(oldest);
+          }
+          try {
+            const evidence = createEvidencePacket(tabId, navigationId, siteKey, batch, health);
+            if (forensics.enabled) {
+              forensics.count('aiCallsStarted');
+              forensics.event('AI_RUNTIME_CALL_BEGIN', {
+                runtime: 'chrome-extension-service-worker',
+                mock: (this.adaptivePlanner as { plannerKind?: string }).plannerKind === 'mock',
+                plannerClass: (this.adaptivePlanner as { plannerKind?: string }).plannerKind ?? 'unknown',
+                endpointClass: (this.adaptivePlanner as { endpointClass?: string }).endpointClass ?? 'unknown',
+                triggerReason: 'ADAPTATION_ENGINE_AMBIGUOUS',
+                candidateCount: evidence.candidateElements.length,
+              });
+            }
+            const rawPlan = await this.adaptivePlanner.plan(evidence);
+            if (forensics.enabled) forensics.count('aiCallsSucceeded');
+            // A planner response belongs only to the document epoch that requested it.
+            // Navigation can occur while the await is pending, before any transaction exists.
+            if (!this.navigationIsCurrent(tabId, navigationId)) return null;
+            const validation = this.policyValidator.validate(evidence, rawPlan);
+            // An invalid plan built from this page's evidence is site-signaling
+            // failure evidence; a valid ABSTAIN is neutral.
+            if (!validation.valid) this.aiNegativeMemory?.noteFailure(siteKey, 'policy-rejected');
+
+            if (validation.valid && validation.sanitizedPlan?.decision === 'ADAPT' && validation.mappedStrategyActions) {
+              const tier = validation.sanitizedPlan.selectedStrategyTier === 'ABSTAIN' ? 'S3' : validation.sanitizedPlan.selectedStrategyTier;
+              selectedCandidate = {
+                id: `ai_cand_${Date.now()}`,
+                tier,
+                name: `AI: ${validation.sanitizedPlan.hypothesis.category}`,
+                rationale: validation.sanitizedPlan.hypothesis.explanation,
+                estimatedRisk: 'MEDIUM',
+                actions: validation.mappedStrategyActions,
+                isReversible: true,
+              };
+            }
+          } catch {
+            // AI outage fallback to fail-closed
+            if (forensics.enabled) {
+              forensics.count('aiCallsFailed');
+              forensics.aiSkip('AI_PLANNER_FAILURE', { path: 'adaptation-engine' });
+            }
+            selectedCandidate = null;
+          } finally {
+            this.plannerInFlight.delete(plannerKey);
+          }
         }
       }
 
@@ -225,7 +288,7 @@ export class AdaptationTransactionEngine {
       return tx;
     } catch (err) {
       if (tx.sessionRuleIds.length > 0) {
-        await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds).catch(() => {});
+        await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds, 'engine-staging-failure').catch(() => {});
       }
       throw err;
     }
@@ -313,7 +376,11 @@ export class AdaptationTransactionEngine {
   }
 
   private navigationIsCurrent(tabId: number, navigationId: string): boolean {
-    return this.isNavigationCurrent?.(tabId, navigationId) ?? true;
+    const current = this.isNavigationCurrent?.(tabId, navigationId) ?? true;
+    // A dropped evaluation is invisible from the page: count it so cold-window
+    // epoch divergences are measurable instead of silently unprotected.
+    if (!current && forensics.enabled) forensics.count('engineStaleNavigationDrops');
+    return current;
   }
 
   private isAmbiguousNovelCase(batch: PageSignalBatch): boolean {

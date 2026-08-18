@@ -206,6 +206,7 @@ describe('ADAPT Extension Phase 1.5 Adversarial Laboratory Suite', () => {
     expect(Object.values(probeResults.markerKeysByObject).flat().filter((value: any) => typeof value === 'string' || value?.key)).toHaveLength(0);
     expect(probeResults.brandedErrors).toHaveLength(0);
     expect(probeResults.domMarkersFound).toBe(false);
+    expect(probeResults.dataAdaptAttributes).toHaveLength(0);
     await page.close();
   });
 

@@ -1,87 +1,93 @@
 {
   "schema": "adapt-phase31b-verification-v3",
-  "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-  "generatedAt": "2026-08-15T17:15:18.801Z",
-  "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
-  "startedAt": "2026-08-15T17:15:18.792Z",
-  "completedAt": "2026-08-15T17:20:38.285Z",
+  "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+  "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+  "generatedAt": "2026-08-18T18:47:36.173Z",
+  "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b",
+  "startedAt": "2026-08-18T18:47:36.160Z",
+  "completedAt": "2026-08-18T18:55:24.344Z",
   "verdict": "PASSED",
   "gates": [
     {
       "name": "TypeScript typecheck",
       "command": "npm run typecheck",
       "pass": true,
-      "durationMs": 2084
+      "durationMs": 3046
     },
     {
       "name": "Full reproducible build and indexed page compilation",
       "command": "npm run build:full",
       "pass": true,
-      "durationMs": 51877
+      "durationMs": 58384
     },
     {
       "name": "Indexed page-plane benchmark",
       "command": "npm run benchmark:page",
       "pass": true,
-      "durationMs": 487
+      "durationMs": 425
     },
     {
       "name": "Page filter compiler and index unit suite",
       "command": "npm run test:page",
       "pass": true,
-      "durationMs": 1608
+      "durationMs": 1625
     },
     {
       "name": "All unit and Phase 3 regression tests",
       "command": "npm run test:unit",
       "pass": true,
-      "durationMs": 9270
+      "durationMs": 18746
     },
     {
       "name": "Passive detector-bait stealth corpus",
       "command": "npm run test:stealth",
       "pass": true,
-      "durationMs": 55765
+      "durationMs": 57108
     },
     {
       "name": "30-scenario executable adversarial corpus",
       "command": "npm run test:anti-adblock",
       "pass": true,
-      "durationMs": 31067
+      "durationMs": 31440
     },
     {
       "name": "Content runtime stability regression",
       "command": "npm run test:runtime",
       "pass": true,
-      "durationMs": 3805
+      "durationMs": 4242
     },
     {
       "name": "Chromium Phase 3 and Phase 3.1B E2E suites",
       "command": "npm run test:e2e",
       "pass": true,
-      "durationMs": 160870
+      "durationMs": 289000
     },
     {
       "name": "Bundle security and packaging checks",
       "command": "npx vitest run tests/unit/production-bundle-clean.test.ts tests/unit/ai-oracle-security-redteam.test.ts tests/unit/ai-prompt-injection-adv.test.ts",
       "pass": true,
-      "durationMs": 1958
+      "durationMs": 1946
+    },
+    {
+      "name": "STRICT privacy wire proof",
+      "command": "npm run verify:privacy",
+      "pass": true,
+      "durationMs": 1536
     },
     {
       "name": "Canonical evidence integrity",
       "command": "npm run verify:phase31b:integrity",
       "pass": true,
-      "durationMs": 635
+      "durationMs": 618
     }
   ],
   "evidence": {
     "adversarial": {
       "schema": "adapt-phase31b-adversarial-v3",
-      "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-      "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-      "generatedAt": "2026-08-15T17:15:18.801Z",
-      "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
+      "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+      "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+      "generatedAt": "2026-08-18T18:47:36.173Z",
+      "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b",
       "total": 30,
       "passed": 30,
       "failed": 0,
@@ -95,31 +101,31 @@
           "id": "network-ad-request",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1042
+          "durationMs": 1040
         },
         {
           "id": "generic-cosmetic-ad",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1408
+          "durationMs": 1414
         },
         {
           "id": "domain-specific-cosmetic",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 2
         },
         {
           "id": "cosmetic-exception",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1
+          "durationMs": 0
         },
         {
           "id": "specific-generic-rule",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 0
+          "durationMs": 1
         },
         {
           "id": "extended-css-target",
@@ -137,7 +143,7 @@
           "id": "scriptlet-target",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 0
+          "durationMs": 1
         },
         {
           "id": "scriptlet-exception",
@@ -155,121 +161,121 @@
           "id": "offset-height-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1453
+          "durationMs": 1452
         },
         {
           "id": "bounding-rect-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1466
+          "durationMs": 1462
         },
         {
           "id": "computed-style-bait",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1451
+          "durationMs": 1456
         },
         {
           "id": "element-removal-detector",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1076
+          "durationMs": 1133
         },
         {
           "id": "bait-reinsertion",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1424
+          "durationMs": 1483
         },
         {
           "id": "timer-detection",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1444
+          "durationMs": 1457
         },
         {
           "id": "scroll-lock-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1415
+          "durationMs": 1485
         },
         {
           "id": "pointer-events-gate",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1417
+          "durationMs": 1561
         },
         {
           "id": "nested-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 351
+          "durationMs": 472
         },
         {
           "id": "cross-origin-frame",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 290
+          "durationMs": 555
         },
         {
           "id": "open-shadow-dom",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1041
+          "durationMs": 1043
         },
         {
           "id": "csp-heavy-page",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 1050
+          "durationMs": 1393
         },
         {
           "id": "spa-route-change",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 1476
+          "durationMs": 1491
         },
         {
           "id": "body-replacement",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 706
+          "durationMs": 729
         },
         {
           "id": "mutation-storm",
           "pass": true,
           "resultClass": "BLOCKING_PASS",
-          "durationMs": 3167
+          "durationMs": 3182
         },
         {
           "id": "worker-restart",
           "pass": true,
           "resultClass": "LIFECYCLE_PASS",
-          "durationMs": 2426
+          "durationMs": 2180
         },
         {
           "id": "consent-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1041
+          "durationMs": 792
         },
         {
           "id": "login-modal",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 757
+          "durationMs": 727
         },
         {
           "id": "paywall",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1049
+          "durationMs": 1048
         },
         {
           "id": "benign-advertisement-text",
           "pass": true,
           "resultClass": "NEGATIVE_CONTROL_PASS",
-          "durationMs": 1050
+          "durationMs": 776
         }
       ]
     },
@@ -340,121 +346,61 @@
         }
       ],
       "liveCanYouBlockIt": "NOT_OBSERVED",
-      "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-      "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-      "generatedAt": "2026-08-15T17:15:18.801Z",
-      "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f"
+      "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+      "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+      "generatedAt": "2026-08-18T18:47:36.173Z",
+      "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b"
     },
     "benchmark": {
       "schema": "adapt-phase31b-page-filter-benchmark-v1",
-      "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-      "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-      "generatedAt": "2026-08-15T17:15:18.801Z",
-      "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
+      "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+      "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+      "generatedAt": "2026-08-18T18:47:36.173Z",
+      "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b",
       "hostname": "www.youtube.com",
       "candidates": [
         "www.youtube.com",
         "youtube.com"
       ],
       "shardFiles": [
-        "domains/0328.json",
-        "domains/0335.json"
+        "domains/0330.json",
+        "domains/0338.json"
       ],
       "baselineIndexBytes": 15022819,
       "afterIndexBytes": 494,
-      "afterBundleBytes": 37145575,
-      "perFrameBytes": 1785905,
-      "perFrameParseMs": 8.587333,
-      "genericBytes": 1833,
-      "relevantDomainShardBytes": 183939,
-      "indexedRules": 765,
+      "afterBundleBytes": 39840145,
+      "perFrameBytes": 1786625,
+      "perFrameParseMs": 7.262543,
+      "genericBytes": 1917,
+      "relevantDomainShardBytes": 174111,
+      "indexedRules": 731,
       "mutationChecks": 2000,
-      "mutationBenchmarkMs": 0.149125,
-      "domainShardCount": 339,
-      "earlyShardCount": 338,
+      "mutationBenchmarkMs": 0.1645,
+      "domainShardCount": 341,
+      "earlyShardCount": 340,
       "noFullBundleParsePerFrame": true
     },
-    "detectorSensitiveCosmeticRules": 2913,
+    "detectorSensitiveCosmeticRules": 3027,
     "scriptletCoverage": {
-      "parsed": 7636,
-      "fullyExecutable": 4471,
-      "fullyExecutableEarly": 2959,
-      "unsupportedByName": 2890,
-      "unsupportedByArguments": 50,
+      "parsed": 7656,
+      "fullyExecutable": 6326,
+      "fullyExecutableEarly": 4809,
+      "unsupportedByName": 976,
+      "unsupportedByArguments": 128,
       "unsafe": 225,
-      "exceptionSuppressed": 0
+      "exceptionSuppressed": 1
     },
-    "scriptletRules": 7636,
-    "supportedScriptletRules": 4471,
+    "scriptletRules": 7655,
+    "supportedScriptletRules": 6326,
     "unsupportedScriptletFrequency": {
       "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-      "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-      "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-      "generatedAt": "2026-08-15T17:15:18.801Z",
-      "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
-      "totalScriptletRules": 7636,
-      "unsupportedScriptletRules": 3165,
+      "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+      "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+      "generatedAt": "2026-08-18T18:47:36.173Z",
+      "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b",
+      "totalScriptletRules": 7655,
+      "unsupportedScriptletRules": 1329,
       "entries": [
-        {
-          "name": "prevent-addEventListener",
-          "total": 421,
-          "fullyExecutable": 0,
-          "unsupported": 421,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 421,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "adjust-setInterval",
-          "total": 348,
-          "fullyExecutable": 0,
-          "unsupported": 348,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 348,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "set-cookie",
-          "total": 336,
-          "fullyExecutable": 0,
-          "unsupported": 336,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 336,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "set-local-storage-item",
-          "total": 297,
-          "fullyExecutable": 0,
-          "unsupported": 297,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 297,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "prevent-element-src-loading",
-          "total": 213,
-          "fullyExecutable": 0,
-          "unsupported": 213,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 213,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
         {
           "name": "set-constant",
           "total": 1344,
@@ -468,25 +414,13 @@
           }
         },
         {
-          "name": "adjust-setTimeout",
-          "total": 165,
-          "fullyExecutable": 0,
-          "unsupported": 165,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 165,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
           "name": "trusted-set-local-storage-item",
-          "total": 143,
+          "total": 144,
           "fullyExecutable": 0,
-          "unsupported": 143,
+          "unsupported": 144,
           "statuses": {
             "fully-executable": 0,
-            "unsupported-by-name": 143,
+            "unsupported-by-name": 144,
             "unsupported-by-arguments": 0,
             "unsafe": 0
           }
@@ -505,12 +439,12 @@
         },
         {
           "name": "abort-on-stack-trace",
-          "total": 130,
+          "total": 131,
           "fullyExecutable": 0,
-          "unsupported": 130,
+          "unsupported": 131,
           "statuses": {
             "fully-executable": 0,
-            "unsupported-by-name": 130,
+            "unsupported-by-name": 131,
             "unsupported-by-arguments": 0,
             "unsafe": 0
           }
@@ -528,30 +462,6 @@
           }
         },
         {
-          "name": "set-session-storage-item",
-          "total": 83,
-          "fullyExecutable": 0,
-          "unsupported": 83,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 83,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "prevent-setInterval",
-          "total": 56,
-          "fullyExecutable": 0,
-          "unsupported": 56,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 56,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
           "name": "trusted-set-cookie",
           "total": 55,
           "fullyExecutable": 0,
@@ -560,6 +470,18 @@
             "fully-executable": 0,
             "unsupported-by-name": 55,
             "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-local-storage-item",
+          "total": 298,
+          "fullyExecutable": 250,
+          "unsupported": 48,
+          "statuses": {
+            "fully-executable": 250,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 48,
             "unsafe": 0
           }
         },
@@ -601,6 +523,18 @@
         },
         {
           "name": "trusted-create-element",
+          "total": 28,
+          "fullyExecutable": 0,
+          "unsupported": 28,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 28,
+            "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "google-ima3",
           "total": 27,
           "fullyExecutable": 0,
           "unsupported": 27,
@@ -612,24 +546,12 @@
           }
         },
         {
-          "name": "google-ima3",
-          "total": 26,
-          "fullyExecutable": 0,
-          "unsupported": 26,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 26,
-            "unsupported-by-arguments": 0,
-            "unsafe": 0
-          }
-        },
-        {
           "name": "json-prune",
-          "total": 143,
-          "fullyExecutable": 121,
+          "total": 145,
+          "fullyExecutable": 123,
           "unsupported": 22,
           "statuses": {
-            "fully-executable": 121,
+            "fully-executable": 123,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 22,
             "unsafe": 0
@@ -732,6 +654,18 @@
           }
         },
         {
+          "name": "prevent-addEventListener",
+          "total": 422,
+          "fullyExecutable": 412,
+          "unsupported": 10,
+          "statuses": {
+            "fully-executable": 412,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 10,
+            "unsafe": 0
+          }
+        },
+        {
           "name": "trusted-prune-inbound-object",
           "total": 10,
           "fullyExecutable": 0,
@@ -817,11 +751,11 @@
         },
         {
           "name": "prevent-setTimeout",
-          "total": 476,
-          "fullyExecutable": 468,
+          "total": 477,
+          "fullyExecutable": 469,
           "unsupported": 8,
           "statuses": {
-            "fully-executable": 468,
+            "fully-executable": 469,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 8,
             "unsafe": 0
@@ -836,6 +770,18 @@
             "fully-executable": 0,
             "unsupported-by-name": 8,
             "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "set-cookie",
+          "total": 339,
+          "fullyExecutable": 332,
+          "unsupported": 7,
+          "statuses": {
+            "fully-executable": 332,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 7,
             "unsafe": 0
           }
         },
@@ -896,6 +842,18 @@
             "fully-executable": 0,
             "unsupported-by-name": 6,
             "unsupported-by-arguments": 0,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "adjust-setInterval",
+          "total": 348,
+          "fullyExecutable": 343,
+          "unsupported": 5,
+          "statuses": {
+            "fully-executable": 343,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 5,
             "unsafe": 0
           }
         },
@@ -997,14 +955,26 @@
         },
         {
           "name": "remove-attr",
-          "total": 199,
-          "fullyExecutable": 196,
+          "total": 200,
+          "fullyExecutable": 197,
           "unsupported": 3,
           "statuses": {
-            "fully-executable": 196,
+            "fully-executable": 197,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 1,
             "unsafe": 2
+          }
+        },
+        {
+          "name": "set-session-storage-item",
+          "total": 83,
+          "fullyExecutable": 80,
+          "unsupported": 3,
+          "statuses": {
+            "fully-executable": 80,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 3,
+            "unsafe": 0
           }
         },
         {
@@ -1068,6 +1038,18 @@
           }
         },
         {
+          "name": "adjust-setTimeout",
+          "total": 166,
+          "fullyExecutable": 164,
+          "unsupported": 2,
+          "statuses": {
+            "fully-executable": 164,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 2,
+            "unsafe": 0
+          }
+        },
+        {
           "name": "remove-node-text",
           "total": 146,
           "fullyExecutable": 144,
@@ -1076,6 +1058,30 @@
             "fully-executable": 144,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 2,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-setInterval",
+          "total": 56,
+          "fullyExecutable": 54,
+          "unsupported": 2,
+          "statuses": {
+            "fully-executable": 54,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 2,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "amazon-apstag",
+          "total": 2,
+          "fullyExecutable": 0,
+          "unsupported": 2,
+          "statuses": {
+            "fully-executable": 0,
+            "unsupported-by-name": 2,
+            "unsupported-by-arguments": 0,
             "unsafe": 0
           }
         },
@@ -1105,11 +1111,23 @@
         },
         {
           "name": "prevent-window-open",
-          "total": 479,
-          "fullyExecutable": 478,
+          "total": 482,
+          "fullyExecutable": 481,
           "unsupported": 1,
           "statuses": {
-            "fully-executable": 478,
+            "fully-executable": 481,
+            "unsupported-by-name": 0,
+            "unsupported-by-arguments": 1,
+            "unsafe": 0
+          }
+        },
+        {
+          "name": "prevent-element-src-loading",
+          "total": 213,
+          "fullyExecutable": 212,
+          "unsupported": 1,
+          "statuses": {
+            "fully-executable": 212,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 1,
             "unsafe": 0
@@ -1124,18 +1142,6 @@
             "fully-executable": 39,
             "unsupported-by-name": 0,
             "unsupported-by-arguments": 1,
-            "unsafe": 0
-          }
-        },
-        {
-          "name": "amazon-apstag",
-          "total": 1,
-          "fullyExecutable": 0,
-          "unsupported": 1,
-          "statuses": {
-            "fully-executable": 0,
-            "unsupported-by-name": 1,
-            "unsupported-by-arguments": 0,
             "unsafe": 0
           }
         },

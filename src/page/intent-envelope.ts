@@ -1,4 +1,5 @@
 import { hashOrigin } from '../shared/causal/events';
+import { isProtectedAuthHost, isProtectedPaymentHost } from '../shared/protected-flows';
 import {
   DestinationClass,
   ElementSemanticRole,
@@ -61,6 +62,46 @@ function relevantTarget(event: Event): HTMLElement | null {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return null;
   return target.closest<HTMLElement>('a,button,[role="button"],video,[data-play],[aria-label]');
+}
+
+/**
+ * Protected-transaction intent detection (Layer 2 trigger). A trusted click on
+ * a flow-shaped element begins conservative mode for the tab even when the
+ * element has no href (JS-driven "Sign in with Google" buttons, "Pay" buttons
+ * whose 3DS iframe loads on an unenumerable bank host). Patterns are
+ * word-boundary disciplined — `display`, `repay`, `signage` never match.
+ * Recall beats precision here by design: a false positive costs a few minutes
+ * of conservative mode on one tab; a false negative costs a broken login.
+ */
+const PROTECTED_AUTH_TEXT = /(sign[ -]?in|log[ -]?in|sign[ -]?up|continue with|verify (your|account|identity)|passkey)/i;
+const PROTECTED_PAYMENT_TEXT = /(check[ -]?out|place order|complete (purchase|order)|billing|paypal|apple pay|google pay|([^a-z]|^)pay(now| later| with| secure)?([^a-z]|$))/i;
+
+export function protectedTransactionIntentFor(event: Event): 'auth' | 'payment' | null {
+  const element = relevantTarget(event);
+  if (!element) return null;
+  const rawHref = element instanceof HTMLAnchorElement ? element.href : '';
+  if (rawHref) {
+    try {
+      const destination = new URL(rawHref, window.location.href);
+      if (isProtectedAuthHost(destination.hostname)) return 'auth';
+      if (isProtectedPaymentHost(destination.hostname)) return 'payment';
+      if (/oauth|authorize|signin|login/i.test(destination.pathname)) return 'auth';
+      if (/pay|checkout|billing|purchase/i.test(destination.pathname)) return 'payment';
+    } catch {
+      /* fall through to text */
+    }
+  }
+  const text = [
+    element.getAttribute('aria-label') || '',
+    element.getAttribute('title') || '',
+    (element.textContent || '').slice(0, 120),
+    element.id,
+    typeof element.className === 'string' ? element.className : '',
+    element instanceof HTMLInputElement ? element.value : '',
+  ].join(' ');
+  if (PROTECTED_PAYMENT_TEXT.test(text)) return 'payment';
+  if (PROTECTED_AUTH_TEXT.test(text)) return 'auth';
+  return null;
 }
 
 export function createIntentEnvelope(

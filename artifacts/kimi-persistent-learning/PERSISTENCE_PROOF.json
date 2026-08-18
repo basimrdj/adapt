@@ -1,0 +1,52 @@
+{
+  "schema": "kimi-persistence-proof-v1",
+  "ranAt": "2026-08-17T06:48:39.675Z",
+  "checks": [
+    {
+      "name": "T2a: production AI staged a session protection with ownership metadata",
+      "pass": true,
+      "detail": "staged=true sessionRules=3000000,3000001 ownershipRecords=2"
+    },
+    {
+      "name": "T1: session rule + ownership survive worker restart; reconcile removes nothing",
+      "pass": true,
+      "detail": "reconcile={\"demoted\":0,\"dynamicRestored\":0,\"metadataCleaned\":0,\"orphanedDynamicRemoved\":0,\"orphanedSessionRemoved\":0,\"promotingResolved\":0,\"reconciled\":true,\"sessionRestored\":2,\"sessionRuleIds\":\"\",\"unknownKept\":0} sessionRules=3000000,3000001 ownership=2"
+    },
+    {
+      "name": "T1: allocator reconstructed without ID collision after restart",
+      "pass": true,
+      "detail": "restored=3000000,3000001 new=3000002"
+    },
+    {
+      "name": "T2: recurring healthy family promoted to a REAL Chrome dynamic rule",
+      "pass": true,
+      "detail": "dynamicRules=1000000 durable=[{\"ruleId\":1000000,\"lifecycle\":\"PERSISTED_DYNAMIC\"}]"
+    },
+    {
+      "name": "T2: redundant session rule removed only after dynamic install verified",
+      "pass": true,
+      "detail": "sessionBefore=3000002 sessionAfter=3000002"
+    },
+    {
+      "name": "T1: promoted dynamic rule survives worker restart reconcile",
+      "pass": true,
+      "detail": "dynamicAfterRestart=1000000"
+    },
+    {
+      "name": "T3: promoted rule + metadata survive full browser restart",
+      "pass": true,
+      "detail": "dynamic=1000000 durable=[{\"ruleId\":1000000,\"lifecycle\":\"PERSISTED_DYNAMIC\"}]"
+    },
+    {
+      "name": "T3: known family pre-blocked after browser restart with zero AI calls",
+      "pass": true,
+      "detail": "learnedFamily=b familyState={\"a\":\"loaded\",\"b\":\"blocked\",\"own\":\"loaded\"} aiCalls=0"
+    },
+    {
+      "name": "credential never appears in forensic artifact",
+      "pass": true,
+      "detail": "tokenPresent=false"
+    }
+  ],
+  "pass": true
+}

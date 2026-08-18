@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T42: 10k-Node Churn SPA Soak</title>
+</head>
+<body>
+  <h1>T42 Churn Soak</h1>
+  <div id="churn-root"></div>
+
+  <script>
+    // 10,000-node tree, fully replaced per SPA navigation. 25 virtual navs via
+    // pushState stress the content script's registry, observer, and alias maps.
+    window.__soak_navs = 0;
+    window.__soak_errors = [];
+    window.addEventListener('error', (e) => window.__soak_errors.push(String(e.message)));
+
+    const buildTree = (seed) => {
+      const root = document.getElementById('churn-root');
+      const parts = [];
+      for (let i = 0; i < 100; i++) {
+        parts.push('<div class="row" id="row-' + seed + '-' + i + '">');
+        for (let j = 0; j < 99; j++) {
+          parts.push('<span class="cell cell-' + j + '">s' + seed + 'r' + i + 'c' + j + '</span>');
+        }
+        parts.push('</div>');
+      }
+      root.innerHTML = parts.join('');
+    };
+
+    window.__spaNav = (index) => {
+      history.pushState({ index }, '', '/t42-churn-soak/nav-' + index);
+      buildTree(index);
+      window.__soak_navs++;
+      return window.__soak_navs;
+    };
+
+    buildTree(0);
+  </script>
+</body>
+</html>

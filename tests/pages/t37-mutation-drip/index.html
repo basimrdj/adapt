@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T37: Continuous Sub-Threshold Mutation Drip</title>
+</head>
+<body>
+  <h1>T37 Mutation Drip</h1>
+  <div id="drip-host"><span class="drip-node">seed</span></div>
+
+  <script>
+    // Steady 2/s sub-threshold mutations FOREVER — the trailing-edge debounce
+    // starvation case. The page itself stays trivially renderable; the e2e
+    // asserts the main thread stays responsive (rAF cadence) and the drip
+    // never stops while the extension observes it.
+    window.__drip_count = 0;
+    window.__raf_frames = 0;
+    window.__drip_errors = [];
+    window.addEventListener('error', (e) => window.__drip_errors.push(String(e.message)));
+
+    setInterval(() => {
+      const host = document.getElementById('drip-host');
+      if (!host) return;
+      const node = document.createElement('span');
+      node.className = 'drip-node';
+      node.textContent = 'drip-' + window.__drip_count;
+      host.appendChild(node);
+      if (host.children.length > 40) host.removeChild(host.firstChild);
+      window.__drip_count++;
+    }, 500);
+
+    const tick = () => {
+      window.__raf_frames++;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Audit Benign — Image Gallery</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; }
+    .gallery { display: flex; gap: 12px; flex-wrap: wrap; }
+    .gallery img { width: 160px; height: 120px; }
+  </style>
+</head>
+<body>
+  <main id="main-content">
+    <h1>Weekend Photo Gallery</h1>
+    <p>Plain image gallery. Every image must load and stay visible.</p>
+    <div class="gallery">
+      <img src="/assets/sample-red.png" alt="Red sample">
+      <img src="/assets/sample-green.png" alt="Green sample">
+      <img src="/assets/sample-blue.png" alt="Blue sample">
+      <!-- Third-party-but-not-an-ad: the CDN-hosted image case that naive
+           blocking breaks. Served by the fixture ad server. -->
+      <img id="cdn-image" src="about:blank" alt="CDN hosted photo" data-cdn-src="/fixtures/cdn-image.png">
+    </div>
+    <nav style="margin-top:24px">
+      <a href="/audit-benign/video.html">Video page</a> |
+      <a href="/audit-benign/comment.html">Comment form</a> |
+      <a href="/audit-benign/search.html">Search</a> |
+      <a href="/audit-benign/article-1.html">Multi-page article</a>
+    </nav>
+  </main>
+  <script>
+    // Resolve the CDN image against the third-party fixture port at runtime.
+    var cdn = document.getElementById('cdn-image');
+    cdn.src = 'http://127.0.0.1:' + (window.__adPort || 4091) + cdn.getAttribute('data-cdn-src');
+  </script>
+</body>
+</html>

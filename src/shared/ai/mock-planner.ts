@@ -2,6 +2,10 @@ import { AdaptivePlanner } from './planner-interface';
 import { EvidencePacket, AdaptationPlan, PlannedActionProposal } from './types';
 
 export class MockPlanner implements AdaptivePlanner {
+  /** Dev-only forensics: identifies the planner class. */
+  readonly plannerKind = 'mock';
+  readonly endpointClass = 'loopback' as const;
+
   private predefinedPlans = new Map<string, AdaptationPlan>();
 
   public setMockPlan(triggerKey: string, plan: AdaptationPlan): void {

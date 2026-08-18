@@ -1,9 +1,9 @@
 {
   "schema": "adapt-phase35b-recipe-lifecycle-live-v1",
-  "verificationRunId": "phase31b-1786816440535-f45ca67a3aad",
-  "sourceCommitSha": "f45ca67a3aad9d19ad8543f57a7725576b8d3617",
-  "generatedAt": "2026-08-15T17:54:00.534Z",
-  "buildFingerprint": "b1dc88b717d367945b79ab10acb1629474523ad5ed9fe83ecf3b197b1867578e",
+  "verificationRunId": "phase31b-1787077107345-0f433a8352ea",
+  "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+  "generatedAt": "2026-08-18T18:18:27.344Z",
+  "buildFingerprint": "9cc5f276937e6dfb34e11792f38c008e98cff325e61e9e5e777f21ebd565f323",
   "visit1_experiments": 1,
   "visit2_experiments": 0,
   "visit3_experiments": 0,

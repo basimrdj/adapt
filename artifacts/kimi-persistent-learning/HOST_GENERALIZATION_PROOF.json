@@ -1,0 +1,77 @@
+{
+  "schema": "kimi-host-generalization-proof-v1",
+  "ranAt": "2026-08-17T06:49:41.235Z",
+  "checks": [
+    {
+      "name": "T4a: randomized-path family promoted to durable HOST-WIDE rule (requestDomains, no urlFilter)",
+      "pass": true,
+      "detail": "record={\"ruleId\":1000000,\"lifecycle\":\"PERSISTED_DYNAMIC\",\"hostWide\":true,\"matchCount\":1,\"family\":\"track-random\",\"scoped\":true,\"siteKeys\":1,\"widthRefusal\":null} condition={\"id\":1000000,\"urlFilter\":null,\"requestDomains\":[\"track-random.test\"],\"initiatorDomains\":[\"learn-random.test\"]}"
+    },
+    {
+      "name": "T4a: promoted rule is site-scoped to the learning site (initiatorDomains set)",
+      "pass": true,
+      "detail": "scoped=true conditionInitiators=[\"learn-random.test\"]"
+    },
+    {
+      "name": "CTL: first-party + never-learned sibling controls loaded during learning",
+      "pass": true,
+      "detail": "familyState={\"sibling\":\"loaded\",\"own\":\"loaded\",\"track\":\"blocked\"}"
+    },
+    {
+      "name": "G3: same-session request to a NEW random path blocked pre-request (host-wide protection)",
+      "pass": true,
+      "detail": "injectedPath=/g3-pp19ek7d9ir/7uzw67a1fil/fam.js state=blocked"
+    },
+    {
+      "name": "G4: randomized revisit blocked with zero new AI calls; controls intact",
+      "pass": true,
+      "detail": "familyState={\"sibling\":\"loaded\",\"own\":\"loaded\",\"track\":\"blocked\"} aiDelta=0"
+    },
+    {
+      "name": "G4: blocked randomized requests never reached the network (server-side log)",
+      "pass": true,
+      "detail": "trackRequestsReceived=1"
+    },
+    {
+      "name": "G4: after full browser restart, randomized path blocked with zero AI calls",
+      "pass": true,
+      "detail": "familyState={\"sibling\":\"loaded\",\"own\":\"loaded\",\"track\":\"blocked\"} aiCalls=0"
+    },
+    {
+      "name": "T5a: site-scoped learned rule does NOT block the same host on a different site",
+      "pass": true,
+      "detail": "firstAttempt=loaded attempts=[\"loaded\",\"blocked\"] own=loaded"
+    },
+    {
+      "name": "T5a: repeated multi-site evidence globalized the rule atomically (initiatorDomains dropped)",
+      "pass": true,
+      "detail": "globalized=true condition={\"id\":1000000,\"urlFilter\":null,\"requestDomains\":[\"track-random.test\"],\"initiatorDomains\":null} counters.rulesGlobalized=1"
+    },
+    {
+      "name": "T5a: after globalization the second site is protected too",
+      "pass": true,
+      "detail": "familyState={\"sibling\":\"n/a\",\"track\":\"blocked\",\"own\":\"loaded\"}"
+    },
+    {
+      "name": "T5b: shared-infra host promoted NARROW ONLY (G5 refusal recorded, no requestDomains)",
+      "pass": true,
+      "detail": "record={\"ruleId\":1000001,\"lifecycle\":\"PERSISTED_DYNAMIC\",\"hostWide\":false,\"matchCount\":1,\"family\":\"cdn-cloudflare\",\"scoped\":true,\"siteKeys\":1,\"widthRefusal\":\"shared-infra\"} condition={\"id\":1000001,\"urlFilter\":\"|http://cdn-cloudflare.test:51617/pkx73lewg10a/ufurabp2z6e*\",\"requestDomains\":null,\"initiatorDomains\":[\"learn-random.test\"]}"
+    },
+    {
+      "name": "T5b: different path on the infra host still loads (narrow rule preserved)",
+      "pass": true,
+      "detail": "familyState={\"sibling\":\"n/a\",\"own\":\"loaded\",\"probe\":\"loaded\"}"
+    },
+    {
+      "name": "CTL: exactly two durable learned rules exist (no rule explosion)",
+      "pass": true,
+      "detail": "durable=[{\"family\":\"track-random\",\"lifecycle\":\"PERSISTED_DYNAMIC\",\"hostWide\":true},{\"family\":\"cdn-cloudflare\",\"lifecycle\":\"PERSISTED_DYNAMIC\",\"hostWide\":false}]"
+    },
+    {
+      "name": "credential never appears in forensic artifact",
+      "pass": true,
+      "detail": "tokenPresent=false"
+    }
+  ],
+  "pass": true
+}

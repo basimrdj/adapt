@@ -256,6 +256,20 @@ export class PromotionGate {
   }
 
   /**
+   * Rehydrate the in-memory lifecycle map from the persisted recipe store after
+   * a worker restart. Without this, an INVALIDATED recipe with stableReplays >= 2
+   * would be re-inferred as RECIPE_SAFE by replay() and applied again — the
+   * invalidation must survive restarts.
+   */
+  public async hydrateLifecycles(): Promise<void> {
+    if (!this.store) return;
+    const records = await this.store.getAll();
+    for (const record of records) {
+      this.lifecycleById.set(record.recipe.id, record.lifecycle);
+    }
+  }
+
+  /**
    * Compile a draft CausalRecipe from a causal finding.
    * Does not require replays and never writes CONFIRMED / RecipeSafe.
    */
@@ -312,9 +326,15 @@ export class PromotionGate {
     recipe: CausalRecipe,
     fingerprint: PageFingerprint,
     healthDelta: number,
-    success: boolean
+    success: boolean,
+    persistedLifecycle?: CausalRecipeLifecycle,
+    healthExpectationOverride?: number
   ): PromotionReplayResult {
-    const prev = this.lifecycleById.get(recipe.id) ?? this.inferLifecycle(recipe);
+    // Priority: live map → caller's persisted record → inference from replays.
+    // Inference alone cannot represent INVALIDATED, so a restarted worker must
+    // never derive lifecycle from stableReplays when a stored record exists.
+    const prev = this.lifecycleById.get(recipe.id) ?? persistedLifecycle ?? this.inferLifecycle(recipe);
+    if (persistedLifecycle !== undefined) this.lifecycleById.set(recipe.id, prev);
     if (prev === 'INVALIDATED') {
       return { recipe: cloneRecipe(recipe), lifecycle: 'INVALIDATED', applied: false };
     }
@@ -334,7 +354,13 @@ export class PromotionGate {
       return { recipe: cloneRecipe(recipe), lifecycle: prev, applied: false };
     }
 
-    const healthOk = replayHealthOk(healthDelta, recipe.expectedHealthDelta);
+    // healthExpectationOverride is used by reduced replays (e.g. cosmetic-owned
+    // revisits where the hide half of the recipe was already delivered by the
+    // cosmetic plane before the baseline was measured): the recipe's recorded
+    // delta includes work the replay no longer needs to do, so the caller
+    // substitutes the residual-harm expectation (0 — no regression tolerated;
+    // resolution of the targeted harm is asserted by the success argument).
+    const healthOk = replayHealthOk(healthDelta, healthExpectationOverride ?? recipe.expectedHealthDelta);
     if (!success || !healthOk) {
       return this.invalidate(recipe);
     }

@@ -44,6 +44,17 @@ export function startTestServers(appPort = 4000, adPort = 4001): Promise<TestSer
         return;
       }
 
+      // Audit harness: comment form endpoint (200 JSON — a working form post).
+      if (urlPath === '/audit-comment' && req.method === 'POST') {
+        let body = '';
+        req.on('data', (chunk) => (body += chunk));
+        req.on('end', () => {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, received: body.length }));
+        });
+        return;
+      }
+
       let filePath = path.join(currentDir, urlPath === '/' ? 'index.html' : urlPath);
 
       if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
@@ -76,6 +87,15 @@ export function startTestServers(appPort = 4000, adPort = 4001): Promise<TestSer
       } else if (urlPath.includes('ad-probe.js')) {
         res.writeHead(200, { 'Content-Type': 'application/javascript' });
         res.end('window.__probe_loaded = true;');
+      } else if (urlPath.includes('/fixtures/wave-img.png') || urlPath.includes('/fixtures/cdn-image.png')) {
+        // 1x1 transparent PNG — a real, completable third-party image response
+        // (t44 wave requests end as REQUEST_COMPLETE; audit-benign's CDN image
+        // proves third-party-but-benign images are never blocked).
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        res.end(Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+          'base64'
+        ));
       } else if (urlPath.includes('cross-origin-fixture.html')) {
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end('<!doctype html><html><body><main id="child-content">Cross-origin content survives</main><div class="sponsor-div">Cross-origin advertisement</div></body></html>');

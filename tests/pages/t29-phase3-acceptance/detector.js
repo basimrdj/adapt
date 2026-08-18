@@ -28,6 +28,12 @@
     }
   };
 
-  update();
-  window.setInterval(update, 50);
+  // Delay the first gate so the script-complete request event is guaranteed
+  // to be in the extension's causal graph before the gate-bearing observation
+  // batch arrives — both hypotheses then exist at the first experiment
+  // selection and the discriminator order is deterministic.
+  window.setTimeout(() => {
+    update();
+    window.setInterval(update, 50);
+  }, 400);
 })();

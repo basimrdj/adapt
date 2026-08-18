@@ -38,7 +38,17 @@ export type GraphAppendResult = { ok: true } | { ok: false; reason: GraphAppendR
 interface GraphSlot {
   key: CausalDocumentKey;
   graph: EventGraph;
+  lastTouchedWallMs: number;
 }
+
+/**
+ * Hard bound on live graph slots. The full slot set is serialized into
+ * chrome.storage.session on every persist — without a cap, a long session of
+ * tab/frame churn grows the snapshot into the 10MB session quota and every
+ * write starts failing. 128 slots × the per-graph node cap stays safely inside
+ * the quota while covering extreme tab floods.
+ */
+export const MAX_GRAPH_SLOTS = 128;
 
 export class EventGraphStore {
   private readonly slots = new Map<string, GraphSlot>();
@@ -48,14 +58,37 @@ export class EventGraphStore {
   getOrCreate(scope: CausalDocumentKey, originHash: string): EventGraph {
     const id = serializeCausalKey(scope);
     const existing = this.slots.get(id);
-    if (existing) return existing.graph;
+    if (existing) {
+      existing.lastTouchedWallMs = Date.now();
+      return existing.graph;
+    }
     const graph = createEmptyGraph(scope, originHash);
-    this.slots.set(id, { key: { ...scope }, graph });
+    this.slots.set(id, { key: { ...scope }, graph, lastTouchedWallMs: Date.now() });
+    this.evictOverflow(id);
     return graph;
   }
 
+  /** LRU-evict slots beyond the cap; the just-created slot is never evicted. */
+  private evictOverflow(protectedId: string): void {
+    while (this.slots.size > MAX_GRAPH_SLOTS) {
+      let oldestId: string | undefined;
+      let oldestTouched = Infinity;
+      for (const [id, slot] of this.slots) {
+        if (id === protectedId) continue;
+        if (slot.lastTouchedWallMs < oldestTouched) {
+          oldestTouched = slot.lastTouchedWallMs;
+          oldestId = id;
+        }
+      }
+      if (oldestId === undefined) return;
+      this.slots.delete(oldestId);
+    }
+  }
+
   get(key: CausalDocumentKey): EventGraph | undefined {
-    return this.slots.get(serializeCausalKey(key))?.graph;
+    const slot = this.slots.get(serializeCausalKey(key));
+    if (slot) slot.lastTouchedWallMs = Date.now();
+    return slot?.graph;
   }
 
   getAll(): EventGraph[] {
@@ -64,7 +97,11 @@ export class EventGraphStore {
 
   hydrate(graphs: EventGraph[]): void {
     this.slots.clear();
-    for (const graph of graphs) {
+    // Newest first, then capped: a snapshot that already exceeded the bound (or a
+    // corrupted/oversized payload) hydrates only its most recent graphs.
+    const ordered = [...graphs].reverse();
+    for (const graph of ordered) {
+      if (this.slots.size >= MAX_GRAPH_SLOTS) break;
       if (!graph || graph.graphVersion !== '3.0' || !graph.scope) continue;
       const frameId = graph.nodes[0]?.scope.frameId ?? 0;
       const key: CausalDocumentKey = {
@@ -73,7 +110,7 @@ export class EventGraphStore {
         documentId: graph.scope.documentId,
         frameId,
       };
-      this.slots.set(serializeCausalKey(key), { key, graph });
+      this.slots.set(serializeCausalKey(key), { key, graph, lastTouchedWallMs: Date.now() });
     }
   }
 
@@ -93,6 +130,7 @@ export class EventGraphStore {
     const key = causalKeyFromNode(node);
     const exact = this.slots.get(serializeCausalKey(key));
     if (exact) {
+      exact.lastTouchedWallMs = Date.now();
       const added = addNode(exact.graph, node);
       if (!added.ok) return added;
       pruneGraph(exact.graph, MAX_GRAPH_NODES);

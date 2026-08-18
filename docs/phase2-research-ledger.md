@@ -9,9 +9,9 @@
 ## 1. Azure OpenAI v1 API & Architecture
 
 ### API Endpoint & Deployment
-- **Endpoint Structure**: `https://basim-agent3-openai-eastus2.openai.azure.com/openai/v1/`
-- **Deployment Name**: `buzz-gpt-5-4-mini` (Underlying model: GPT-5.4 mini)
-- **Authentication**: Azure Cognitive Services API Key (obtained at runtime via Azure CLI `az cognitiveservices account keys list`; NEVER stored in repository or client bundle).
+- **Endpoint Structure**: `https://<your-account>.openai.azure.com/openai/v1/` (set via `AZURE_OPENAI_BASE_URL`)
+- **Deployment Name**: set via `AZURE_OPENAI_MODEL`
+- **Authentication**: Azure Cognitive Services API Key (set via `AZURE_OPENAI_API_KEY`, or obtained at runtime via Azure CLI `az cognitiveservices account keys list` with `AZURE_OPENAI_ACCOUNT`/`AZURE_OPENAI_RESOURCE_GROUP`; NEVER stored in repository or client bundle).
 
 ### Protocol: Chat Completions vs Responses API
 - **v1 Chat Completions**: Fully supports Structured Outputs (`response_format: { type: "json_schema", json_schema: { strict: true, schema: ... } }`) and `reasoning_effort`.

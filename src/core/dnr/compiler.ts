@@ -55,10 +55,13 @@ export class DnrCompiler {
       resourceTypes: action.resourceTypes || defaultResourceTypes,
     };
 
-    if (action.isRegex) {
+    if (action.isRegex && action.urlFilter) {
       condition.regexFilter = action.urlFilter;
-    } else {
+    } else if (action.urlFilter) {
       condition.urlFilter = action.urlFilter;
+    }
+    if (action.requestDomains && action.requestDomains.length > 0) {
+      condition.requestDomains = action.requestDomains;
     }
 
     if (options?.tabId !== undefined) {

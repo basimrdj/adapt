@@ -28,7 +28,6 @@ export class DnrIdAllocator {
   }
 
   public allocate(band: IdBandType, ownerId: string): number {
-    let candidate = this.nextId[band];
     const max =
       band === 'DYNAMIC_SAFE'
         ? ID_BANDS.DYNAMIC_SAFE_MAX
@@ -47,19 +46,24 @@ export class DnrIdAllocator {
         ? ID_BANDS.SESSION_SAFE_MIN
         : ID_BANDS.SESSION_UNSAFE_MIN;
 
-    let loops = 0;
+    // Clamp before the collision scan: a nextId past the band ceiling must wrap
+    // back to the floor, never leak into the neighbouring band. A rule id outside
+    // its band reconciles under the wrong band and can be misclassified as an
+    // orphan or collide with a foreign band's live rule.
+    let candidate = this.nextId[band];
+    if (candidate > max || candidate < min) candidate = min;
+
+    const bandSize = max - min + 1;
+    let visited = 0;
     while (this.allocatedIds.has(candidate)) {
-      candidate++;
-      if (candidate > max) {
-        candidate = min;
-        loops++;
-        if (loops > 1) {
-          throw new Error(`Exhausted DNR Rule ID pool for band: ${band}`);
-        }
+      candidate = candidate >= max ? min : candidate + 1;
+      visited++;
+      if (visited >= bandSize) {
+        throw new Error(`Exhausted DNR Rule ID pool for band: ${band}`);
       }
     }
 
-    this.nextId[band] = candidate + 1;
+    this.nextId[band] = candidate >= max ? min : candidate + 1;
     const alloc: RuleIdAllocation = {
       id: candidate,
       band,
@@ -68,6 +72,29 @@ export class DnrIdAllocator {
     };
     this.allocatedIds.set(candidate, alloc);
     return candidate;
+  }
+
+  /**
+   * Adopts allocations recovered from authoritative browser/storage state after a
+   * worker or browser restart. An empty in-memory Map is NOT evidence that an ID is
+   * free — recovered records make previously-owned IDs unallocatable again.
+   */
+  public adopt(recovered: RuleIdAllocation[]): number {
+    let adopted = 0;
+    for (const alloc of recovered) {
+      if (!this.allocatedIds.has(alloc.id)) {
+        this.allocatedIds.set(alloc.id, alloc);
+        adopted++;
+      }
+      if (alloc.id >= this.nextId[alloc.band]) {
+        this.nextId[alloc.band] = alloc.id + 1;
+      }
+    }
+    return adopted;
+  }
+
+  public isAllocated(id: number): boolean {
+    return this.allocatedIds.has(id);
   }
 
   public release(id: number): boolean {

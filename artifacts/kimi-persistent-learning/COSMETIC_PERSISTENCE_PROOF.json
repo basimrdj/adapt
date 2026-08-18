@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-08-17T06:49:56.093Z",
+  "visit1": {
+    "insertedVisible": true,
+    "currentlyVisible": false,
+    "articleVisible": true
+  },
+  "relayCallsVisit1": 1,
+  "persistedAfterVisit1": [
+    "div.sponsored-offer-xq7"
+  ],
+  "visit2": {
+    "insertedVisible": false,
+    "currentlyVisible": false,
+    "articleVisible": true
+  },
+  "relayCallsVisit2": 0,
+  "visit3AfterRestart": {
+    "insertedVisible": false,
+    "currentlyVisible": false,
+    "articleVisible": true
+  },
+  "relayCallsVisit3": 0,
+  "redesignVisits": [
+    {
+      "insertedVisible": null,
+      "currentlyVisible": true,
+      "articleVisible": true
+    },
+    {
+      "insertedVisible": null,
+      "currentlyVisible": true,
+      "articleVisible": true
+    },
+    {
+      "insertedVisible": null,
+      "currentlyVisible": true,
+      "articleVisible": true
+    }
+  ],
+  "persistedAfterGuard": [],
+  "visit7AfterDrop": {
+    "insertedVisible": null,
+    "currentlyVisible": true,
+    "articleVisible": true
+  },
+  "verdict": "PASS",
+  "failures": []
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Audit Benign — Comment Form</title>
+</head>
+<body>
+  <main id="main-content">
+    <h1>Leave a Comment</h1>
+    <form id="comment-form">
+      <label>Name <input id="comment-name" name="name" type="text" required></label>
+      <label>Comment <textarea id="comment-body" name="body" required></textarea></label>
+      <button type="submit">Post comment</button>
+    </form>
+    <p id="comment-status"></p>
+    <a href="/audit-benign/index.html">Back to gallery</a>
+  </main>
+  <script>
+    document.getElementById('comment-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var status = document.getElementById('comment-status');
+      status.textContent = 'submitting';
+      fetch('/audit-comment', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('comment-name').value,
+          body: document.getElementById('comment-body').value,
+        }),
+      }).then(function (res) {
+        status.textContent = res.ok ? 'posted' : 'failed-' + res.status;
+      }).catch(function () { status.textContent = 'failed-network'; });
+    });
+  </script>
+</body>
+</html>

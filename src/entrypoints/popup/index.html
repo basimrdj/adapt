@@ -7,43 +7,96 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="popup-container">
-    <header class="popup-header">
-      <div class="logo-area">
-        <span class="shield-icon">🛡️</span>
-        <h1>ADAPT</h1>
+  <div class="panel">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-word">ADAPT</span>
       </div>
-      <span id="shield-status" class="status-badge active">ACTIVE</span>
+      <button id="btn-options" class="icon-btn" type="button" title="Settings" aria-label="Open settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
     </header>
 
-    <main class="popup-content">
-      <div class="site-card">
-        <div class="site-label">CURRENT SITE</div>
-        <div id="current-site" class="site-host">example.com</div>
-        <div id="recipe-status" class="recipe-badge">Baseline Protection</div>
+    <section class="card hero">
+      <div class="hero-emblem" aria-hidden="true">
+        <span class="ring ring-outer"></span>
+        <span class="ring ring-mid"></span>
+        <span class="emblem-core">
+          <svg viewBox="0 0 24 24"><path d="M12 2.5 4.5 5.5v5.2c0 4.6 3.1 8.9 7.5 10.3 4.4-1.4 7.5-5.7 7.5-10.3V5.5L12 2.5z" fill="#ececef"/><path d="m8.7 11.6 2.3 2.3 4.3-4.6" stroke="#141416" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
       </div>
+      <div class="hero-copy">
+        <h2 id="hero-title">Protection Active</h2>
+        <p id="hero-sub">You&rsquo;re protected across<br>the modern web.</p>
+        <span class="hero-actions">
+          <span class="live-pill" id="live-pill"><span class="live-dot" aria-hidden="true"></span><span id="live-text">Live</span></span>
+          <button id="btn-pause" class="pause-btn" type="button" hidden>Pause on this site</button>
+        </span>
+      </div>
+    </section>
 
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div id="blocked-count" class="stat-value">0</div>
-          <div class="stat-label">Blocked Ads</div>
-        </div>
-        <div class="stat-box">
-          <div id="adapt-count" class="stat-value">0</div>
-          <div class="stat-label">Adaptations</div>
-        </div>
+    <section class="card rows">
+      <button class="row" id="row-threat" type="button" aria-expanded="false">
+        <span class="row-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="7.5"/><line x1="12" y1="1.8" x2="12" y2="4.8"/><line x1="12" y1="19.2" x2="12" y2="22.2"/><line x1="1.8" y1="12" x2="4.8" y2="12"/><line x1="19.2" y1="12" x2="22.2" y2="12"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="row-text">
+          <span class="row-title">Threat Blocking</span>
+          <span class="row-desc">Blocks trackers, malicious sites, and harmful scripts.</span>
+        </span>
+        <span class="row-tail">
+          <span class="row-state" id="state-threat">On</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+        </span>
+      </button>
+      <div class="row-detail" id="detail-threat" hidden>
+        <div class="detail-line" id="dt-site-line">Checking this tab&hellip;</div>
+        <div class="detail-line" id="dt-recipe-line"></div>
+        <div class="detail-audit" id="dt-audit"></div>
       </div>
+      <div class="hair" aria-hidden="true"></div>
 
-      <div class="control-section">
-        <button id="btn-toggle-protection" class="btn btn-primary">Protection Enabled</button>
-        <button id="btn-view-audit" class="btn btn-secondary">View Adaptation Audit</button>
+      <button class="row" id="row-privacy" type="button" aria-expanded="false">
+        <span class="row-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+        </span>
+        <span class="row-text">
+          <span class="row-title">Privacy Guard</span>
+          <span class="row-desc">Reduces fingerprinting and protects your data.</span>
+        </span>
+        <span class="row-tail">
+          <span class="row-state">On</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+        </span>
+      </button>
+      <div class="row-detail" id="detail-privacy" hidden>
+        <div class="detail-line">Main-world shims mask automation and fingerprinting surfaces before page scripts run.</div>
       </div>
+      <div class="hair" aria-hidden="true"></div>
 
-      <div id="audit-drawer" class="audit-drawer hidden">
-        <h3>Recent Local Events</h3>
-        <div id="audit-list" class="audit-list"></div>
+      <button class="row" id="row-performance" type="button" aria-expanded="false">
+        <span class="row-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 17.5a9 9 0 1 1 17 0"/><line x1="12" y1="13.5" x2="15.8" y2="8.6"/><circle cx="12" cy="14" r="1.3" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="row-text">
+          <span class="row-title">Performance Mode</span>
+          <span class="row-desc">Optimizes pages for speed and efficiency.</span>
+        </span>
+        <span class="row-tail">
+          <span class="row-state">On</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg>
+        </span>
+      </button>
+      <div class="row-detail" id="detail-performance" hidden>
+        <div class="detail-line">Pre-paint cosmetic filtering and the document-start popup broker keep pages lean before first paint.</div>
       </div>
-    </main>
+    </section>
+
+    <footer class="card foot">
+      <span>ADAPT is running quietly in the background.</span>
+      <svg class="foot-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2.5 12 6.5 12 9.5 4.5 14.5 19.5 17.5 12 21.5 12"/></svg>
+    </footer>
   </div>
   <script type="module" src="popup.ts"></script>
 </body>

@@ -12,6 +12,9 @@ const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 // These are the only maintained source lists Phase 3.1 currently consumes.
 // Downloading them serially avoids the dozens of concurrent requests that
 // caused the AdGuard loader ECONNRESET on the large Base list.
+// id 9001 is outside the AdGuard registry space: the Adblock Warning Removal
+// List (anti-adblock notices) is an EasyList-family list not mirrored by
+// filters.adtidy.org, so it carries its own source URL.
 const REQUIRED = [
   { id: 2, family: 'base', expected: /^AdGuard Base filter$/i },
   { id: 3, family: 'tracking', expected: /^AdGuard Tracking Protection filter$/i },
@@ -19,6 +22,12 @@ const REQUIRED = [
   { id: 19, family: 'popups', expected: /^AdGuard Popups filter$/i },
   { id: 21, family: 'annoyances', expected: /^AdGuard Other Annoyances filter$/i },
   { id: 208, family: 'malicious', expected: /^Online Malicious URL Blocklist$/i },
+  {
+    id: 9001,
+    family: 'antiadblock',
+    expected: /^Adblock Warning Removal List$/i,
+    url: 'https://easylist-downloads.adblockplus.org/antiadblockfilters.txt',
+  },
 ];
 
 function sleep(ms) {
@@ -162,6 +171,7 @@ let freshComplete = false;
 try {
   for (const spec of REQUIRED) {
     const url =
+      spec.url ??
       `https://filters.adtidy.org/extension/chromium-mv3/filters/${spec.id}.txt`;
 
     const text = await fetchTextWithRetry(

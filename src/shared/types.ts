@@ -49,9 +49,12 @@ export interface BaseAction {
 
 export interface NetBlockAction extends BaseAction {
   type: 'NET_BLOCK';
+  /** Empty when requestDomains carries the match (host-wide learned rules). */
   urlFilter: string;
   resourceTypes?: chrome.declarativeNetRequest.ResourceType[];
   isRegex?: boolean;
+  /** DNR-native host matching (Chrome 101+); preferred over fragile URL strings. */
+  requestDomains?: string[];
 }
 
 export interface NetAllowAction extends BaseAction {

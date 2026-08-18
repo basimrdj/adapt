@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>T44 — AI budget: repeated ambiguous survivors on one navigation</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; }
+    #article { max-width: 640px; }
+    .wave-slot { margin: 16px 0; }
+    img.wave-creative { width: 300px; height: 120px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <main id="article">
+    <h1>Local News Roundup</h1>
+    <p>Benign article content. The page itself never gates interaction.</p>
+    <section id="waves"></section>
+  </main>
+  <script>
+    // Four waves of ambiguous third-party survivors: each wave injects a fresh
+    // third-party image (new visible survivor + a same-graph third-party
+    // REQUEST_COMPLETE node — sub_frame documents would land in the child
+    // frame's own graph and never qualify as network candidates). One
+    // survivor-AI gate evaluation per wave on a single navigation; the
+    // background budget must cap planner calls at 2 per navigation and gate
+    // the third evaluation AI_BUDGET_EXHAUSTED.
+    window.__waves_injected = 0;
+    window.__budget_done = false;
+    var WAVES = 4;
+    function injectWave(n) {
+      var host = document.getElementById('waves');
+      var slot = document.createElement('div');
+      slot.className = 'wave-slot';
+      slot.id = 'wave-slot-' + n;
+      var img = document.createElement('img');
+      img.className = 'wave-creative';
+      img.alt = 'Sponsored content';
+      // 127.0.0.1 vs localhost: same loopback host, DIFFERENT site under
+      // registrable-domain semantics — genuinely third-party to this page.
+      img.src = 'http://127.0.0.1:' + (window.__adPort || 4071) + '/fixtures/wave-img.png?wave=' + n + '&t=' + Date.now();
+      slot.appendChild(img);
+      host.appendChild(slot);
+      window.__waves_injected = n;
+    }
+    var wave = 0;
+    var timer = setInterval(function () {
+      wave += 1;
+      injectWave(wave);
+      if (wave >= WAVES) {
+        clearInterval(timer);
+        // Let the final wave's observation batch flush before the harness polls.
+        setTimeout(function () { window.__budget_done = true; }, 1500);
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

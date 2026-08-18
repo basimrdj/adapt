@@ -1,0 +1,158 @@
+{
+  "artifact": "adapt-protected-flow-matrix-v1",
+  "date": "2026-08-18",
+  "trigger": "live user failure: Google account chooser renders but account clicks are inert with the extension on; works with it off",
+  "failureClass": "interaction failure (distinct from the Azure boot-failure class): one blocked sign-in dependency script kills the click handlers while the server-rendered page keeps rendering",
+  "mechanismProof": {
+    "method": "real Chrome, extension loaded, desktop UA (Google serves GlifWebSignIn full stack); poison injected as a durable declarativeNetRequest rule mimicking legacy pre-guard learned poison; trusted mouse clicks on the real identifier flow",
+    "killRule": {
+      "requestDomains": [
+        "www.gstatic.com"
+      ],
+      "resourceTypes": [
+        "script"
+      ]
+    },
+    "blockedModule": "https://www.gstatic.com/_/mss/boq-identity/_/js/k=boq-identity.AccountsSignInUi.*.js",
+    "poisonedBoot": {
+      "rendered": true,
+      "emailField": "clickable",
+      "nextButton": "clickable",
+      "progressionAfterClick": "NO-PROGRESSION-18s",
+      "gstaticFailures": 1
+    },
+    "cleanBoot": {
+      "progressionAfterClick": "PROGRESSED (v3/signin/rejected \u2014 fake email refused by Google; the click and continuation POST work)"
+    },
+    "healedBoot": {
+      "poisonRemainingAfterRestart": 0,
+      "progressionAfterClick": "PROGRESSED",
+      "gstaticFailures": 0
+    },
+    "conclusion": "the chooser and identifier flow share the boq-identity AccountsSignInUi module family; one blocked dependency script reproduces the exact reported symptom (renders, clicks inert), and the startup purge heals it on restart"
+  },
+  "perPlaneAttribution": {
+    "staticDnr": "CLEAN for the core flow. Only real-flow rule: ||accounts.google.com/gsi/client^$third-party,script,domain=<33 sites> from AdGuard Popups filter \u2014 upstream prompt-suppression policy (documented tradeoff, not overridden). Captcha rules hit telemetry subpaths only; payment hits are phishing lookalikes/junk; ||stripe.com^ is an upstream ALLOW rule.",
+    "stealth": "RULED OUT \u2014 detector flags + adsbygoogle shim + phantom-marker trap only; zero fabricated markers on identity pages; no navigator/credentials/WebAuthn patches",
+    "pagePlane": "NO EVIDENCE \u2014 no hides/overlays/scroll-locks on identity pages; interactive elements geometrically clickable",
+    "learnedPlanes": "THE KILL CLASS \u2014 pre-guard legacy host-wide poison on identity dependency CDNs (gstatic.com et al.) was not covered by the v1 guard (identity hosts only)"
+  },
+  "rootFix": {
+    "registry": "src/shared/protected-flows.ts extended from identity-hosts-only to the full matrix",
+    "classes": {
+      "identityHosts": 15,
+      "identityDependencyCdns": [
+        "gstatic.com",
+        "gstatic.cn",
+        "googleapis.com",
+        "apis.google.com",
+        "cdn-apple.com"
+      ],
+      "captchaProviders": [
+        "recaptcha.net",
+        "hcaptcha.com",
+        "challenges.cloudflare.com",
+        "arkoselabs.com",
+        "funcaptcha.com",
+        "geetest.com",
+        "captchafox.com",
+        "friendlycaptcha.com",
+        "mtcaptcha.com"
+      ],
+      "paymentHosts": [
+        "stripe.com",
+        "stripecdn.com",
+        "stripe.network",
+        "paypal.com",
+        "paypalobjects.com",
+        "venmo.com",
+        "braintreegateway.com",
+        "braintree-api.com",
+        "adyen.com",
+        "klarna.com",
+        "klarnacdn.net",
+        "squareup.com",
+        "squarecdn.com",
+        "authorize.net",
+        "checkout.com",
+        "mollie.com",
+        "razorpay.com",
+        "alipay.com",
+        "2checkout.com",
+        "worldpay.com",
+        "affirm.com",
+        "afterpay.com",
+        "sezzle.com",
+        "shop.app",
+        "payments.amazon.com",
+        "pay.amazon.com",
+        "pay.google.com"
+      ],
+      "hostPathPairs": [
+        {
+          "host": "google.com",
+          "pathPrefix": "/recaptcha/"
+        }
+      ]
+    },
+    "guardPoints": [
+      "DnrController.dropProtectedAuthActions (birth refusal, session + durable, all learned planes)",
+      "PersonalLearningManager.promote (revoke-not-promote) + stageHostWideTwin (never widen)",
+      "DnrController.purgeProtectedAuthRules (startup physical-first purge \u2014 now covers the full matrix; one extension reload heals a poisoned profile)",
+      "intent-tracker destinationClass is host-aware: protected identity hosts are always oauth-like, payment hosts always payment-like (closes /AccountChooser, /CompleteSignIn, /ppsecure, /SAS/ProcessAuth pathname-keyword holes in the popup broker's legitimate-destination discount)",
+      "intent-tracker destinationClass is host-aware: protected identity hosts are always oauth-like, payment hosts always payment-like (closes /AccountChooser, /CompleteSignIn, /ppsecure, /SAS/ProcessAuth pathname-keyword holes in the background CLOSE classifier's legitimate-destination discount)",
+      "page-plane survivor discovery refuses elements whose resource lives on a protected-flow host"
+    ],
+    "discipline": [
+      "dot-boundary suffix matching: notgstatic.com / gstatic.com.evil.com / stripe.rs-1028-a.com never match",
+      "mixed-use giants stay blockable: google.com itself is NOT protected (search ads remain covered); only google.com/recaptcha/ is",
+      "initiatorDomains are scope, not target: rules scoped TO login pages blocking trackers are not poison",
+      "static list policy untouched: telemetry endpoints on protected CDNs (csi.gstatic.com, firebaselogging-pa.googleapis.com) remain list-blocked",
+      "guard restrains only the LEARNED planes; the manifest-owned static plane is upstream-vetted"
+    ]
+  },
+  "regressionCoverage": {
+    "unit": "tests/unit/protected-flows.test.ts 11/11 + tests/unit/popup-broker-policy.test.ts 6/6 (host-aware classification, protected deadline extension, unchanged fan-out/nag suppression)",
+    "realChromeSelfHeal": "poison \u2192 dead click confirmed \u2192 restart \u2192 purged \u2192 click progresses (PASS)",
+    "fullSuite": "318/318 unit; 85/85 e2e; canonical gates re-run on the final state"
+  },
+  "documentedTradeoffs": [
+    "AdGuard Popups ||accounts.google.com/gsi/client^$third-party suppresses Google's sign-in prompt on 33 listed sites (upstream policy; uBO/AdGuard ship it; not overridden)",
+    "Facebook-connect SDK blocking by static tracking lists is upstream policy (same class); same-host logins (github.com, discord.com) cannot be host-guarded and rely on narrow-rule discipline",
+    "bank-specific 3DS ACS hosts are an unbounded set; covered generically by host-aware popup classification, not enumeration",
+    "learned planes can no longer block telemetry on protected CDNs (csi.gstatic.com etc.) \u2014 the static lists already cover those endpoints"
+  ],
+  "noSiteSpecificHacks": true,
+  "credentialsInArtifacts": "none \u2014 keys only, never values (standing constraint)",
+  "layer2ProtectedTransactionMode": {
+    "module": "src/background/protected-transactions.ts",
+    "concept": "user-intent-driven conservative mode: while a deliberate auth/payment/captcha transaction is active on a tab, every blocking plane fails OPEN inside that tab's frame hierarchy, and no autonomy/survivor experiments stage there",
+    "triggers": [
+      "main-frame onBeforeNavigate toward a protected-flow host (pre-first-byte; covers popup OAuth tabs + redirect flows)",
+      "popup-tab adoption at onCreatedNavigationTarget for protected targets (closes the birth race)",
+      "trusted click on a flow-shaped element (host-aware href + word-boundary text: Sign in with\u2026, Pay, Checkout, passkey) relayed from the isolated sensor as PROTECTED_TRANSACTION_INTENT \u2014 covers same-tab checkout + 3DS iframes on unenumerable bank hosts"
+    ],
+    "allowance": "session DNR rule: allowAllRequests, tabIds:[tab], main_frame (frame-hierarchy), priority 1000000, dedicated id band 5000000-5009999; session-only = can never become durable poison",
+    "inheritance": "non-protected hops (custom IdP, bank ACS) do NOT end the transaction \u2014 protection inherits across the chain; TTL is the bound",
+    "lifecycle": [
+      "frame activity keeps it alive",
+      "main-frame return to origin host ends immediately",
+      "4-min TTL reaps (sweeps piggyback navigation events; no alarms permission added)",
+      "tab close ends"
+    ],
+    "standDown": "orchestrator maybeRun + maybeRunSurvivorAi + engine evaluateSignals gate off on transaction tabs; observations still record",
+    "failClosedSettle": "worker startup physically removes every band rule from Chrome ground truth; mid-flow tab re-begins on next protected navigation",
+    "liveProof": {
+      "legs": 9,
+      "verdict": "PASS",
+      "highlights": "ad URL ERR_BLOCKED_BY_CLIENT baseline \u2192 loaded:200 during the sign-in transaction \u2192 blocked again after return; stray band rule settled across browser restart"
+    },
+    "unit": "protected-transactions.test.ts 11/11 + protected-transaction-intent.test.ts 4/4",
+    "deliberateExclusions": [
+      "no global googleapis/gstatic allowlisting (matrix governs learned planes only)",
+      "static gsi/client prompt-suppression policy unchanged; during an active transaction the tab-scoped allowance overrides it for subsequent loads (lazy-loading GIS integrations work on the 33 listed sites now)",
+      "zero page-visible state (no fingerprint surface)",
+      "no new manifest permissions"
+    ]
+  }
+}

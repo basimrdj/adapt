@@ -1,0 +1,4463 @@
+{
+  "schema": "adapt-ruleset-reload-fix-v1",
+  "status": "pass",
+  "observedAt": "2026-08-16T10:51:18.932Z",
+  "extensionPath": "/Users/basimhussain/Projects/adapt/dist",
+  "constants": {
+    "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+    "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+  },
+  "manifestRulesets": [
+    {
+      "id": "ruleset_baseline",
+      "count": 6,
+      "priority": 0,
+      "defaultEnabled": true,
+      "path": "rules/baseline.json"
+    },
+    {
+      "id": "phase31_2_core",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": true,
+      "path": "phase31-rulesets/filter_2_core.json"
+    },
+    {
+      "id": "phase31_2_extra_1",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_2_extra_1.json"
+    },
+    {
+      "id": "phase31_2_extra_2",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_2_extra_2.json"
+    },
+    {
+      "id": "phase31_3_part_1",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_3_part_1.json"
+    },
+    {
+      "id": "phase31_3_part_2",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_3_part_2.json"
+    },
+    {
+      "id": "phase31_3_part_3",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_3_part_3.json"
+    },
+    {
+      "id": "phase31_3_part_4",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_3_part_4.json"
+    },
+    {
+      "id": "phase31_3_part_5",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_3_part_5.json"
+    },
+    {
+      "id": "phase31_17_part_1",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_17_part_1.json"
+    },
+    {
+      "id": "phase31_19_part_1",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_19_part_1.json"
+    },
+    {
+      "id": "phase31_21_part_1",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_21_part_1.json"
+    },
+    {
+      "id": "phase31_208_part_1",
+      "count": 0,
+      "priority": 0,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/filter_208_part_1.json"
+    }
+  ],
+  "catalogRulesets": [
+    {
+      "id": "phase31_2_core",
+      "count": 29994,
+      "priority": 1150,
+      "defaultEnabled": true,
+      "path": "phase31-rulesets/phase31_2_core.json"
+    },
+    {
+      "id": "phase31_2_extra_1",
+      "count": 20000,
+      "priority": 1139,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_2_extra_1.json"
+    },
+    {
+      "id": "phase31_2_extra_2",
+      "count": 19599,
+      "priority": 1138,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_2_extra_2.json"
+    },
+    {
+      "id": "phase31_3_part_1",
+      "count": 20000,
+      "priority": 999,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_3_part_1.json"
+    },
+    {
+      "id": "phase31_3_part_2",
+      "count": 20000,
+      "priority": 998,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_3_part_2.json"
+    },
+    {
+      "id": "phase31_3_part_3",
+      "count": 20000,
+      "priority": 997,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_3_part_3.json"
+    },
+    {
+      "id": "phase31_3_part_4",
+      "count": 20000,
+      "priority": 996,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_3_part_4.json"
+    },
+    {
+      "id": "phase31_3_part_5",
+      "count": 14031,
+      "priority": 995,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_3_part_5.json"
+    },
+    {
+      "id": "phase31_17_part_1",
+      "count": 2424,
+      "priority": 949,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_17_part_1.json"
+    },
+    {
+      "id": "phase31_19_part_1",
+      "count": 2083,
+      "priority": 849,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_19_part_1.json"
+    },
+    {
+      "id": "phase31_21_part_1",
+      "count": 544,
+      "priority": 799,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_21_part_1.json"
+    },
+    {
+      "id": "phase31_208_part_1",
+      "count": 9579,
+      "priority": 699,
+      "defaultEnabled": false,
+      "path": "phase31-rulesets/phase31_208_part_1.json"
+    }
+  ],
+  "baselineRules": 6,
+  "catalogRuleTotal": 178254,
+  "packagedRuleTotal": 178260,
+  "intendedDefaultEnabledRulesets": [
+    "ruleset_baseline",
+    "phase31_2_core"
+  ],
+  "timeline": {
+    "T0": {
+      "label": "T0:first-install",
+      "elapsedMs": 2897,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core"
+      ],
+      "availableStaticRuleCount": 300000,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994
+      },
+      "estimatedEnabledStaticRuleCount": 30000,
+      "runtimeState": null
+    },
+    "T1": {
+      "label": "T1:immediately-before-reload",
+      "elapsedMs": 4454,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 151740,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994,
+        "phase31_2_extra_1": 20000,
+        "phase31_2_extra_2": 19599,
+        "phase31_3_part_1": 20000,
+        "phase31_3_part_2": 20000,
+        "phase31_3_part_3": 20000,
+        "phase31_3_part_4": 20000,
+        "phase31_3_part_5": 14031,
+        "phase31_17_part_1": 2424,
+        "phase31_19_part_1": 2083,
+        "phase31_21_part_1": 544,
+        "phase31_208_part_1": 9579
+      },
+      "estimatedEnabledStaticRuleCount": 178260,
+      "runtimeState": {
+        "availableStaticRuleCount": 151740,
+        "capturedAt": "2026-08-16T10:48:10.979Z",
+        "catalogRulesets": [
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "expectedEnabledRuleCount": 178254,
+        "failedEnableAttempts": [],
+        "manifestDefaultRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core"
+        ],
+        "optionalEnabledRulesets": [
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "reason": "before:2/300000",
+        "reconciliationErrors": [],
+        "stage": "reconcile-complete"
+      }
+    },
+    "T2": {
+      "label": "T2:immediately-after-reload",
+      "elapsedMs": 8,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core"
+      ],
+      "availableStaticRuleCount": 448260,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994
+      },
+      "estimatedEnabledStaticRuleCount": 30000,
+      "runtimeState": null
+    },
+    "T3": {
+      "label": "T3:+250ms",
+      "elapsedMs": 254,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core"
+      ],
+      "availableStaticRuleCount": 448260,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994
+      },
+      "estimatedEnabledStaticRuleCount": 30000,
+      "runtimeState": null
+    },
+    "T4": {
+      "label": "T4:+1s",
+      "elapsedMs": 1004,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core"
+      ],
+      "availableStaticRuleCount": 448260,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994
+      },
+      "estimatedEnabledStaticRuleCount": 30000,
+      "runtimeState": null
+    },
+    "T5": {
+      "label": "T5:+3s",
+      "elapsedMs": 3002,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 300000,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994,
+        "phase31_2_extra_1": 20000,
+        "phase31_2_extra_2": 19599,
+        "phase31_3_part_1": 20000,
+        "phase31_3_part_2": 20000,
+        "phase31_3_part_3": 20000,
+        "phase31_3_part_4": 20000,
+        "phase31_3_part_5": 14031,
+        "phase31_17_part_1": 2424,
+        "phase31_19_part_1": 2083,
+        "phase31_21_part_1": 544,
+        "phase31_208_part_1": 9579
+      },
+      "estimatedEnabledStaticRuleCount": 178260,
+      "runtimeState": {
+        "availableStaticRuleCount": 300000,
+        "capturedAt": "2026-08-16T10:48:14.736Z",
+        "catalogRulesets": [
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "expectedEnabledRuleCount": 178254,
+        "failedEnableAttempts": [],
+        "manifestDefaultRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core"
+        ],
+        "optionalEnabledRulesets": [
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "reason": "before:2/448260",
+        "reconciliationErrors": [],
+        "stage": "reconcile-complete"
+      }
+    },
+    "T6": {
+      "label": "T6:+5s",
+      "elapsedMs": 5003,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 300000,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994,
+        "phase31_2_extra_1": 20000,
+        "phase31_2_extra_2": 19599,
+        "phase31_3_part_1": 20000,
+        "phase31_3_part_2": 20000,
+        "phase31_3_part_3": 20000,
+        "phase31_3_part_4": 20000,
+        "phase31_3_part_5": 14031,
+        "phase31_17_part_1": 2424,
+        "phase31_19_part_1": 2083,
+        "phase31_21_part_1": 544,
+        "phase31_208_part_1": 9579
+      },
+      "estimatedEnabledStaticRuleCount": 178260,
+      "runtimeState": {
+        "availableStaticRuleCount": 300000,
+        "capturedAt": "2026-08-16T10:48:14.736Z",
+        "catalogRulesets": [
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "expectedEnabledRuleCount": 178254,
+        "failedEnableAttempts": [],
+        "manifestDefaultRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core"
+        ],
+        "optionalEnabledRulesets": [
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "reason": "before:2/448260",
+        "reconciliationErrors": [],
+        "stage": "reconcile-complete"
+      }
+    }
+  },
+  "variants": [
+    {
+      "name": "small-optional-shard",
+      "manifestEnabledAll": false,
+      "attempts": [
+        {
+          "rulesetId": "phase31_21_part_1",
+          "batchIds": [
+            "phase31_21_part_1"
+          ],
+          "ruleCount": 544,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3528,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_208_part_1",
+            "phase31_21_part_1"
+          ]
+        }
+      ],
+      "finalProbe": {
+        "label": "small-optional-shard:final",
+        "elapsedMs": 3531,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_208_part_1",
+          "phase31_21_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_208_part_1": 9579,
+          "phase31_21_part_1": 544
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:25.557Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reloadProbe": {
+        "label": "small-optional-shard:reloaded",
+        "elapsedMs": 3727,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:29.478Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      }
+    },
+    {
+      "name": "large-optional-shard",
+      "manifestEnabledAll": false,
+      "attempts": [
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3487,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ]
+        }
+      ],
+      "finalProbe": {
+        "label": "large-optional-shard:final",
+        "elapsedMs": 3492,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1",
+          "phase31_2_extra_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579,
+          "phase31_2_extra_1": 20000
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:36.830Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reloadProbe": {
+        "label": "large-optional-shard:reloaded",
+        "elapsedMs": 3703,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:40.558Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      }
+    },
+    {
+      "name": "all-optional-single-call",
+      "manifestEnabledAll": false,
+      "attempts": [
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_2_extra_2",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_1",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_2",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_3",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_4",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_5",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_17_part_1",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_19_part_1",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_21_part_1",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_208_part_1",
+          "batchIds": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3625,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        }
+      ],
+      "finalProbe": {
+        "label": "all-optional-single-call:final",
+        "elapsedMs": 3628,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:47.997Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reloadProbe": {
+        "label": "all-optional-single-call:reloaded",
+        "elapsedMs": 3617,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:51.756Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      }
+    },
+    {
+      "name": "optional-sequential",
+      "manifestEnabledAll": false,
+      "attempts": [
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3408,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_2_extra_2",
+          "batchIds": [
+            "phase31_2_extra_2"
+          ],
+          "ruleCount": 19599,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ],
+          "attemptAtMs": 3414,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_1",
+          "batchIds": [
+            "phase31_3_part_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2"
+          ],
+          "attemptAtMs": 3421,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_2",
+          "batchIds": [
+            "phase31_3_part_2"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1"
+          ],
+          "attemptAtMs": 3428,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_3",
+          "batchIds": [
+            "phase31_3_part_3"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2"
+          ],
+          "attemptAtMs": 3434,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_4",
+          "batchIds": [
+            "phase31_3_part_4"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3"
+          ],
+          "attemptAtMs": 3441,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4"
+          ]
+        },
+        {
+          "rulesetId": "phase31_3_part_5",
+          "batchIds": [
+            "phase31_3_part_5"
+          ],
+          "ruleCount": 14031,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4"
+          ],
+          "attemptAtMs": 3447,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5"
+          ]
+        },
+        {
+          "rulesetId": "phase31_17_part_1",
+          "batchIds": [
+            "phase31_17_part_1"
+          ],
+          "ruleCount": 2424,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5"
+          ],
+          "attemptAtMs": 3450,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_19_part_1",
+          "batchIds": [
+            "phase31_19_part_1"
+          ],
+          "ruleCount": 2083,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1"
+          ],
+          "attemptAtMs": 3453,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_21_part_1",
+          "batchIds": [
+            "phase31_21_part_1"
+          ],
+          "ruleCount": 544,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1"
+          ],
+          "attemptAtMs": 3456,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_208_part_1",
+          "batchIds": [
+            "phase31_208_part_1"
+          ],
+          "ruleCount": 9579,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_208_part_1",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1"
+          ],
+          "attemptAtMs": 3460,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ]
+        }
+      ],
+      "finalProbe": {
+        "label": "optional-sequential:final",
+        "elapsedMs": 3464,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:48:58.946Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reloadProbe": {
+        "label": "optional-sequential:reloaded",
+        "elapsedMs": 3619,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:49:02.768Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      }
+    },
+    {
+      "name": "retry-delays",
+      "manifestEnabledAll": false,
+      "attempts": [
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "attemptAtMs": 3832,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ],
+          "attemptAtMs": 4841,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ],
+          "attemptAtMs": 7852,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ]
+        },
+        {
+          "rulesetId": "phase31_2_extra_1",
+          "batchIds": [
+            "phase31_2_extra_1"
+          ],
+          "ruleCount": 20000,
+          "availableBefore": 300000,
+          "enabledBefore": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ],
+          "attemptAtMs": 12859,
+          "result": "success",
+          "exactError": null,
+          "availableAfter": 300000,
+          "enabledAfter": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1",
+            "phase31_2_extra_1"
+          ]
+        }
+      ],
+      "finalProbe": {
+        "label": "retry-delays:final",
+        "elapsedMs": 12864,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1",
+          "phase31_2_extra_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579,
+          "phase31_2_extra_1": 20000
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:49:10.112Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reloadProbe": {
+        "label": "retry-delays:reloaded",
+        "elapsedMs": 3528,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:49:23.141Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      }
+    }
+  ],
+  "focusedRuns": [
+    {
+      "pass": 1,
+      "fresh": {
+        "label": "focused-1:fresh",
+        "elapsedMs": 3374,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 151740,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 151740,
+          "capturedAt": "2026-08-16T10:49:36.114Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/300000",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reload": {
+        "label": "focused-1:reload",
+        "elapsedMs": 8425,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:49:39.716Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "relaunch": {
+        "label": "focused-1:relaunch",
+        "elapsedMs": 8835,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:49:48.584Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "passed": true
+    },
+    {
+      "pass": 2,
+      "fresh": {
+        "label": "focused-2:fresh",
+        "elapsedMs": 3680,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 151740,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 151740,
+          "capturedAt": "2026-08-16T10:49:57.451Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/300000",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reload": {
+        "label": "focused-2:reload",
+        "elapsedMs": 8820,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:50:01.369Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "relaunch": {
+        "label": "focused-2:relaunch",
+        "elapsedMs": 8800,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:50:10.322Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "passed": true
+    },
+    {
+      "pass": 3,
+      "fresh": {
+        "label": "focused-3:fresh",
+        "elapsedMs": 3703,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 151740,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 151740,
+          "capturedAt": "2026-08-16T10:50:19.182Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/300000",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reload": {
+        "label": "focused-3:reload",
+        "elapsedMs": 8873,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:50:23.189Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "relaunch": {
+        "label": "focused-3:relaunch",
+        "elapsedMs": 8831,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:50:32.129Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "passed": true
+    },
+    {
+      "pass": 4,
+      "fresh": {
+        "label": "focused-4:fresh",
+        "elapsedMs": 3841,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 151740,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 151740,
+          "capturedAt": "2026-08-16T10:50:41.245Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/300000",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reload": {
+        "label": "focused-4:reload",
+        "elapsedMs": 8764,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:50:45.125Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "relaunch": {
+        "label": "focused-4:relaunch",
+        "elapsedMs": 8379,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:50:53.615Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "passed": true
+    },
+    {
+      "pass": 5,
+      "fresh": {
+        "label": "focused-5:fresh",
+        "elapsedMs": 3301,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 151740,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 151740,
+          "capturedAt": "2026-08-16T10:51:02.096Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/300000",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "reload": {
+        "label": "focused-5:reload",
+        "elapsedMs": 8228,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:51:05.471Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "relaunch": {
+        "label": "focused-5:relaunch",
+        "elapsedMs": 8206,
+        "constants": {
+          "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+          "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+        },
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "availableStaticRuleCount": 300000,
+        "expectedEnabledRuleCounts": {
+          "ruleset_baseline": 6,
+          "phase31_2_core": 29994,
+          "phase31_2_extra_1": 20000,
+          "phase31_2_extra_2": 19599,
+          "phase31_3_part_1": 20000,
+          "phase31_3_part_2": 20000,
+          "phase31_3_part_3": 20000,
+          "phase31_3_part_4": 20000,
+          "phase31_3_part_5": 14031,
+          "phase31_17_part_1": 2424,
+          "phase31_19_part_1": 2083,
+          "phase31_21_part_1": 544,
+          "phase31_208_part_1": 9579
+        },
+        "estimatedEnabledStaticRuleCount": 178260,
+        "runtimeState": {
+          "availableStaticRuleCount": 300000,
+          "capturedAt": "2026-08-16T10:51:13.703Z",
+          "catalogRulesets": [
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "enabledRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core",
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "expectedEnabledRuleCount": 178254,
+          "failedEnableAttempts": [],
+          "manifestDefaultRulesets": [
+            "ruleset_baseline",
+            "phase31_2_core"
+          ],
+          "optionalEnabledRulesets": [
+            "phase31_2_extra_1",
+            "phase31_2_extra_2",
+            "phase31_3_part_1",
+            "phase31_3_part_2",
+            "phase31_3_part_3",
+            "phase31_3_part_4",
+            "phase31_3_part_5",
+            "phase31_17_part_1",
+            "phase31_19_part_1",
+            "phase31_21_part_1",
+            "phase31_208_part_1"
+          ],
+          "reason": "before:2/448260",
+          "reconciliationErrors": [],
+          "stage": "reconcile-complete"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "control": {
+    "manifestEnabledAll": true,
+    "beforeReload": {
+      "label": "control:manifest-all-enabled",
+      "elapsedMs": 2019,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 151740,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994,
+        "phase31_2_extra_1": 20000,
+        "phase31_2_extra_2": 19599,
+        "phase31_3_part_1": 20000,
+        "phase31_3_part_2": 20000,
+        "phase31_3_part_3": 20000,
+        "phase31_3_part_4": 20000,
+        "phase31_3_part_5": 14031,
+        "phase31_17_part_1": 2424,
+        "phase31_19_part_1": 2083,
+        "phase31_21_part_1": 544,
+        "phase31_208_part_1": 9579
+      },
+      "estimatedEnabledStaticRuleCount": 178260,
+      "runtimeState": null
+    },
+    "afterReload": {
+      "label": "control:after-reload",
+      "elapsedMs": 1883,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 300000,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994,
+        "phase31_2_extra_1": 20000,
+        "phase31_2_extra_2": 19599,
+        "phase31_3_part_1": 20000,
+        "phase31_3_part_2": 20000,
+        "phase31_3_part_3": 20000,
+        "phase31_3_part_4": 20000,
+        "phase31_3_part_5": 14031,
+        "phase31_17_part_1": 2424,
+        "phase31_19_part_1": 2083,
+        "phase31_21_part_1": 544,
+        "phase31_208_part_1": 9579
+      },
+      "estimatedEnabledStaticRuleCount": 178260,
+      "runtimeState": null
+    },
+    "after5s": {
+      "label": "control:+5s",
+      "elapsedMs": 6893,
+      "constants": {
+        "MAX_NUMBER_OF_ENABLED_STATIC_RULESETS": 50,
+        "GUARANTEED_MINIMUM_STATIC_RULES": 30000
+      },
+      "enabledRulesets": [
+        "ruleset_baseline",
+        "phase31_2_core",
+        "phase31_2_extra_1",
+        "phase31_2_extra_2",
+        "phase31_3_part_1",
+        "phase31_3_part_2",
+        "phase31_3_part_3",
+        "phase31_3_part_4",
+        "phase31_3_part_5",
+        "phase31_17_part_1",
+        "phase31_19_part_1",
+        "phase31_21_part_1",
+        "phase31_208_part_1"
+      ],
+      "availableStaticRuleCount": 300000,
+      "expectedEnabledRuleCounts": {
+        "ruleset_baseline": 6,
+        "phase31_2_core": 29994,
+        "phase31_2_extra_1": 20000,
+        "phase31_2_extra_2": 19599,
+        "phase31_3_part_1": 20000,
+        "phase31_3_part_2": 20000,
+        "phase31_3_part_3": 20000,
+        "phase31_3_part_4": 20000,
+        "phase31_3_part_5": 14031,
+        "phase31_17_part_1": 2424,
+        "phase31_19_part_1": 2083,
+        "phase31_21_part_1": 544,
+        "phase31_208_part_1": 9579
+      },
+      "estimatedEnabledStaticRuleCount": 178260,
+      "runtimeState": {
+        "availableStaticRuleCount": 300000,
+        "capturedAt": "2026-08-16T10:49:29.034Z",
+        "catalogRulesets": [
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "enabledRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core",
+          "phase31_2_extra_1",
+          "phase31_2_extra_2",
+          "phase31_3_part_1",
+          "phase31_3_part_2",
+          "phase31_3_part_3",
+          "phase31_3_part_4",
+          "phase31_3_part_5",
+          "phase31_17_part_1",
+          "phase31_19_part_1",
+          "phase31_21_part_1",
+          "phase31_208_part_1"
+        ],
+        "expectedEnabledRuleCount": 178254,
+        "failedEnableAttempts": [],
+        "manifestDefaultRulesets": [
+          "ruleset_baseline",
+          "phase31_2_core"
+        ],
+        "optionalEnabledRulesets": [],
+        "reason": "before:13/300000",
+        "reconciliationErrors": [],
+        "stage": "reconcile-complete"
+      }
+    }
+  },
+  "primaryAssertions": {
+    "freshLoadHasMaximumObservedState": true,
+    "reloadDoesNotCollapseToGuaranteedMinimum": true,
+    "controlManifestAllEnabled": true,
+    "controlSurvivesReload": true,
+    "focusedFivePasses": true
+  },
+  "diagnosis": {
+    "observedFailure": "same-profile relaunch leaves only manifest defaults enabled while the API reports more apparent capacity; runtime optional re-enable behavior is captured in variants",
+    "candidateCauses": [
+      "transient Chrome reload quota state",
+      "incorrect available-count interpretation",
+      "aggregate updateEnabledRulesets call",
+      "one specific malformed or oversized ruleset",
+      "enabled-ruleset-count limit",
+      "regex or static sub-limit",
+      "stale extension-version state",
+      "catalog count mismatch",
+      "Chromium unpacked-extension behavior"
+    ]
+  }
+}

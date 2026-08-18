@@ -16,6 +16,7 @@ interface ExperimentState {
     rollbackVerified: boolean;
     healthDelta?: number;
     privacyScore?: number;
+    policyDecisionId?: string;
   };
 }
 
@@ -62,19 +63,62 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
     await page.goto('http://localhost:4030/t29-phase3-acceptance/index.html', { waitUntil: 'networkidle2' });
     await new Promise((resolve) => setTimeout(resolve, 3200));
 
-    const states = (await experimentStates()).sort(
-      (left, right) => left.record.id.localeCompare(right.record.id, undefined, { numeric: true })
-    );
-    const causalSession = await worker.evaluate(async () => {
-      const value = await chrome.storage.session.get('adapt_causal_session_state_v1');
-      return value.adapt_causal_session_state_v1;
-    });
+    // The belief row for the rolled-back hypothesis is persisted after the
+    // experiment records and the follow-up staging path, so poll for the fully
+    // settled sequence instead of trusting a single fixed wait.
+    let states: ExperimentState[] = [];
+    let causalSession: unknown;
+    let wrongBelief: { alpha: number; beta: number } | undefined;
+    const settleDeadline = Date.now() + 10_000;
+    for (;;) {
+      states = (await experimentStates()).sort(
+        (left, right) => left.record.id.localeCompare(right.record.id, undefined, { numeric: true })
+      );
+      causalSession = await worker.evaluate(async () => {
+        const value = await chrome.storage.session.get('adapt_causal_session_state_v1');
+        return value.adapt_causal_session_state_v1;
+      });
+      const rows = (causalSession as {
+        belief?: { beliefs?: Array<[string, { alpha: number; beta: number }]> };
+      })?.belief?.beliefs ?? [];
+      wrongBelief = rows.find(([key]) => key.includes('SCROLL_LOCK_REACTION'))?.[1];
+      const settled =
+        states.length >= 2 &&
+        states[0]?.record.status === 'ROLLED_BACK' &&
+        states[1]?.record.status === 'COMMITTED' &&
+        wrongBelief !== undefined;
+      if (settled || Date.now() >= settleDeadline) break;
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
     expect(states.length, JSON.stringify({ states, causalSession }, null, 2)).toBeGreaterThanOrEqual(2);
-    const beliefRows = (causalSession as {
+    console.log('ACCEPTANCE_STATES_DEBUG', JSON.stringify(states.map((state) => ({
+      id: state.record.id,
+      status: state.record.status,
+      hypothesisId: state.hypothesisId,
+      actionTypes: state.candidate.actions.map((action) => action.type),
+      rollbackVerified: state.record.rollbackVerified,
+      healthDelta: state.record.healthDelta,
+      privacyScore: state.record.privacyScore,
+      policyDecisionId: state.record.policyDecisionId,
+      primitiveId: (state.record as { primitiveId?: string }).primitiveId,
+      txId: state.record.transactionId,
+    })), null, 2));
+    console.log('ACCEPTANCE_BELIEFS_DEBUG', JSON.stringify((causalSession as {
       belief?: { beliefs?: Array<[string, { alpha: number; beta: number }]> };
-    })?.belief?.beliefs ?? [];
-    const wrongBelief = beliefRows.find(([key]) => key.includes('SCROLL_LOCK_REACTION'))?.[1];
-    expect(wrongBelief?.beta).toBeGreaterThan(wrongBelief?.alpha ?? Number.POSITIVE_INFINITY);
+    })?.belief?.beliefs ?? [], null, 2));
+    expect(
+      wrongBelief?.beta,
+      JSON.stringify(
+        {
+          beliefRows: (causalSession as {
+            belief?: { beliefs?: Array<[string, { alpha: number; beta: number }]> };
+          })?.belief?.beliefs ?? [],
+          states,
+        },
+        null,
+        2
+      )
+    ).toBeGreaterThan(wrongBelief?.alpha ?? Number.POSITIVE_INFINITY);
     expect(states[0]?.candidate.actions.some((action) => action.type === 'DOM_RESTORE_SCROLL')).toBe(true);
     expect(states[0]?.record.status).toBe('ROLLED_BACK');
     expect(states[0]?.record.rollbackVerified).toBe(true);
@@ -112,5 +156,5 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
       },
     }));
     await page.close();
-  }, 15_000);
+  }, 25_000);
 });

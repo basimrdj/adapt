@@ -2,6 +2,7 @@ import { MutationSignal } from '../shared/types';
 import { ADAPT_THRESHOLDS } from '../shared/constants';
 
 const REINSERTION_WINDOW_MS = 3000;
+const MAX_BATCH_WAIT_MS = 500;
 const REINSERTION_MARKER = /(ad[-_ ]?block|anti[-_ ]?ad|disable[-_ ]?ad|blocker[-_ ]?gate)/i;
 
 export class MutationPipeline {
@@ -12,6 +13,7 @@ export class MutationPipeline {
   private reinsertionEvents: number[] = [];
   private onBatchCallback?: () => void;
   private debounceTimer: number | null = null;
+  private firstDeferredAt: number | null = null;
   private readonly recentlyRemoved = new Map<string, number>();
   private domReadyListenerInstalled = false;
 
@@ -37,9 +39,30 @@ export class MutationPipeline {
               ? 150
               : 60;
 
-        if (this.debounceTimer !== null) clearTimeout(this.debounceTimer);
+        // Trailing-edge starvation guard: a steady drip of sub-threshold
+        // mutations must not defer the batch forever. Once a batch has been
+        // continuously deferred for MAX_BATCH_WAIT_MS, fire it immediately.
+        if (this.debounceTimer !== null) {
+          if (this.firstDeferredAt !== null && Date.now() - this.firstDeferredAt >= MAX_BATCH_WAIT_MS) {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = null;
+            this.firstDeferredAt = null;
+            try {
+              this.onBatchCallback?.();
+            } catch {
+              // Sensor callback failures are contained by PageSensor too; never
+              // let a page mutation surface as an uncaught content-script error.
+            }
+            return;
+          }
+          clearTimeout(this.debounceTimer);
+        } else {
+          this.firstDeferredAt = Date.now();
+        }
 
         this.debounceTimer = window.setTimeout(() => {
+          this.debounceTimer = null;
+          this.firstDeferredAt = null;
           try {
             this.onBatchCallback?.();
           } catch {
@@ -134,6 +157,7 @@ export class MutationPipeline {
     if (this.debounceTimer !== null) {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = null;
+      this.firstDeferredAt = null;
     }
   }
 
@@ -141,6 +165,7 @@ export class MutationPipeline {
     if (this.debounceTimer !== null) {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = null;
+      this.firstDeferredAt = null;
     }
 
     if (this.observer) {

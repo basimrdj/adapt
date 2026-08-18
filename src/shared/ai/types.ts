@@ -11,6 +11,7 @@ export type AllowedAiActionType =
   | 'NET_TEMP_BLOCK'
   | 'TARGETED_SESSION_DNR'
   | 'NET_REDIRECT_LOCAL'
+  | 'STEALTH_SET_CONSTANT'
   | 'OBSERVE_MORE'
   | 'ABSTAIN';
 
@@ -105,4 +106,12 @@ export interface PolicyValidationResult {
   reasons: string[];
   sanitizedPlan?: AdaptationPlan;
   mappedStrategyActions?: StrategyAction[];
+  /**
+   * Validated STEALTH_SET_CONSTANT proposals, decoded from the audited
+   * `path=value` parameter grammar. Never contains a value outside the benign
+   * constant set, never a path outside the safe property grammar. These are
+   * applied in the page's MAIN world and only persisted per site after the
+   * transaction's outcome verifier marks the adaptation healthy.
+   */
+  stealthConstants?: Array<{ path: string; value: string }>;
 }

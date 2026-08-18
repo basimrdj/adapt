@@ -1,0 +1,5 @@
+cd /Users/basimhussain/Projects/adapt
+
+mkdir -p artifacts/kimi-forensics
+
+pbpaste > artifacts/kimi-forensics/RUNTIME_LOOP_TRACE.json

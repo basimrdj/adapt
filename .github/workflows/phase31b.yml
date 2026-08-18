@@ -77,3 +77,15 @@ jobs:
       - name: Prepare validated Phase 3.1 filter cache
         run: npm run phase31:sync
       - run: ADAPT_PHASE31_OFFLINE=1 ADAPT_LIVE_PROFILE=full npm run verify:autonomy:live
+
+  release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pack release artifact (no baked AI) and verify it in a clean Chrome profile
+        run: npm run pack && npm run verify:packaged

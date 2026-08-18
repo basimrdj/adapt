@@ -1,0 +1,50 @@
+{
+  "schema": "kimi-everyday-learning-curve-v1",
+  "ranAt": "2026-08-17T06:49:14.184Z",
+  "curve": [
+    {
+      "visit": "visit1-discovery",
+      "aiCalls": 1
+    },
+    {
+      "visit": "visit2-covered-same-worker",
+      "aiCalls": 0
+    },
+    {
+      "visit": "visit3-covered-after-browser-restart",
+      "aiCalls": 0
+    },
+    {
+      "visit": "visit4-new-family",
+      "aiCalls": 1
+    }
+  ],
+  "counters": {
+    "learnedFamilyAiAvoided": 1,
+    "dynamicRulesPromoted": 1,
+    "rollbackOnRegression": 1
+  },
+  "checks": [
+    {
+      "name": "S1 visit1: bounded AI discovery learned the family (narrow durable, G5 infra refusal)",
+      "pass": true,
+      "detail": "learned=true aiCalls=1"
+    },
+    {
+      "name": "S1 visit2: known-family coverage short-circuits the planner (zero AI)",
+      "pass": true,
+      "detail": "aiDelta=0 learnedFamilyAiAvoided=1"
+    },
+    {
+      "name": "S1 visit3: after browser restart, coverage still avoids all AI calls",
+      "pass": true,
+      "detail": "aiCalls=0 learnedFamilyAiAvoided=1"
+    },
+    {
+      "name": "S1 visit4: uncovered family triggers bounded AI discovery (>=1, <=2 calls)",
+      "pass": true,
+      "detail": "aiDelta=1"
+    }
+  ],
+  "pass": true
+}

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ADAPT — Adaptive Content & Privacy Blocker",
   "version": "1.0.0",
-  "description": "Fast deterministic Chromium MV3 content blocker with transactional adaptation engine.",
+  "description": "MV3 content blocker with a transactional adaptation engine and optional bring-your-own-key AI (OpenAI-compatible or Anthropic).",
   "permissions": [
     "declarativeNetRequest",
     "scripting",
@@ -31,6 +31,15 @@
     },
     {
       "matches": ["http://*/*", "https://*/*"],
+      "js": ["stealth-main.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    },
+    {
+      "matches": ["http://*/*", "https://*/*"],
       "js": ["content.js"],
       "run_at": "document_start",
       "all_frames": true,
@@ -38,9 +47,25 @@
       "match_origin_as_fallback": true
     }
   ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
   "action": {
     "default_popup": "popup/index.html",
-    "default_title": "ADAPT Shield"
+    "default_title": "ADAPT Shield",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/index.html",
+    "open_in_tab": true
   },
   "declarative_net_request": {
     "rule_resources": [

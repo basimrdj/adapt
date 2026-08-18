@@ -1,0 +1,21 @@
+{
+  "ranAt": "2026-08-17T06:48:39.674Z",
+  "pass": true,
+  "checks": [
+    {
+      "name": "T1: session rule + ownership survive worker restart; reconcile removes nothing",
+      "pass": true,
+      "detail": "reconcile={\"demoted\":0,\"dynamicRestored\":0,\"metadataCleaned\":0,\"orphanedDynamicRemoved\":0,\"orphanedSessionRemoved\":0,\"promotingResolved\":0,\"reconciled\":true,\"sessionRestored\":2,\"sessionRuleIds\":\"\",\"unknownKept\":0} sessionRules=3000000,3000001 ownership=2"
+    },
+    {
+      "name": "T1: allocator reconstructed without ID collision after restart",
+      "pass": true,
+      "detail": "restored=3000000,3000001 new=3000002"
+    },
+    {
+      "name": "T1: promoted dynamic rule survives worker restart reconcile",
+      "pass": true,
+      "detail": "dynamicAfterRestart=1000000"
+    }
+  ]
+}

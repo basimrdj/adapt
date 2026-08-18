@@ -137,28 +137,23 @@ export async function reconcilePhase31StaticRulesets(): Promise<void> {
       }
     }
 
-    const enableBatches: string[][] = [];
-    let currentBatch: string[] = [];
-    let currentBatchCount = 0;
-    for (const id of enableRulesetIds) {
-      const entry = catalog.rulesets.find((candidate) => candidate.id === id);
-      const count = entry?.count ?? 0;
-      if (currentBatch.length > 0 && currentBatchCount + count > 25_000) {
-        enableBatches.push(currentBatch);
-        currentBatch = [];
-        currentBatchCount = 0;
-      }
-      currentBatch.push(id);
-      currentBatchCount += count;
-    }
-    if (currentBatch.length > 0) enableBatches.push(currentBatch);
-
     const reconciliationErrors: string[] = [];
-    for (const batch of enableBatches) {
+    const enableAggregate = async (ids: string[]): Promise<boolean> => {
+      if (ids.length === 0) return true;
       try {
-        await chrome.declarativeNetRequest.updateEnabledRulesets({ enableRulesetIds: batch });
+        await chrome.declarativeNetRequest.updateEnabledRulesets({ enableRulesetIds: ids });
+        return true;
       } catch (error) {
-        reconciliationErrors.push(`${batch.join(',')}: ${error instanceof Error ? error.message : String(error)}`);
+        const message = `${ids.join(',')}: ${error instanceof Error ? error.message : String(error)}`;
+        reconciliationErrors.push(message);
+        console.error('[ADAPT] static ruleset reconciliation failed', message);
+        return false;
+      }
+    };
+
+    if (!(await enableAggregate(enableRulesetIds))) {
+      for (let length = enableRulesetIds.length - 1; length > 0; length -= 1) {
+        if (await enableAggregate(enableRulesetIds.slice(0, length))) break;
       }
     }
     const enabledAfter = await chrome.declarativeNetRequest.getEnabledRulesets();

@@ -1,0 +1,434 @@
+{
+  "schema": "kimi-forensics-sanity-v1",
+  "ranAt": "2026-08-16T11:50:51.786Z",
+  "checks": [
+    {
+      "name": "A: startup events recorded",
+      "pass": true,
+      "detail": "SW_START=1 STARTUP_READY=1"
+    },
+    {
+      "name": "A: planner reported unconfigured",
+      "pass": true,
+      "detail": "AI_CONFIG={\"configured\":false,\"endpointClass\":\"none\",\"plannerClass\":\"none\"}"
+    },
+    {
+      "name": "A: request funnel counters increment",
+      "pass": true,
+      "detail": "observed=4 thirdParty=2 eligible=2"
+    },
+    {
+      "name": "A: AI gate records AI_PROVIDER_UNCONFIGURED with trigger context",
+      "pass": true,
+      "detail": "skips=2 first={\"candidateRequests\":0,\"reason\":\"AI_PROVIDER_UNCONFIGURED\",\"survivorsSeen\":0,\"wouldTrigger\":\"none\"}"
+    },
+    {
+      "name": "A: zero chrome-runtime AI calls without planner",
+      "pass": true,
+      "detail": "AI_RUNTIME_CALL_BEGIN=0"
+    },
+    {
+      "name": "B: AI call executed inside the extension service worker",
+      "pass": true,
+      "detail": "begin={\"candidateCount\":2,\"endpointClass\":\"loopback\",\"mock\":false,\"plannerClass\":\"remote\",\"runtime\":\"chrome-extension-service-worker\",\"triggerReason\":\"NOVEL_NETWORK_DISCOVERY\"} end={\"latencyMs\":16,\"ok\":true}"
+    },
+    {
+      "name": "B: executor staged TARGETED_SESSION_DNR",
+      "pass": true,
+      "detail": "stage={\"ok\":true,\"primitiveId\":\"TARGETED_SESSION_DNR\"}"
+    },
+    {
+      "name": "B: learned session rule installed and confirmed present in Chrome",
+      "pass": true,
+      "detail": "add={\"count\":1,\"ruleIds\":\"3000000\",\"tabScoped\":false} snapshot={\"ids\":[3000000],\"learned\":1,\"t\":1786881039717,\"total\":1}"
+    },
+    {
+      "name": "B: outcome recorded as learned session protection",
+      "pass": true,
+      "detail": "learnedSessionProtections=1"
+    },
+    {
+      "name": "C: (informational) worker termination unavailable under automation; reconcile-wipe rests on code evidence",
+      "pass": true,
+      "detail": "Target.terminateTarget not available in this environment"
+    }
+  ],
+  "pass": true,
+  "artifact": {
+    "counters": {
+      "aiCallsStarted": 1,
+      "aiCallsSucceeded": 1,
+      "aiGateEvaluations": 6,
+      "aiSkip.AI_NO_TRIGGER_ORIGIN_ALREADY_AUDITED": 3,
+      "aiSkip.AI_PROVIDER_UNCONFIGURED": 2,
+      "candidateEligibleRequests": 6,
+      "candidateExcluded.EXCLUDE_FIRST_PARTY": 6,
+      "candidateExcludedRequests": 6,
+      "engineAntiBlockGateLow": 12,
+      "engineEvaluations": 12,
+      "executorStageSuccesses": 1,
+      "firstPartyRequests": 6,
+      "funnelEvents": 12,
+      "learnedSessionProtections": 1,
+      "matchProbes": 4,
+      "observationBatches": 6,
+      "policyApproved": 1,
+      "sessionRulesInstalled": 1,
+      "successfulRequests": 12,
+      "thirdPartyRequests": 6,
+      "totalRequestsObserved": 12
+    },
+    "events": [
+      {
+        "kind": "SW_START",
+        "t": 1786881031237
+      },
+      {
+        "data": {
+          "configured": false,
+          "endpointClass": "none",
+          "plannerClass": "none"
+        },
+        "kind": "AI_CONFIG",
+        "t": 1786881031254
+      },
+      {
+        "data": {
+          "activeTransactions": 0,
+          "autonomySnapshot": false,
+          "ruleAllocationsRestored": 0
+        },
+        "kind": "STARTUP_READY",
+        "t": 1786881031255
+      },
+      {
+        "data": {
+          "checkpoint": "startup-ready",
+          "total": 0
+        },
+        "kind": "SESSION_RULES_SNAPSHOT",
+        "t": 1786881031259
+      },
+      {
+        "data": {
+          "orphanedDynamicRemoved": 0,
+          "orphanedSessionRemoved": 0,
+          "reconciled": true,
+          "sessionRuleIds": ""
+        },
+        "kind": "RECONCILE_RESULT",
+        "t": 1786881031259
+      },
+      {
+        "data": {
+          "checkpoint": "post-reconcile",
+          "total": 0
+        },
+        "kind": "SESSION_RULES_SNAPSHOT",
+        "t": 1786881031259
+      },
+      {
+        "data": {
+          "candidateRequests": 0,
+          "reason": "AI_PROVIDER_UNCONFIGURED",
+          "survivorsSeen": 0,
+          "wouldTrigger": "none"
+        },
+        "kind": "AI_SKIP",
+        "t": 1786881031332
+      },
+      {
+        "data": {
+          "ex": "EXCLUDE_FIRST_PARTY",
+          "hh": "c7e23885b1fb04a3",
+          "ph": "d6f01095705f6adb",
+          "rt": "main_frame",
+          "tp": false
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881033294
+      },
+      {
+        "data": {
+          "ex": "none",
+          "hh": "070c6e7cc3dd8972",
+          "ph": "c3bba4fce9658267",
+          "rt": "script",
+          "tp": true
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881033316
+      },
+      {
+        "data": {
+          "ex": "none",
+          "hh": "a5718e72d9eda308",
+          "ph": "3e3ae2bda8da1eac",
+          "rt": "script",
+          "tp": true
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881033316
+      },
+      {
+        "data": {
+          "ex": "EXCLUDE_FIRST_PARTY",
+          "hh": "c7e23885b1fb04a3",
+          "ph": "420e2d7f92cd36a1",
+          "rt": "image",
+          "tp": false
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881033332
+      },
+      {
+        "data": {
+          "candidateRequests": 2,
+          "reason": "AI_PROVIDER_UNCONFIGURED",
+          "survivorsSeen": 0,
+          "wouldTrigger": "NOVEL_NETWORK_DISCOVERY"
+        },
+        "kind": "AI_SKIP",
+        "t": 1786881033449
+      },
+      {
+        "data": {
+          "configured": true,
+          "endpointClass": "loopback",
+          "plannerClass": "remote"
+        },
+        "kind": "AI_CONFIG_CHANGED",
+        "t": 1786881037876
+      },
+      {
+        "data": {
+          "ex": "EXCLUDE_FIRST_PARTY",
+          "hh": "964c6c66e6a84cfa",
+          "ph": "1683764cb92757a3",
+          "rt": "main_frame",
+          "tp": false
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881039499
+      },
+      {
+        "data": {
+          "ex": "none",
+          "hh": "070c6e7cc3dd8972",
+          "ph": "6864fef5436a6f8c",
+          "rt": "script",
+          "tp": true
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881039566
+      },
+      {
+        "data": {
+          "ex": "none",
+          "hh": "a5718e72d9eda308",
+          "ph": "fae248d309e5bc8f",
+          "rt": "script",
+          "tp": true
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881039569
+      },
+      {
+        "data": {
+          "ex": "EXCLUDE_FIRST_PARTY",
+          "hh": "964c6c66e6a84cfa",
+          "ph": "7555c04c894fedf1",
+          "rt": "image",
+          "tp": false
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881039587
+      },
+      {
+        "data": {
+          "candidateCount": 2,
+          "endpointClass": "loopback",
+          "mock": false,
+          "plannerClass": "remote",
+          "runtime": "chrome-extension-service-worker",
+          "triggerReason": "NOVEL_NETWORK_DISCOVERY"
+        },
+        "kind": "AI_RUNTIME_CALL_BEGIN",
+        "t": 1786881039699
+      },
+      {
+        "data": {
+          "latencyMs": 16,
+          "ok": true
+        },
+        "kind": "AI_RUNTIME_CALL_END",
+        "t": 1786881039715
+      },
+      {
+        "data": {
+          "decision": "ADAPT",
+          "reasonCount": 0,
+          "valid": true
+        },
+        "kind": "POLICY_RESULT",
+        "t": 1786881039715
+      },
+      {
+        "data": {
+          "count": 1,
+          "ruleIds": "3000000",
+          "tabScoped": false
+        },
+        "kind": "SESSION_RULES_ADD",
+        "t": 1786881039717
+      },
+      {
+        "data": {
+          "ok": true,
+          "primitiveId": "TARGETED_SESSION_DNR"
+        },
+        "kind": "EXECUTOR_STAGE",
+        "t": 1786881039717
+      },
+      {
+        "data": {
+          "checkpoint": "after-add",
+          "total": 1
+        },
+        "kind": "SESSION_RULES_SNAPSHOT",
+        "t": 1786881039717
+      },
+      {
+        "data": {
+          "primitiveId": "TARGETED_SESSION_DNR",
+          "rolledBack": false,
+          "safe": true,
+          "sessionProtectionInstalled": true,
+          "survivorResolved": true
+        },
+        "kind": "SURVIVOR_AI_OUTCOME",
+        "t": 1786881039976
+      },
+      {
+        "data": {
+          "candidateRequests": 2,
+          "reason": "AI_NO_TRIGGER_ORIGIN_ALREADY_AUDITED",
+          "survivorsSeen": 0,
+          "wouldTrigger": "none"
+        },
+        "kind": "AI_SKIP",
+        "t": 1786881039980
+      },
+      {
+        "data": {
+          "ex": "EXCLUDE_FIRST_PARTY",
+          "hh": "964c6c66e6a84cfa",
+          "ph": "81ca63e594e51b2a",
+          "rt": "main_frame",
+          "tp": false
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881046722
+      },
+      {
+        "data": {
+          "ex": "none",
+          "hh": "070c6e7cc3dd8972",
+          "ph": "752fcbcd6b3bd6fa",
+          "rt": "script",
+          "tp": true
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881046755
+      },
+      {
+        "data": {
+          "ex": "none",
+          "hh": "a5718e72d9eda308",
+          "ph": "e7abe33651599430",
+          "rt": "script",
+          "tp": true
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881046756
+      },
+      {
+        "data": {
+          "ex": "EXCLUDE_FIRST_PARTY",
+          "hh": "964c6c66e6a84cfa",
+          "ph": "7555c04c894fedf1",
+          "rt": "image",
+          "tp": false
+        },
+        "kind": "REQ_COMPLETE",
+        "t": 1786881046774
+      },
+      {
+        "data": {
+          "candidateRequests": 2,
+          "reason": "AI_NO_TRIGGER_ORIGIN_ALREADY_AUDITED",
+          "survivorsSeen": 0,
+          "wouldTrigger": "none"
+        },
+        "kind": "AI_SKIP",
+        "t": 1786881046821
+      },
+      {
+        "data": {
+          "candidateRequests": 2,
+          "reason": "AI_NO_TRIGGER_ORIGIN_ALREADY_AUDITED",
+          "survivorsSeen": 0,
+          "wouldTrigger": "none"
+        },
+        "kind": "AI_SKIP",
+        "t": 1786881046884
+      }
+    ],
+    "firstBootAt": 1786881031233,
+    "hostFamilies": {
+      "463071d73b65e888": 3,
+      "cabd158c9b5c9c1c": 3
+    },
+    "hostPathFamilies": {
+      "062d64b7fc64792e": 1,
+      "19157cc270a54c89": 1,
+      "6a7eb75be2db3026": 1,
+      "6f4be3b9f90d7330": 1,
+      "725ec5641cca5a98": 1,
+      "dcbbb9e0c5d515cf": 1
+    },
+    "rules": {
+      "3000000": {
+        "filterHash": "10188178de9a4324",
+        "installedAt": 1786881039717,
+        "learned": true,
+        "ownerClass": "survivor-ai",
+        "resourceTypes": 1,
+        "tabScoped": false
+      }
+    },
+    "sessionRuleSnapshots": [
+      {
+        "ids": [],
+        "learned": 0,
+        "t": 1786881031259,
+        "total": 0
+      },
+      {
+        "ids": [],
+        "learned": 0,
+        "t": 1786881031259,
+        "total": 0
+      },
+      {
+        "ids": [
+          3000000
+        ],
+        "learned": 1,
+        "t": 1786881039717,
+        "total": 1
+      }
+    ],
+    "version": 1
+  }
+}

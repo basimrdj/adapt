@@ -16,8 +16,20 @@ import { DomActionExecutor } from './dom-actions';
 import { ContentToBackgroundMessage, BackgroundToContentMessage } from '../shared/messages';
 import { calculateHealthVector } from '../core/health/scorer';
 import { OpaqueTargetRegistry } from './opaque-targets';
-import { createIntentEnvelope } from './intent-envelope';
+import { createIntentEnvelope, protectedTransactionIntentFor } from './intent-envelope';
 import { SurvivorDiscoveryEngine } from './survivor-discovery';
+
+const MAX_BATCH_WAIT_MS = 500;
+const INTENT_WINDOW_MS = 10_000;
+const MAX_INTENT_ENVELOPES_PER_WINDOW = 20;
+/** Cold-worker handshake: a READY delivered while the service worker is still
+ * starting can arrive before the navigation epoch exists and is dropped without
+ * a response. READY is retried (bounded backoff) until the background acks this
+ * document, then one full-state batch is flushed so a static page whose initial
+ * batch also fell into that window never stays unprotected. */
+const READY_RETRY_MAX_ATTEMPTS = 8;
+const READY_RETRY_BASE_MS = 500;
+const READY_RETRY_MAX_DELAY_MS = 4_000;
 
 function elementRefFromOpaqueRefs(refs: readonly string[]): `element:e${number}` | undefined {
   const ref = refs.find((value) => value.startsWith('element:e'));
@@ -62,25 +74,37 @@ export class PageSensor {
   private mutationPipeline: MutationPipeline;
   private domExecutor: DomActionExecutor;
   private debounceTimer: number | null = null;
+  private firstDeferredAt: number | null = null;
+  private intentWindowStart = 0;
+  private intentCount = 0;
   private readonly targets = new OpaqueTargetRegistry();
   private readonly survivorDiscovery: SurvivorDiscoveryEngine;
   private sensorFaults = 0;
+  private readyAcked = false;
+  private readyRetryActive = false;
+  private readyAttempts = 0;
 
   constructor(navigationId: string) {
     this.navigationId = navigationId;
-    this.domExecutor = new DomActionExecutor(this.targets);
+    this.domExecutor = new DomActionExecutor(this.targets, (actionId, reHideCount) => {
+      // Post-hoc re-hide telemetry (P4): additive DOM_ACTION_RESULT follow-up.
+      // Carries no hideSelectors, so the cosmetic-learning ack path ignores it.
+      this.sendMessage({
+        v: 1,
+        type: 'DOM_ACTION_RESULT',
+        navigationId: this.navigationId,
+        actionId,
+        operation: 'apply',
+        success: true,
+        reHideCount,
+      });
+    });
     this.mutationPipeline = new MutationPipeline(() => this.scheduleSignalBatch());
     this.survivorDiscovery = new SurvivorDiscoveryEngine(navigationId, this.targets);
   }
 
   public init(): void {
-    this.sendMessage({
-      v: 1,
-      type: 'PAGE_SENSOR_READY',
-      navigationId: this.navigationId,
-      url: window.location.href,
-      origin: window.location.origin,
-    });
+    this.sendReady();
 
     this.mutationPipeline.start();
 
@@ -103,6 +127,18 @@ export class PageSensor {
       'click',
       (event) => {
         try {
+          // Synthetic clicks (element.click(), dispatchEvent) never create
+          // background work — a hostile page can emit thousands per second.
+          // Genuine user gestures are additionally rate-limited per document
+          // so intent traffic stays bounded no matter what the page does.
+          if (!event.isTrusted) return;
+          const now = Date.now();
+          if (now - this.intentWindowStart >= INTENT_WINDOW_MS) {
+            this.intentWindowStart = now;
+            this.intentCount = 0;
+          }
+          if (this.intentCount >= MAX_INTENT_ENVELOPES_PER_WINDOW) return;
+          this.intentCount += 1;
           const intent = createIntentEnvelope(event, this.targets);
           if (!intent) return;
           this.sendMessage({
@@ -111,6 +147,18 @@ export class PageSensor {
             navigationId: this.navigationId,
             payload: intent,
           });
+          // Layer-2 trigger: a trusted click on a flow-shaped element begins
+          // protected transaction mode for this tab (covers checkout/3DS flows
+          // that never navigate the main frame to a protected host).
+          const protectedKind = protectedTransactionIntentFor(event);
+          if (protectedKind) {
+            this.sendMessage({
+              v: 1,
+              type: 'PROTECTED_TRANSACTION_INTENT',
+              navigationId: this.navigationId,
+              kind: protectedKind,
+            });
+          }
         } catch {
           this.sensorFaults++;
         }
@@ -131,21 +179,86 @@ export class PageSensor {
 
   private handleSpaTransition(): void {
     this.mutationPipeline.reset();
-    this.sendMessage({
+    this.sendReady();
+    this.scheduleSignalBatch();
+  }
+
+  /**
+   * READY handshake. Before the first background ack, a single retry chain
+   * re-sends READY with bounded backoff — this is the cold-worker window guard
+   * (see READY_RETRY_* constants). Once acked, READY is fire-and-forget: the
+   * background already holds this document's epoch, so SPA-transition READYs
+   * land on a warm handler.
+   */
+  private sendReady(): void {
+    if (this.readyAcked) {
+      this.sendMessage({
+        v: 1,
+        type: 'PAGE_SENSOR_READY',
+        navigationId: this.navigationId,
+        url: window.location.href,
+        origin: window.location.origin,
+      });
+      return;
+    }
+    if (this.readyRetryActive) return; // one chain coalesces init + SPA bursts
+    this.readyRetryActive = true;
+    this.sendReadyAttempt();
+  }
+
+  private sendReadyAttempt(): void {
+    const response = this.sendMessage({
       v: 1,
       type: 'PAGE_SENSOR_READY',
       navigationId: this.navigationId,
       url: window.location.href,
       origin: window.location.origin,
     });
-    this.scheduleSignalBatch();
+    void Promise.resolve(response).then((ack) => {
+      if (this.readyAcked) return;
+      const acknowledged = Boolean(
+        ack && typeof ack === 'object' && (ack as { success?: unknown }).success === true
+      );
+      if (acknowledged) {
+        this.readyAcked = true;
+        this.readyRetryActive = false;
+        // The initial batch may have been dropped in the same cold-worker
+        // window; a fresh full-state batch converges the background's view.
+        this.scheduleSignalBatch();
+        return;
+      }
+      if (this.readyAttempts >= READY_RETRY_MAX_ATTEMPTS) {
+        this.readyRetryActive = false;
+        return;
+      }
+      this.readyAttempts += 1;
+      const delay = Math.min(
+        READY_RETRY_BASE_MS * Math.pow(1.7, this.readyAttempts - 1),
+        READY_RETRY_MAX_DELAY_MS
+      );
+      window.setTimeout(() => this.sendReadyAttempt(), delay);
+    });
   }
 
   private scheduleSignalBatch(): void {
-    if (this.debounceTimer !== null) clearTimeout(this.debounceTimer);
+    // Trailing-edge starvation guard (mirrors MutationPipeline): continuous
+    // re-scheduling must not defer the batch forever.
+    if (this.debounceTimer !== null) {
+      if (this.firstDeferredAt !== null && Date.now() - this.firstDeferredAt >= MAX_BATCH_WAIT_MS) {
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = null;
+        this.firstDeferredAt = null;
+        this.collectAndSendBatch();
+        return;
+      }
+      clearTimeout(this.debounceTimer);
+    } else {
+      this.firstDeferredAt = Date.now();
+    }
 
     this.debounceTimer = window.setTimeout(() => {
       this.debounceTimer = null;
+      this.firstDeferredAt = null;
       this.collectAndSendBatch();
     }, 60);
   }
@@ -295,6 +408,7 @@ export class PageSensor {
           operation: 'apply',
           actionId: message.payload.id,
           success,
+          hideSelectors: success ? this.domExecutor.hideSelectorsFor(message.payload.id) : [],
         });
         return { success, actionId: message.payload.id };
       }
@@ -332,6 +446,17 @@ export class PageSensor {
           }
           applied.push(action.id);
         }
+        const hideSelectors = [...new Set(applied.flatMap((id) => this.domExecutor.hideSelectorsFor(id)))];
+        this.sendMessage({
+          v: 1,
+          type: 'DOM_ACTION_RESULT',
+          navigationId: this.navigationId,
+          txId: message.txId,
+          operation: 'apply',
+          actionId: applied[applied.length - 1] ?? '',
+          success: true,
+          hideSelectors,
+        });
         return { success: true, actionIds: applied };
       }
 
@@ -345,16 +470,24 @@ export class PageSensor {
     }
   }
 
-  private sendMessage(msg: ContentToBackgroundMessage): void {
+  /**
+   * Fire-and-forget transport. Returns the background's response (undefined
+   * when the worker is down, the context is gone, or the message type has no
+   * response) so the READY handshake can tell acknowledged from dropped.
+   */
+  private sendMessage(msg: ContentToBackgroundMessage): Promise<unknown> {
     try {
       const pending = chrome.runtime.sendMessage(msg);
       if (pending && typeof pending.catch === 'function') {
-        void pending.catch(() => {
+        return Promise.resolve(pending).catch(() => {
           // Service worker may have terminated or the extension may be reloading.
+          return undefined;
         });
       }
+      return Promise.resolve(undefined);
     } catch {
       // Extension context can disappear during reload/navigation.
+      return Promise.resolve(undefined);
     }
   }
 }

@@ -46,6 +46,7 @@ export const STORAGE_KEYS = {
   AUTONOMY_STATE: 'adapt_autonomy_state_v1',
   SETTINGS: 'adapt_settings_v1',
   AUDIT_LOGS: 'adapt_audit_logs_v1',
+  PAUSED_HOSTS: 'adapt_paused_hosts',
   SCHEMA_VERSION: 'adapt_schema_version',
 } as const;
 

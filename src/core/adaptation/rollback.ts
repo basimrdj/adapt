@@ -25,7 +25,7 @@ export class AdaptationRollbackHandler {
     // 1. Remove staged session rules (guaranteed attempt)
     if (tx.sessionRuleIds.length > 0) {
       try {
-        await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds);
+        await this.dnrController.removeSessionExperimentRules(tx.sessionRuleIds, 'adaptation-rollback');
         sessionRulesRemoved = true;
       } catch (err: unknown) {
         errors.push(`DNR rollback error: ${err instanceof Error ? err.message : String(err)}`);

@@ -76,8 +76,10 @@ const SCRIPTLET_NAMES = new Set([
   'json-prune',
   'json-prune-xhr-response',
   'prevent-addEventListener',
+  'prevent-element-src-loading',
   'prevent-eval-if',
   'prevent-fetch',
+  'prevent-setInterval',
   'prevent-setTimeout',
   'prevent-window-open',
   'prevent-xhr',
@@ -88,6 +90,7 @@ const SCRIPTLET_NAMES = new Set([
   'set-constant',
   'set-cookie',
   'set-local-storage-item',
+  'set-session-storage-item',
   'trusted-suppress-native-method',
 ]);
 
@@ -95,9 +98,14 @@ const EXECUTABLE_SCRIPTLETS = new Set([
   'abort-current-inline-script',
   'abort-on-property-read',
   'abort-on-property-write',
+  'adjust-setInterval',
+  'adjust-setTimeout',
   'json-prune',
+  'prevent-addEventListener',
+  'prevent-element-src-loading',
   'prevent-eval-if',
   'prevent-fetch',
+  'prevent-setInterval',
   'prevent-setTimeout',
   'prevent-window-open',
   'prevent-xhr',
@@ -106,6 +114,9 @@ const EXECUTABLE_SCRIPTLETS = new Set([
   'remove-node-attr',
   'remove-node-text',
   'set-constant',
+  'set-cookie',
+  'set-local-storage-item',
+  'set-session-storage-item',
 ]);
 
 const EARLY_SCRIPTLETS = new Set([
@@ -114,14 +125,24 @@ const EARLY_SCRIPTLETS = new Set([
   'abort-on-property-read',
   'abort-on-property-write',
   'prevent-setTimeout',
+  'prevent-setInterval',
   'prevent-eval-if',
   'json-prune',
+  // Interception/state primitives must land before page scripts run.
+  'adjust-setInterval',
+  'adjust-setTimeout',
+  'prevent-addEventListener',
+  'prevent-element-src-loading',
+  'set-cookie',
+  'set-local-storage-item',
+  'set-session-storage-item',
 ]);
 
 const DETECTOR_BAIT_EXACT_NAMES = new Set([
   'ad',
   'ads',
   'adblock',
+  'ad-block',
   'ad-banner',
   'ad-box',
   'ad-container',
@@ -133,6 +154,29 @@ const DETECTOR_BAIT_EXACT_NAMES = new Set([
   'advertisement',
   'adsbox',
   'banner-ad',
+  // FuckAdBlock v3/v4 bait classes (its canonical tripwire div carries these)
+  'pub-300x250',
+  'pub-300x250m',
+  'pub-728x90',
+  'text-ad',
+  'textad',
+  'text-ads',
+  'ad-text',
+  'text-ad-links',
+  'adsense',
+  'ad-sense',
+  'ad-content',
+  // tutorial-kit / Adblock-Analytics-style bait ids and classes
+  'adbanner',
+  'adbox',
+  'adimg',
+  'advert',
+  'advert-box',
+  'adsbygoogle',
+  'ads-responsive',
+  'ad-detector',
+  'adblock-detector',
+  'adb-detector',
 ]);
 
 const DETECTOR_BAIT_ROLE_WORDS = new Set([
@@ -156,9 +200,10 @@ export function classifyDetectorBaitSelector(selector: string): DetectorBaitClas
   if (!match) return 'ORDINARY_COSMETIC';
 
   const name = match[1]!.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-  if (DETECTOR_BAIT_EXACT_NAMES.has(name)) return 'POSSIBLE_DETECTOR_BAIT';
+  const canonical = name.replace(/_/g, '-');
+  if (DETECTOR_BAIT_EXACT_NAMES.has(name) || DETECTOR_BAIT_EXACT_NAMES.has(canonical)) return 'POSSIBLE_DETECTOR_BAIT';
 
-  const words = name.split(/[-_]+/).filter(Boolean);
+  const words = canonical.split(/[-_]+/).filter(Boolean);
   const hasAdWord = words.some((word) => word === 'ad' || word === 'ads' || word === 'advert' || word === 'advertisement');
   const hasRoleWord = words.some((word) => DETECTOR_BAIT_ROLE_WORDS.has(word));
   return hasAdWord && hasRoleWord && words.length <= 5 ? 'POSSIBLE_DETECTOR_BAIT' : 'ORDINARY_COSMETIC';
@@ -258,6 +303,14 @@ function isConstantValue(value: string): boolean {
   return /^-?\d{1,6}(?:\.\d{1,3})?$/.test(value);
 }
 
+/** Storage values: constant scalars/containers + '$remove$'; function-typed
+ * magic values are meaningless as strings and stay refused. */
+function isStorageValue(value: string): boolean {
+  if (value === '$remove$') return true;
+  if (value === '' || /^(undefined|null|true|false|emptyObj|emptyArray|emptyArr)$/.test(value)) return true;
+  return /^-?\d{1,6}(?:\.\d{1,3})?$/.test(value);
+}
+
 function validateScriptlet(name: string, args: string[], scope: DomainScope): ScriptletValidation {
   if (!SCRIPTLET_NAMES.has(name)) {
     return { world: 'ISOLATED', lifecycle: 'ELEMENT_SCOPED', early: false, status: 'unsupported-by-name', reason: `scriptlet '${name}' is not in the audited primitive registry` };
@@ -323,8 +376,44 @@ function validateScriptlet(name: string, args: string[], scope: DomainScope): Sc
     return { world, lifecycle, early, status: 'fully-executable' };
   }
 
-  if (name === 'prevent-setTimeout' || name === 'prevent-eval-if' || name === 'prevent-window-open') {
+  if (name === 'prevent-setTimeout' || name === 'prevent-setInterval' || name === 'prevent-eval-if' || name === 'prevent-window-open') {
     if (args.length > (name === 'prevent-window-open' ? 3 : 2) || args.some((arg) => arg && !isBoundedPattern(arg))) return unsupportedArguments(`${name} arguments must be bounded patterns`);
+    return { world, lifecycle, early, status: 'fully-executable' };
+  }
+
+  if (name === 'adjust-setInterval' || name === 'adjust-setTimeout') {
+    if (args.length < 1 || args.length > 3) return unsupportedArguments(`${name} requires 1-3 arguments`);
+    if (!args[0] || !isBoundedPattern(args[0])) return unsupportedArguments(`${name} requires a non-empty bounded handler-source pattern`);
+    if (args[1] && !isBoundedPattern(args[1])) return unsupportedArguments(`${name} delay pattern must be bounded`);
+    if (args[2] && !/^(?:0?\.\d{1,4}|1(?:\.0{1,4})?)$/.test(args[2])) return unsupportedArguments(`${name} boost must be a float in (0, 1]`);
+    return { world, lifecycle, early, status: 'fully-executable' };
+  }
+
+  if (name === 'prevent-addEventListener') {
+    if (args.length < 1 || args.length > 2) return unsupportedArguments('prevent-addEventListener requires 1-2 arguments');
+    if (args.some((arg) => arg && !isBoundedPattern(arg))) return unsupportedArguments('prevent-addEventListener arguments must be bounded patterns');
+    if (!args[0] && !args[1]) return unsupportedArguments('prevent-addEventListener requires a non-empty type or handler pattern');
+    return { world, lifecycle, early, status: 'fully-executable' };
+  }
+
+  if (name === 'set-cookie') {
+    if (args.length !== 2) return unsupportedArguments('set-cookie requires name and value');
+    if (!/^[A-Za-z0-9_!#$%&'*+.^`|~-]{1,64}$/.test(args[0] ?? '')) return unsafe('set-cookie name is outside the RFC token grammar');
+    if (!/^[\w%+./=-]{0,100}$/.test(args[1] ?? '')) return unsupportedArguments('set-cookie value is outside the audited charset');
+    return { world, lifecycle, early, status: 'fully-executable' };
+  }
+
+  if (name === 'set-local-storage-item' || name === 'set-session-storage-item') {
+    if (args.length !== 2) return unsupportedArguments(`${name} requires key and value`);
+    if (!/^[\w$.-]{1,128}$/.test(args[0] ?? '')) return unsupportedArguments(`${name} key grammar is unsupported`);
+    if (!isStorageValue(args[1] ?? '')) return unsupportedArguments(`${name} value is outside the audited value grammar`);
+    return { world, lifecycle, early, status: 'fully-executable' };
+  }
+
+  if (name === 'prevent-element-src-loading') {
+    if (args.length !== 2) return unsupportedArguments('prevent-element-src-loading requires tag and URL pattern');
+    if (!/^(?:script|img|iframe|video|audio|source|embed)$/.test(args[0] ?? '')) return unsupportedArguments('prevent-element-src-loading tag is outside the audited set');
+    if (!args[1] || !isBoundedPattern(args[1])) return unsupportedArguments('prevent-element-src-loading requires a non-empty bounded URL pattern');
     return { world, lifecycle, early, status: 'fully-executable' };
   }
 

@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-08-17T10:27:58.994Z",
+  "visit1Early": {
+    "wallVisible": false,
+    "disarmed": true
+  },
+  "relayCallsAfterVisit1": 1,
+  "visit1Plan": [
+    {
+      "actionType": "DOM_REMOVE_OVERLAY",
+      "targetRef": "element:e1",
+      "parameter": ""
+    },
+    {
+      "actionType": "STEALTH_SET_CONSTANT",
+      "targetRef": "",
+      "parameter": "novDetectLabs.disarmed=true"
+    }
+  ],
+  "persistedConstants": [
+    {
+      "path": "novDetectLabs.disarmed",
+      "value": "true"
+    }
+  ],
+  "wallClearedOnRecheck": true,
+  "visit2": {
+    "wallVisible": false,
+    "disarmed": true
+  },
+  "relayCallsVisit2": 0,
+  "visit3AfterRestart": {
+    "wallVisible": false,
+    "disarmed": true
+  },
+  "relayCallsVisit3": 0,
+  "verdict": "PASS",
+  "failures": []
+}

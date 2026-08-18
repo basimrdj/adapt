@@ -1,10 +1,10 @@
 import http from 'node:http';
-import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { OpenAI } from 'openai';
 import puppeteer, { Browser } from 'puppeteer';
 import { chromeExecutable } from '../../tests/support/chrome-executable';
+import { requireAzureApiKey, requireAzureBaseURL, requireAzureModel } from '../azure-env';
 import { ADAPTATION_PLAN_JSON_SCHEMA } from '../../src/shared/ai/schemas';
 
 const root = process.cwd();
@@ -73,22 +73,14 @@ function token(): string {
   return Math.random().toString(36).slice(2, 12);
 }
 
-function keyFromAzure(): string {
-  if (process.env.AZURE_OPENAI_API_KEY) return process.env.AZURE_OPENAI_API_KEY;
-  return execSync(
-    'az cognitiveservices account keys list --name basim-agent3-openai-eastus2 --resource-group rg-maheekodhan42-8571 --query key1 -o tsv',
-    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }
-  ).trim();
-}
-
 async function startRelay(): Promise<RunningServer> {
   const client = new OpenAI({
-    apiKey: keyFromAzure(),
-    baseURL: process.env.AZURE_OPENAI_BASE_URL || 'https://basim-agent3-openai-eastus2.openai.azure.com/openai/v1/',
+    apiKey: requireAzureApiKey(),
+    baseURL: requireAzureBaseURL(),
     timeout: 5000,
     maxRetries: 0,
   });
-  const model = process.env.AZURE_OPENAI_MODEL || 'buzz-gpt-5-4-mini';
+  const model = requireAzureModel();
   const server = http.createServer(async (request, response) => {
     if (request.method !== 'POST' || request.url !== '/plan') {
       response.writeHead(404).end();
@@ -383,7 +375,7 @@ async function main(): Promise<void> {
 
     const result = {
       schema: 'adapt-final-survivor-intelligence-v1',
-      provider: { liveProviderConfigured: aiEnabled, mockPlanner: false, modelClass: process.env.AZURE_OPENAI_MODEL || 'buzz-gpt-5-4-mini' },
+      provider: { liveProviderConfigured: aiEnabled, mockPlanner: false, modelClass: process.env.AZURE_OPENAI_MODEL ?? 'unset' },
       inventory: INVENTORY,
       executedFamilies: [...ACTIVE_RUN, ...PROTECTED_RUN],
       run1,

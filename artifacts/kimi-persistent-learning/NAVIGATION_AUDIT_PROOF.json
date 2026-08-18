@@ -1,0 +1,16 @@
+{
+  "ranAt": "2026-08-17T06:49:14.183Z",
+  "pass": true,
+  "checks": [
+    {
+      "name": "S2: audit latch is navigation-scoped — each navigation re-audits, bounded <=2",
+      "pass": true,
+      "detail": "nav1Calls=1 nav2Calls=1"
+    },
+    {
+      "name": "S2: abstain relay left both families untouched (no learning without evidence)",
+      "pass": true,
+      "detail": "familyState={\"x\":\"loaded\",\"y\":\"loaded\",\"own\":\"loaded\"}"
+    }
+  ]
+}

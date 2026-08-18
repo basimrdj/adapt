@@ -32,6 +32,12 @@ export type ContentToBackgroundMessage =
     }
   | {
       v: 1;
+      type: 'PROTECTED_TRANSACTION_INTENT';
+      navigationId: string;
+      kind: 'auth' | 'payment';
+    }
+  | {
+      v: 1;
       type: 'HEALTH_SNAPSHOT';
       navigationId: string;
       txId?: string;
@@ -46,6 +52,11 @@ export type ContentToBackgroundMessage =
       operation?: 'apply' | 'rollback';
       success: boolean;
       error?: string;
+      /** Stable selectors captured when hide-type actions applied (Phase E). */
+      hideSelectors?: string[];
+      /** Post-hoc telemetry: reinsertions suppressed by the bounded re-hide
+       * watch before it settled (P4). Sent as a follow-up message. */
+      reHideCount?: number;
     }
   | {
       v: 1;
@@ -53,6 +64,31 @@ export type ContentToBackgroundMessage =
       ruleId: string;
       name: string;
       args: string[];
+    }
+  | {
+      v: 1;
+      type: 'STEALTH_PROFILE_GET';
+    }
+  | {
+      v: 1;
+      type: 'STEALTH_BAIT_CANDIDATES';
+      candidates: string[];
+    }
+  | {
+      v: 1;
+      type: 'STEALTH_REPLAY_OUTCOME';
+      wallSeen: boolean;
+    }
+  | {
+      v: 1;
+      type: 'COSMETIC_REPLAY_GET';
+    }
+  | {
+      v: 1;
+      type: 'COSMETIC_REPLAY_OUTCOME';
+      broke: boolean;
+      matched: string[];
+      missed: string[];
     };
 
 export type BackgroundToContentMessage =

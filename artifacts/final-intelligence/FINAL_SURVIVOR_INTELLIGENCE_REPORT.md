@@ -6,7 +6,7 @@ BEFORE
 
 AFTER INTERNAL PASS
 
-- Live provider: **true**; mock planner: **false**; model class: `buzz-gpt-5-4-mini`
+- Live provider: **true**; mock planner: **false**; model class: `<your-model-deployment>`
 - Real AI calls: **5** in Run 1
 - Novel-network discovery calls: **1**
 - Ambiguous-survivor calls: **4**

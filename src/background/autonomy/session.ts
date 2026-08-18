@@ -21,6 +21,13 @@ export interface AutonomyPendingState {
     recordId: string;
     applicationKey: string;
     fingerprint: PageFingerprint;
+    /**
+     * True when the replay was staged through the DETECTOR_MISMATCH bypass:
+     * the cosmetic plane's learned hides erase the gate's semantic text, so
+     * the detector leg of the fingerprint is self-inflicted and must be
+     * neutralized again at settlement (promotion.replay re-checks it).
+     */
+    detectorBypass?: boolean;
   };
 }
 
@@ -57,7 +64,10 @@ export class AutonomySessionRepository {
       loops: [...loops.entries()].map(([key, value]) => [key, JSON.parse(JSON.stringify(value)) as AutonomyLoopState]),
       pending: JSON.parse(JSON.stringify(pending)) as AutonomyPendingState[],
     };
-    this.writeChain = this.writeChain.then(() => this.backend.set({ [STORAGE_KEYS.AUTONOMY_STATE]: snapshot }));
-    return this.writeChain;
+    const write = this.writeChain.then(() => this.backend.set({ [STORAGE_KEYS.AUTONOMY_STATE]: snapshot }));
+    // A rejected write must not poison the chain for the rest of the worker's
+    // lifetime; the caller's promise still reflects this write's real outcome.
+    this.writeChain = write.catch(() => undefined);
+    return write;
   }
 }

@@ -1,4 +1,5 @@
 import { hashOrigin } from '../../shared/causal/events';
+import { isProtectedAuthHost, isProtectedPaymentHost } from '../../shared/protected-flows';
 import {
   DestinationClass,
   NavigationTargetObservation,
@@ -30,6 +31,12 @@ function destinationClass(url: string, sourceOrigin: string): DestinationClass {
   try {
     const parsed = new URL(url);
     if (parsed.origin === sourceOrigin) return 'same-origin';
+    // Host-aware first: a dedicated identity host is ALWAYS oauth-like, even on
+    // continuation paths with no keyword — /AccountChooser, /CompleteSignIn,
+    // /ppsecure, /common/SAS/ProcessAuth all dead-end at 'cross-origin'
+    // otherwise and lose the popup broker's legitimate-destination discount.
+    if (isProtectedAuthHost(parsed.hostname)) return 'oauth-like';
+    if (isProtectedPaymentHost(parsed.hostname)) return 'payment-like';
     if (/oauth|authorize|signin|login/i.test(parsed.pathname)) return 'oauth-like';
     if (/pay|checkout|billing|purchase/i.test(parsed.pathname)) return 'payment-like';
     if (/\.pdf$|\.docx?$|\.xlsx?$|\.zip$/i.test(parsed.pathname)) return 'document';

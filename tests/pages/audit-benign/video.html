@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Audit Benign — HTML5 Video</title>
+</head>
+<body>
+  <main id="main-content">
+    <h1>HTML5 Video</h1>
+    <p>The video must start playback and advance — no player obstruction.</p>
+    <video id="clip" src="/assets/tiny.mp4" width="320" height="240" muted controls playsinline></video>
+    <p id="playback-status">not-started</p>
+    <a href="/audit-benign/index.html">Back to gallery</a>
+  </main>
+  <script>
+    var video = document.getElementById('clip');
+    // NB: top-level `var status` would collide with window.status (legacy
+    // string accessor) and silently swallow the textContent writes.
+    var statusEl = document.getElementById('playback-status');
+    video.addEventListener('playing', function () { statusEl.textContent = 'playing'; });
+    video.addEventListener('error', function () { statusEl.textContent = 'error'; });
+    // Autoplay attempt is muted + playsinline, which headless Chrome permits.
+    video.play().catch(function () { statusEl.textContent = 'play-rejected'; });
+  </script>
+</body>
+</html>

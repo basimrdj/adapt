@@ -1,0 +1,62 @@
+{
+  "schema": "kimi-ai-wiring-fix-v1",
+  "ranAt": "2026-08-16T16:58:35.424Z",
+  "configurationSurfaceExists": true,
+  "configSavedUsingExistingSchema": true,
+  "testConnection": {
+    "providerReached": true,
+    "schemaValid": true,
+    "latencyMs": 8
+  },
+  "productionFixture": {
+    "chromeRuntimeAiCalls": 1,
+    "nodeDirectAiCalls": 0,
+    "mock": false,
+    "policyReached": true
+  },
+  "secretsLeakedToArtifacts": false,
+  "unrelatedProductSystemsModified": [],
+  "checks": [
+    {
+      "name": "1: options page saves the existing adapt_ai_config schema",
+      "pass": true,
+      "detail": "keys=endpoint,privacyMode,token"
+    },
+    {
+      "name": "1: options page shows CONFIGURED after save",
+      "pass": true,
+      "detail": "badge=CONFIGURED"
+    },
+    {
+      "name": "2: test connection reached provider and passed production schema validation",
+      "pass": true,
+      "detail": "badge=CONNECTION VERIFIED result=\"Connection verified — latency: 8 ms (decision: ADAPT)\" authedRelayCalls=1"
+    },
+    {
+      "name": "3: service worker live-reloaded planner on config change",
+      "pass": true,
+      "detail": "AI_CONFIG_CHANGED={\"configured\":true,\"endpointClass\":\"loopback\",\"plannerClass\":\"remote\",\"source\":\"stored\"}"
+    },
+    {
+      "name": "4: production runtime path triggered real AI call from the service worker",
+      "pass": true,
+      "detail": "begins={\"candidateCount\":2,\"endpointClass\":\"loopback\",\"mock\":false,\"plannerClass\":\"remote\",\"runtime\":\"chrome-extension-service-worker\",\"triggerReason\":\"NOVEL_NETWORK_DISCOVERY\"} end={\"latencyMs\":2,\"ok\":true}"
+    },
+    {
+      "name": "4: PolicyValidator remained authoritative on the runtime plan",
+      "pass": true,
+      "detail": "policy={\"decision\":\"ADAPT\",\"reasonCount\":0,\"valid\":true}"
+    },
+    {
+      "name": "5: disable & clear returns planner to unconfigured without reload",
+      "pass": true,
+      "detail": "stored=null lastChange={\"configured\":false,\"endpointClass\":\"none\",\"plannerClass\":\"none\",\"source\":\"none\"}"
+    },
+    {
+      "name": "6: credential never appears in forensic artifact",
+      "pass": true,
+      "detail": "tokenPresent=false"
+    }
+  ],
+  "pass": true
+}

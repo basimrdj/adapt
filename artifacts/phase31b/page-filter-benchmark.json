@@ -1,29 +1,29 @@
 {
   "schema": "adapt-phase31b-page-filter-benchmark-v1",
-  "verificationRunId": "phase31b-1786814118801-e88a0fa3ffbd",
-  "sourceCommitSha": "e88a0fa3ffbd9cae2db27d9772f76dea9e2cb766",
-  "generatedAt": "2026-08-15T17:15:18.801Z",
-  "buildFingerprint": "2510e3e2f4b3682486755bb4abd218f4349e3b041776d156211a64780efd681f",
+  "verificationRunId": "phase31b-1787078856173-0f433a8352ea",
+  "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+  "generatedAt": "2026-08-18T18:47:36.173Z",
+  "buildFingerprint": "31096d6f05d17a6dab157d1a1f9326ced686e142fa0ea808f51fcc5e4c57874b",
   "hostname": "www.youtube.com",
   "candidates": [
     "www.youtube.com",
     "youtube.com"
   ],
   "shardFiles": [
-    "domains/0328.json",
-    "domains/0335.json"
+    "domains/0330.json",
+    "domains/0338.json"
   ],
   "baselineIndexBytes": 15022819,
   "afterIndexBytes": 494,
-  "afterBundleBytes": 37145575,
-  "perFrameBytes": 1785905,
-  "perFrameParseMs": 8.587333,
-  "genericBytes": 1833,
-  "relevantDomainShardBytes": 183939,
-  "indexedRules": 765,
+  "afterBundleBytes": 39840145,
+  "perFrameBytes": 1786625,
+  "perFrameParseMs": 7.262543,
+  "genericBytes": 1917,
+  "relevantDomainShardBytes": 174111,
+  "indexedRules": 731,
   "mutationChecks": 2000,
-  "mutationBenchmarkMs": 0.149125,
-  "domainShardCount": 339,
-  "earlyShardCount": 338,
+  "mutationBenchmarkMs": 0.1645,
+  "domainShardCount": 341,
+  "earlyShardCount": 340,
   "noFullBundleParsePerFrame": true
 }

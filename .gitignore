@@ -36,3 +36,12 @@ test-results/
 # Logs
 *.log
 npm-debug.log*
+
+# Dev-only baked AI credential (generated, never commit)
+src/background/ai/dev-defaults.ts
+
+# Tool session state (machine-local)
+.zcode/
+
+# Built release zips (distributed via GitHub Releases)
+release/

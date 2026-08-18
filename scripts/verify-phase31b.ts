@@ -86,6 +86,7 @@ try {
   run('Content runtime stability regression', 'npm', ['run', 'test:runtime']);
   run('Chromium Phase 3 and Phase 3.1B E2E suites', 'npm', ['run', 'test:e2e']);
   run('Bundle security and packaging checks', 'npx', ['vitest', 'run', 'tests/unit/production-bundle-clean.test.ts', 'tests/unit/ai-oracle-security-redteam.test.ts', 'tests/unit/ai-prompt-injection-adv.test.ts']);
+  run('STRICT privacy wire proof', 'npm', ['run', 'verify:privacy']);
   const pendingReport = {
     schema: 'adapt-phase31b-verification-v3',
     ...metadata,

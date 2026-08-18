@@ -53,6 +53,7 @@ export const ADAPTATION_PLAN_JSON_SCHEMA = {
               'NET_TEMP_BLOCK',
               'TARGETED_SESSION_DNR',
               'NET_REDIRECT_LOCAL',
+              'STEALTH_SET_CONSTANT',
               'OBSERVE_MORE',
               'ABSTAIN',
             ],

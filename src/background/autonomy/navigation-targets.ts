@@ -48,7 +48,7 @@ export class EphemeralNavigationTargetRegistry {
       closed: false,
     };
     this.targets.set(value.ref, value);
-    void this.persist();
+    void this.persist().catch(() => undefined);
     return { ...value };
   }
 
@@ -62,14 +62,14 @@ export class EphemeralNavigationTargetRegistry {
     if (!value) return;
     value.closed = true;
     value.undoTabId = undoTabId;
-    void this.persist();
+    void this.persist().catch(() => undefined);
   }
 
   clearTab(tabId: number): void {
     for (const [ref, target] of this.targets.entries()) {
       if (target.tabId === tabId || target.undoTabId === tabId) this.targets.delete(ref);
     }
-    void this.persist();
+    void this.persist().catch(() => undefined);
   }
 
   snapshot(): EphemeralNavigationTarget[] {
@@ -78,8 +78,12 @@ export class EphemeralNavigationTargetRegistry {
 
   private persist(): Promise<void> {
     if (!this.backend) return Promise.resolve();
+    const backend = this.backend;
     const snapshot: Snapshot = { version: 1, targets: this.snapshot() };
-    this.writeChain = this.writeChain.then(() => this.backend!.set({ [this.storageKey]: snapshot }));
-    return this.writeChain;
+    const write = this.writeChain.then(() => backend.set({ [this.storageKey]: snapshot }));
+    // Keep the chain alive across a rejected write — one transient storage error
+    // must not silently drop every later snapshot for the worker's lifetime.
+    this.writeChain = write.catch(() => undefined);
+    return write;
   }
 }

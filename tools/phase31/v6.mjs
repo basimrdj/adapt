@@ -637,3 +637,13 @@ console.log('PACKAGED STATIC REGEX RULES:', phase31RegexRules);
 console.log('PHASE31 STATIC SHARDS:', packagedShards.length);
 console.log('WAR RESOURCES:', warFiles.length);
 console.log('REPORT:', reportPath);
+
+// Stealth plane re-assert (Phase D1): v6 regenerates the manifest and re-walks
+// web-accessible-resources, so re-install shims + the adapt_shims ruleset last.
+try {
+  const { installStealthPlane } = await import('../stealth/install-shims.mjs');
+  const stealth = installStealthPlane(dist);
+  console.log('STEALTH PLANE:', JSON.stringify(stealth));
+} catch (error) {
+  console.warn('STEALTH PLANE: install failed —', error?.message || error);
+}

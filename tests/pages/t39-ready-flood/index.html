@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T39: READY / Hashchange Flood</title>
+</head>
+<body>
+  <h1>T39 Hashchange Flood</h1>
+  <main id="main-content"><p id="flood-copy">Flood host page.</p></main>
+
+  <script>
+    // 200 hashchange flips as fast as the event loop drains them — each one
+    // makes the content script re-emit PAGE_SENSOR_READY. The background must
+    // bound the replay work. After the flood the page appends an anti-adblock
+    // gate so the e2e can prove the pipeline is still functional.
+    window.__flood_done = false;
+    window.__flood_errors = [];
+    window.addEventListener('error', (e) => window.__flood_errors.push(String(e.message)));
+
+    let flips = 0;
+    const flood = () => {
+      for (let i = 0; i < 10 && flips < 200; i++) {
+        flips++;
+        location.hash = 'flood-' + flips;
+      }
+      if (flips < 200) {
+        setTimeout(flood, 0);
+      } else {
+        window.__flood_done = true;
+      }
+    };
+    flood();
+
+    window.__spawn_gate = () => {
+      const gate = document.createElement('div');
+      gate.id = 'blocker-modal';
+      gate.style.cssText =
+        'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;' +
+        'display:flex;align-items:center;justify-content:center;z-index:999999;';
+      gate.innerHTML = '<h1>Adblock Detected</h1><p>Please disable your ad blocker to continue viewing this website.</p>';
+      document.body.style.overflow = 'hidden';
+      document.body.appendChild(gate);
+      return true;
+    };
+  </script>
+</body>
+</html>

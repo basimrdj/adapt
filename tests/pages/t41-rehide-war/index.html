@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T41: Re-Hide War Endgame</title>
+  <style>
+    body { font-family: sans-serif; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <main id="main-content">
+    <h1>T41 Re-Hide War Content</h1>
+    <p id="article-body">Article under the wall.</p>
+  </main>
+
+  <div id="war-gate" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;">
+    <h1>Adblock Detected</h1>
+    <p>Please disable your ad blocker to continue viewing this website.</p>
+  </div>
+
+  <script>
+    // The detector fights back FOREVER at 40ms cadence: any hide is reverted,
+    // any removal is re-inserted. The extension's bounded re-hide watch
+    // (TTL 20s, max 25 re-hides) must fight, then settle — the wall wins the
+    // endgame and that outcome must be honestly stable (no thrash, no errors).
+    // The hidden check uses COMPUTED style: real detectors fight any
+    // suppression, not just inline-style writes.
+    window.__war_reshows = 0;
+    window.__war_errors = [];
+    window.__raf_frames_war = 0;
+    window.addEventListener('error', (e) => window.__war_errors.push(String(e.message)));
+
+    const ensureWall = () => {
+      let gate = document.getElementById('war-gate');
+      const hidden = gate && window.getComputedStyle(gate).display === 'none';
+      if (!gate || hidden) {
+        window.__war_reshows++;
+        if (!gate) {
+          gate = document.createElement('div');
+          gate.id = 'war-gate';
+          gate.style.cssText =
+            'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#fff;' +
+            'display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;';
+          gate.innerHTML = '<h1>Adblock Detected</h1><p>Please disable your ad blocker to continue viewing this website.</p>';
+          document.body.appendChild(gate);
+        } else {
+          // Strongest possible re-show: inline !important beats both inline
+          // hides and stylesheet hides, so the war engages regardless of which
+          // plane suppressed the wall.
+          gate.style.setProperty('display', 'flex', 'important');
+        }
+        document.body.style.overflow = 'hidden';
+      }
+    };
+    setInterval(ensureWall, 40);
+
+    const tick = () => {
+      window.__raf_frames_war++;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

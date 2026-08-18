@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T40: Synthetic Click Flood</title>
+</head>
+<body>
+  <h1>T40 Synthetic Click Flood</h1>
+  <main id="main-content"><p id="click-copy">Click flood host.</p></main>
+  <div id="anchor-pool"></div>
+
+  <script>
+    // 1000 untrusted element.click() dispatches on real anchors. Synthetic
+    // events must never create background intent work; the flood must not
+    // navigate (preventDefault) and must not stall the main thread.
+    window.__click_flood_done = false;
+    window.__click_errors = [];
+    window.__raf_frames_click = 0;
+    window.addEventListener('error', (e) => window.__click_errors.push(String(e.message)));
+
+    const pool = document.getElementById('anchor-pool');
+    const anchors = [];
+    for (let i = 0; i < 50; i++) {
+      const a = document.createElement('a');
+      a.href = '#click-' + i;
+      a.textContent = 'anchor ' + i;
+      a.addEventListener('click', (event) => event.preventDefault());
+      pool.appendChild(a);
+      anchors.push(a);
+    }
+
+    const tick = () => {
+      window.__raf_frames_click++;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    setTimeout(() => {
+      for (let round = 0; round < 20; round++) {
+        for (const anchor of anchors) anchor.click();
+      }
+      window.__click_flood_done = true;
+    }, 100);
+  </script>
+</body>
+</html>

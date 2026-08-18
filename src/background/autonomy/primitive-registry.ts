@@ -46,7 +46,7 @@ export type PrimitiveValidation =
   | { ok: false; reason: string };
 
 const FORBIDDEN_TOKENS = /javascript:|eval\s*\(|new\s+function|document\.cookie|authorization|password|paywall|drm|purchase|checkout|form/i;
-const OPAQUE_REF = /^(event|element|request|resource|frame|intent|navigation|primitive|strategy|hypothesis|experiment|recipe):[^\s]+$/;
+const OPAQUE_REF = /^(event|element|survivor|request|resource|frame|intent|navigation|primitive|strategy|hypothesis|experiment|recipe):[^\s]+$/;
 
 function definition(
   id: PrimitiveId,

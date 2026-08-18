@@ -8,6 +8,8 @@
 
 import { EventGraphStore } from './graph-store';
 import { experimentToStrategy, StrategyResolutionContext } from './experiment-to-strategy';
+import { primitiveRecipeActions } from '../autonomy/executor-registry';
+import { PrimitiveId } from '../autonomy/primitive-registry';
 import { AdaptationTransactionEngine } from '../../core/adaptation/engine';
 import { AdaptationRollbackHandler } from '../../core/adaptation/rollback';
 import { AdaptationVerifier } from '../../core/adaptation/verify';
@@ -261,7 +263,11 @@ export class CausalEngine {
         tier: 'S1',
         name: input.record.primitiveId ?? 'AUTONOMOUS_PRIMITIVE',
         rationale: 'autonomous primitive execution',
-        actions: [],
+        // The real primitive actions (previously persisted as an empty list,
+        // which broke ordering assumptions in the acceptance ledger).
+        actions: input.record.primitiveId
+          ? primitiveRecipeActions(input.record.primitiveId as PrimitiveId, input.record.observedRefs)
+          : [],
         isReversible: input.record.rollbackVerified,
         estimatedRisk: 'LOW',
       },
@@ -272,6 +278,27 @@ export class CausalEngine {
     };
     this.records.set(`autonomy:${input.tabId}:${input.documentId}:${input.record.id}`, state);
     await this.persistRecords();
+  }
+
+  private ledgerIdHighWater = 0;
+
+  /**
+   * Allocates a ledger-unique experiment id for autonomy records. Autonomy loop
+   * ids are loop-local — every loop restarts numbering at x1 — so they collide
+   * with the causal id space in this shared ledger (the acceptance sequence
+   * orders records by record.id). The ledger owns a single monotone
+   * experiment:xN space; the high-water mark guards concurrent allocations
+   * between ledger writes.
+   */
+  public async allocateLedgerExperimentId(): Promise<`experiment:x${number}`> {
+    await this.init();
+    let max = this.ledgerIdHighWater;
+    for (const state of this.records.values()) {
+      const match = /^experiment:x(\d+)$/.exec(state.record.id);
+      if (match) max = Math.max(max, Number(match[1]));
+    }
+    this.ledgerIdHighWater = max + 1;
+    return `experiment:x${max + 1}`;
   }
 
   public async onTabClosed(tabId: number): Promise<void> {

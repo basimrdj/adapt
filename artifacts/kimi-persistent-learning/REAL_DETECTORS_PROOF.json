@@ -1,0 +1,162 @@
+{
+  "schema": "kimi-real-detectors-proof-v1",
+  "ranAt": "2026-08-17T06:56:26.128Z",
+  "kitSources": [
+    {
+      "id": "fuckadblock",
+      "fetchedFrom": "raw.githubusercontent.com"
+    },
+    {
+      "id": "blockadblock",
+      "fetchedFrom": "cdn.jsdelivr.net"
+    }
+  ],
+  "baseline": {
+    "sim": [
+      {
+        "kit": "fuckadblock",
+        "verdict": true
+      },
+      {
+        "kit": "blockadblock",
+        "verdict": true
+      }
+    ],
+    "plain": [
+      {
+        "kit": "fuckadblock",
+        "verdict": false,
+        "kitScriptReceipts": 1
+      },
+      {
+        "kit": "blockadblock",
+        "verdict": false,
+        "kitScriptReceipts": 1
+      }
+    ]
+  },
+  "extension": [
+    {
+      "kit": "fuckadblock",
+      "verdict": false,
+      "kitScriptReceipts": 0
+    },
+    {
+      "kit": "blockadblock",
+      "verdict": false,
+      "kitScriptReceipts": 0
+    }
+  ],
+  "extensionNeutralName": [
+    {
+      "kit": "fuckadblock",
+      "verdict": false,
+      "kitScriptReceipts": 1
+    },
+    {
+      "kit": "blockadblock",
+      "verdict": false,
+      "kitScriptReceipts": 1
+    }
+  ],
+  "live": [
+    {
+      "url": "https://detectadblock.com/",
+      "pass": 1,
+      "reachable": false,
+      "error": "TimeoutError: Navigation timeout of 30000 ms exceeded"
+    },
+    {
+      "url": "https://detectadblock.com/",
+      "pass": 2,
+      "reachable": false,
+      "error": "TimeoutError: Navigation timeout of 30000 ms exceeded"
+    },
+    {
+      "url": "https://adblockanalytics.com/",
+      "reachable": true,
+      "saysBlocking": false,
+      "saysClean": false
+    }
+  ],
+  "tester": {
+    "reachable": true,
+    "score": 90,
+    "rawExcerpt": "Night mode\nAdBlock Tester (version 3.1.1 from 11/23/2023)\n\nChoosing an ad blocker but don't know where to test it? This site contains various advertising and analytic services you can use to test the effectiveness of your Adblocker. Some examples of Adblockers you can test are:\nTotal Adblock, AdBloc"
+  },
+  "checks": [
+    {
+      "tier": "T0-baseline",
+      "name": "fuckadblock: real kit fires under aggressive bait hiding (functional sanity)",
+      "pass": true,
+      "detail": "verdict=true"
+    },
+    {
+      "tier": "T0-baseline",
+      "name": "blockadblock: real kit fires under aggressive bait hiding (functional sanity)",
+      "pass": true,
+      "detail": "verdict=true"
+    },
+    {
+      "tier": "T0-baseline",
+      "name": "fuckadblock: no false positive on a plain page",
+      "pass": true,
+      "detail": "verdict=false"
+    },
+    {
+      "tier": "T0-baseline",
+      "name": "blockadblock: no false positive on a plain page",
+      "pass": true,
+      "detail": "verdict=false"
+    },
+    {
+      "tier": "T1-vendored-kit",
+      "name": "fuckadblock: no detection under the extension",
+      "pass": true,
+      "detail": "verdict=false (kit script redirected to the bundled defuser shim — nofab/nobab answer not-detected)"
+    },
+    {
+      "tier": "T1-vendored-kit",
+      "name": "blockadblock: no detection under the extension",
+      "pass": true,
+      "detail": "verdict=false (kit script redirected to the bundled defuser shim — nofab/nobab answer not-detected)"
+    },
+    {
+      "tier": "T1b-kit-live-bait",
+      "name": "fuckadblock: kit runs under a neutral name and finds its bait untouched",
+      "pass": true,
+      "detail": "verdict=false scriptReceipts=1"
+    },
+    {
+      "tier": "T1b-kit-live-bait",
+      "name": "blockadblock: kit runs under a neutral name and finds its bait untouched",
+      "pass": true,
+      "detail": "verdict=false scriptReceipts=1"
+    },
+    {
+      "tier": "T2-live",
+      "name": "detectadblock.com pass 1 — SKIP (unreachable)",
+      "pass": "SKIP",
+      "detail": "error=TimeoutError: Navigation timeout of 30000 ms exceeded"
+    },
+    {
+      "tier": "T2-live",
+      "name": "detectadblock.com pass 2 — SKIP (unreachable)",
+      "pass": "SKIP",
+      "detail": "error=TimeoutError: Navigation timeout of 30000 ms exceeded"
+    },
+    {
+      "tier": "T2-live",
+      "name": "adblockanalytics.com: site does not report blocking",
+      "pass": true,
+      "detail": "saysBlocking=false saysClean=false"
+    },
+    {
+      "tier": "T3-report-only",
+      "name": "adblock-tester.com blocking score snapshot (not gated)",
+      "pass": true,
+      "detail": "reachable=true score=90/100"
+    }
+  ],
+  "pass": true
+}

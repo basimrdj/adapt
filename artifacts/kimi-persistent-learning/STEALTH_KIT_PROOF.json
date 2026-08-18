@@ -1,0 +1,177 @@
+{
+  "generatedAt": "2026-08-17T06:50:25.224Z",
+  "baseline": {
+    "results": {
+      "/d1": {
+        "detected": false,
+        "bait1Hidden": false,
+        "bait2Hidden": false
+      },
+      "/d2": {
+        "detected": true,
+        "state": {
+          "adsJs": "blocked",
+          "advJs": "blocked"
+        }
+      },
+      "/d3": {
+        "detected": false,
+        "scriptFailed": false,
+        "adsbygoogleLoaded": true
+      },
+      "/d4": {
+        "detected": true,
+        "scriptBlocked": true
+      },
+      "/d5": {
+        "detected": false,
+        "status": 404
+      },
+      "/d6": {
+        "detected": false,
+        "loaded": true
+      },
+      "/d7": {
+        "detected": true,
+        "probes": {
+          "adsbygoogleLoaded": false,
+          "jobrunner": false
+        }
+      },
+      "/control": {
+        "detected": false,
+        "blockingIntact": true,
+        "state": {
+          "appJs": "loaded",
+          "doubleclickImg": "blocked"
+        }
+      }
+    },
+    "serverArrivals": [
+      "/d1",
+      "/favicon.ico",
+      "/d2",
+      "/ads.js",
+      "/advertisement.js",
+      "/d3",
+      "/d4",
+      "/blockadblock.js",
+      "/d5",
+      "/ads.txt",
+      "/d6",
+      "/adframe.html",
+      "/d7",
+      "/control",
+      "/app.js"
+    ]
+  },
+  "d9PersistedIds": [
+    "kq8zmvlaq3p7xwt2n"
+  ],
+  "d8Trap": {
+    "visit1": {
+      "detected": false,
+      "baitPresent": true
+    }
+  },
+  "d9BaitReplay": {
+    "visit1": {
+      "detected": false,
+      "baitPresent": true
+    },
+    "visit2": {
+      "detected": false,
+      "baitPresent": true
+    },
+    "visit3AfterRestart": {
+      "detected": false,
+      "baitPresent": true
+    }
+  },
+  "realSites": [
+    {
+      "url": "https://adblockanalytics.com/",
+      "reachable": true,
+      "saysBlocking": false,
+      "saysClean": false,
+      "snippet": "   Adblock Analytics\nSample Report\nGlobal Insights\nPricing\nLog In\nSample Report\nGlobal Insights\nAPI Documentation\nContact Us\nGet Started\n34% of our visitors are blocking ads\nFind out how many of your "
+    },
+    {
+      "url": "https://detectadblock.com/",
+      "reachable": false,
+      "error": "TimeoutError: Navigation timeout of 30000 ms exceeded",
+      "pass": 1
+    },
+    {
+      "url": "https://detectadblock.com/",
+      "reachable": false,
+      "error": "TimeoutError: Navigation timeout of 30000 ms exceeded",
+      "pass": 2
+    }
+  ],
+  "stealth": {
+    "results": {
+      "/d1": {
+        "detected": false,
+        "bait1Hidden": false,
+        "bait2Hidden": false
+      },
+      "/d2": {
+        "detected": false,
+        "state": {
+          "adsJs": "loaded",
+          "advJs": "loaded"
+        }
+      },
+      "/d3": {
+        "detected": false,
+        "scriptFailed": false,
+        "adsbygoogleLoaded": true
+      },
+      "/d4": {
+        "detected": false,
+        "callback": "onNotDetected"
+      },
+      "/d5": {
+        "detected": false,
+        "status": 200
+      },
+      "/d6": {
+        "detected": false,
+        "loaded": true
+      },
+      "/d7": {
+        "detected": false,
+        "probes": {
+          "adblock": false,
+          "canRunAds": true,
+          "isAdBlockActive": false,
+          "adsbygoogleLoaded": true,
+          "jobrunner": true
+        }
+      },
+      "/control": {
+        "detected": false,
+        "blockingIntact": true,
+        "state": {
+          "appJs": "loaded",
+          "doubleclickImg": "blocked"
+        }
+      }
+    },
+    "serverArrivals": [
+      "/d1",
+      "/favicon.ico",
+      "/d2",
+      "/d3",
+      "/d4",
+      "/d5",
+      "/d6",
+      "/d7",
+      "/control",
+      "/app.js"
+    ]
+  },
+  "verdict": "PASS",
+  "failures": []
+}

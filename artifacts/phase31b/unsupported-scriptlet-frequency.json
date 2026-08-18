@@ -1,128 +1,56 @@
 {
   "schema": "adapt-phase31b-unsupported-scriptlet-frequency-v1",
-  "verificationRunId": "phase31b-1786875855446-f45ca67a3aad",
-  "sourceCommitSha": "f45ca67a3aad9d19ad8543f57a7725576b8d3617",
-  "generatedAt": "2026-08-16T10:24:15.445Z",
-  "buildFingerprint": "24c342c2cdfce26a120cb008df2eecbc94e0c71b65cadce06d5de1a3249560db",
-  "totalScriptletRules": 7636,
-  "unsupportedScriptletRules": 3165,
+  "verificationRunId": "phase31b-1787084800909-0f433a8352ea",
+  "sourceCommitSha": "0f433a8352eaf30d05c9a9e33fc11a90a9a619bb",
+  "generatedAt": "2026-08-18T20:26:40.908Z",
+  "buildFingerprint": "f4387fc7f4020ffa76aa21e8ed3ec6e78e317ab2c5d58642ed334b0c073d6d4b",
+  "totalScriptletRules": 7656,
+  "unsupportedScriptletRules": 1331,
   "entries": [
     {
-      "name": "prevent-addEventListener",
-      "total": 421,
-      "fullyExecutable": 0,
-      "unsupported": 421,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 421,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "adjust-setInterval",
-      "total": 348,
-      "fullyExecutable": 0,
-      "unsupported": 348,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 348,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "set-cookie",
-      "total": 336,
-      "fullyExecutable": 0,
-      "unsupported": 336,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 336,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "set-local-storage-item",
-      "total": 297,
-      "fullyExecutable": 0,
-      "unsupported": 297,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 297,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "prevent-element-src-loading",
-      "total": 213,
-      "fullyExecutable": 0,
-      "unsupported": 213,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 213,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
       "name": "set-constant",
-      "total": 1344,
-      "fullyExecutable": 1178,
+      "total": 1343,
+      "fullyExecutable": 1177,
       "unsupported": 166,
       "statuses": {
-        "fully-executable": 1178,
+        "fully-executable": 1177,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
         "unsafe": 165
       }
     },
     {
-      "name": "adjust-setTimeout",
-      "total": 165,
-      "fullyExecutable": 0,
-      "unsupported": 165,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 165,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
       "name": "trusted-set-local-storage-item",
-      "total": 143,
+      "total": 144,
       "fullyExecutable": 0,
-      "unsupported": 143,
+      "unsupported": 144,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 143,
+        "unsupported-by-name": 144,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
     },
     {
       "name": "trusted-click-element",
-      "total": 136,
+      "total": 137,
       "fullyExecutable": 0,
-      "unsupported": 136,
+      "unsupported": 137,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 136,
+        "unsupported-by-name": 137,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
     },
     {
       "name": "abort-on-stack-trace",
-      "total": 130,
+      "total": 131,
       "fullyExecutable": 0,
-      "unsupported": 130,
+      "unsupported": 131,
       "statuses": {
         "fully-executable": 0,
-        "unsupported-by-name": 130,
+        "unsupported-by-name": 131,
         "unsupported-by-arguments": 0,
         "unsafe": 0
       }
@@ -140,30 +68,6 @@
       }
     },
     {
-      "name": "set-session-storage-item",
-      "total": 83,
-      "fullyExecutable": 0,
-      "unsupported": 83,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 83,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "prevent-setInterval",
-      "total": 56,
-      "fullyExecutable": 0,
-      "unsupported": 56,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 56,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
       "name": "trusted-set-cookie",
       "total": 55,
       "fullyExecutable": 0,
@@ -172,6 +76,18 @@
         "fully-executable": 0,
         "unsupported-by-name": 55,
         "unsupported-by-arguments": 0,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "set-local-storage-item",
+      "total": 298,
+      "fullyExecutable": 250,
+      "unsupported": 48,
+      "statuses": {
+        "fully-executable": 250,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 48,
         "unsafe": 0
       }
     },
@@ -213,6 +129,18 @@
     },
     {
       "name": "trusted-create-element",
+      "total": 28,
+      "fullyExecutable": 0,
+      "unsupported": 28,
+      "statuses": {
+        "fully-executable": 0,
+        "unsupported-by-name": 28,
+        "unsupported-by-arguments": 0,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "google-ima3",
       "total": 27,
       "fullyExecutable": 0,
       "unsupported": 27,
@@ -224,24 +152,12 @@
       }
     },
     {
-      "name": "google-ima3",
-      "total": 26,
-      "fullyExecutable": 0,
-      "unsupported": 26,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 26,
-        "unsupported-by-arguments": 0,
-        "unsafe": 0
-      }
-    },
-    {
       "name": "json-prune",
-      "total": 143,
-      "fullyExecutable": 121,
+      "total": 145,
+      "fullyExecutable": 123,
       "unsupported": 22,
       "statuses": {
-        "fully-executable": 121,
+        "fully-executable": 123,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 22,
         "unsafe": 0
@@ -344,6 +260,18 @@
       }
     },
     {
+      "name": "prevent-addEventListener",
+      "total": 422,
+      "fullyExecutable": 412,
+      "unsupported": 10,
+      "statuses": {
+        "fully-executable": 412,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 10,
+        "unsafe": 0
+      }
+    },
+    {
       "name": "trusted-prune-inbound-object",
       "total": 10,
       "fullyExecutable": 0,
@@ -429,11 +357,11 @@
     },
     {
       "name": "prevent-setTimeout",
-      "total": 476,
-      "fullyExecutable": 468,
+      "total": 477,
+      "fullyExecutable": 469,
       "unsupported": 8,
       "statuses": {
-        "fully-executable": 468,
+        "fully-executable": 469,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 8,
         "unsafe": 0
@@ -452,7 +380,31 @@
       }
     },
     {
+      "name": "set-cookie",
+      "total": 339,
+      "fullyExecutable": 332,
+      "unsupported": 7,
+      "statuses": {
+        "fully-executable": 332,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 7,
+        "unsafe": 0
+      }
+    },
+    {
       "name": "inject-css-in-shadow-dom",
+      "total": 7,
+      "fullyExecutable": 0,
+      "unsupported": 7,
+      "statuses": {
+        "fully-executable": 0,
+        "unsupported-by-name": 7,
+        "unsupported-by-arguments": 0,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "trusted-replace-outbound-text",
       "total": 7,
       "fullyExecutable": 0,
       "unsupported": 7,
@@ -488,7 +440,7 @@
       }
     },
     {
-      "name": "trusted-replace-outbound-text",
+      "name": "ubo-set",
       "total": 6,
       "fullyExecutable": 0,
       "unsupported": 6,
@@ -500,14 +452,14 @@
       }
     },
     {
-      "name": "ubo-set",
-      "total": 6,
-      "fullyExecutable": 0,
-      "unsupported": 6,
+      "name": "adjust-setInterval",
+      "total": 348,
+      "fullyExecutable": 343,
+      "unsupported": 5,
       "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 6,
-        "unsupported-by-arguments": 0,
+        "fully-executable": 343,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 5,
         "unsafe": 0
       }
     },
@@ -609,14 +561,26 @@
     },
     {
       "name": "remove-attr",
-      "total": 199,
-      "fullyExecutable": 196,
+      "total": 200,
+      "fullyExecutable": 197,
       "unsupported": 3,
       "statuses": {
-        "fully-executable": 196,
+        "fully-executable": 197,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
         "unsafe": 2
+      }
+    },
+    {
+      "name": "set-session-storage-item",
+      "total": 83,
+      "fullyExecutable": 80,
+      "unsupported": 3,
+      "statuses": {
+        "fully-executable": 80,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 3,
+        "unsafe": 0
       }
     },
     {
@@ -680,6 +644,18 @@
       }
     },
     {
+      "name": "adjust-setTimeout",
+      "total": 166,
+      "fullyExecutable": 164,
+      "unsupported": 2,
+      "statuses": {
+        "fully-executable": 164,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 2,
+        "unsafe": 0
+      }
+    },
+    {
       "name": "remove-node-text",
       "total": 146,
       "fullyExecutable": 144,
@@ -688,6 +664,30 @@
         "fully-executable": 144,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 2,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "prevent-setInterval",
+      "total": 56,
+      "fullyExecutable": 54,
+      "unsupported": 2,
+      "statuses": {
+        "fully-executable": 54,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 2,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "amazon-apstag",
+      "total": 2,
+      "fullyExecutable": 0,
+      "unsupported": 2,
+      "statuses": {
+        "fully-executable": 0,
+        "unsupported-by-name": 2,
+        "unsupported-by-arguments": 0,
         "unsafe": 0
       }
     },
@@ -717,11 +717,23 @@
     },
     {
       "name": "prevent-window-open",
-      "total": 479,
-      "fullyExecutable": 478,
+      "total": 482,
+      "fullyExecutable": 481,
       "unsupported": 1,
       "statuses": {
-        "fully-executable": 478,
+        "fully-executable": 481,
+        "unsupported-by-name": 0,
+        "unsupported-by-arguments": 1,
+        "unsafe": 0
+      }
+    },
+    {
+      "name": "prevent-element-src-loading",
+      "total": 213,
+      "fullyExecutable": 212,
+      "unsupported": 1,
+      "statuses": {
+        "fully-executable": 212,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
         "unsafe": 0
@@ -736,18 +748,6 @@
         "fully-executable": 39,
         "unsupported-by-name": 0,
         "unsupported-by-arguments": 1,
-        "unsafe": 0
-      }
-    },
-    {
-      "name": "amazon-apstag",
-      "total": 1,
-      "fullyExecutable": 0,
-      "unsupported": 1,
-      "statuses": {
-        "fully-executable": 0,
-        "unsupported-by-name": 1,
-        "unsupported-by-arguments": 0,
         "unsafe": 0
       }
     },

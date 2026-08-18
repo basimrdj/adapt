@@ -8,6 +8,16 @@ describe('Phase 3.1B page filter compiler', () => {
     expect(classifyDetectorBaitSelector('#ads')).toBe('POSSIBLE_DETECTOR_BAIT');
     expect(classifyDetectorBaitSelector('.sponsored-card')).toBe('ORDINARY_COSMETIC');
 
+    // FuckAdBlock v3/v4 canonical bait classes (all naming variants) must never be
+    // hidden — they exist only as detection tripwires.
+    for (const bait of ['.text-ad', '.textAd', '.text_ad', '.text_ads', '.text-ads', '.ad-text',
+      '.pub_300x250', '.pub_300x250m', '.pub_728x90', '.adSense', '.adContent', '.adBanner',
+      '.adsbox', '#adblock-detector', '.adsbygoogle']) {
+      expect(classifyDetectorBaitSelector(bait), `bait ${bait}`).toBe('POSSIBLE_DETECTOR_BAIT');
+    }
+    // Real sponsored-content containers keep getting hidden (not in the decoy set).
+    expect(classifyDetectorBaitSelector('.sponsored')).toBe('ORDINARY_COSMETIC');
+
     const bundle = parseFilterLists([{ id: 7, text: '##.ad-widget\n##.ordinary-card\n' }]);
     expect(bundle.counts.possibleDetectorBait).toBe(1);
     expect(renderGenericCosmeticCss(bundle)).toContain('.ordinary-card');
@@ -56,6 +66,77 @@ describe('Phase 3.1B page filter compiler', () => {
     expect(bundle.counts.fullyExecutable).toBe(3);
     expect(bundle.counts.unsupportedByName).toBe(0);
     expect(bundle.unsupported).toHaveLength(0);
+  });
+
+  it('compiles the newly-audited interception and state scriptlets as early MAIN-world rules', () => {
+    const bundle = parseFilterLists([
+      {
+        id: 31,
+        text: [
+          "example.com#%#//scriptlet('prevent-addEventListener', 'click', '/track/')",
+          "example.com#%#//scriptlet('prevent-setInterval', '/ads/')",
+          "example.com#%#//scriptlet('adjust-setInterval', '/ads/')",
+          "example.com#%#//scriptlet('adjust-setTimeout', 'check', '1000', '0.1')",
+          "example.com#%#//scriptlet('set-cookie', 'consent', 'yes')",
+          "example.com#%#//scriptlet('set-local-storage-item', 'flag', 'false')",
+          "example.com#%#//scriptlet('set-local-storage-item', 'stale', '$remove$')",
+          "example.com#%#//scriptlet('set-session-storage-item', 'counter', '1')",
+          "example.com#%#//scriptlet('prevent-element-src-loading', 'script', '/advert/')",
+        ].join('\n'),
+      },
+    ]);
+
+    for (const scriptlet of bundle.scriptlets) {
+      expect(scriptlet.supported, `${scriptlet.name} should be supported`).toBe(true);
+      expect(scriptlet.supportStatus, `${scriptlet.name} status`).toBe('fully-executable');
+      expect(scriptlet.world).toBe('MAIN');
+      expect(scriptlet.early, `${scriptlet.name} must run pre-page-script`).toBe(true);
+    }
+    expect(bundle.counts.fullyExecutable).toBe(9);
+    expect(bundle.unsupported).toHaveLength(0);
+  });
+
+  it('rejects out-of-grammar arguments for the newly-audited scriptlets', () => {
+    const bundle = parseFilterLists([
+      {
+        id: 32,
+        text: [
+          // boost outside (0, 1]
+          "example.com#%#//scriptlet('adjust-setTimeout', 'check', '1000', '2')",
+          // empty handler-source pattern
+          "example.com#%#//scriptlet('adjust-setInterval', '')",
+          // both patterns empty
+          "example.com#%#//scriptlet('prevent-addEventListener', '', '')",
+          // cookie name outside the RFC token grammar
+          "example.com#%#//scriptlet('set-cookie', 'bad;name', 'x')",
+          // cookie value with a separator
+          "example.com#%#//scriptlet('set-cookie', 'consent', 'a b')",
+          // function-typed magic value is meaningless as a stored string
+          "example.com#%#//scriptlet('set-local-storage-item', 'flag', 'noopFunc')",
+          // key outside the audited grammar
+          "example.com#%#//scriptlet('set-session-storage-item', 'bad key', '1')",
+          // tag outside the audited src-bearing set
+          "example.com#%#//scriptlet('prevent-element-src-loading', 'div', '/x/')",
+          // empty URL pattern
+          "example.com#%#//scriptlet('prevent-element-src-loading', 'script', '')",
+        ].join('\n'),
+      },
+    ]);
+
+    expect(bundle.counts.fullyExecutable).toBe(0);
+    const byName = bundle.scriptlets.map((scriptlet) => [scriptlet.name, scriptlet.supportStatus] as const);
+    expect(byName).toEqual([
+      ['adjust-setTimeout', 'unsupported-by-arguments'],
+      ['adjust-setInterval', 'unsupported-by-arguments'],
+      ['prevent-addEventListener', 'unsupported-by-arguments'],
+      ['set-cookie', 'unsafe'],
+      ['set-cookie', 'unsupported-by-arguments'],
+      ['set-local-storage-item', 'unsupported-by-arguments'],
+      ['set-session-storage-item', 'unsupported-by-arguments'],
+      ['prevent-element-src-loading', 'unsupported-by-arguments'],
+      ['prevent-element-src-loading', 'unsupported-by-arguments'],
+    ]);
+    expect(bundle.unsupported).toHaveLength(9);
   });
 
   it('accepts bounded procedural CSS and rejects unsafe primitives', () => {
