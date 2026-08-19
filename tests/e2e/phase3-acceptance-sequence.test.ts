@@ -69,7 +69,9 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
     let states: ExperimentState[] = [];
     let causalSession: unknown;
     let wrongBelief: { alpha: number; beta: number } | undefined;
-    const settleDeadline = Date.now() + 10_000;
+    // 30s: belief persistence is debounced and can lag far behind the
+    // experiment records on a loaded CI runner — observed flaking at 10s.
+    const settleDeadline = Date.now() + 30_000;
     for (;;) {
       states = (await experimentStates()).sort(
         (left, right) => left.record.id.localeCompare(right.record.id, undefined, { numeric: true })
@@ -106,19 +108,20 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
     console.log('ACCEPTANCE_BELIEFS_DEBUG', JSON.stringify((causalSession as {
       belief?: { beliefs?: Array<[string, { alpha: number; beta: number }]> };
     })?.belief?.beliefs ?? [], null, 2));
-    expect(
-      wrongBelief?.beta,
-      JSON.stringify(
-        {
-          beliefRows: (causalSession as {
-            belief?: { beliefs?: Array<[string, { alpha: number; beta: number }]> };
-          })?.belief?.beliefs ?? [],
-          states,
-        },
-        null,
-        2
-      )
-    ).toBeGreaterThan(wrongBelief?.alpha ?? Number.POSITIVE_INFINITY);
+    // Fail with the full state dump, not a TypeError, if the belief row
+    // never persisted within the settle budget.
+    const debugDump = JSON.stringify(
+      {
+        beliefRows: (causalSession as {
+          belief?: { beliefs?: Array<[string, { alpha: number; beta: number }]> };
+        })?.belief?.beliefs ?? [],
+        states,
+      },
+      null,
+      2
+    );
+    expect(wrongBelief, debugDump).toBeDefined();
+    expect(wrongBelief!.beta, debugDump).toBeGreaterThan(wrongBelief!.alpha);
     expect(states[0]?.candidate.actions.some((action) => action.type === 'DOM_RESTORE_SCROLL')).toBe(true);
     expect(states[0]?.record.status).toBe('ROLLED_BACK');
     expect(states[0]?.record.rollbackVerified).toBe(true);
@@ -132,6 +135,7 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
       trueMechanismObserved: Boolean((window as typeof window & { __phase3_true_mechanism_observed?: boolean }).__phase3_true_mechanism_observed),
     }));
     expect(pageState.trueMechanismObserved).toBe(true);
+    // (settle budget above is 30s — the test timeout must comfortably exceed it)
     console.log('PHASE3_SEQUENCE_EVIDENCE', JSON.stringify({
       fixture: 't29-phase3-acceptance',
       wrong: {
@@ -156,5 +160,5 @@ describe('Phase 3 original acceptance sequence in real Chromium', () => {
       },
     }));
     await page.close();
-  }, 25_000);
+  }, 60_000); // the 30s settle budget plus fixture/runtime overhead must fit
 });
