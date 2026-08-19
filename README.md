@@ -41,13 +41,23 @@ ADAPT keeps a battle-tested static plane **and adds a transactional adaptation e
 
 ## Install (developer mode — 60 seconds)
 
-1. **Download** the latest `adapt-1.0.0.zip` from [**Releases**](../../releases) and **unzip it** — you get an `adapt-1.0.0/` folder (with `manifest.json` inside).
+1. **Download** the latest `adapt-1.0.1.zip` from [**Releases**](../../releases) and **unzip it** — you get an `adapt-1.0.1/` folder (with `manifest.json` inside).
 2. Open **`chrome://extensions`** in Chrome.
 3. Toggle **Developer mode** (top right).
 4. Click **Load unpacked** and select the unzipped folder.
 5. Pin ADAPT to the toolbar — the popup shows **Protection Active** on your next page.
 
 > Loading unpacked requires the folder to stay on disk — put it somewhere permanent (e.g. `~/Extensions/`) before step 4.
+
+### Updating an existing install
+
+Unpacked extensions don't auto-update, but updating keeps all your settings and learned rules:
+
+1. **Download** the newest zip from [**Releases**](../../releases).
+2. **Unzip it over your existing ADAPT folder** (replace the old files — same location you loaded from). If you no longer know where it is: `chrome://extensions` → ADAPT → *Loaded from*.
+3. On `chrome://extensions`, hit the **reload** button on the ADAPT card.
+
+Done — version 1.0.1's card shows the new version number. Your paused sites, AI settings, and learned rules all survive (they live in extension storage, not the folder). If you ever load the new zip from a *different* folder instead, Chrome treats it as a fresh install and you'll re-enter your AI key — same-location replacement avoids that.
 
 ### Build from source instead
 
@@ -74,7 +84,7 @@ Click the **gear** in the popup → **AI Planner**:
 | Azure v1 | your `*.openai.azure.com/openai/v1` | your deployment |
 | Anthropic | `https://api.anthropic.com` | any Claude model |
 
-Paste your key, pick a model, hit **Test connection** — the test runs through the production transport and production policy validator, so a green result means the real path works. **Save** and you're done. Your key is stored only in Chrome's local storage and is sent only to the endpoint you chose.
+Paste your key, pick a model, hit **Test connection** — the test runs through the production transport and production policy validator, so a green result means the real path works. **Save** and you're done. Your key is stored only in Chrome's local storage and is sent only to the endpoint you chose. Reasoning models (gpt-5 family), translating proxies, and older servers are handled automatically: the planner negotiates the request dialect per endpoint and enforces the plan schema server-side where supported.
 
 ## How it's verified
 

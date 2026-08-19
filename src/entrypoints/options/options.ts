@@ -31,6 +31,33 @@ interface ConnectionTestResponse {
   latencyMs: number | null;
   decision?: string;
   errorClass?: string;
+  policyReasons?: string[];
+}
+
+/** Honest per-class failure text — the raw class stays in parens for support. */
+function unreachableMessage(errorClass: string | undefined): string {
+  switch (errorClass) {
+    case 'http-401':
+    case 'http-403':
+      return `Provider rejected the API key (${errorClass}). Check that the key is valid and matches the selected provider.`;
+    case 'http-404':
+    case 'http-405':
+      return `Endpoint did not recognize the request path (${errorClass}). Check that the Base URL matches the selected provider protocol.`;
+    case 'http-400':
+    case 'http-422':
+      return `Provider rejected the request shape (${errorClass}). Check that the model id exists on this endpoint.`;
+    case 'http-429':
+      return 'Provider rate-limited the request (http-429). Wait a moment and retry.';
+    case 'timeout':
+      return 'Provider unreachable (timeout). The endpoint did not answer in time — check the URL and network.';
+    case 'truncated':
+      return 'Provider replied but ran out of output tokens before finishing the plan (truncated).';
+    case 'invalid-config':
+      return 'Invalid configuration.';
+    default:
+      if (errorClass?.startsWith('http-5')) return `Provider failed server-side (${errorClass}). Try again later.`;
+      return `Provider unreachable (${errorClass ?? 'transport'}).`;
+  }
 }
 
 const PROVIDER_NOTE: Record<UiProvider, string> = {
@@ -264,15 +291,24 @@ async function onTest(): Promise<void> {
   if (result.providerReached && result.schemaValid) {
     setBadge('verified', 'CONNECTION VERIFIED');
     testResult.className = 'ok';
-    testResult.textContent = `Connection verified — latency: ${result.latencyMs ?? '?'} ms (decision: ${result.decision ?? 'n/a'})`;
+    const dirty = !useDefault && (
+      tokenInput.value.length > 0 ||
+      endpointInput.value.trim() !== (lastEffective.endpoint ?? '') ||
+      modelInput.value.trim() !== (lastEffective.model ?? '') ||
+      selectedProvider !== (lastEffective.provider === 'relay' ? null : lastEffective.provider)
+    );
+    testResult.textContent = `Connection verified — latency: ${result.latencyMs ?? '?'} ms (decision: ${result.decision ?? 'n/a'})${dirty ? '. Click Save to make this configuration active.' : ''}`;
   } else if (result.providerReached) {
     setBadge('error', 'ERROR');
     testResult.className = 'err';
-    testResult.textContent = `Provider reached but response failed production schema validation (${result.errorClass ?? 'schema'}).`;
+    const reason = result.policyReasons?.[0];
+    testResult.textContent = reason
+      ? `Provider reached, but its response failed production plan validation: ${reason} (policy).`
+      : `Provider reached but response failed production schema validation (${result.errorClass ?? 'schema'}).`;
   } else {
     setBadge('error', 'ERROR');
     testResult.className = 'err';
-    testResult.textContent = `Provider unreachable (${result.errorClass ?? 'transport'}).`;
+    testResult.textContent = unreachableMessage(result.errorClass);
   }
 }
 

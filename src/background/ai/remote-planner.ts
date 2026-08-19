@@ -48,6 +48,7 @@ export interface LoadedPlannerConfig {
 const SURVIVOR_PLANNER_SYSTEM_PROMPT = [
   'You are the ADAPT survivor attribution planner.',
   'Return only the strict AdaptationPlan JSON schema.',
+  'Always return the complete plan object with every schema field (schemaVersion, hypothesis, selectedStrategyTier, actions, verification, abortConditions, explanationCodes), even when abstaining.',
   'Use only supplied opaque refs and supplied safe action IDs.',
   'Never emit URLs, code, selectors, or invented refs.',
   'For TARGETED_SESSION_DNR, set targetRef to a supplied request ref and parameter to the empty string.',
@@ -101,6 +102,84 @@ export function anthropicStopReason(payload: unknown): string | undefined {
 /** Planner responses are small strict-JSON plans; anything bigger is a protocol violation. */
 const MAX_PLANNER_RESPONSE_BYTES = 64 * 1024;
 
+/** Error bodies are inspected for parameter-negotiation hints; cap what we read. */
+const MAX_ERROR_BODY_BYTES = 8 * 1024;
+
+/**
+ * Output-token budget per planner call. Reasoning-model endpoints (gpt-5 family
+ * and proxies fronting them) spend completion tokens on hidden reasoning before
+ * the plan JSON — the old 600 cap truncated them mid-plan (finish_reason
+ * 'length'). 4096 covers reasoning plus the ~200-token plan with headroom.
+ */
+export const PLANNER_OUTPUT_TOKEN_BUDGET = 4096;
+
+/**
+ * Request-shape dialect for the openai-compatible transport. There is no single
+ * dialect every "OpenAI-compatible" server accepts: gpt-5-family endpoints reject
+ * `max_tokens` (demanding `max_completion_tokens`) and any explicit temperature;
+ * older servers reject `reasoning_effort`; some reject structured
+ * `response_format` entirely. The planner starts optimistic (strict json_schema —
+ * the same server-side guarantee the Azure path has always had) and negotiates
+ * down on HTTP 400/422 parameter rejections, caching the working dialect per
+ * endpoint+model for the service worker's lifetime.
+ */
+export interface OpenAiDialect {
+  responseFormat: 'json_schema' | 'json_object' | 'none';
+  tokenField: 'max_completion_tokens' | 'max_tokens';
+  temperature: boolean;
+  reasoningEffort: boolean;
+}
+
+export const DEFAULT_OPENAI_DIALECT: OpenAiDialect = {
+  responseFormat: 'json_schema',
+  tokenField: 'max_completion_tokens',
+  temperature: false,
+  reasoningEffort: true,
+};
+
+/** Negotiation retries are protocol-shape discovery, never planner re-invocations:
+ *  the ≤2 planner-calls-per-navigation budget counts plan() calls, and this cap
+ *  bounds the HTTP attempts inside any single one. */
+const MAX_NEGOTIATION_RETRIES = 3;
+
+const negotiatedDialects = new Map<string, OpenAiDialect>();
+
+/**
+ * Derives the next dialect from an HTTP 400/422 error body. Providers name the
+ * offending parameter in the error text (OpenAI: "Unsupported parameter:
+ * 'max_tokens'… Use 'max_completion_tokens' instead."; Anthropic-shaped proxies:
+ * "max_tokens: field required"). Returns undefined when no known adjustment
+ * applies — the caller then surfaces the original failure unchanged.
+ */
+export function negotiateOpenAiDialect(current: OpenAiDialect, errorText: string): OpenAiDialect | undefined {
+  const next: OpenAiDialect = { ...current };
+  let changed = false;
+  // Check max_completion_tokens first: the "use max_completion_tokens instead"
+  // message names both fields and asks for the modern one.
+  if (/max_completion_tokens/i.test(errorText)) {
+    if (next.tokenField !== 'max_completion_tokens') {
+      next.tokenField = 'max_completion_tokens';
+      changed = true;
+    }
+  } else if (/max_tokens/i.test(errorText) && next.tokenField !== 'max_tokens') {
+    next.tokenField = 'max_tokens';
+    changed = true;
+  }
+  if (/temperature/i.test(errorText) && next.temperature) {
+    next.temperature = false;
+    changed = true;
+  }
+  if (/reasoning_effort/i.test(errorText) && next.reasoningEffort) {
+    next.reasoningEffort = false;
+    changed = true;
+  }
+  if (/response_format|json_schema|json_object/i.test(errorText) && next.responseFormat !== 'none') {
+    next.responseFormat = next.responseFormat === 'json_schema' ? 'json_object' : 'none';
+    changed = true;
+  }
+  return changed ? next : undefined;
+}
+
 /** Exported for the hermetic truncation-failure pin (pure payload inspection). */
 export function azureFinishReason(payload: unknown): string | undefined {
   if (!payload || typeof payload !== 'object') return undefined;
@@ -108,6 +187,41 @@ export function azureFinishReason(payload: unknown): string | undefined {
   if (!Array.isArray(choices) || choices.length === 0) return undefined;
   const reason = (choices[0] as { finish_reason?: unknown }).finish_reason;
   return typeof reason === 'string' ? reason : undefined;
+}
+
+/**
+ * Parses the plan JSON out of a model's text. Endpoints without strict
+ * structured output (negotiated-down dialects, proxies, local servers) often
+ * wrap the object in markdown fences or a sentence of preamble. The
+ * PolicyValidator remains the real gate on the result — this only finds the
+ * JSON object the model produced; anything else is an honest schema failure.
+ */
+export function parsePlanJsonText(text: string): unknown {
+  const trimmed = text.trim();
+  if (trimmed.length === 0) return undefined;
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    // Fall through to the tolerant scans.
+  }
+  const fenced = /```(?:json)?\s*([\s\S]*?)```/.exec(trimmed);
+  if (fenced && typeof fenced[1] === 'string') {
+    try {
+      return JSON.parse(fenced[1].trim());
+    } catch {
+      // Fall through to the brace scan.
+    }
+  }
+  const firstBrace = trimmed.indexOf('{');
+  const lastBrace = trimmed.lastIndexOf('}');
+  if (firstBrace >= 0 && lastBrace > firstBrace) {
+    try {
+      return JSON.parse(trimmed.slice(firstBrace, lastBrace + 1));
+    } catch {
+      // Not salvageable.
+    }
+  }
+  return undefined;
 }
 
 function concatChunks(chunks: Uint8Array[], total: number): Uint8Array {
@@ -207,22 +321,7 @@ export class RemotePlanner implements AdaptivePlanner {
     const startedAt = Date.now();
     try {
       const kind = this.providerKind;
-      const response = await fetch(plannerRequestUrl(this.config), {
-        method: 'POST',
-        headers: this.requestHeaders(),
-        body: JSON.stringify(this.requestBody(kind, evidence)),
-        signal: controller.signal,
-      });
-      if (!response.ok) {
-        // Auth, rate-limit, and server faults are operationally distinct — the
-        // Options badge must tell the user which one bit them.
-        const failureClass = response.status === 401 || response.status === 403 || response.status === 429
-          ? `http-${response.status}` as const
-          : `http-${Math.floor(response.status / 100)}xx` as const;
-        void recordPlannerFailure(failureClass);
-        throw new PlannerHttpError(response.status);
-      }
-      const payload = await this.readJsonBounded(response);
+      const payload = await this.postWithNegotiation(kind, evidence, controller.signal);
       if (this.isTruncated(kind, payload)) {
         // The completion hit the token cap — the JSON is truncated by
         // construction and can never validate. Classify honestly; do not let a
@@ -244,6 +343,56 @@ export class RemotePlanner implements AdaptivePlanner {
       throw error;
     } finally {
       clearTimeout(timeout);
+    }
+  }
+
+  /**
+   * Single logical planner request. The openai-compatible transport negotiates
+   * its request dialect on HTTP 400/422 parameter rejections (bounded by
+   * MAX_NEGOTIATION_RETRIES, remembered per endpoint+model afterwards); every
+   * other status class fails immediately with its honest taxonomy class.
+   */
+  private async postWithNegotiation(kind: AiProviderKind, evidence: EvidencePacket, signal: AbortSignal): Promise<unknown> {
+    const url = plannerRequestUrl(this.config);
+    const cacheKey = `${url}#${this.config.model ?? ''}`;
+    let dialect = kind === 'openai'
+      ? negotiatedDialects.get(cacheKey) ?? { ...DEFAULT_OPENAI_DIALECT }
+      : undefined;
+    for (let attempt = 0; ; attempt++) {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: this.requestHeaders(),
+        body: JSON.stringify(this.requestBody(kind, evidence, dialect)),
+        signal,
+      });
+      if (response.ok) {
+        if (dialect) negotiatedDialects.set(cacheKey, dialect);
+        return this.readJsonBounded(response);
+      }
+      if (dialect && (response.status === 400 || response.status === 422) && attempt < MAX_NEGOTIATION_RETRIES) {
+        const adjusted = negotiateOpenAiDialect(dialect, await this.readErrorBodyBounded(response));
+        if (adjusted) {
+          dialect = adjusted;
+          continue;
+        }
+      }
+      // Auth, rate-limit, and server faults are operationally distinct — the
+      // Options badge must tell the user which one bit them.
+      const failureClass = response.status === 401 || response.status === 403 || response.status === 429
+        ? `http-${response.status}` as const
+        : `http-${Math.floor(response.status / 100)}xx` as const;
+      void recordPlannerFailure(failureClass);
+      throw new PlannerHttpError(response.status);
+    }
+  }
+
+  /** Bounded error-body read for dialect negotiation hints. */
+  private async readErrorBodyBounded(response: Response): Promise<string> {
+    try {
+      const text = await response.text();
+      return text.slice(0, MAX_ERROR_BODY_BYTES);
+    } catch {
+      return '';
     }
   }
 
@@ -277,12 +426,12 @@ export class RemotePlanner implements AdaptivePlanner {
     return headers;
   }
 
-  private requestBody(kind: AiProviderKind, evidence: EvidencePacket): unknown {
+  private requestBody(kind: AiProviderKind, evidence: EvidencePacket, dialect?: OpenAiDialect): unknown {
     switch (kind) {
       case 'azure':
         return this.buildAzureRequest(evidence);
       case 'openai':
-        return this.buildOpenAiRequest(evidence);
+        return this.buildOpenAiRequest(evidence, dialect ?? DEFAULT_OPENAI_DIALECT);
       case 'anthropic':
         return this.buildAnthropicRequest(evidence);
       case 'relay':
@@ -358,34 +507,46 @@ export class RemotePlanner implements AdaptivePlanner {
         json_schema: { name: 'adapt_survivor_plan', strict: true, schema: ADAPTATION_PLAN_JSON_SCHEMA },
       },
       reasoning_effort: 'low',
-      max_completion_tokens: 600,
+      max_completion_tokens: PLANNER_OUTPUT_TOKEN_BUDGET,
     };
   }
 
   /**
    * OpenAI-compatible chat-completions (OpenAI, OpenRouter, Groq, xAI, Together,
-   * LM Studio, …). `json_object` is the widest-supported structured-output mode;
-   * the system prompt already names the JSON schema, and every plan still passes
-   * the production PolicyValidator after parsing, so schema drift fails loud.
+   * LM Studio, Azure's /openai/v1 path, translating proxies, …). The dialect
+   * decides which optional fields ride along: strict json_schema gives the same
+   * server-side plan-shape guarantee the Azure transport has always had, and
+   * 400/422 parameter rejections negotiate it down (see postWithNegotiation).
+   * Whatever the server returns still passes the production PolicyValidator
+   * after parsing, so schema drift fails loud.
    */
-  private buildOpenAiRequest(evidence: EvidencePacket): Record<string, unknown> {
-    return {
+  private buildOpenAiRequest(evidence: EvidencePacket, dialect: OpenAiDialect): Record<string, unknown> {
+    const body: Record<string, unknown> = {
       model: this.config.model ?? '',
       messages: [
         { role: 'system', content: SURVIVOR_PLANNER_SYSTEM_PROMPT },
         { role: 'user', content: JSON.stringify(evidence) },
       ],
-      response_format: { type: 'json_object' },
-      max_tokens: 600,
-      temperature: 0,
     };
+    if (dialect.responseFormat === 'json_schema') {
+      body.response_format = {
+        type: 'json_schema',
+        json_schema: { name: 'adapt_survivor_plan', strict: true, schema: ADAPTATION_PLAN_JSON_SCHEMA },
+      };
+    } else if (dialect.responseFormat === 'json_object') {
+      body.response_format = { type: 'json_object' };
+    }
+    body[dialect.tokenField] = PLANNER_OUTPUT_TOKEN_BUDGET;
+    if (dialect.temperature) body.temperature = 0;
+    if (dialect.reasoningEffort) body.reasoning_effort = 'low';
+    return body;
   }
 
   /** Anthropic Messages API — system is a top-level field, not a message. */
   private buildAnthropicRequest(evidence: EvidencePacket): Record<string, unknown> {
     return {
       model: this.config.model ?? '',
-      max_tokens: 600,
+      max_tokens: PLANNER_OUTPUT_TOKEN_BUDGET,
       system: SURVIVOR_PLANNER_SYSTEM_PROMPT,
       messages: [{ role: 'user', content: JSON.stringify(evidence) }],
     };
@@ -396,12 +557,19 @@ export class RemotePlanner implements AdaptivePlanner {
     const choices = (payload as { choices?: unknown }).choices;
     if (!Array.isArray(choices) || choices.length === 0) return undefined;
     const content = (choices[0] as { message?: { content?: unknown } })?.message?.content;
-    if (typeof content !== 'string' || content.length === 0) return undefined;
-    try {
-      return JSON.parse(content);
-    } catch {
-      return undefined;
-    }
+    const text = typeof content === 'string'
+      ? content
+      : Array.isArray(content)
+        // OpenAI content-parts shape (gpt-4o/5 multimodal responses and proxies
+        // that normalize to it): concatenate the text parts.
+        ? content
+            .filter((part) => part && typeof part === 'object' && (part as { type?: unknown }).type === 'text')
+            .map((part) => (part as { text?: unknown }).text)
+            .filter((value): value is string => typeof value === 'string')
+            .join('')
+        : '';
+    if (text.length === 0) return undefined;
+    return parsePlanJsonText(text);
   }
 
   private extractAnthropicPlan(payload: unknown): unknown {
@@ -412,11 +580,7 @@ export class RemotePlanner implements AdaptivePlanner {
       (block) => block && typeof block === 'object' && (block as { type?: unknown }).type === 'text'
     ) as { text?: unknown } | undefined;
     if (!textBlock || typeof textBlock.text !== 'string' || textBlock.text.length === 0) return undefined;
-    try {
-      return JSON.parse(textBlock.text);
-    } catch {
-      return undefined;
-    }
+    return parsePlanJsonText(textBlock.text);
   }
 
   private extractGenericPlan(payload: unknown): unknown {

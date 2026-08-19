@@ -5,8 +5,8 @@
  *     verbatim full URLs, azure bare-host completion to the proven v1 path.
  *  B. Legacy inference — configs without a provider field resolve azure by host
  *     and relay otherwise, so pre-multiprovider stored configs never break.
- *  C. openai-compatible — /chat/completions, Bearer, json_object mode, plan
- *     extraction from choices[0].message.content, finish_reason length = truncated.
+ *  C. openai-compatible — /chat/completions, Bearer, strict json_schema dialect,
+ *     plan extraction from choices[0].message.content, finish_reason length = truncated.
  *  D. anthropic — /v1/messages, x-api-key + anthropic-version (never Bearer),
  *     system lifted to top level, content-block extraction, stop_reason
  *     max_tokens = truncated.
@@ -15,18 +15,30 @@
  *  F. relay — raw EvidencePacket body, .plan unwrap (harness/loopback compat).
  *  G. validConfig — provider enum, model required for explicit chat providers,
  *     legacy model-less configs stay valid.
+ *  H. openai dialect negotiation — 400/422 parameter rejections downgrade the
+ *     request shape (token field, reasoning_effort, response_format), the working
+ *     dialect is cached per endpoint+model, and non-parameter faults never retry.
+ *  I. plan extraction robustness — markdown-fenced and prose-wrapped JSON,
+ *     content-parts arrays; garbage stays an honest schema failure.
+ *  J. connection-test policy surfacing — validator rejection reasons reach the
+ *     Options page so BYOK users see WHY a reached provider was refused.
  */
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import http from 'node:http';
 import { AddressInfo } from 'node:net';
 import {
   AiConfig,
+  DEFAULT_OPENAI_DIALECT,
+  PLANNER_OUTPUT_TOKEN_BUDGET,
   RemotePlanner,
   anthropicStopReason,
+  negotiateOpenAiDialect,
+  parsePlanJsonText,
   plannerRequestUrl,
   resolveProviderKind,
   validConfig,
 } from '../../src/background/ai/remote-planner';
+import { runPlannerConnectionTest } from '../../src/background/ai/test-connection';
 import { AI_STATUS_STORAGE_KEY, AiPlannerStatus } from '../../src/background/ai/status';
 import { EvidencePacket } from '../../src/shared/ai/types';
 
@@ -190,9 +202,14 @@ describe('C. openai-compatible transport', () => {
     expect(seen?.anthropicVersion).toBeUndefined();
     expect(seen?.body.model).toBe('gpt-x');
     expect((seen?.body.messages as Array<{ role: string }>).at(0)?.role).toBe('system');
-    expect(seen?.body.response_format).toEqual({ type: 'json_object' });
-    expect(seen?.body.max_tokens).toBe(600);
-    expect(seen?.body.temperature).toBe(0);
+    // Optimistic modern dialect: strict json_schema (the same server-side plan
+    // guarantee the Azure path has), modern token field, low reasoning effort.
+    const fmt = seen?.body.response_format as { type: string; json_schema?: { strict: boolean } };
+    expect(fmt.type).toBe('json_schema');
+    expect(fmt.json_schema?.strict).toBe(true);
+    expect(seen?.body.max_completion_tokens).toBe(PLANNER_OUTPUT_TOKEN_BUDGET);
+    expect(seen?.body.max_tokens).toBeUndefined();
+    expect(seen?.body.reasoning_effort).toBe('low');
     await server.close();
   });
 
@@ -245,7 +262,7 @@ describe('D. anthropic transport', () => {
     const messages = seen?.body.messages as Array<{ role: string; content: string }>;
     expect(messages).toHaveLength(1);
     expect(messages.at(0)?.role).toBe('user');
-    expect(seen?.body.max_tokens).toBe(600);
+    expect(seen?.body.max_tokens).toBe(PLANNER_OUTPUT_TOKEN_BUDGET);
     expect(seen?.body.response_format).toBeUndefined();
     expect(seen?.body.tool_choice).toBeUndefined();
     await server.close();
@@ -308,7 +325,7 @@ describe('E. azure transport', () => {
     expect(fmt.type).toBe('json_schema');
     expect(fmt.json_schema?.strict).toBe(true);
     expect(seen.r?.body.reasoning_effort).toBe('low');
-    expect(seen.r?.body.max_completion_tokens).toBe(600);
+    expect(seen.r?.body.max_completion_tokens).toBe(PLANNER_OUTPUT_TOKEN_BUDGET);
     expect(seen.r?.body.model).toBe('dep-1');
     await server.close();
   });
@@ -383,5 +400,211 @@ describe('G. validConfig provider rules', () => {
   it('loopback http is allowed only for 127.0.0.1/localhost regardless of provider', () => {
     expect(validConfig({ provider: 'openai', endpoint: 'http://127.0.0.1:1234/v1', model: 'm' })).toBe(true);
     expect(validConfig({ provider: 'openai', endpoint: 'http://192.168.1.20:1234/v1', model: 'm' })).toBe(false);
+  });
+});
+
+// ---- H. openai dialect negotiation ---------------------------------------------------
+
+describe('H. openai dialect negotiation', () => {
+  const okPlan = () => ({ body: JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: PLAN_JSON } }] }) });
+
+  it('negotiateOpenAiDialect applies only the adjustment the error text names', () => {
+    // OpenAI gpt-5-family token-field rejection names BOTH fields and asks for
+    // the modern one — the modern field must win.
+    const modern = negotiateOpenAiDialect(
+      { ...DEFAULT_OPENAI_DIALECT, tokenField: 'max_tokens' },
+      "Unsupported parameter: 'max_tokens' is not supported with this model. Use 'max_completion_tokens' instead."
+    );
+    expect(modern?.tokenField).toBe('max_completion_tokens');
+    // Anthropic-backed proxies demand max_tokens when they don't know the modern field.
+    const legacy = negotiateOpenAiDialect(DEFAULT_OPENAI_DIALECT, 'invalid_request_error: max_tokens: Field required');
+    expect(legacy?.tokenField).toBe('max_tokens');
+    expect(legacy?.responseFormat).toBe('json_schema');
+    // temperature and reasoning_effort drop only when named.
+    expect(negotiateOpenAiDialect({ ...DEFAULT_OPENAI_DIALECT, temperature: true }, "Unsupported value: 'temperature'")?.temperature).toBe(false);
+    expect(negotiateOpenAiDialect(DEFAULT_OPENAI_DIALECT, "Unsupported parameter: 'reasoning_effort'")?.reasoningEffort).toBe(false);
+    // response_format steps down one rung at a time, never below none.
+    expect(negotiateOpenAiDialect(DEFAULT_OPENAI_DIALECT, 'response_format is not supported')?.responseFormat).toBe('json_object');
+    expect(negotiateOpenAiDialect({ ...DEFAULT_OPENAI_DIALECT, responseFormat: 'json_object' }, 'json_object not supported')?.responseFormat).toBe('none');
+    expect(negotiateOpenAiDialect({ ...DEFAULT_OPENAI_DIALECT, responseFormat: 'none' }, 'json_schema json_object response_format none')).toBeUndefined();
+    // Unactionable errors (unknown model, auth phrasing) never rewrite the dialect.
+    expect(negotiateOpenAiDialect(DEFAULT_OPENAI_DIALECT, 'The model `gpt-x` does not exist')).toBeUndefined();
+  });
+
+  it('retries a 400 with the downgraded dialect and caches the winner per endpoint+model', async () => {
+    const bodies: Array<Record<string, unknown>> = [];
+    const server = await captureServer((req) => {
+      bodies.push(req.body);
+      if (bodies.length === 1) return { status: 400, body: JSON.stringify({ error: { message: "Unsupported parameter: 'reasoning_effort'" } }) };
+      if (bodies.length === 2) return { status: 400, body: JSON.stringify({ error: { message: 'response_format json_schema is not supported for this model' } }) };
+      return okPlan();
+    });
+    const config: AiConfig = { provider: 'openai', endpoint: `${server.base}/v1`, token: 'sk-test', model: 'gpt-x' };
+    const planner = new RemotePlanner(config);
+    const plan = await planner.plan(minimalEvidence);
+    expect(plan.decision).toBe('ABSTAIN');
+    expect(bodies).toHaveLength(3);
+    expect(bodies[0]?.reasoning_effort).toBe('low');
+    expect(bodies[1]?.reasoning_effort).toBeUndefined();
+    expect((bodies[1]?.response_format as { type: string }).type).toBe('json_schema');
+    expect((bodies[2]?.response_format as { type: string }).type).toBe('json_object');
+    // A second plan() on the same endpoint+model must skip negotiation entirely.
+    const again = new RemotePlanner(config);
+    await again.plan(minimalEvidence);
+    expect(bodies).toHaveLength(4);
+    expect((bodies[3]?.response_format as { type: string }).type).toBe('json_object');
+    expect(bodies[3]?.reasoning_effort).toBeUndefined();
+    await server.close();
+  });
+
+  it('switches to max_tokens when an Anthropic-backed proxy requires it', async () => {
+    const bodies: Array<Record<string, unknown>> = [];
+    const server = await captureServer((req) => {
+      bodies.push(req.body);
+      if (!('max_tokens' in req.body)) {
+        return { status: 400, body: JSON.stringify({ type: 'error', error: { type: 'invalid_request_error', message: 'max_tokens: Field required' } }) };
+      }
+      return okPlan();
+    });
+    const planner = new RemotePlanner({ provider: 'openai', endpoint: `${server.base}/v1`, token: 'k', model: 'claude-via-proxy' });
+    const plan = await planner.plan(minimalEvidence);
+    expect(plan.decision).toBe('ABSTAIN');
+    expect(bodies.length).toBeGreaterThanOrEqual(2);
+    const final = bodies.at(-1) ?? {};
+    expect(final.max_tokens).toBe(PLANNER_OUTPUT_TOKEN_BUDGET);
+    expect(final.max_completion_tokens).toBeUndefined();
+    await server.close();
+  });
+
+  it('never negotiates auth, rate-limit, or server faults — they surface immediately', async () => {
+    for (const status of [401, 429, 500]) {
+      let hits = 0;
+      const server = await captureServer(() => {
+        hits += 1;
+        return { status, body: JSON.stringify({ error: { message: "reasoning_effort response_format max_tokens" } }) };
+      });
+      const planner = new RemotePlanner({ provider: 'openai', endpoint: `${server.base}/v1`, token: 'k', model: 'm' });
+      await expect(planner.plan(minimalEvidence)).rejects.toThrow(`planner request failed: ${status}`);
+      expect(hits).toBe(1);
+      await server.close();
+    }
+  });
+
+  it('gives up after bounded retries and reports http-4xx when nothing actionable remains', async () => {
+    let hits = 0;
+    const server = await captureServer(() => {
+      hits += 1;
+      return { status: 400, body: JSON.stringify({ error: { message: 'response_format not supported here' } }) };
+    });
+    const planner = new RemotePlanner({ provider: 'openai', endpoint: `${server.base}/v1`, token: 'k', model: 'm' });
+    await expect(planner.plan(minimalEvidence)).rejects.toThrow('planner request failed: 400');
+    // json_schema → json_object → none → no further adjustment: 3 attempts total.
+    expect(hits).toBe(3);
+    expect(await lastFailureClass()).toBe('http-4xx');
+    await server.close();
+  });
+
+  it('does not retry a 400 that names no known parameter', async () => {
+    let hits = 0;
+    const server = await captureServer(() => {
+      hits += 1;
+      return { status: 400, body: JSON.stringify({ error: { message: 'The model `gpt-x` does not exist or you do not have access to it.' } }) };
+    });
+    const planner = new RemotePlanner({ provider: 'openai', endpoint: `${server.base}/v1`, token: 'k', model: 'gpt-x' });
+    await expect(planner.plan(minimalEvidence)).rejects.toThrow('planner request failed: 400');
+    expect(hits).toBe(1);
+    await server.close();
+  });
+});
+
+// ---- I. plan extraction robustness -----------------------------------------------------
+
+describe('I. plan extraction robustness', () => {
+  it('parsePlanJsonText tolerates fences and preamble, rejects garbage', () => {
+    expect((parsePlanJsonText(PLAN_JSON) as { decision: string }).decision).toBe('ABSTAIN');
+    expect((parsePlanJsonText(`\`\`\`json\n${PLAN_JSON}\n\`\`\``) as { decision: string }).decision).toBe('ABSTAIN');
+    expect((parsePlanJsonText(`Here is the plan:\n${PLAN_JSON}`) as { decision: string }).decision).toBe('ABSTAIN');
+    expect(parsePlanJsonText('no json here at all')).toBeUndefined();
+    expect(parsePlanJsonText('')).toBeUndefined();
+    expect(parsePlanJsonText('{"unterminated": ')).toBeUndefined();
+  });
+
+  it('openai: markdown-fenced content still yields the plan', async () => {
+    const server = await captureServer(() => ({
+      body: JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: `\`\`\`json\n${PLAN_JSON}\n\`\`\`` } }] }),
+    }));
+    const planner = new RemotePlanner({ provider: 'openai', endpoint: server.base, model: 'm' });
+    const plan = await planner.plan(minimalEvidence);
+    expect(plan.decision).toBe('ABSTAIN');
+    await server.close();
+  });
+
+  it('openai: content-parts arrays are concatenated before parsing', async () => {
+    const half = Math.floor(PLAN_JSON.length / 2);
+    const server = await captureServer(() => ({
+      body: JSON.stringify({
+        choices: [{
+          finish_reason: 'stop',
+          message: { content: [{ type: 'text', text: PLAN_JSON.slice(0, half) }, { type: 'text', text: PLAN_JSON.slice(half) }] },
+        }],
+      }),
+    }));
+    const planner = new RemotePlanner({ provider: 'openai', endpoint: server.base, model: 'm' });
+    const plan = await planner.plan(minimalEvidence);
+    expect(plan.decision).toBe('ABSTAIN');
+    await server.close();
+  });
+
+  it('anthropic: fenced text blocks still yield the plan', async () => {
+    const server = await captureServer(() => ({
+      body: JSON.stringify({ stop_reason: 'end_turn', content: [{ type: 'text', text: `\`\`\`\n${PLAN_JSON}\n\`\`\`` }] }),
+    }));
+    const planner = new RemotePlanner({ provider: 'anthropic', endpoint: server.base, token: 'k', model: 'm' });
+    const plan = await planner.plan(minimalEvidence);
+    expect(plan.decision).toBe('ABSTAIN');
+    await server.close();
+  });
+
+  it('unparseable content stays an honest schema failure', async () => {
+    const server = await captureServer(() => ({
+      body: JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: 'I cannot help with that.' } }] }),
+    }));
+    const planner = new RemotePlanner({ provider: 'openai', endpoint: server.base, model: 'm' });
+    await expect(planner.plan(minimalEvidence)).rejects.toThrow('planner response is not an object');
+    expect(await lastFailureClass()).toBe('schema');
+    await server.close();
+  });
+});
+
+// ---- J. connection-test policy surfacing -------------------------------------------------
+
+describe('J. connection-test policy surfacing', () => {
+  it('a reached provider whose plan fails the validator reports the rejection reasons', async () => {
+    // A lazy model answering the CONNECTION_TEST instruction literally:
+    // parseable JSON, but missing schemaVersion/hypothesis/tier/verification.
+    const lazyPlan = JSON.stringify({ decision: 'ABSTAIN', actions: [] });
+    const server = await captureServer(() => ({
+      body: JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: lazyPlan } }] }),
+    }));
+    const result = await runPlannerConnectionTest({ provider: 'openai', endpoint: `${server.base}/v1`, token: 'k', model: 'lazy-model' });
+    expect(result.providerReached).toBe(true);
+    expect(result.schemaValid).toBe(false);
+    expect(result.errorClass).toBe('schema');
+    expect(result.policyReasons?.length).toBeGreaterThan(0);
+    expect(result.policyReasons?.[0]).toContain('schemaVersion');
+    expect(await lastFailureClass()).toBe('policy');
+    await server.close();
+  });
+
+  it('a reached provider with a complete abstain plan verifies clean', async () => {
+    const server = await captureServer(() => ({
+      body: JSON.stringify({ choices: [{ finish_reason: 'stop', message: { content: PLAN_JSON } }] }),
+    }));
+    const result = await runPlannerConnectionTest({ provider: 'openai', endpoint: `${server.base}/v1`, token: 'k', model: 'good-model' });
+    expect(result.providerReached).toBe(true);
+    expect(result.schemaValid).toBe(true);
+    expect(result.decision).toBe('ABSTAIN');
+    expect(result.policyReasons).toBeUndefined();
+    await server.close();
   });
 });

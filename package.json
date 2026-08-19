@@ -1,6 +1,6 @@
 {
   "name": "adapt-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adaptive Chromium Manifest V3 ad and privacy blocker",
   "type": "module",
   "scripts": {

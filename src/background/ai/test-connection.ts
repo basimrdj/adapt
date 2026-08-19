@@ -20,6 +20,10 @@ export interface ConnectionTestResult {
   latencyMs: number | null;
   decision?: string;
   errorClass?: string;
+  /** First validator rejection reasons when the plan fails production policy —
+   *  internal codes only (no URLs, keys, or model text), shown so BYOK users can
+   *  see WHY their endpoint's response was refused instead of a bare "schema". */
+  policyReasons?: string[];
 }
 
 export const TEST_REQUEST_REFS = ['request:r990001', 'request:r990002'] as const;
@@ -76,7 +80,7 @@ export async function runPlannerConnectionTest(config: AiConfig): Promise<Connec
       schemaValid: validation.valid,
       latencyMs,
       decision: validation.sanitizedPlan?.decision,
-      ...(validation.valid ? {} : { errorClass: 'schema' }),
+      ...(validation.valid ? {} : { errorClass: 'schema', policyReasons: validation.reasons.slice(0, 3) }),
     };
   } catch (error) {
     return {

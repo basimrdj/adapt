@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ADAPT — Adaptive Content & Privacy Blocker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MV3 content blocker with a transactional adaptation engine and optional bring-your-own-key AI (OpenAI-compatible or Anthropic).",
   "permissions": [
     "declarativeNetRequest",
